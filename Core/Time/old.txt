@@ -1,0 +1,76 @@
+﻿namespace OldStuff;
+
+class DateTimeExtensions
+{
+    /// <summary>
+    /// Express the DateTime as a Julian Date. The time part of the DateTime
+    /// will be expressed as the decimal part of the return value.
+    /// </summary>
+    /// <param name="dt">The DateTime.</param>
+    /// <returns>The equivalent Julian Date.</returns>
+    public static double ToJulianDay1(this DateTime dt)
+    {
+        return dt.GetDateOnly().ToJulianDay() - 0.5 + dt.TimeOfDay.TotalDays;
+    }
+
+    /// <summary>
+    /// Meeus method.
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns></returns>
+    public static double ToJulianDay3(this DateTime dt)
+    {
+        int y = dt.Year;
+        int m = dt.Month;
+        int d = dt.Day;
+        if (m < 3)
+        {
+            y--;
+            m += 12;
+        }
+        int a = y / 100;
+        int b = 2 - a + a / 4;
+        int c = (int)(365.25 * (y + 4716));
+        int e = (int)(30.6001 * (m + 1));
+        return b + c + d + e - 1524.5 + dt.TimeOfDay.TotalDays;
+    }
+
+    /// <summary>
+    /// Meeus' method via a conversion to DateOnly (DRY).
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns></returns>
+    public static double ToJulianDay4(this DateTime dt)
+    {
+        return dt.GetDateOnly().ToJulianDay() - 0.5 + dt.TimeOfDay.TotalDays;
+    }
+}
+
+class DateOnlyExtensions
+{
+    /// <summary>
+    /// Formula from page 61, Astronomical Algorithms 2nd ed. by Jean Meeus.
+    ///
+    /// NB: The result gives the Julian Day at the start of the given date
+    /// (00:00:00, i.e. midnight), which will always have a fraction of 0.5,
+    /// since a Julian Day starts at 12:00:00 (noon).
+    /// </summary>
+    /// <param name="date">The DateOnly instance.</param>
+    /// <returns>The Julian Day value.</returns>
+    public static double ToJulianDay(this DateOnly date)
+    {
+        int y = date.Year;
+        int m = date.Month;
+        int d = date.Day;
+        if (m < 3)
+        {
+            y--;
+            m += 12;
+        }
+        int a = y / 100;
+        int b = 2 - a + a / 4;
+        int c = (int)(365.25 * (y + 4716));
+        int e = (int)(30.6001 * (m + 1));
+        return b + c + d + e - 1524.5;
+    }
+}
