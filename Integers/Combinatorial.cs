@@ -62,7 +62,7 @@ public static class Combinatorial
     /// </summary>
     public static List<List<T>> GetPermutations<T>(List<T> bag, int n)
     {
-        List<List<T>> result = new ();
+        List<List<T>> result = [];
 
         // There are 0 ways of selecting n items from a bag with fewer than n items.
         if (n > bag.Count)
@@ -74,7 +74,7 @@ public static class Combinatorial
         // in the bag.
         if (n == 0)
         {
-            result.Add(new List<T>());
+            result.Add([]);
             return result;
         }
 
@@ -100,7 +100,7 @@ public static class Combinatorial
             List<List<T>> remPerms = GetPermutations(remainder, n - 1);
             foreach (List<T> remPerm in remPerms)
             {
-                List<T> perm = new () { item };
+                List<T> perm = [item];
                 perm.AddRange(remPerm);
                 result.Add(perm);
             }
@@ -119,13 +119,13 @@ public static class Combinatorial
         switch (chars.Length)
         {
             case 0:
-                return new List<string>();
+                return [];
 
             case 1:
-                return new List<string> { chars };
+                return [chars];
         }
 
-        HashSet<string> result = new ();
+        HashSet<string> result = [];
         for (var i = 0; i < chars.Length; i++)
         {
             char ch = chars[i];
@@ -187,7 +187,7 @@ public static class Combinatorial
     /// </summary>
     public static List<List<T>> GetCombinations<T>(List<T> bag, int n)
     {
-        List<List<T>> result = new ();
+        List<List<T>> result = [];
 
         // Combinations of 0 items is undefined.
         if (n == 0)
@@ -214,7 +214,7 @@ public static class Combinatorial
             // If we only want 1 item, shortcut.
             if (n == 1)
             {
-                List<T> newCombo = new () { bag[i] };
+                List<T> newCombo = [bag[i]];
                 result.Add(newCombo);
                 continue;
             }
@@ -237,7 +237,7 @@ public static class Combinatorial
             List<List<T>> remCombos = GetCombinations(remainder, n - 1);
             foreach (List<T> remCombo in remCombos)
             {
-                List<T> newCombo = new () { bag[i] };
+                List<T> newCombo = [bag[i]];
                 newCombo.AddRange(remCombo);
                 result.Add(newCombo);
             }

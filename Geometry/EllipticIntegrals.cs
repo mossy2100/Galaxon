@@ -111,15 +111,22 @@ public static class EllipticIntegrals
             dx = 1 - x / A;
             dy = 1 - y / A;
             dz = 1 - z / A;
-        } while (Compare.Max(Abs(dx), Abs(dy), Abs(dz)) >= _Delta);
+        }
+        while (Compare.Max(Abs(dx), Abs(dy), Abs(dz)) >= _Delta);
 
         double E2 = dx * dy + dy * dz + dz * dx;
         double E3 = dx * dy * dz;
         double E22 = E2 * E2;
 
         // Integer values rearranged to avoid integer division operations.
-        return (1 - E2 / 10 + E3 / 14 + E22 / 24 - 3 * E2 * E3 / 44
-                - 5 * E22 * E2 / 208 + 3 * E3 * E3 / 104 + E22 * E3 / 16)
+        return (1
+                - E2 / 10
+                + E3 / 14
+                + E22 / 24
+                - 3 * E2 * E3 / 44
+                - 5 * E22 * E2 / 208
+                + 3 * E3 * E3 / 104
+                + E22 * E3 / 16)
             / Sqrt(A);
     }
 
@@ -157,7 +164,8 @@ public static class EllipticIntegrals
             dx = 1 - x / A;
             dy = 1 - y / A;
             dz = 1 - z / A;
-        } while (Compare.Max(Abs(dx), Abs(dy), Abs(dz)) >= _Delta);
+        }
+        while (Compare.Max(Abs(dx), Abs(dy), Abs(dz)) >= _Delta);
 
         double dz2 = dz * dz;
         double dz3 = dz2 * dz;
@@ -168,10 +176,21 @@ public static class EllipticIntegrals
         double E5 = dx * dy * dz3;
         double E22 = E2 * E2;
 
-        return 3 * sum + fac * (1 - 3 * E2 / 14 + E3 / 6 + 9 * E22 / 88
-                - 3 * E4 / 22 - 9 * E2 * E3 / 52 + 3 * E5 / 26
-                - E22 * E2 / 16 + 3 * E3 * E3 / 40 + 3 * E2 * E4 / 20
-                + 45 * E22 * E3 / 272 - 9 * (E3 * E4 + E2 * E5) / 68)
-            / A / Sqrt(A);
+        return 3 * sum
+            + fac
+            * (1
+                - 3 * E2 / 14
+                + E3 / 6
+                + 9 * E22 / 88
+                - 3 * E4 / 22
+                - 9 * E2 * E3 / 52
+                + 3 * E5 / 26
+                - E22 * E2 / 16
+                + 3 * E3 * E3 / 40
+                + 3 * E2 * E4 / 20
+                + 45 * E22 * E3 / 272
+                - 9 * (E3 * E4 + E2 * E5) / 68)
+            / A
+            / Sqrt(A);
     }
 }

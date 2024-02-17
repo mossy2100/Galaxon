@@ -22,7 +22,7 @@ public static class Sequences
             throw new ArgumentOutOfRangeException(nameof(n), "Cannot be less than 1.");
         }
 
-        List<long> result = new () { n };
+        List<long> result = [n];
 
         if (n > 1)
         {

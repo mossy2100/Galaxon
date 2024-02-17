@@ -21,7 +21,7 @@ public static class Divisors
             throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
         }
 
-        List<BigInteger> divisors = new ();
+        List<BigInteger> divisors = [];
 
         // Get the truncated square root of the argument.
         var sqrt = (BigInteger)Sqrt((double)n);

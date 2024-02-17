@@ -33,7 +33,7 @@ public static class Digits
 
     public static List<ulong> GetRotations(long n)
     {
-        List<ulong> result = new ();
+        List<ulong> result = [];
         var nString = n.ToString();
         int nDigits = nString.Length;
         for (var i = 1; i < nDigits; i++)

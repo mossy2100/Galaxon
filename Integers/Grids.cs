@@ -16,7 +16,7 @@ public static class Grids
         // Create the data structure.
         var spiral = new uint?[size, size];
 
-        bool IsVacant(int x, int y) =>
+        bool isVacant(int x, int y) =>
             x >= 0 && x < size && y >= 0 && y < size && spiral[x, y] == null;
 
         // Start in the centre.
@@ -35,19 +35,19 @@ public static class Grids
             switch (direction)
             {
                 case EDirection.Up:
-                    if (clockwise && IsVacant(x + 1, y))
+                    if (clockwise && isVacant(x + 1, y))
                     {
                         // Go right.
                         x++;
                         direction = EDirection.Right;
                     }
-                    else if (!clockwise && IsVacant(x - 1, y))
+                    else if (!clockwise && isVacant(x - 1, y))
                     {
                         // Go left.
                         x--;
                         direction = EDirection.Left;
                     }
-                    else if (IsVacant(x, y - 1))
+                    else if (isVacant(x, y - 1))
                     {
                         // Go up again.
                         y--;
@@ -55,19 +55,19 @@ public static class Grids
                     break;
 
                 case EDirection.Right:
-                    if (clockwise && IsVacant(x, y + 1))
+                    if (clockwise && isVacant(x, y + 1))
                     {
                         // Go down.
                         y++;
                         direction = EDirection.Down;
                     }
-                    else if (!clockwise && IsVacant(x, y - 1))
+                    else if (!clockwise && isVacant(x, y - 1))
                     {
                         // Go up.
                         y--;
                         direction = EDirection.Up;
                     }
-                    else if (IsVacant(x + 1, y))
+                    else if (isVacant(x + 1, y))
                     {
                         // Go right again.
                         x++;
@@ -75,19 +75,19 @@ public static class Grids
                     break;
 
                 case EDirection.Down:
-                    if (clockwise && IsVacant(x - 1, y))
+                    if (clockwise && isVacant(x - 1, y))
                     {
                         // Go left.
                         x--;
                         direction = EDirection.Left;
                     }
-                    else if (!clockwise && IsVacant(x + 1, y))
+                    else if (!clockwise && isVacant(x + 1, y))
                     {
                         // Go right.
                         x++;
                         direction = EDirection.Right;
                     }
-                    else if (IsVacant(x, y + 1))
+                    else if (isVacant(x, y + 1))
                     {
                         // Go down again.
                         y++;
@@ -95,19 +95,19 @@ public static class Grids
                     break;
 
                 case EDirection.Left:
-                    if (clockwise && IsVacant(x, y - 1))
+                    if (clockwise && isVacant(x, y - 1))
                     {
                         // Go up.
                         y--;
                         direction = EDirection.Up;
                     }
-                    else if (!clockwise && IsVacant(x, y + 1))
+                    else if (!clockwise && isVacant(x, y + 1))
                     {
                         // Go down.
                         y++;
                         direction = EDirection.Down;
                     }
-                    else if (IsVacant(x - 1, y))
+                    else if (isVacant(x - 1, y))
                     {
                         // Go left again.
                         x--;

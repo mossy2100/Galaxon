@@ -128,7 +128,7 @@ public static class Primes
         // 2^64 (ulong.MaxValue) will pass the test.
         // i.e. for ulong values it detects primes correctly, not just probable primes, and won't
         // find any pseudoprimes.
-        ulong[] bases = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 };
+        ulong[] bases = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
 
         // If the number is one of these bases then it's prime, so we don't need to continue.
         if (bases.Contains(n))
@@ -386,7 +386,7 @@ public static class Primes
     private static List<ulong> _PrimeFactors(ulong n)
     {
         // Result array.
-        List<ulong> factors = new ();
+        List<ulong> factors = [];
 
         // 0 and 1 are not prime and have no factors.
         if (n <= 1)
@@ -471,7 +471,7 @@ public static class Primes
     /// All numbers up to and including this value have been tested and, if prime, added to the
     /// cache.
     /// </summary>
-    public static ulong MaxValueChecked;
+    public static ulong MaxValueChecked { get; set; }
 
     /// <summary>
     /// Cache of primes found so far.
@@ -486,8 +486,8 @@ public static class Primes
     /// <summary>
     /// Primes up to MaxKnown.
     /// </summary>
-    public static readonly List<ulong> KnownPrimes = new ()
-    {
+    public static readonly List<ulong> KnownPrimes =
+    [
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89,
         97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181,
         191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281,
@@ -497,7 +497,7 @@ public static class Primes
         631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743,
         751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863,
         877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997
-    };
+    ];
 
     /// <summary>
     /// Clear the primes cache.

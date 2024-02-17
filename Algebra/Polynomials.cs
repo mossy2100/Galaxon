@@ -32,7 +32,7 @@ public class Polynomials
         }
 
         // Create a delegate for the polynomial function.
-        Func<double, double> fnPolynomial = x =>
+        double polynomial(double x)
         {
             // Initialize the result with the highest order term.
             double result = coeffs[^1];
@@ -47,9 +47,9 @@ public class Polynomials
             }
 
             return result;
-        };
+        }
 
-        return fnPolynomial;
+        return polynomial;
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class Polynomials
     /// <returns>0, 1, or 2 solutions to the equation, as complex numbers.</returns>
     public static List<Complex> SolveQuadratic(double a, double b, double c)
     {
-        List<Complex> result = new ();
+        List<Complex> result = [];
 
         // Check for a == 0.
         if (a == 0)

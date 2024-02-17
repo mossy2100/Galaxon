@@ -101,21 +101,21 @@ public class AnglesTests
     {
         // Arrange.
         double[] inputs =
-        {
+        [
             -720, -630, -540, -450,
             -360, -270, -180, -90,
             0, 90, 180, 270,
             360, 450, 540, 630,
             720
-        };
+        ];
         double[] outputs =
-        {
+        [
             0, 90, 180, 270,
             0, 90, 180, 270,
             0, 90, 180, 270,
             0, 90, 180, 270,
             0
-        };
+        ];
         for (var i = 0; i < inputs.Length; i++)
         {
             double actual = NormalizeDegrees(inputs[i], false);

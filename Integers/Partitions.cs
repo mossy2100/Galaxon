@@ -30,7 +30,7 @@ public static class Partitions
         // Get the signs and arguments so we can calculate the smaller partitions first.
         // This will avoid a stack overflow.
         // The results of P() are cached due to memoization of the method.
-        List<(int sign, ushort arg)> terms = new ();
+        List<(int sign, ushort arg)> terms = [];
         var k = 1;
         var sign = 1;
         while (true)

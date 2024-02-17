@@ -14,22 +14,19 @@ public static class Analysis
     /// <returns>The Bernoulli number as a BigRational.</returns>
     private static BigRational _Bernoulli(int n)
     {
-        // Guard.
-        if (n < 0)
+        switch (n)
         {
-            throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
-        }
+            // Guard.
+            case < 0:
+                throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
 
-        // Optimizations.
-        if (n == 0)
-        {
-            return 1;
-        }
+            // Optimizations.
+            case 0:
+                return 1;
 
-        // For all odd indices greater than 1, the Bernoulli number is 0.
-        if (n > 1 && int.IsOddInteger(n))
-        {
-            return 0;
+            // For all odd indices greater than 1, the Bernoulli number is 0.
+            case > 1 when int.IsOddInteger(n):
+                return 0;
         }
 
         // Compute result.

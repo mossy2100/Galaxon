@@ -81,8 +81,8 @@ public static class Angles
     public static double DmsToDeg(double degrees, double arcminutes, double arcseconds = 0)
     {
         return degrees
-            + (arcminutes / ARCMINUTES_PER_DEGREE)
-            + (arcseconds / ARCSECONDS_PER_DEGREE);
+            + arcminutes / ARCMINUTES_PER_DEGREE
+            + arcseconds / ARCSECONDS_PER_DEGREE;
     }
 
     /// <summary>
