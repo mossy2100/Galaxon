@@ -1,7 +1,8 @@
 using System.Numerics;
+using Galaxon.Core.Numbers.Extensions;
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Bases;
 
 /// <summary>
 /// Utility class for converting floating point values to sexagesimal values.
@@ -25,7 +26,7 @@ public static class Sexagesimal
         { 0, '°' },
         { 1, '‵' },
         { 2, '‶' },
-        { 3, '‷' },
+        { 3, '‷' }
     };
 
     /// <summary>
@@ -82,11 +83,11 @@ public static class Sexagesimal
         // Calculate the units part.
         // This will throw an exception if the truncated value of n is outside the valid range for
         // long. We could make units a BigInteger but that seems unnecessary at this stage.
-        long units = (long)Math.Truncate(n);
+        var units = (long)Math.Truncate(n);
 
         // Calculate the minutes part.
         double decimalMinutes = (n - units) * BASE;
-        sbyte minutes = (sbyte)Math.Truncate(decimalMinutes);
+        var minutes = (sbyte)Math.Truncate(decimalMinutes);
 
         // Calculate the seconds part.
         double seconds = (decimalMinutes - minutes) * BASE;
@@ -104,7 +105,7 @@ public static class Sexagesimal
     /// <returns></returns>
     public static double FromUnitsMinutesSeconds(double units, double minutes, double seconds)
     {
-        return units + (minutes * BASE) + (seconds * BASE * BASE);
+        return units + minutes * BASE + seconds * BASE * BASE;
     }
 
     /// <summary>Convert a double value to units, minutes, and seconds notation.</summary>
@@ -127,8 +128,8 @@ public static class Sexagesimal
         (long units, sbyte minutes, double seconds) = ToUnitsMinutesSeconds(n);
 
         // Format the minutes and seconds.
-        string sMinutes = Math.Abs(minutes).ToString();
-        string sSeconds = Math.Abs(seconds).ToString($"F{precision}");
+        var sMinutes = Math.Abs(minutes).ToString();
+        var sSeconds = Math.Abs(seconds).ToString($"F{precision}");
 
         // Format the output.
         return notation switch

@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>Extension methods and other bonus stuff for float.</summary>
 public static class XFloat

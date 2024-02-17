@@ -1,5 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Bases;
 using Galaxon.Core.Strings;
 
 namespace Galaxon.Core.Tests;

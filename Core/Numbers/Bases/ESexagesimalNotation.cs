@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Bases;
 
 /// <summary>
 /// Enum for the different notations used to represent sexagesimal numbers.

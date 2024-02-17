@@ -1,6 +1,6 @@
 using Galaxon.Core.Collections;
 
-namespace Galaxon.Core.Tests;
+namespace Galaxon.Core.Tests.Collections;
 
 [TestClass]
 public class XEnumerableTests

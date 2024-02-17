@@ -2,7 +2,7 @@ using System.Numerics;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>Extension methods for BigInteger.</summary>
 public static class XBigInteger
@@ -113,7 +113,7 @@ public static class XBigInteger
 
         a = BigInteger.Abs(a);
         b = BigInteger.Abs(b);
-        var gcd = GreatestCommonDivisor(a, b);
+        BigInteger gcd = GreatestCommonDivisor(a, b);
 
         return a > b ? a / gcd * b : b / gcd * a;
     }
@@ -146,7 +146,7 @@ public static class XBigInteger
 
         // Check the cache.
         var key = $"{a}/{b}";
-        if (s_gcdCache.TryGetValue(key, out var gcd))
+        if (s_gcdCache.TryGetValue(key, out BigInteger gcd))
         {
             return gcd;
         }
@@ -194,20 +194,20 @@ public static class XBigInteger
         {
             throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
         }
-        else if (n == 0)
+        if (n == 0)
         {
             // Sqrt(0) == 0
             return 0;
         }
-        else if (n == 1)
+        if (n == 1)
         {
             // Sqrt(1) == 1
             return 1;
         }
 
         // Compute using Newton's method.
-        var x = n;
-        var y = (x + 1) / 2;
+        BigInteger x = n;
+        BigInteger y = (x + 1) / 2;
         while (y < x)
         {
             x = y;

@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>Extension methods and other bonus stuff for double.</summary>
 public static class XDouble

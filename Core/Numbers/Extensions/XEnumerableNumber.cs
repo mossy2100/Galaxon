@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>
 /// LINQ methods for IEnumerable{INumberBase}.

@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>Extension methods for numbers (INumber{T} and INumberBase{T}).</summary>
 /// <remarks>

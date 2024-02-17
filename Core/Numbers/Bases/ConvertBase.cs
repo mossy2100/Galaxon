@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
 using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Bases;
 
 /// <summary>
 /// This class supports conversion between integers and strings of digits in a specified base,
@@ -179,7 +178,7 @@ public static class ConvertBase
             // Add the digit to the start of the string.
             sbDigits.Prepend(c);
         }
-        string result = sbDigits.ToString();
+        var result = sbDigits.ToString();
 
         // Pad to the desired width.
         return result.PadLeft(width, '0');
@@ -289,7 +288,7 @@ public static class ConvertBase
         digits = Regex.Replace(digits, $"[{DIGIT_GROUPING_CHARACTERS}]", "");
 
         // See if the value is negative.
-        int sign = 1;
+        var sign = 1;
         if (digits[0] == '-')
         {
             sign = -1;

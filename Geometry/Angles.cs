@@ -1,6 +1,4 @@
-﻿using static System.Math;
-
-namespace Galaxon.Core.Numbers;
+﻿namespace Galaxon.Numerics.Geometry;
 
 /// <summary>
 /// Stuff related to angles.

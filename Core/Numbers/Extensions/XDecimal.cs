@@ -1,6 +1,6 @@
 using DecimalMath;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Core.Numbers.Extensions;
 
 /// <summary>Extension methods for decimal.</summary>
 public static class XDecimal
