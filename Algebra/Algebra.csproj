@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Galaxon.Numerics.Algebra</AssemblyName>
+        <RootNamespace>Galaxon.Numerics.Algebra</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Galaxon.BigNumbers">
+          <HintPath>..\..\BigNumbers\BigNumbers\bin\Debug\net8.0\Galaxon.BigNumbers.dll</HintPath>
+        </Reference>
+        <Reference Include="Galaxon.Core">
+          <HintPath>..\..\Core\Core\bin\Debug\net8.0\Galaxon.Core.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\Integers\Integers.csproj" />
+    </ItemGroup>
+
+</Project>
