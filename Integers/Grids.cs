@@ -1,5 +1,4 @@
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers;
 using Galaxon.Core.Numbers.Extensions;
 
 namespace Galaxon.Numerics.Integers;
