@@ -1,6 +1,6 @@
 using Galaxon.Core.Functional;
 
-namespace Galaxon.Tests;
+namespace Galaxon.Tests.Functional;
 
 [TestClass]
 public class MemoizationTests

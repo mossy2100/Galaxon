@@ -19,18 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="BigDecimalOld.cs"/>
-        <Compile Remove="BigDecimal\BigDecimal.Old.cs"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Galaxon.Core">
-            <HintPath>..\..\Core\Core\bin\Debug\net8.0\Galaxon.Core.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.2.1"/>
     </ItemGroup>
 
     <ItemGroup>

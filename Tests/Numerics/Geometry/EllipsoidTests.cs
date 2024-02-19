@@ -1,6 +1,6 @@
 ﻿using Galaxon.Numerics.Geometry;
 
-namespace Galaxon.Tests.Numerics;
+namespace Galaxon.Tests.Numerics.Geometry;
 
 [TestClass]
 public class EllipsoidTests

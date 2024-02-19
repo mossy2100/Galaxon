@@ -194,14 +194,16 @@ public static class XBigInteger
         {
             throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
         }
+
+        // Sqrt(0) == 0
         if (n == 0)
         {
-            // Sqrt(0) == 0
             return 0;
         }
+
+        // Sqrt(1) == 1
         if (n == 1)
         {
-            // Sqrt(1) == 1
             return 1;
         }
 
