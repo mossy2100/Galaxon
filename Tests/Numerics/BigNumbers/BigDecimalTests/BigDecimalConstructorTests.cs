@@ -1,6 +1,7 @@
 using System.Numerics;
+using Galaxon.Numerics.BigNumbers;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 [TestClass]
 public class BigDecimalConstructorTests

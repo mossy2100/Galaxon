@@ -1,6 +1,7 @@
-using Galaxon.BigNumbers.TestTools;
+using Galaxon.Numerics.BigNumbers;
+using Galaxon.Numerics.BigNumbers.Testing;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 /// <summary>
 /// Test all methods in BigDecimal.Exp.cs.
@@ -146,10 +147,10 @@ public class BigDecimalExpLogTests
     /// I generated these expected results using Python.
     /// <code>
     /// from mpmath import mp, exp
-    /// 
+    ///
     /// # Set the precision (number of decimal places)
     /// mp.dps = 50  # 50 decimal places of precision
-    /// 
+    ///
     /// # Loop through integer values from -12 to 12
     /// for i in range(-12, 13):
     ///     theta = i * mp.pi / 6

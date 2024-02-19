@@ -1,6 +1,7 @@
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Numerics.BigNumbers;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 /// <summary>
 /// Test conversions between BigDecimal and the standard number types.

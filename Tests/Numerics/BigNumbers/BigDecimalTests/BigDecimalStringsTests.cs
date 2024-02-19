@@ -1,8 +1,9 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
 using Galaxon.Core.Strings;
+using Galaxon.Numerics.BigNumbers;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 [TestClass]
 public class BigDecimalStringsTests

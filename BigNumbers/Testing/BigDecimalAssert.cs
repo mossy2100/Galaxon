@@ -1,7 +1,7 @@
 using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Galaxon.BigNumbers.TestTools;
+namespace Galaxon.Numerics.BigNumbers.Testing;
 
 /// <summary>
 /// Assert methods for BigDecimal. Analogous to StringAssert.

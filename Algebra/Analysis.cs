@@ -1,5 +1,5 @@
-using Galaxon.BigNumbers;
 using Galaxon.Core.Functional;
+using Galaxon.Numerics.BigNumbers;
 using Galaxon.Numerics.Integers;
 
 namespace Galaxon.Numerics.Algebra;

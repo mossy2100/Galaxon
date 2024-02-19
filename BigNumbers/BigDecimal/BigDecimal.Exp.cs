@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 /// <summary>
 /// Power, root, exponential, and logarithm methods for BigDecimal.

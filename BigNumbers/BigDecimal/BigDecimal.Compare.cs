@@ -1,9 +1,9 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
 using Galaxon.Core.Types;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 /// <summary>
 /// Operators and methods for comparing BigDecimal.

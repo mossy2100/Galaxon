@@ -1,7 +1,8 @@
 using System.Numerics;
-using Galaxon.BigNumbers.TestTools;
+using Galaxon.Numerics.BigNumbers;
+using Galaxon.Numerics.BigNumbers.Testing;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigComplexTests;
 
 [TestClass]
 public class BigComplexCoreTests

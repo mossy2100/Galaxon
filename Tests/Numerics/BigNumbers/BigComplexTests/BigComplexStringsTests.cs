@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Numerics;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigComplexTests;
 
 [TestClass]
 public class BigComplexStringsTests

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigComplex :
     IPowerFunctions<BigComplex>,

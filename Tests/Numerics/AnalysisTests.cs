@@ -1,5 +1,5 @@
-using Galaxon.BigNumbers;
 using Galaxon.Numerics.Algebra;
+using Galaxon.Numerics.BigNumbers;
 
 namespace Galaxon.Tests.Numerics;
 

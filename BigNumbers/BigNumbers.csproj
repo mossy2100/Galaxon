@@ -4,8 +4,8 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>Galaxon.BigNumbers</AssemblyName>
-        <RootNamespace>Galaxon.BigNumbers</RootNamespace>
+        <AssemblyName>Galaxon.Numerics.BigNumbers</AssemblyName>
+        <RootNamespace>Galaxon.Numerics.BigNumbers</RootNamespace>
         <OutputType>Library</OutputType>
         <DocumentationFile>docs/index.xml</DocumentationFile>
         <IsPackable>true</IsPackable>
@@ -31,6 +31,10 @@
 
     <ItemGroup>
         <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

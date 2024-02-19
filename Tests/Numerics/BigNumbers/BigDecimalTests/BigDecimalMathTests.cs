@@ -1,6 +1,7 @@
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Numerics.BigNumbers;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 /// <summary>
 /// Test class for checking the number of guard digits used by each operator and method is correct.

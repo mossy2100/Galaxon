@@ -1,7 +1,8 @@
-using Galaxon.BigNumbers.TestTools;
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Numerics.BigNumbers;
+using Galaxon.Numerics.BigNumbers.Testing;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 [TestClass]
 public class BigDecimalNumericTests

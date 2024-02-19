@@ -2,9 +2,9 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigRational
 {

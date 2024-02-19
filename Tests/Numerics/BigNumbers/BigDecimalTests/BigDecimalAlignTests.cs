@@ -1,4 +1,6 @@
-namespace Galaxon.BigNumbers.Tests;
+using Galaxon.Numerics.BigNumbers;
+
+namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 
 /// <summary>
 /// Test the Align() method. This method should probably be private, but I want to make sure it

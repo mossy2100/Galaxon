@@ -1,7 +1,7 @@
 using System.Numerics;
-using Galaxon.Core.Numbers;
+using Galaxon.Core.Numbers.Extensions;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigRational
 {

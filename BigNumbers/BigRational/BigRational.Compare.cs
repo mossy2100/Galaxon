@@ -1,6 +1,6 @@
 using Galaxon.Core.Exceptions;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigRational
 {

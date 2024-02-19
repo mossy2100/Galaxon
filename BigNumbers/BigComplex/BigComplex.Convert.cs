@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Types;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigComplex
 {

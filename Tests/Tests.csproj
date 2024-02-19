@@ -23,16 +23,11 @@
     <ItemGroup>
         <ProjectReference Include="..\Algebra\Algebra.csproj" />
         <ProjectReference Include="..\Bases\Bases.csproj" />
+        <ProjectReference Include="..\BigNumbers\BigNumbers.csproj" />
         <ProjectReference Include="..\Core\Core.csproj"/>
         <ProjectReference Include="..\Geometry\Geometry.csproj" />
         <ProjectReference Include="..\Integers\Integers.csproj" />
         <ProjectReference Include="..\Time\Time.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Galaxon.BigNumbers">
-            <HintPath>..\..\BigNumbers\BigNumbers\bin\Debug\net8.0\Galaxon.BigNumbers.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
 </Project>

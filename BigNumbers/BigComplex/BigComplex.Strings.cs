@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
 
-namespace Galaxon.BigNumbers;
+namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigComplex
 {
@@ -87,8 +87,10 @@ public partial struct BigComplex
             var sRight = match.Groups["right"].Value;
 
             // Check the brackets match.
-            if ((sLeft == "" && sRight != "") || (sLeft == "<" && sRight != ">")
-                || (sLeft == "(" && sRight != ")") || (sLeft == "[" && sRight != "]")
+            if ((sLeft == "" && sRight != "")
+                || (sLeft == "<" && sRight != ">")
+                || (sLeft == "(" && sRight != ")")
+                || (sLeft == "[" && sRight != "]")
                 || (sLeft == "{" && sRight != "}"))
             {
                 throw new ArgumentFormatException(nameof(s),

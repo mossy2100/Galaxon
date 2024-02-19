@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
+using Galaxon.Numerics.BigNumbers;
 
-namespace Galaxon.BigNumbers.Tests;
+namespace Galaxon.Tests.Numerics.BigNumbers;
 
 /// <summary>
 /// Methods and stuff for calling Python scripts.

@@ -1,4 +1,6 @@
-namespace Galaxon.BigNumbers;
+using Galaxon.Numerics.BigNumbers;
+
+namespace Galaxon.Tests.Numerics.BigNumbers.BigRationalTests;
 
 [TestClass]
 public class BigRationalConvertTests2
