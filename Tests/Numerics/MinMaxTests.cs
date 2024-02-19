@@ -1,6 +1,6 @@
 ﻿using Galaxon.Numerics.Integers;
 
-namespace Galaxon.Core.Tests.Numerics;
+namespace Galaxon.Tests.Numerics;
 
 [TestClass]
 public class MinMaxTests

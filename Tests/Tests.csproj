@@ -5,8 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <RootNamespace>Galaxon.Core.Tests</RootNamespace>
-        <AssemblyName>Galaxon.Core.Tests</AssemblyName>
+        <RootNamespace>Galaxon.Tests</RootNamespace>
+        <AssemblyName>Galaxon.Tests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

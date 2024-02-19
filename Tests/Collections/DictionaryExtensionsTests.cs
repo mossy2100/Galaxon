@@ -1,7 +1,7 @@
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 
-namespace Galaxon.Core.Tests.Collections;
+namespace Galaxon.Tests.Collections;
 
 [TestClass]
 public class DictionaryExtensionsTests

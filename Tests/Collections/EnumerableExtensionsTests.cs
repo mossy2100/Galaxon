@@ -1,6 +1,6 @@
 using Galaxon.Core.Collections;
 
-namespace Galaxon.Core.Tests.Collections;
+namespace Galaxon.Tests.Collections;
 
 [TestClass]
 public class EnumerableExtensionsTests

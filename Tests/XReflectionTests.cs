@@ -1,6 +1,6 @@
 using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Tests;
+namespace Galaxon.Tests;
 
 class Example
 {

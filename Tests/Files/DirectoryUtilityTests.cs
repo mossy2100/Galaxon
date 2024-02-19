@@ -1,6 +1,6 @@
 using Galaxon.Core.Files;
 
-namespace Galaxon.Core.Tests.Files;
+namespace Galaxon.Tests.Files;
 
 [TestClass]
 public class DirectoryUtilityTests

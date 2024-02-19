@@ -1,7 +1,7 @@
 using System.Collections;
 using Galaxon.Core.Collections;
 
-namespace Galaxon.Core.Tests.Collections;
+namespace Galaxon.Tests.Collections;
 
 [TestClass]
 public class CollectionExtensionsTests

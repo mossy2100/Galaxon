@@ -1,6 +1,6 @@
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Core.Tests;
+namespace Galaxon.Tests;
 
 [TestClass]
 public class XStringTests

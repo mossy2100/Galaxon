@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Galaxon.Core.Numbers.Extensions;
 
-namespace Galaxon.Core.Tests;
+namespace Galaxon.Tests;
 
 [TestClass]
 public class XFloatingPointTests
