@@ -12,10 +12,10 @@
 
     <ItemGroup>
         <PackageReference Include="DecimalMath.DecimalEx" Version="1.0.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0"/>
-        <PackageReference Include="MSTest.TestAdapter" Version="2.2.10"/>
-        <PackageReference Include="MSTest.TestFramework" Version="2.2.10"/>
-        <PackageReference Include="coverlet.collector" Version="3.2.0">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.2.1" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.2.1" />
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -23,15 +23,13 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Algebra\Algebra.csproj" />
+        <ProjectReference Include="..\Bases\Bases.csproj" />
         <ProjectReference Include="..\Geometry\Geometry.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <Reference Include="Galaxon.BigNumbers">
           <HintPath>..\..\BigNumbers\BigNumbers\bin\Debug\net8.0\Galaxon.BigNumbers.dll</HintPath>
-        </Reference>
-        <Reference Include="Galaxon.Core">
-            <HintPath>..\..\Core\Core\bin\Debug\net8.0\Galaxon.Core.dll</HintPath>
         </Reference>
     </ItemGroup>
 

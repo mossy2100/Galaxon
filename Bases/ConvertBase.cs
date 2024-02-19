@@ -1,17 +1,13 @@
-﻿using System.Numerics;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
 using Galaxon.Core.Strings;
-using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Numbers.Bases;
+namespace Bases;
 
 /// <summary>
-/// This class supports conversion between integers and strings of digits in a specified base,
-/// which can be in the range 2..64.
-///
-/// All built-in integer types are supported, including Int128, UInt128, and BigInteger.
+/// This class supports conversion between unsigned long integers and strings of digits in a
+/// specified base, which can be in the range 2..64.
 ///
 /// As in hexadecimal literals, upper-case letters have the same value as lower-case letters.
 /// Lower-case is the default for strings returned from methods.
@@ -54,20 +50,13 @@ namespace Galaxon.Core.Numbers.Bases;
 /// represent the values 32-35, and printable non-alphanumeric ASCII characters to represent the
 /// values 36-63. These characters are ordered by ASCII value. As there are 33 such characters, 5
 /// are excluded.
-/// The characters selected for exclusion include the 4 characters used for digit grouping:
+///
+/// The excluded characters are those used for digit grouping or decimal separators:
 ///   space ( )
 ///   period (.)
 ///   comma (,)
 ///   apostrophe (')
-/// The dash (-) is also excluded, as this is taken to indicate a negative value. A dash is only
-/// valid at the start of a string.
-///
-/// Certain programming languages support underscores (_) for digit grouping. However, because there
-/// are only 95 printable ASCII characters, the underscore is not excluded from the base64hex
-/// character set and has a value of 58.
-///
-/// At this stage there is no support for decimal or floating point values, although it's
-/// possible this could be added in the future.
+///   underscore (_)
 /// </summary>
 /// <see href="https://en.wikipedia.org/wiki/List_of_numeral_systems"/>
 /// <see href="https://en.wikipedia.org/wiki/Binary_number"/>
@@ -95,12 +84,12 @@ public static class ConvertBase
     /// Digit characters. The index of a character in the string equals its value.
     /// </summary>
     public const string DIGITS =
-        "0123456789abcdefghijklmnopqrstuvwxyz!\"#$%&()*+/:;<=>?@[\\]^_`{|}~";
+        "0123456789abcdefghijklmnopqrstuvwxyz!\"#$%&()*+-/:;<=>?@[\\]^`{|}~";
 
     /// <summary>
     /// Digit grouping characters.
     /// </summary>
-    public const string DIGIT_GROUPING_CHARACTERS = " ,.'";
+    public const string DIGIT_GROUPING_CHARACTERS = " ',._";
 
     #endregion Constants
 
@@ -108,10 +97,7 @@ public static class ConvertBase
 
     /// <summary>
     /// Convert an integer to a string of digits in a given base.
-    /// Note, a negative value will be converted to a non-negative value with the same underlying
-    /// bits. This reflects the behaviour of other base-conversion methods in .NET.
     /// </summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The instance value.</param>
     /// <param name="toBase">The base to convert to.</param>
     /// <param name="width">
@@ -126,13 +112,17 @@ public static class ConvertBase
     ///   true  = upper-case
     /// </param>
     /// <returns>The string of digits.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If the input value is negative.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If the base is out of range.</exception>
-    /// <exception cref="ArgumentInvalidException"> If T is an unsupported type.</exception>
-    public static string ToBase<T>(this T n, byte toBase, int width = 1, bool upper = false)
-        where T : IBinaryInteger<T>
+    /// <exception cref="ArgumentOutOfRangeException">If the width is less than 1.</exception>
+    public static string ToBase(this ulong n, byte toBase, int width = 1, bool upper = false)
     {
         // Guard. Check the base is valid.
-        CheckBase(toBase);
+        if (toBase is < MIN_BASE or > MAX_BASE)
+        {
+            throw new ArgumentOutOfRangeException(nameof(toBase),
+                $"The base must be in the range {MIN_BASE}..{MAX_BASE}.");
+        }
 
         // Guard. Make sure width is valid.
         if (width < 1)
@@ -140,27 +130,8 @@ public static class ConvertBase
             throw new ArgumentOutOfRangeException(nameof(width), "Must be at least 1.");
         }
 
-        // Convert value to BigInteger. It's much easier to work with BigInteger than T, and any
-        // integer type can be converted to BigInteger.
-        if (n is not BigInteger bi)
-        {
-            bi = XReflection.Cast<T, BigInteger>(n);
-        }
-
-        // Check for 0.
-        if (bi == 0)
-        {
-            return "0";
-        }
-
-        // Check for negative value.
-        if (bi < 0)
-        {
-            return "-" + (-bi).ToBase(toBase, width, upper);
-        }
-
         // Get the digit values.
-        List<byte> digitValues = bi.CalcDigitValues(toBase);
+        List<byte> digitValues = CalcDigitValues(n, toBase);
 
         // Build the output string.
         StringBuilder sbDigits = new ();
@@ -178,74 +149,68 @@ public static class ConvertBase
             // Add the digit to the start of the string.
             sbDigits.Prepend(c);
         }
-        var result = sbDigits.ToString();
+        string result = sbDigits.ToString();
 
         // Pad to the desired width.
-        return result.PadLeft(width, '0');
+        return result.ZeroPad(width);
     }
 
     /// <summary>Convert an integer to binary digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <returns>The value as a string of binary digits.</returns>
-    public static string ToBin<T>(this T n, int width = 1) where T : IBinaryInteger<T>
+    public static string ToBin(this ulong n, int width = 1)
     {
         return ToBase(n, 2, width);
     }
 
     /// <summary>Convert integer to quaternary digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <returns>The value as a string of quaternary digits.</returns>
-    public static string ToQuat<T>(this T n, int width = 1) where T : IBinaryInteger<T>
+    public static string ToQuat(this ulong n, int width = 1)
     {
         return ToBase(n, 4, width);
     }
 
     /// <summary>Convert integer to octal digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <returns>The value as a string of octal digits.</returns>
-    public static string ToOct<T>(this T n, int width = 1) where T : IBinaryInteger<T>
+    public static string ToOct(this ulong n, int width = 1)
     {
         return ToBase(n, 8, width);
     }
 
     /// <summary>Convert integer to hexadecimal digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
     /// <returns>The value as a string of hexadecimal digits.</returns>
-    public static string ToHex<T>(this T n, int width = 1, bool upper = false)
-        where T : IBinaryInteger<T>
+    public static string ToHex(this ulong n, int width = 1, bool upper = false)
+
     {
         return ToBase(n, 16, width, upper);
     }
 
     /// <summary>Convert integer to duotrigesimal digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
     /// <returns>The value as a string of duotrigesimal digits.</returns>
-    public static string ToDuo<T>(this T n, int width = 1, bool upper = false)
-        where T : IBinaryInteger<T>
+    public static string ToDuo(this ulong n, int width = 1, bool upper = false)
+
     {
         return ToBase(n, 32, width, upper);
     }
 
     /// <summary>Convert integer to tetrasexagesimal digits.</summary>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <param name="n">The integer to convert.</param>
     /// <param name="width">The minimum number of digits in the result.</param>
     /// <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
     /// <returns>The value as a string of tetrasexagesimal digits.</returns>
-    public static string ToTetra<T>(this T n, int width = 1, bool upper = false)
-        where T : IBinaryInteger<T>
+    public static string ToTetra(this ulong n, int width = 1, bool upper = false)
+
     {
         return ToBase(n, 64, width, upper);
     }
@@ -255,23 +220,18 @@ public static class ConvertBase
     #region Static conversion methods
 
     /// <summary>
-    /// Convert a string of digits in a given base into a int.
-    /// Group separator characters, including spaces, newlines, thin spaces, periods, commas, and
-    /// underscores, will be ignored.
+    /// Convert a string of digits in a given base into a ulong.
+    /// Group separator characters and decimal separators will be ignored.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">A string of digits in the specified base.</param>
     /// <param name="fromBase">The base that the digits in the string are in.</param>
     /// <returns>The integer equivalent of the digits.</returns>
     /// <exception cref="ArgumentNullException">If string is null, empty, or whitespace.</exception>
-    /// <exception cref="ArgumentFormatException">
+    /// <exception cref="ArgumentInvalidException">
     /// If string contains invalid characters for the specified base.
     /// </exception>
-    /// <exception cref="InvalidCastException">If a cast to the target type failed.</exception>
-    /// <exception cref="OverflowException">
-    /// If the resulting value is out of range for the target type.
-    /// </exception>
-    public static T FromBase<T>(string digits, byte fromBase) where T : IBinaryInteger<T>
+    /// <exception cref="OverflowException">If the result is out of range for ulong.</exception>
+    public static ulong FromBase(string digits, byte fromBase)
     {
         // Check the input string != null, empty, or whitespace.
         if (string.IsNullOrWhiteSpace(digits))
@@ -280,27 +240,25 @@ public static class ConvertBase
         }
 
         // Check the base is valid. This could throw an ArgumentOutOfRangeException.
-        CheckBase(fromBase);
-
-        // Remove digit grouping characters. We'll allow them to be present anywhere in the input
-        // string without throwing an exception, even if they aren't in the correct positions.
-        // Any other characters that are invalid for the specified base will throw an exception.
-        digits = Regex.Replace(digits, $"[{DIGIT_GROUPING_CHARACTERS}]", "");
-
-        // See if the value is negative.
-        var sign = 1;
-        if (digits[0] == '-')
+        if (fromBase is < MIN_BASE or > MAX_BASE)
         {
-            sign = -1;
-            // Remove the minus sign.
-            digits = digits[1..];
+            throw new ArgumentOutOfRangeException(nameof(fromBase),
+                $"The base must be in the range {MIN_BASE}..{MAX_BASE}.");
         }
+
+        // Remove ignored characters (i.e. control characters and digit grouping characters) from
+        // the input.
+        // We'll allow digit grouping characters to be present anywhere in the input string without
+        // throwing an exception, even if they aren't in the technically correct positions.
+        // Any remaining characters that aren't valid for the specified base will cause an exception
+        // to be thrown.
+        digits = Regex.Replace(digits, @$"[\x00-\x1F\x7F{DIGIT_GROUPING_CHARACTERS}]", "");
 
         // Get a map of valid digits to their value, for this base.
         Dictionary<char, byte> digitValues = GetDigitValuesForBase(fromBase);
 
         // Do the conversion.
-        BigInteger value = 0;
+        ulong value = 0;
         foreach (char c in digits)
         {
             // Try to get the character value from the map.
@@ -308,113 +266,89 @@ public static class ConvertBase
             {
                 char[] digitChars = digitValues.Select(kvp => kvp.Key).ToArray();
                 string digitList = string.Join(", ", digitChars[..^1]) + " and " + digitChars[^1];
-                throw new ArgumentFormatException(nameof(digits),
+                throw new ArgumentInvalidException(nameof(digits),
                     $"A string representing a number in base {fromBase} may only include the digits {digitList}.");
             }
 
-            // Add it to the result.
-            value = value * fromBase + digitValue;
+            // Add it to the result. Check for overflow.
+            try
+            {
+                value = value * fromBase + digitValue;
+            }
+            catch (OverflowException ex)
+            {
+                throw new OverflowException(
+                    "The integer represented by the string is outside the valid range for ulong.",
+                    ex);
+            }
         }
 
-        // Make the result negative or positive as needed.
-        value *= sign;
-
-        // Try to convert the value to the target type.
-        try
-        {
-            return XReflection.Cast<BigInteger, T>(value);
-        }
-        catch (OverflowException ex)
-        {
-            throw new OverflowException(
-                $"The integer represented by the string is outside the valid range for {typeof(T).Name}.",
-                ex);
-        }
+        return value;
     }
 
     /// <summary>
     /// Convert a string of binary digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromBin<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromBin(string digits)
     {
-        return FromBase<T>(digits, 2);
+        return FromBase(digits, 2);
     }
 
     /// <summary>
     /// Convert a string of quaternary digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromQuat<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromQuat(string digits)
     {
-        return FromBase<T>(digits, 4);
+        return FromBase(digits, 4);
     }
 
     /// <summary>
     /// Convert a string of octal digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromOct<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromOct(string digits)
     {
-        return FromBase<T>(digits, 8);
+        return FromBase(digits, 8);
     }
 
     /// <summary>
     /// Convert a string of hexadecimal digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromHex<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromHex(string digits)
     {
-        return FromBase<T>(digits, 16);
+        return FromBase(digits, 16);
     }
 
     /// <summary>
     /// Convert a string of duotrigesimal digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromDuo<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromDuo(string digits)
     {
-        return FromBase<T>(digits, 32);
+        return FromBase(digits, 32);
     }
 
     /// <summary>
     /// Convert a string of tetrasexagesimal digits into an integer.
     /// </summary>
-    /// <typeparam name="T">The integer type to create.</typeparam>
     /// <param name="digits">The string of digits to parse.</param>
     /// <returns>The integer equivalent of the digits.</returns>
-    public static T FromTetra<T>(string digits) where T : IBinaryInteger<T>
+    public static ulong FromTetra(string digits)
     {
-        return FromBase<T>(digits, 64);
+        return FromBase(digits, 64);
     }
 
     #endregion Static conversion methods
 
     #region Private helper methods
-
-    /// <summary>
-    /// Checks if the provided base is valid for use by this class.
-    /// </summary>
-    /// <param name="radix">The base to check.</param>
-    /// <exception cref="ArgumentOutOfRangeException">If the base is out of range.</exception>
-    private static void CheckBase(byte radix)
-    {
-        if (radix is < MIN_BASE or > MAX_BASE)
-        {
-            throw new ArgumentOutOfRangeException(nameof(radix),
-                $"The base must be in the range {MIN_BASE}..{MAX_BASE}.");
-        }
-    }
 
     /// <summary>
     /// Get the values of valid digits for the specified base.
@@ -447,54 +381,40 @@ public static class ConvertBase
     /// </summary>
     /// <param name="n">The integer.</param>
     /// <param name="toBase">The base.</param>
-    /// <typeparam name="T">The integer type.</typeparam>
     /// <returns>
     /// The digit values as a list of bytes. An item's index in the list will equal the exponent
     /// (i.e. the first item will have an index of 0, corresponding to the exponent of 0 or units
     /// position). Thus the digit values will be in the reverse order to how they would appear if
     /// written using positional notation.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If the argument is non-negative.</exception>
-    internal static List<byte> CalcDigitValues<T>(this T n, byte toBase) where T : IBinaryInteger<T>
+    internal static List<byte> CalcDigitValues(ulong n, byte toBase)
     {
-        // Guard against negative argument.
-        if (T.IsNegative(n))
-        {
-            throw new ArgumentOutOfRangeException(nameof(n), "Must be non-negative.");
-        }
-
         // Initialize the result.
         var result = new List<byte>();
 
         // Check for zero.
-        if (T.IsZero(n))
+        if (n == 0)
         {
             result.Add(0);
             return result;
-        }
-
-        // Convert value to BigInteger. It's much easier to work with BigInteger than T, and any
-        // integer type can be converted to BigInteger.
-        if (n is not BigInteger bi)
-        {
-            bi = XReflection.Cast<T, BigInteger>(n);
         }
 
         // Get the digit values.
         while (true)
         {
             // Get the next digit.
-            BigInteger rem = bi % toBase;
+            ulong rem = n % toBase;
             result.Add((byte)rem);
 
             // Check if we're done.
-            bi -= rem;
-            if (bi == 0)
+            n -= rem;
+            if (n == 0)
             {
                 break;
             }
 
             // Prepare for next iteration.
-            bi /= toBase;
+            n /= toBase;
         }
 
         return result;

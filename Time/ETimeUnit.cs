@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Time;
+namespace Galaxon.Time;
 
 /// <summary>
 /// The time units supported by the conversion functions.

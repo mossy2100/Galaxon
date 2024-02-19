@@ -1,8 +1,4 @@
-using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
-using Galaxon.Core.Strings;
-
-namespace Galaxon.Core.Numbers.Bases;
+namespace Bases;
 
 /// <summary>
 /// Utility class for converting floating point values to sexagesimal values.
@@ -13,55 +9,6 @@ public static class Sexagesimal
     /// The radix or base of sexagesimal numbers.
     /// </summary>
     public const int BASE = 60;
-
-    /// <summary>
-    /// Map of digit position in sexagesimal number to the correct character for degrees, minutes,
-    /// seconds notation.
-    /// </summary>
-    private static readonly Dictionary<int, char> _POSITION_TO_PRIMES = new ()
-    {
-        { -3, '‴' },
-        { -2, '″' },
-        { -1, '′' },
-        { 0, '°' },
-        { 1, '‵' },
-        { 2, '‶' },
-        { 3, '‷' }
-    };
-
-    /// <summary>
-    /// Get the correct string of degree or prime characters to indicate the position of a
-    /// sexagesimal digit within a number.
-    /// </summary>
-    /// <param name="digit">The digit</param>
-    /// <param name="position"></param>
-    /// <returns></returns>
-    private static string PositionToPrimes(byte digit, int position)
-    {
-        if (digit >= BASE)
-        {
-            throw new ArgumentOutOfRangeException(nameof(digit),
-                $"Must be in the range 0-{BASE - 1}.");
-        }
-
-        BigInteger q, r;
-
-        switch (position)
-        {
-            case >= -3 and <= 3:
-                return _POSITION_TO_PRIMES[position].ToString();
-
-            case < -3:
-                (q, r) = XBigInteger.DivMod(-position, 3);
-                return XString.Repeat(_POSITION_TO_PRIMES[-3].ToString(), (int)q)
-                    + _POSITION_TO_PRIMES[-(int)r];
-
-            case > 3:
-                (q, r) = XBigInteger.DivMod(position, 3);
-                return XString.Repeat(_POSITION_TO_PRIMES[3].ToString(), (int)q)
-                    + _POSITION_TO_PRIMES[(int)r];
-        }
-    }
 
     /// <summary>
     /// Convert a double value into units, minutes, and seconds.
@@ -137,7 +84,6 @@ public static class Sexagesimal
             ESexagesimalNotation.Angle => $"{units}°{sMinutes}′{sSeconds}″",
             ESexagesimalNotation.Colons => $"{units}:{sMinutes}:{sSeconds}",
             ESexagesimalNotation.TimeUnits => $"{units}h {sMinutes}m {sSeconds}s",
-            ESexagesimalNotation.Neugebauer => $"{units};{sMinutes},{sSeconds}",
             _ => throw new ArgumentOutOfRangeException(nameof(notation), "Invalid notation.")
         };
     }

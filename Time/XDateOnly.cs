@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Galaxon.Core.Time;
+namespace Galaxon.Time;
 
 /// <summary>
 /// Extension methods for the DateOnly class.
@@ -95,9 +95,9 @@ public static class XDateOnly
     /// </summary>
     /// <param name="date">The DateOnly instance.</param>
     /// <returns>The number of days since the epoch start.</returns>
-    public static long GetTotalDays(this DateOnly date)
+    public static int GetTotalDays(this DateOnly date)
     {
-        return date.GetTicks() / TimeSpan.TicksPerDay;
+        return (int)(date.GetTicks() / TimeSpan.TicksPerDay);
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public static class XDateOnly
     /// <param name="end">The end date.</param>
     /// <param name="start">The start date.</param>
     /// <returns>The number of days difference between the two dates.</returns>
-    public static long Subtract(this DateOnly end, DateOnly start)
+    public static int Subtract(this DateOnly end, DateOnly start)
     {
         return end.GetTotalDays() - start.GetTotalDays();
     }

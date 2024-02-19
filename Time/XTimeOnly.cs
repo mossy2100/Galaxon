@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Time;
+namespace Galaxon.Time;
 
 /// <summary>
 /// Extension methods for TimeOnly.

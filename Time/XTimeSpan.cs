@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Time;
+namespace Galaxon.Time;
 
 /// <summary>
 /// Additional members to supplement the TimeSpan class.

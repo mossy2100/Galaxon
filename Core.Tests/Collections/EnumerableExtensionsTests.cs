@@ -9,12 +9,12 @@ public class EnumerableExtensionsTests
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 
     public class TestItemWithoutId
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 
     [TestMethod]

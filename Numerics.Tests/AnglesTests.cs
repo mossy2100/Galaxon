@@ -1,4 +1,4 @@
-﻿using Galaxon.Core.Numbers.Bases;
+﻿using Bases;
 using Galaxon.Core.Testing;
 using static Galaxon.Numerics.Geometry.Angles;
 

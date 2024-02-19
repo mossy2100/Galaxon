@@ -20,7 +20,7 @@
 
     <ItemGroup>
         <PackageReference Include="DecimalMath.DecimalEx" Version="1.0.2"/>
-        <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.2.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,6 +36,10 @@
     <ItemGroup>
         <None Remove="Strings\old\**"/>
         <None Remove="Numbers\old\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Numbers\Bases\" />
     </ItemGroup>
 
 

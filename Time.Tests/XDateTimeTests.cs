@@ -1,6 +1,4 @@
-﻿using Galaxon.Core.Time;
-
-namespace Galaxon.Core.Tests;
+namespace Galaxon.Time.Tests;
 
 [TestClass]
 public class XDateTimeTests
@@ -14,19 +12,19 @@ public class XDateTimeTests
 
         // Test start of range.
         dt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(dt.GetTotalDays(), 0);
+        Assert.AreEqual(0, (int)dt.GetTotalDays());
 
         // Test current date.
         dt = new DateTime(2022, 6, 8, 5, 50, 24, 0, DateTimeKind.Utc);
-        Assert.AreEqual(dt.GetTotalDays(), 738313.243333333, _DELTA);
+        Assert.AreEqual(738313.243333333, dt.GetTotalDays(), _DELTA);
 
         // Test middle of range.
         dt = new DateTime(5000, 7, 2, 12, 30, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(dt.GetTotalDays(), 1826029.520833333, _DELTA);
+        Assert.AreEqual(1826029.520833333, dt.GetTotalDays(), _DELTA);
 
         // Test end of range.
         dt = new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc);
-        Assert.AreEqual(dt.GetTotalDays(), 3652058.999999988, _DELTA);
+        Assert.AreEqual(3652058.999999988, dt.GetTotalDays(), _DELTA);
     }
 
     [TestMethod]
