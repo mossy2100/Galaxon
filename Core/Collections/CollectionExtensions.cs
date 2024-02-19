@@ -5,7 +5,7 @@ namespace Galaxon.Core.Collections;
 /// <summary>
 /// Extension methods for ICollection and ICollection{T}.
 /// </summary>
-public static class XCollection
+public static class CollectionExtensions
 {
     /// <summary>
     /// Check if an ICollection (array, list, etc.) is null or empty.

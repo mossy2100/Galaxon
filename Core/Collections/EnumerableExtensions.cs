@@ -5,11 +5,11 @@ namespace Galaxon.Core.Collections;
 /// <summary>
 /// Extension methods for IEnumerable and IEnumerable{T}.
 /// </summary>
-public static class XEnumerable
+public static class EnumerableExtensions
 {
     /// <summary>
-    /// Return list1 with values from list2 removed.
-    /// Supports duplicates, so this is not the same as set difference.
+    /// Return values from one collection with values from a second collection removed.
+    /// This method supports duplicates, so this is not the same as set difference.
     /// For example, if list1 has two instances of "cat" and list2 has one instance of "cat", the
     /// result will have one instance of "cat".
     /// </summary>

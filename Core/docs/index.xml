@@ -4,22 +4,22 @@
         <name>Galaxon.Core</name>
     </assembly>
     <members>
-        <member name="T:Galaxon.Core.Collections.XCollection">
+        <member name="T:Galaxon.Core.Collections.CollectionExtensions">
             <summary>
             Extension methods for ICollection and ICollection{T}.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Collections.XCollection.IsEmpty(System.Collections.ICollection)">
+        <member name="M:Galaxon.Core.Collections.CollectionExtensions.IsEmpty(System.Collections.ICollection)">
             <summary>
             Check if an ICollection (array, list, etc.) is null or empty.
             </summary>
         </member>
-        <member name="T:Galaxon.Core.Collections.XDictionary">
+        <member name="T:Galaxon.Core.Collections.DictionaryExtensions">
             <summary>
             Extension methods for Dictionary.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Collections.XDictionary.HasUniqueValues``2(System.Collections.Generic.Dictionary{``0,``1})">
+        <member name="M:Galaxon.Core.Collections.DictionaryExtensions.HasUniqueValues``2(System.Collections.Generic.Dictionary{``0,``1})">
             <summary>
             Checks if a dictionary contains unique values.
             </summary>
@@ -32,7 +32,7 @@
             are unique. It uses a HashSet to track unique values.
             </remarks>
         </member>
-        <member name="M:Galaxon.Core.Collections.XDictionary.Flip``2(System.Collections.Generic.Dictionary{``0,``1})">
+        <member name="M:Galaxon.Core.Collections.DictionaryExtensions.Flip``2(System.Collections.Generic.Dictionary{``0,``1})">
             <summary>
             Create a new dictionary from the instance with keys and values flipped.
             </summary>
@@ -44,20 +44,20 @@
             If the instance contains duplicate values.
             </exception>
         </member>
-        <member name="T:Galaxon.Core.Collections.XEnumerable">
+        <member name="T:Galaxon.Core.Collections.EnumerableExtensions">
             <summary>
             Extension methods for IEnumerable and IEnumerable{T}.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Collections.XEnumerable.Diff``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:Galaxon.Core.Collections.EnumerableExtensions.Diff``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Return list1 with values from list2 removed.
-            Supports duplicates, so this is not the same as set difference.
+            Return values from one collection with values from a second collection removed.
+            This method supports duplicates, so this is not the same as set difference.
             For example, if list1 has two instances of "cat" and list2 has one instance of "cat", the
             result will have one instance of "cat".
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Collections.XEnumerable.ToIndex``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:Galaxon.Core.Collections.EnumerableExtensions.ToIndex``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Converts an IEnumerable of objects with an Id property to a Dictionary{int, T},
             using the value of the Id property as the key.
@@ -188,18 +188,35 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
-        <member name="T:Galaxon.Core.Files.XDirectory">
+        <member name="T:Galaxon.Core.Files.DirectoryUtility">
             <summary>
             Extension methods for the Directory class, and other useful methods for working with
             directories.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Files.XDirectory.GetSolutionDirectory">
+        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetParentDirectoryByFileType(System.String)">
             <summary>
-            Gets the path to the solution directory containing the solution file (.sln).
+            Gets the path to the closest ancestor directory to the current (assembly) directory
+            (which could be itself) containing a file with the specified extension.
+            </summary>
+            <returns>
+            The path to the directory if found, or <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetSolution">
+            <summary>
+            Gets the path to the directory containing the solution file (.sln).
             </summary>
             <returns>
             The path to the solution directory if found, or <c>null</c> if no solution file was found.
+            </returns>
+        </member>
+        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetProject">
+            <summary>
+            Gets the path to the directory containing the project file (.csproj).
+            </summary>
+            <returns>
+            The path to the project directory if found, or <c>null</c> if no project file was found.
             </returns>
         </member>
         <member name="T:Galaxon.Core.Functional.Memoization">
@@ -222,7 +239,7 @@
             <typeparam name="TResult">Result type.</typeparam>
             <returns>The memoized version of the pure function.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.ConvertBase">
+        <member name="T:Galaxon.Core.Numbers.Bases.ConvertBase">
              <summary>
              This class supports conversion between integers and strings of digits in a specified base,
              which can be in the range 2..64.
@@ -294,27 +311,27 @@
              <see href="https://en.wikipedia.org/wiki/Sexagesimal"/>
              <see href="https://en.wikipedia.org/wiki/Base64"/>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ConvertBase.MIN_BASE">
+        <member name="F:Galaxon.Core.Numbers.Bases.ConvertBase.MIN_BASE">
             <summary>
             The minimum supported base.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ConvertBase.MAX_BASE">
+        <member name="F:Galaxon.Core.Numbers.Bases.ConvertBase.MAX_BASE">
             <summary>
             The maximum supported base.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ConvertBase.DIGITS">
+        <member name="F:Galaxon.Core.Numbers.Bases.ConvertBase.DIGITS">
             <summary>
             Digit characters. The index of a character in the string equals its value.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ConvertBase.DIGIT_GROUPING_CHARACTERS">
+        <member name="F:Galaxon.Core.Numbers.Bases.ConvertBase.DIGIT_GROUPING_CHARACTERS">
             <summary>
             Digit grouping characters.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToBase``1(``0,System.Byte,System.Int32,System.Boolean)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToBase``1(``0,System.Byte,System.Int32,System.Boolean)">
             <summary>
             Convert an integer to a string of digits in a given base.
             Note, a negative value will be converted to a non-negative value with the same underlying
@@ -338,28 +355,28 @@
             <exception cref="T:System.ArgumentOutOfRangeException">If the base is out of range.</exception>
             <exception cref="T:Galaxon.Core.Exceptions.ArgumentInvalidException"> If T is an unsupported type.</exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToBin``1(``0,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToBin``1(``0,System.Int32)">
             <summary>Convert an integer to binary digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
             <param name="width">The minimum number of digits in the result.</param>
             <returns>The value as a string of binary digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToQuat``1(``0,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToQuat``1(``0,System.Int32)">
             <summary>Convert integer to quaternary digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
             <param name="width">The minimum number of digits in the result.</param>
             <returns>The value as a string of quaternary digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToOct``1(``0,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToOct``1(``0,System.Int32)">
             <summary>Convert integer to octal digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
             <param name="width">The minimum number of digits in the result.</param>
             <returns>The value as a string of octal digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToHex``1(``0,System.Int32,System.Boolean)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToHex``1(``0,System.Int32,System.Boolean)">
             <summary>Convert integer to hexadecimal digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
@@ -367,7 +384,7 @@
             <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
             <returns>The value as a string of hexadecimal digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToDuo``1(``0,System.Int32,System.Boolean)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToDuo``1(``0,System.Int32,System.Boolean)">
             <summary>Convert integer to duotrigesimal digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
@@ -375,7 +392,7 @@
             <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
             <returns>The value as a string of duotrigesimal digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.ToTetra``1(``0,System.Int32,System.Boolean)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.ToTetra``1(``0,System.Int32,System.Boolean)">
             <summary>Convert integer to tetrasexagesimal digits.</summary>
             <typeparam name="T">The integer type.</typeparam>
             <param name="n">The integer to convert.</param>
@@ -383,7 +400,7 @@
             <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
             <returns>The value as a string of tetrasexagesimal digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromBase``1(System.String,System.Byte)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromBase``1(System.String,System.Byte)">
             <summary>
             Convert a string of digits in a given base into a int.
             Group separator characters, including spaces, newlines, thin spaces, periods, commas, and
@@ -402,7 +419,7 @@
             If the resulting value is out of range for the target type.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromBin``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromBin``1(System.String)">
             <summary>
             Convert a string of binary digits into an integer.
             </summary>
@@ -410,7 +427,7 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromQuat``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromQuat``1(System.String)">
             <summary>
             Convert a string of quaternary digits into an integer.
             </summary>
@@ -418,7 +435,7 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromOct``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromOct``1(System.String)">
             <summary>
             Convert a string of octal digits into an integer.
             </summary>
@@ -426,7 +443,7 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromHex``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromHex``1(System.String)">
             <summary>
             Convert a string of hexadecimal digits into an integer.
             </summary>
@@ -434,7 +451,7 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromDuo``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromDuo``1(System.String)">
             <summary>
             Convert a string of duotrigesimal digits into an integer.
             </summary>
@@ -442,7 +459,7 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.FromTetra``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.FromTetra``1(System.String)">
             <summary>
             Convert a string of tetrasexagesimal digits into an integer.
             </summary>
@@ -450,21 +467,21 @@
             <param name="digits">The string of digits to parse.</param>
             <returns>The integer equivalent of the digits.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.CheckBase(System.Byte)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.CheckBase(System.Byte)">
             <summary>
             Checks if the provided base is valid for use by this class.
             </summary>
             <param name="radix">The base to check.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">If the base is out of range.</exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.GetDigitValuesForBase(System.Byte)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.GetDigitValuesForBase(System.Byte)">
             <summary>
             Get the values of valid digits for the specified base.
             </summary>
             <param name="radix">The base.</param>
             <returns>The map of digit characters to their values.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.ConvertBase.CalcDigitValues``1(``0,System.Byte)">
+        <member name="M:Galaxon.Core.Numbers.Bases.ConvertBase.CalcDigitValues``1(``0,System.Byte)">
             <summary>
             Calculate the digit values for a non-negative integer when converted to a given base.
             </summary>
@@ -478,12 +495,12 @@
             written using positional notation.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">If the argument is non-negative.</exception>
         </member>
-        <member name="T:Galaxon.Core.Numbers.ESexagesimalNotation">
+        <member name="T:Galaxon.Core.Numbers.Bases.ESexagesimalNotation">
             <summary>
             Enum for the different notations used to represent sexagesimal numbers.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ESexagesimalNotation.Angle">
+        <member name="F:Galaxon.Core.Numbers.Bases.ESexagesimalNotation.Angle">
             <summary>
             A method of writing sexagesimal numbers using degrees, arcminutes, and arcseconds notation,
             which uses the degree character and prime characters.
@@ -493,7 +510,7 @@
             e.g. 123°15′6.789″
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ESexagesimalNotation.Colons">
+        <member name="F:Galaxon.Core.Numbers.Bases.ESexagesimalNotation.Colons">
             <summary>
             A method of writing sexagesimal numbers using colons to separate digits.
             The hours part can be any integer, not limited to the range of a sexagesimal value.
@@ -504,7 +521,7 @@
             e.g. 123:45:06.789
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ESexagesimalNotation.TimeUnits">
+        <member name="F:Galaxon.Core.Numbers.Bases.ESexagesimalNotation.TimeUnits">
             <summary>
             A method of writing sexagesimal numbers using h, m, and s to indicate hours, minutes, and
             seconds.
@@ -514,7 +531,7 @@
             e.g. 123h45m6.789s
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ESexagesimalNotation.Neugebauer">
+        <member name="F:Galaxon.Core.Numbers.Bases.ESexagesimalNotation.Neugebauer">
             <summary>
             Neugebauer notation. A method of writing sexagesimal numbers using semicolons and commas.
             <see href="https://en.wikipedia.org/wiki/Sexagesimal#Notations"/>
@@ -524,7 +541,7 @@
             e.g. 29;31,50,8,20
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.ESexagesimalNotation.Primes">
+        <member name="F:Galaxon.Core.Numbers.Bases.ESexagesimalNotation.Primes">
             <summary>
             A method of writing sexagesimal numbers using minutes, seconds, thirds, and fourths
             notation, which uses the degree character and prime characters.
@@ -533,23 +550,23 @@
             e.g. 36‷25‶15‵1°15′2″36‴49⁗
             </summary>
         </member>
-        <member name="T:Galaxon.Core.Numbers.Sexagesimal">
+        <member name="T:Galaxon.Core.Numbers.Bases.Sexagesimal">
             <summary>
             Utility class for converting floating point values to sexagesimal values.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.Sexagesimal.BASE">
+        <member name="F:Galaxon.Core.Numbers.Bases.Sexagesimal.BASE">
             <summary>
             The radix or base of sexagesimal numbers.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.Sexagesimal._POSITION_TO_PRIMES">
+        <member name="F:Galaxon.Core.Numbers.Bases.Sexagesimal._POSITION_TO_PRIMES">
             <summary>
             Map of digit position in sexagesimal number to the correct character for degrees, minutes,
             seconds notation.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.Sexagesimal.PositionToPrimes(System.Byte,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Bases.Sexagesimal.PositionToPrimes(System.Byte,System.Int32)">
             <summary>
             Get the correct string of degree or prime characters to indicate the position of a
             sexagesimal digit within a number.
@@ -558,7 +575,7 @@
             <param name="position"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.Sexagesimal.ToUnitsMinutesSeconds(System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Bases.Sexagesimal.ToUnitsMinutesSeconds(System.Double)">
             <summary>
             Convert a double value into units, minutes, and seconds.
             This can be used to convert a time to hours, minutes, and seconds, or an angle to degrees,
@@ -575,7 +592,7 @@
             arcseconds).
             </returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.Sexagesimal.FromUnitsMinutesSeconds(System.Double,System.Double,System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Bases.Sexagesimal.FromUnitsMinutesSeconds(System.Double,System.Double,System.Double)">
             <summary>
             Convert a value provided as units (e.g. hours or degrees), minutes and seconds, to a double
             value.
@@ -585,7 +602,7 @@
             <param name="seconds"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.Sexagesimal.ToString(System.Double,Galaxon.Core.Numbers.ESexagesimalNotation,System.Byte)">
+        <member name="M:Galaxon.Core.Numbers.Bases.Sexagesimal.ToString(System.Double,Galaxon.Core.Numbers.Bases.ESexagesimalNotation,System.Byte)">
             <summary>Convert a double value to units, minutes, and seconds notation.</summary>
             <param name="n">
             The double value to convert. This could be a time in hours or an angle in degrees.
@@ -594,38 +611,38 @@
             <param name="precision">The number of decimal places to use for the seconds part.</param>
             <returns>The argument as a string formatted using the specified notation.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XBigInteger">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XBigInteger">
             <summary>Extension methods for BigInteger.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XBigInteger.s_gcdCache">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XBigInteger.s_gcdCache">
             <summary>
             Cache for GreatestCommonDivisor().
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.ToUnsigned(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.ToUnsigned(System.Numerics.BigInteger)">
             <summary>
             Get the unsigned, twos-complement version of the value, containing the fewest number of
             bytes.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.Reverse(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.Reverse(System.Numerics.BigInteger)">
             <summary>
             Reverse a BigInteger.
             e.g. 123 becomes 321.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.IsPalindromic(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.IsPalindromic(System.Numerics.BigInteger)">
             <summary>
             Check if a BigInteger is palindromic.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.DigitSum(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.DigitSum(System.Numerics.BigInteger)">
             <summary>
             Sum of the digits in a BigInteger.
             If present, a negative sign is ignored.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.NumDigits(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.NumDigits(System.Numerics.BigInteger)">
             <summary>
             Get the number of digits in the BigInteger.
             The result will be the same for a positive or negative value.
@@ -633,7 +650,7 @@
             for values close to but less than powers of 10.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.LeastCommonMultiple(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.LeastCommonMultiple(System.Numerics.BigInteger,System.Numerics.BigInteger)">
             <summary>
             Find the smallest integer which is a multiple of both arguments.
             Synonyms: lowest common multiple, smallest common multiple.
@@ -645,23 +662,23 @@
             <param name="b">Second integer.</param>
             <returns>The least common multiple.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.GreatestCommonDivisor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.GreatestCommonDivisor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
             <summary>
             Determine the greatest common divisor of two integers.
             Synonyms: greatest common factor, highest common factor.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.Exp2(System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.Exp2(System.Int32)">
             <summary>Compute 2 raised to a given integer power.</summary>
             <param name="y">The power to which 2 is raised.</param>
             <returns>2 raised to the given BigInteger value.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.Exp10(System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.Exp10(System.Int32)">
             <summary>Compute 10 raised to a given integer power.</summary>
             <param name="y">The power to which 10 is raised.</param>
             <returns>10 raised to the given BigInteger value.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.TruncSqrt(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.TruncSqrt(System.Numerics.BigInteger)">
             <summary>
             Calculated the truncated square root of a BigInteger value.
             Uses Newton's method.
@@ -670,12 +687,12 @@
             <returns>The truncated square root.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.IsPowerOf2(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.IsPowerOf2(System.Numerics.BigInteger)">
             <summary>Check if a BigInteger is a power of 2.</summary>
             <param name="bi">The BigInteger to inspect.</param>
             <returns>If the value is a power of 2.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger._Factorial(System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger._Factorial(System.Numerics.BigInteger)">
             <summary>
             Factorial of n, n >= 0.
             Private, uncached version.
@@ -684,10 +701,10 @@
             <returns>The factorial of the parameter.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XBigInteger.Factorial">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XBigInteger.Factorial">
             <summary>Public memoized version of the Factorial method.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.FlooredDivision(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.FlooredDivision(System.Numerics.BigInteger,System.Numerics.BigInteger)">
             <summary>
             Return the floored division of 2 BigInteger values.
             </summary>
@@ -696,7 +713,7 @@
             <returns></returns>
             <exception cref="T:System.DivideByZeroException"></exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBigInteger.DivMod(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBigInteger.DivMod(System.Numerics.BigInteger,System.Numerics.BigInteger)">
             <summary>
             Return the floored division of 2 BigInteger values, with the remainder after division.
             </summary>
@@ -705,22 +722,22 @@
             <returns>A tuple containing the result of the floored division, and the remainder.</returns>
             <exception cref="T:System.DivideByZeroException"></exception>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XBinaryInteger">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XBinaryInteger">
             <summary>
             Extension methods for IBinaryInteger{T}.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XBinaryInteger.SuperscriptChars">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XBinaryInteger.SuperscriptChars">
             <summary>
             Map from normal integer characters to their superscript versions.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XBinaryInteger.SubscriptChars">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XBinaryInteger.SubscriptChars">
             <summary>
             Map from normal integer characters to their subscript versions.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBinaryInteger.ToSuperscript``1(``0)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBinaryInteger.ToSuperscript``1(``0)">
             <summary>
             Render an integer as a superscript string.
             This is useful for formatting exponents, numerators, and other numeric superscripts when
@@ -732,7 +749,7 @@
             <param name="n">The integer.</param>
             <returns>The string of superscript characters.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XBinaryInteger.ToSubscript``1(``0)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XBinaryInteger.ToSubscript``1(``0)">
             <summary>
             Render an integer as a subscript string.
             This is useful for formatting denominators, the number of atoms in a molecule, atomic
@@ -741,19 +758,19 @@
             <param name="n">The integer.</param>
             <returns>The string of subscript characters.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XDecimal">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XDecimal">
             <summary>Extension methods for decimal.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDecimal.NUM_EXP_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDecimal.NUM_EXP_BITS">
             <summary>The number of bits in the exponent.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDecimal.NUM_INT_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDecimal.NUM_INT_BITS">
             <summary>The number of bits in the integer part.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDecimal.MAX_SCALE">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDecimal.MAX_SCALE">
             <summary>The minimum scale factor (inverse decimal exponent).</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Log(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log(System.Decimal)">
             <summary>
             Calculate the natural logarithm of a decimal.
             The algorithm is from:
@@ -768,11 +785,11 @@
             If the argument is less than or equal to 0.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Log(System.Decimal,System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log(System.Decimal,System.Decimal)">
             <summary>
             Logarithm of a decimal in a specified base.
             <see cref="M:System.Math.Log(System.Double,System.Double)"/>
-            <see cref="M:Galaxon.Core.Numbers.XDecimal.Log(System.Decimal,System.Decimal)"/>
+            <see cref="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log(System.Decimal,System.Decimal)"/>
             </summary>
             <param name="m">The decimal value.</param>
             <param name="b">The base.</param>
@@ -786,11 +803,11 @@
             or equal to 0, or equal to 1.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Log10(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log10(System.Decimal)">
             <summary>
             Logarithm of a decimal in base 10.
             <see cref="M:System.Math.Log10(System.Double)"/>
-            <see cref="M:Galaxon.Core.Numbers.XDecimal.Log10(System.Decimal)"/>
+            <see cref="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log10(System.Decimal)"/>
             </summary>
             <param name="m">The decimal value.</param>
             <returns>The logarithm of the number in base 10.</returns>
@@ -798,14 +815,14 @@
             If the number is less than or equal to 0.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Exp10(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Exp10(System.Decimal)">
             <summary>
             Calculate 10 raised to a decimal power.
             </summary>
             <param name="m">A decimal value.</param>
             <returns>10^d</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Log2(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Log2(System.Decimal)">
             <summary>
             Logarithm of a decimal in base 2.
             </summary>
@@ -815,61 +832,61 @@
             If the number is less than or equal to 0.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Exp2(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Exp2(System.Decimal)">
             <summary>
             Calculate 2 raised to a decimal power.
             </summary>
             <param name="m">A decimal value.</param>
             <returns>2^d</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Sinh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Sinh(System.Decimal)">
             <summary>
             Hyperbolic sine.
             </summary>
             <param name="x">The hyperbolic angle.</param>
             <returns>The hyperbolic sine of the given angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Cosh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Cosh(System.Decimal)">
             <summary>
             Hyperbolic cosine.
             </summary>
             <param name="x">The hyperbolic angle.</param>
             <returns>The hyperbolic cosine of the given angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Tanh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Tanh(System.Decimal)">
             <summary>
             Hyperbolic tangent.
             </summary>
             <param name="x">The hyperbolic angle.</param>
             <returns>The hyperbolic tangent of the given angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Asinh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Asinh(System.Decimal)">
             <summary>
             Inverse hyperbolic sine.
             </summary>
             <param name="x">The hyperbolic sine of an angle.</param>
             <returns>The angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Acosh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Acosh(System.Decimal)">
             <summary>
             Inverse hyperbolic cosine.
             </summary>
             <param name="x">The hyperbolic cosine of an angle.</param>
             <returns>The angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Atanh(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Atanh(System.Decimal)">
             <summary>
             Inverse hyperbolic tangent.
             </summary>
             <param name="x">The hyperbolic tangent of an angle.</param>
             <returns>The angle.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.IsInteger(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.IsInteger(System.Decimal)">
             <summary>
             Check if a decimal value is an integer.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.RoundSigFigs(System.Decimal,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.RoundSigFigs(System.Decimal,System.Int32)">
             <summary>
             Round off a value to a given number of significant figures.
             </summary>
@@ -878,13 +895,13 @@
             <returns>The rounded number.</returns>
             TODO: Test. If digits is too high an exception will be thrown, so this needs to be checked.
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Disassemble(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Disassemble(System.Decimal)">
             <summary>Disassemble the decimal into bitwise parts.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.GetScaleBits(System.Decimal)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.GetScaleBits(System.Decimal)">
             <summary>Get the scale bits from a decimal value.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDecimal.Assemble(System.Byte,System.Byte,System.UInt128)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDecimal.Assemble(System.Byte,System.Byte,System.UInt128)">
             <summary>
             Assemble a new decimal value from bitwise parts.
             </summary>
@@ -893,21 +910,21 @@
             <param name="intBits">The integer bits.</param>
             <returns>The new decimal.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XDouble">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XDouble">
             <summary>Extension methods and other bonus stuff for double.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDouble.DELTA">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDouble.DELTA">
             <summary>
             The default maximum difference between 2 double values being compared for equality.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDouble.TOTAL_NUM_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDouble.TOTAL_NUM_BITS">
             <summary>The total number of bits in the value.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XDouble.NUM_FRAC_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XDouble.NUM_FRAC_BITS">
             <summary>The number of bits in the fraction.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.RoundSigFigs(System.Double,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.RoundSigFigs(System.Double,System.Int32)">
             <summary>
             Round off a value to a given number of significant figures.
             </summary>
@@ -915,13 +932,13 @@
             <param name="nSigFigs">The number of significant figures.</param>
             <returns>The rounded number.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.Disassemble(System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.Disassemble(System.Double)">
             <summary>
             Disassemble the double into its bitwise components.
             </summary>
             <see href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format"/>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.Assemble(System.Byte,System.UInt16,System.UInt64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.Assemble(System.Byte,System.UInt16,System.UInt64)">
             <summary>
             Assemble a new double from parts.
             </summary>
@@ -930,22 +947,22 @@
             <param name="fracBits">The fraction bits.</param>
             <returns>The new double.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.IsPositiveInteger(System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.IsPositiveInteger(System.Double)">
             <summary>
             Check if a double is a positive integer.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.IsNegativeInteger(System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.IsNegativeInteger(System.Double)">
             <summary>
             Check if a double is a negative integer.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.IsPerfectSquare(System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.IsPerfectSquare(System.Double)">
             <summary>
             Check if a value is a perfect square.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.FuzzyEquals(System.Double,System.Double,System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.FuzzyEquals(System.Double,System.Double,System.Double)">
             <summary>
             Check if 2 double values are equal for practical purposes.
             If two double values differ only by the least significant bit, this is more likely
@@ -960,7 +977,7 @@
             <param name="tolerance">The maximum allowable difference between them.</param>
             <returns>If close enough to equal.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.FuzzyEquals(System.Nullable{System.Double},System.Nullable{System.Double},System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.FuzzyEquals(System.Nullable{System.Double},System.Nullable{System.Double},System.Double)">
             <summary>
             Compare two nullable doubles for fuzzy equality.
             </summary>
@@ -969,60 +986,60 @@
             <param name="tolerance"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.FuzzyIsInteger(System.Double,System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.FuzzyIsInteger(System.Double,System.Double)">
             <summary>
             IsInteger() can be a bit strict. This method allows for some fuzziness.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.FuzzyIsPositiveInteger(System.Double,System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.FuzzyIsPositiveInteger(System.Double,System.Double)">
             <summary>
             Check if a double is a positive integer, with some fuzziness.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XDouble.FuzzyIsNegativeInteger(System.Double,System.Double)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XDouble.FuzzyIsNegativeInteger(System.Double,System.Double)">
             <summary>
             Check if a double is a negative integer, with some fuzziness.
             </summary>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XEnumerableNumber">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XEnumerableNumber">
             <summary>
             LINQ methods for IEnumerable{INumberBase}.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XEnumerableNumber.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0})">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XEnumerableNumber.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0})">
             <summary>
             Get the sum of all values in the collection, transformed by the supplied map function.
             If the map function is null or omitted, just get the sum of the values.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XEnumerableNumber.Product``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0})">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XEnumerableNumber.Product``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0})">
             <summary>
             Get the product of all values in the collection, transformed by the supplied map function.
             If the map function is null or omitted, just get the product of the values.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XEnumerableNumber.Average``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XEnumerableNumber.Average``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Given a collection of T values, get the average (i.e. the arithmetic mean).
             </summary>
             <see href="https://en.wikipedia.org/wiki/Arithmetic_mean"/>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XFloat">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XFloat">
             <summary>Extension methods and other bonus stuff for float.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XFloat.TOTAL_NUM_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XFloat.TOTAL_NUM_BITS">
             <summary>The total number of bits in the value.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XFloat.NUM_FRAC_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XFloat.NUM_FRAC_BITS">
             <summary>The number of bits in the fraction.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloat.Disassemble(System.Single)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloat.Disassemble(System.Single)">
             <summary>
             Disassemble the float into its bitwise components.
             </summary>
             <see href="https://en.wikipedia.org/wiki/Single-precision_floating-point_format"/>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloat.Assemble(System.Byte,System.UInt16,System.UInt64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloat.Assemble(System.Byte,System.UInt16,System.UInt64)">
             <summary>
             Assemble a new float from parts.
             </summary>
@@ -1031,82 +1048,82 @@
             <param name="fracBits">The fraction bits.</param>
             <returns>The new float.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XFloatingPoint">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XFloatingPoint">
             <summary>Extension methods for IFloatingPoint{T}.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetExtensionType``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetExtensionType``1">
             <summary>
             Get the Galaxon extension type for this floating point type.
             </summary>
             <typeparam name="T">The standard floating point type.</typeparam>
             <returns>The corresponding extension type.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetTotalNumBits``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetTotalNumBits``1">
             <summary>
             Get the total number of bits in values of this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetNumFracBits``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetNumFracBits``1">
             <summary>
             Get the number of bits in the fraction part of values of this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetNumExpBits``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetNumExpBits``1">
             <summary>
             Get the number of bits in the exponent part of values of this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetExpBias``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetExpBias``1">
             <summary>
             Get the exponent bias for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMinExp``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMinExp``1">
             <summary>
             Get the minimum binary exponent supported by the type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMaxExp``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMaxExp``1">
             <summary>
             Get the maximum binary exponent supported by the type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetSignBitMask``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetSignBitMask``1">
             <summary>
             Get the sign bit mask for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetExpBitMask``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetExpBitMask``1">
             <summary>
             Get the exponent bit mask for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetFracBitMask``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetFracBitMask``1">
             <summary>
             Get the fraction bit mask for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMinPosSubnormalValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMinPosSubnormalValue``1">
             <summary>
             Get the minimum positive subnormal value for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMaxPosSubnormalValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMaxPosSubnormalValue``1">
             <summary>
             Get the maximum positive subnormal value for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMinPosNormalValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMinPosNormalValue``1">
             <summary>
             Get the minimum positive normal value for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetMaxPosNormalValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetMaxPosNormalValue``1">
             <summary>
             Get the minimum positive subnormal value for this type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetNegativeInfinity``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetNegativeInfinity``1">
             <summary>
             Get the negative infinity value for a standard binary floating point type.
             </summary>
@@ -1116,7 +1133,7 @@
             If the class doesn't have a static field or property names "NegativeInfinity".
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetPositiveInfinity``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetPositiveInfinity``1">
             <summary>
             Get the positive infinity value for a standard binary floating point type.
             </summary>
@@ -1126,7 +1143,7 @@
             If the class doesn't have a static field or property names "PositiveInfinity".
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetInfinities``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetInfinities``1">
             <summary>
             Get the positive and negative infinity values for a standard binary floating point type.
             </summary>
@@ -1139,15 +1156,15 @@
             "PositiveInfinity".
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.Disassemble``1(``0)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.Disassemble``1(``0)">
             <summary>
             Disassemble the floating point value into its bitwise components.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.GetExpBits``1(``0)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.GetExpBits``1(``0)">
             <summary>Get the exponent bits from a floating point number.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XFloatingPoint.Assemble``1(System.Byte,System.UInt16,System.UInt64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XFloatingPoint.Assemble``1(System.Byte,System.UInt16,System.UInt64)">
             <summary>
             Assemble a new floating point value from parts.
             </summary>
@@ -1158,22 +1175,22 @@
             <returns>The new floating point value.</returns>
             <exception cref="T:System.InvalidOperationException">If the type is unsupported.</exception>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XHalf">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XHalf">
             <summary>Extension methods and other bonus stuff for Half.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XHalf.TOTAL_NUM_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XHalf.TOTAL_NUM_BITS">
             <summary>The total number of bits in the value.</summary>
         </member>
-        <member name="F:Galaxon.Core.Numbers.XHalf.NUM_FRAC_BITS">
+        <member name="F:Galaxon.Core.Numbers.Extensions.XHalf.NUM_FRAC_BITS">
             <summary>The number of bits in the fraction.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XHalf.Disassemble(System.Half)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XHalf.Disassemble(System.Half)">
             <summary>
             Disassemble the Half into its bitwise components.
             </summary>
             <see href="https://en.wikipedia.org/wiki/Half-precision_floating-point_format"/>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XHalf.Assemble(System.Byte,System.UInt16,System.UInt64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XHalf.Assemble(System.Byte,System.UInt16,System.UInt64)">
             <summary>
             Assemble a new Half from parts.
             </summary>
@@ -1182,17 +1199,17 @@
             <param name="fracBits">The fraction bits.</param>
             <returns>The new Half.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XInt">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XInt">
             <summary>Extension methods for int.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XInt.Sqrt(System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XInt.Sqrt(System.Int32)">
             <summary>
             Get the int closest to the square root of the given int.
             </summary>
             <param name="n"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XInt.Abs(System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XInt.Abs(System.Int32)">
             <summary>
             Return the absolute value of an int as a uint.
             This addresses an issue with int.Abs(), which is that Abs(int.MinValue) can't be expressed
@@ -1202,10 +1219,10 @@
             <param name="n">A int value.</param>
             <returns>The absolute value as a uint.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XLong">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XLong">
             <summary>Extension methods for long.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XLong.Pow(System.Int64,System.Int64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XLong.Pow(System.Int64,System.Int64)">
             <summary>
             Get the long value closest to x^y.
             </summary>
@@ -1213,14 +1230,14 @@
             <param name="y"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XLong.Sqrt(System.Int64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XLong.Sqrt(System.Int64)">
             <summary>
             Get the long value closest to √x.
             </summary>
             <param name="x"></param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XLong.Abs(System.Int64)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XLong.Abs(System.Int64)">
             <summary>
             Return the absolute value of a long as a ulong.
             This addresses an issue with long.Abs(), which is that Abs(long.MinValue) can't be expressed
@@ -1230,13 +1247,13 @@
             <param name="n">A long value.</param>
             <returns>The absolute value as a ulong.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XNumber">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XNumber">
             <summary>Extension methods for numbers (INumber{T} and INumberBase{T}).</summary>
             <remarks>
             TODO: Sort out methods to check for implementation of generic interfaces.
             </remarks>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsStandardNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsStandardNumberType(System.Type)">
             <summary>
             Check if a type is a standard numerical type in .NET.
             Excludes char, vector, and matrix types.
@@ -1244,63 +1261,63 @@
             <param name="type">The type to check.</param>
             <returns>True if the type is a standard numerical type.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsNumberType(System.Type)">
             <summary>
             Check if a type is a number type.
             </summary>
             <param name="type">Some type.</param>
             <returns>If the type implements INumberBase{TSelf}.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsSignedNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsSignedNumberType(System.Type)">
             <summary>
             Check if a type is a signed number type.
             </summary>
             <param name="type">Some type.</param>
             <returns>If the type implements ISignedNumber{TSelf}.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsUnsignedNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsUnsignedNumberType(System.Type)">
             <summary>
             Check if a type is an unsigned number type.
             </summary>
             <param name="type">Some type.</param>
             <returns>If the type implements IUnsignedNumber{TSelf}.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsIntegerType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsIntegerType(System.Type)">
             <summary>
             Check if a type is an integer type.
             </summary>
             <param name="type">Some type.</param>
             <returns>If the type implements IBinaryInteger{TSelf}.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsFloatingPointType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsFloatingPointType(System.Type)">
             <summary>
             Check if a type is a floating point type.
             </summary>
             <param name="type">Some type.</param>
             <returns>If the type implements IFloatingPoint{TSelf}.</returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsSignedIntegerType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsSignedIntegerType(System.Type)">
             <summary>
             Check if a type is a signed integer type.
             </summary>
             <param name="type">Some type.</param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsUnsignedIntegerType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsUnsignedIntegerType(System.Type)">
             <summary>
             Check if a type is an unsigned integer type.
             </summary>
             <param name="type">Some type.</param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsRealNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsRealNumberType(System.Type)">
             <summary>
             Check if a type is a real (non-complex) number type.
             </summary>
             <param name="type">Some type.</param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.IsComplexNumberType(System.Type)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.IsComplexNumberType(System.Type)">
             <summary>
             Check if a type is a complex number type.
             TODO Make it support BigComplex without actually referencing it.
@@ -1308,7 +1325,7 @@
             <param name="type">Some type.</param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.Mod``1(``0,``0)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.Mod``1(``0,``0)">
             <summary>
             Corrected modulo operation, using floored division.
             The modulus will always have the same sign as the divisor.
@@ -1322,7 +1339,7 @@
             </summary>
             <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.GetStaticValue``1(System.String)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.GetStaticValue``1(System.String)">
             <summary>
             Get the value of the static field or property for a specified number type.
             </summary>
@@ -1333,7 +1350,7 @@
             If the class doesn't have a static field or property with the given name.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.GetMinValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.GetMinValue``1">
             <summary>
             Get the min value for a specified number type, if specified.
             </summary>
@@ -1343,7 +1360,7 @@
             If the class doesn't have a static field or property names "MinValue".
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.GetMaxValue``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.GetMaxValue``1">
             <summary>
             Get the maximum value for a specified number type, if specified.
             </summary>
@@ -1353,7 +1370,7 @@
             If the class doesn't have a static field or property names "MaxValue".
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XNumber.GetRange``1">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XNumber.GetRange``1">
             <summary>
             Get the minimum and maximum values for a specified number type.
             </summary>
@@ -1363,36 +1380,36 @@
             If the class doesn't have static fields or properties called "MinValue" and "MaxValue".
             </exception>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XRandom">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XRandom">
             <summary>
             Extension methods for Random class.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetShort(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetShort(System.Random)">
             <summary>
             Get a random signed short.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetUshort(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetUshort(System.Random)">
             <summary>
             Get a random unsigned short.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetInt(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetInt(System.Random)">
             <summary>
             Get a random signed int.
             The Random.Next() method will only return an int in the range 0..int.MaxValue. This method
             will return a signed int with a value anywhere in the valid range for that type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetUint(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetUint(System.Random)">
             <summary>
             Get a random unsigned int.
             The Random.Next() method will only return an int in the range 0..int.MaxValue. This method
             will return an unsigned int with a value anywhere in the valid range for that type.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetLong(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetLong(System.Random)">
             <summary>
             Get a random signed long.
             Will return a value in the valid range for long (long.MinValue..long.MaxValue).
@@ -1400,24 +1417,24 @@
             <see cref="M:System.Random.NextInt64"/>
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetUlong(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetUlong(System.Random)">
             <summary>
             Get a random unsigned long.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetHalf(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetHalf(System.Random)">
             <summary>
             Get a random Half.
             Will not return anything weird like -0, ±∞, or NaN.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetFloat(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetFloat(System.Random)">
             <summary>
             Get a random float.
             Will not return anything weird like -0, ±∞, or NaN.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetDouble(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetDouble(System.Random)">
             <summary>
             Get a random double.
             Will not return anything weird like -0, ±∞, or NaN.
@@ -1425,12 +1442,12 @@
             <see cref="M:System.Random.NextDouble"/>
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.GetDecimal(System.Random)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.GetDecimal(System.Random)">
             <summary>
             Get a random decimal.
             </summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.DieRoll(System.Random,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.DieRoll(System.Random,System.Int32)">
             <summary>
             Simulate rolling a dice with a given number of sides.
             This is designed for board games.
@@ -1440,7 +1457,7 @@
             <param name="sides">The number of sides on the dice.</param>
             <returns></returns>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XRandom.DiceRoll(System.Random,System.Int32,System.Int32)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XRandom.DiceRoll(System.Random,System.Int32,System.Int32)">
             <summary>
             Simulate rolling multiple dice with the same number of sides.
             This is designed for board games.
@@ -1451,10 +1468,10 @@
             <param name="sides">The number of sides on the dice.</param>
             <returns></returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XSbyte">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XSbyte">
             <summary>Extension methods for sbyte.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XSbyte.Abs(System.SByte)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XSbyte.Abs(System.SByte)">
             <summary>
             Return the absolute value of an sbyte as a byte.
             This addresses an issue with sbyte.Abs(), which is that Abs(sbyte.MinValue) can't be
@@ -1464,10 +1481,10 @@
             <param name="n">A sbyte value.</param>
             <returns>The absolute value as a byte.</returns>
         </member>
-        <member name="T:Galaxon.Core.Numbers.XShort">
+        <member name="T:Galaxon.Core.Numbers.Extensions.XShort">
             <summary>Extension methods for short.</summary>
         </member>
-        <member name="M:Galaxon.Core.Numbers.XShort.Abs(System.Int16)">
+        <member name="M:Galaxon.Core.Numbers.Extensions.XShort.Abs(System.Int16)">
             <summary>
             Return the absolute value of a short as a ushort.
             This addresses an issue with short.Abs(), which is that Abs(short.MinValue) can't be expressed

@@ -5,7 +5,7 @@ namespace Galaxon.Core.Collections;
 /// <summary>
 /// Extension methods for Dictionary.
 /// </summary>
-public static class XDictionary
+public static class DictionaryExtensions
 {
     /// <summary>
     /// Checks if a dictionary contains unique values.

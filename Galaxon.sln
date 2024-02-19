@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{423B83FA-A787-4794-9C8A-D64A21715530}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{485D48EB-DCEC-4EE1-87DF-A9086FDF1F64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Core.Tests\Core.Tests.csproj", "{485D48EB-DCEC-4EE1-87DF-A9086FDF1F64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{0E626344-1EE2-4111-B09B-FF93C270D1B3}"
 EndProject
@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geometry", "Geometry\Geomet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integers", "Integers\Integers.csproj", "{4574786F-1793-4707-81C0-1BEC28A8DCE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumericsTests", "NumericsTests\NumericsTests.csproj", "{FB85BA3D-E951-478A-BE5D-6126D6F6B557}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Numerics.Tests", "Numerics.Tests\Numerics.Tests.csproj", "{FB85BA3D-E951-478A-BE5D-6126D6F6B557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

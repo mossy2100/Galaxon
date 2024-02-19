@@ -3,7 +3,7 @@ using Galaxon.Core.Collections;
 namespace Galaxon.Core.Tests.Collections;
 
 [TestClass]
-public class XEnumerableTests
+public class EnumerableExtensionsTests
 {
     public class TestItem
     {

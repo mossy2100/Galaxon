@@ -4,7 +4,7 @@ using Galaxon.Core.Collections;
 namespace Galaxon.Core.Tests.Collections;
 
 [TestClass]
-public class XCollectionTests
+public class CollectionExtensionsTests
 {
     [TestMethod]
     public void IsEmpty_NullCollection_ReturnsTrue()

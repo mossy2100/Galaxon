@@ -4,7 +4,7 @@ using Galaxon.Core.Exceptions;
 namespace Galaxon.Core.Tests.Collections;
 
 [TestClass]
-public class XDictionaryTests
+public class DictionaryExtensionsTests
 {
     [TestMethod]
     public void HasUniqueValues_EmptyDictionary_ReturnsTrue()
