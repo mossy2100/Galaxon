@@ -17,8 +17,11 @@ public static class Sexagesimal
     /// The units part will be a signed integer, not limited to the range 0-59.
     /// The minutes part will be an integer in the range 0-59.
     /// The seconds part will be a decimal in the range 0-59.999...
-    /// The minutes and seconds values will have the same sign as the whole number, or be
+    ///
+    /// NB: The minutes and seconds values will have the same sign as the whole number, or be
     /// zero.
+    /// In this way, FromUnitsMinutesSeconds() serves as the reverse of ToUnitsMinutesSeconds()
+    /// without additional complexity.
     /// </summary>
     /// <param name="n">The value to convert.</param>
     /// <returns>
@@ -53,38 +56,5 @@ public static class Sexagesimal
     public static double FromUnitsMinutesSeconds(double units, double minutes, double seconds)
     {
         return units + minutes * BASE + seconds * BASE * BASE;
-    }
-
-    /// <summary>Convert a double value to units, minutes, and seconds notation.</summary>
-    /// <param name="n">
-    /// The double value to convert. This could be a time in hours or an angle in degrees.
-    /// </param>
-    /// <param name="notation">The notation to use for the output string.</param>
-    /// <param name="precision">The number of decimal places to use for the seconds part.</param>
-    /// <returns>The argument as a string formatted using the specified notation.</returns>
-    public static string ToString(double n,
-        ESexagesimalNotation notation = ESexagesimalNotation.Angle, byte precision = 0)
-    {
-        // Handle negative values.
-        if (n < 0)
-        {
-            return '-' + ToString(-n, notation, precision);
-        }
-
-        // Convert double value to units, minutes, and seconds.
-        (long units, sbyte minutes, double seconds) = ToUnitsMinutesSeconds(n);
-
-        // Format the minutes and seconds.
-        var sMinutes = Math.Abs(minutes).ToString();
-        var sSeconds = Math.Abs(seconds).ToString($"F{precision}");
-
-        // Format the output.
-        return notation switch
-        {
-            ESexagesimalNotation.Angle => $"{units}°{sMinutes}′{sSeconds}″",
-            ESexagesimalNotation.Colons => $"{units}:{sMinutes}:{sSeconds}",
-            ESexagesimalNotation.TimeUnits => $"{units}h {sMinutes}m {sSeconds}s",
-            _ => throw new ArgumentOutOfRangeException(nameof(notation), "Invalid notation.")
-        };
     }
 }
