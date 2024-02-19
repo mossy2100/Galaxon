@@ -1,4 +1,6 @@
-namespace Galaxon.Time.Tests;
+using Galaxon.Time;
+
+namespace Galaxon.Core.Tests.Time;
 
 [TestClass]
 public class XDateOnlyTests

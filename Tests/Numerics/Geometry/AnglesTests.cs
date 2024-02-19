@@ -1,7 +1,7 @@
 ﻿using Galaxon.Core.Testing;
 using static Galaxon.Numerics.Geometry.Angles;
 
-namespace Galaxon.Numerics.Tests;
+namespace Galaxon.Core.Tests.Numerics.Geometry;
 
 [TestClass]
 public class AnglesTests

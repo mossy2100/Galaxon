@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Numerics.Integers;
 
-namespace Galaxon.Numerics.Tests;
+namespace Galaxon.Core.Tests.Numerics;
 
 [TestClass]
 public class PartitionTests

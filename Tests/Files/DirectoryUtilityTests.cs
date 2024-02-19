@@ -58,7 +58,7 @@ public class DirectoryUtilityTests
         Assert.IsNotNull(result);
 
         // Check directory.
-        Assert.IsTrue(result.EndsWith("/Galaxon/Galaxon/Core.Tests"));
+        Assert.IsTrue(result.EndsWith("/Galaxon/Galaxon/Tests"));
         Assert.IsTrue(Directory.Exists(result));
     }
 }

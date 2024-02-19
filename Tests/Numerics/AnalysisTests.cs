@@ -1,7 +1,7 @@
 using Galaxon.BigNumbers;
 using Galaxon.Numerics.Algebra;
 
-namespace Galaxon.Numerics.Tests;
+namespace Galaxon.Core.Tests.Numerics;
 
 [TestClass]
 public class AnalysisTests

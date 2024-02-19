@@ -1,7 +1,7 @@
 using Bases;
 using Galaxon.Core.Exceptions;
 
-namespace Galaxon.Numerics.Tests.Bases;
+namespace Galaxon.Core.Tests.Numerics.Bases;
 
 [TestClass]
 public class ConvertBaseTests

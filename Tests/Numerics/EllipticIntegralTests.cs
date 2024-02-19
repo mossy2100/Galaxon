@@ -1,6 +1,6 @@
 ﻿using Galaxon.Numerics.Geometry;
 
-namespace Galaxon.Numerics.Tests;
+namespace Galaxon.Core.Tests.Numerics;
 
 [TestClass]
 public class EllipticIntegralTests

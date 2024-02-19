@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Galaxon.Core.Numbers.Extensions;
 using Galaxon.Numerics.Integers;
 
-namespace Galaxon.Numerics.Tests;
+namespace Galaxon.Core.Tests.Numerics;
 
 [TestClass]
 [Ignore]
