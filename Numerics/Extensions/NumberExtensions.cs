@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using Galaxon.Core.Types;
 
 namespace Galaxon.Numerics.Extensions;
@@ -219,4 +221,26 @@ public static class NumberExtensions
     }
 
     #endregion Methods related to static properties
+
+    #region String methods
+
+    /// <summary>
+    /// Removed digit grouping characters from a string.
+    ///
+    /// This includes:
+    ///   * normal whitespace (spaces, tabs, newlines, carriage returns)
+    ///   * thin spaces
+    ///   * the number group separator for the provided culture (typically dot or comma)
+    ///   * underscores
+    ///   * ASCII apostrophes
+    /// </summary>
+    /// <param name="s">The string.</param>
+    /// <param name="nfi">The NumberFormatInfo.</param>
+    /// <returns>The string with the ignored characters removed.</returns>
+    public static string RemoveNumberGroupSeparators(string s, NumberFormatInfo nfi)
+    {
+        return Regex.Replace(s, $@"[\s\u2009{nfi.NumberGroupSeparator}_']", "");
+    }
+
+    #endregion String methods
 }

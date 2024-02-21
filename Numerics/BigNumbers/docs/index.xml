@@ -698,9 +698,9 @@
              Supported formats:
              1. Ordinary real number (integer or floating point), e.g. 12345, 123.45, 123.45e67 etc. The
                 'e' for exponent can be lower or upper-case, as with normal floating point syntax.
-             2. Format used by System.Complex.ToString(), with angle brackets and a semicolon. Square
-                brackets, curly braces, parentheses, or no brackets at all are also supported.
-             3. Standard notation used in maths is supported (e.g. a + bi), with either i or j. The i or
+             2. Format used by System.Complex.ToString(), with angle brackets and a semicolon.
+             3. Format shown in Microsoft documentation, with round brackets and a comma.
+             4. Standard notation used in maths is supported (e.g. a + bi), with either i or j. The i or
                 j can come before or after the imaginary number, and it can be lower or upper-case.
             
              Also note:
@@ -1987,16 +1987,6 @@
             ○ Match if at the end of the string or if before an ending newline.<br/>
             </code>
             </remarks>
-        </member>
-        <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.RemoveIgnoredCharacters(System.String,System.Globalization.NumberFormatInfo)">
-            <summary>
-            Removed ignored characters from a string we want to parse, i.e. whitespace and digit
-            grouping characters, which includes the usual comma or period (depending on the culture
-            specified by the NumberFormatInfo parameter), as well as underscores and thin spaces.
-            </summary>
-            <param name="s">The string.</param>
-            <param name="nfi">The NumberFormatInfo.</param>
-            <returns>The string with the ignored characters removed.</returns>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.Sin(Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>

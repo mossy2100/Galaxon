@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.BigNumbers;
 
@@ -20,9 +21,9 @@ public partial struct BigComplex
     /// Supported formats:
     /// 1. Ordinary real number (integer or floating point), e.g. 12345, 123.45, 123.45e67 etc. The
     ///    'e' for exponent can be lower or upper-case, as with normal floating point syntax.
-    /// 2. Format used by System.Complex.ToString(), with angle brackets and a semicolon. Square
-    ///    brackets, curly braces, parentheses, or no brackets at all are also supported.
-    /// 3. Standard notation used in maths is supported (e.g. a + bi), with either i or j. The i or
+    /// 2. Format used by System.Complex.ToString(), with angle brackets and a semicolon.
+    /// 3. Format shown in Microsoft documentation, with round brackets and a comma.
+    /// 4. Standard notation used in maths is supported (e.g. a + bi), with either i or j. The i or
     ///    j can come before or after the imaginary number, and it can be lower or upper-case.
     ///
     /// Also note:
@@ -37,37 +38,33 @@ public partial struct BigComplex
     /// </remarks>
     public static BigComplex Parse(string s, IFormatProvider? provider)
     {
-        // Optimization.
-        if (string.IsNullOrWhiteSpace(s))
-        {
-            return 0;
-        }
-
         // Get a NumberFormatInfo object so we know what decimal point character to accept.
         var nfi = provider as NumberFormatInfo ?? NumberFormatInfo.InvariantInfo;
 
         // Remove ignored characters from the string.
-        s = BigDecimal.RemoveIgnoredCharacters(s, nfi);
+        s = NumberExtensions.RemoveNumberGroupSeparators(s, nfi);
 
         // Different components of the patterns.
-        var rxUnsignedReal = $@"\d+({nfi.NumberDecimalSeparator}\d+)?(e[+\-]?\d+)?";
-        var rxSignedReal = $@"[+\-]?{rxUnsignedReal}";
-        var rxUnsignedImag = $@"({rxUnsignedReal}[ij]|[ij]{rxUnsignedReal})";
-        var rxSignedImag = $@"[+\-]?{rxUnsignedImag}";
-        var rxLeftBracket = @"[<\(\[{]";
-        var rxRightBracket = @"[>\)\]}]";
+        var rxSign = $"[{nfi.NegativeSign}{nfi.PositiveSign}]";
+        var rxReal = $@"(\d+({nfi.NumberDecimalSeparator}\d+)?)";
+        var rxUnsignedReal = $@"{rxReal}(e{rxSign}?\d+)?";
+        var rxSignedReal = $"{rxSign}?{rxUnsignedReal}";
+        var rxUnsignedImag = $"({rxUnsignedReal}[ij]|[ij]{rxUnsignedReal})";
+        var rxSignedImag = $"{rxSign}?{rxUnsignedImag}";
 
         // Supported patterns.
         var patterns = new[]
         {
-            // Brackets and semicolon style, e.g. x;y, <x;y>, (x;y), [x;y], or {x;y}.
-            $@"(?<left>{rxLeftBracket})?(?<real>{rxSignedReal});(?<imag>{rxSignedImag})(?<right>{rxRightBracket})?",
-            // Real part only, e.g. 123.45, -6, 7.8e9, etc.
-            $@"(?<real>{rxSignedReal})",
+            // Angle brackets style. e.g. <1.2;4.5>
+            $@"\<(?<real>{rxSignedReal});(?<imag>{rxSignedImag})\>",
+            // Round brackets style. e.g. (1.2,4.5)
+            $@"\((?<real>{rxSignedReal}),(?<imag>{rxSignedImag})\)",
+            // Real part only, e.g. 123.45, -6, 7.8e9
+            $"(?<real>{rxSignedReal})",
             // Imaginary part only, e.g. 12i, -j34, etc.
-            $@"(?<imag>{rxSignedImag})",
+            $"(?<imag>{rxSignedImag})",
             // Both real and imaginary part, e.g. 12+34i, 5.6-j7.8, etc.
-            $@"(?<real>{rxSignedReal})[+\-](?<imag>{rxUnsignedImag})"
+            $"(?<real>{rxSignedReal})(?<imag>{rxSign}{rxUnsignedImag})"
         };
 
         // Test each pattern.
@@ -83,24 +80,26 @@ public partial struct BigComplex
             // Extract the components.
             var sReal = match.Groups["real"].Value;
             var sImag = match.Groups["imag"].Value;
-            var sLeft = match.Groups["left"].Value;
-            var sRight = match.Groups["right"].Value;
 
-            // Check the brackets match.
-            if ((sLeft == "" && sRight != "")
-                || (sLeft == "<" && sRight != ">")
-                || (sLeft == "(" && sRight != ")")
-                || (sLeft == "[" && sRight != "]")
-                || (sLeft == "{" && sRight != "}"))
+            // Check we have at least one number.
+            if (sReal == "" && sImag == "")
             {
                 throw new ArgumentFormatException(nameof(s),
-                    "Invalid format for complex number (non-matching brackets).");
+                    "Either the real part or the imaginary part, or both, must be specified.");
             }
 
-            // Construct the BigComplex.
-            var real = sReal == "" ? 0 : BigDecimal.Parse(sReal);
-            var imag = sImag == "" ? 0 : BigDecimal.Parse(sImag);
-            return new BigComplex(real, imag);
+            try
+            {
+                // Construct the BigComplex.
+                var real = BigDecimal.Parse(sReal);
+                var imag = BigDecimal.Parse(sImag);
+                return new BigComplex(real, imag);
+            }
+            catch (FormatException ex)
+            {
+                throw new ArgumentFormatException(nameof(s),
+                    "Either the real or imaginary part, or both, are improperly formatted.", ex);
+            }
         }
 
         // The provided string does not match any supported pattern.

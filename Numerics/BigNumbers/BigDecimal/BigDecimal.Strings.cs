@@ -24,7 +24,7 @@ public partial struct BigDecimal
         var nfi = provider as NumberFormatInfo ?? NumberFormatInfo.InvariantInfo;
 
         // Remove ignored characters from the string.
-        s = RemoveIgnoredCharacters(s, nfi);
+        s = NumberExtensions.RemoveNumberGroupSeparators(s, nfi);
 
         // See if there are any characters left.
         if (string.IsNullOrWhiteSpace(s))
@@ -432,19 +432,6 @@ public partial struct BigDecimal
     [GeneratedRegex("^(?<format>[DEFGNPR])(?<precision>\\d*)(?<unicode>U?)$",
         RegexOptions.IgnoreCase, "en-AU")]
     private static partial Regex FormatRegex();
-
-    /// <summary>
-    /// Removed ignored characters from a string we want to parse, i.e. whitespace and digit
-    /// grouping characters, which includes the usual comma or period (depending on the culture
-    /// specified by the NumberFormatInfo parameter), as well as underscores and thin spaces.
-    /// </summary>
-    /// <param name="s">The string.</param>
-    /// <param name="nfi">The NumberFormatInfo.</param>
-    /// <returns>The string with the ignored characters removed.</returns>
-    internal static string RemoveIgnoredCharacters(string s, NumberFormatInfo nfi)
-    {
-        return Regex.Replace(s, $@"[\s{nfi.NumberGroupSeparator}_\u2009]", "");
-    }
 
     #endregion Helper methods
 }
