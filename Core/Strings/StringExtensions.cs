@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using Galaxon.Core.Numbers;
 
 namespace Galaxon.Core.Strings;
 
@@ -388,26 +387,6 @@ public static class StringExtensions
             str = str[..^size];
         }
         return sb.ToString();
-    }
-
-    /// <summary>
-    /// Transform any digit characters in the string to their superscript version.
-    /// </summary>
-    /// <param name="str">The input string.</param>
-    /// <returns>The input string with digits converted to superscript.</returns>
-    public static string MakeDigitsSuperscript(this string str)
-    {
-        return ReplaceChars(str, BinaryIntegerExtensions.SuperscriptChars);
-    }
-
-    /// <summary>
-    /// Transform any digit characters in the string to their subscript version.
-    /// </summary>
-    /// <param name="str">The input string.</param>
-    /// <returns>The input string with digits converted to subscript.</returns>
-    public static string MakeDigitsSubscript(this string str)
-    {
-        return ReplaceChars(str, BinaryIntegerExtensions.SubscriptChars);
     }
 
     #endregion Methods for formatting numbers

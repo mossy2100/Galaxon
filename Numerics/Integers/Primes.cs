@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Functional;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.Integers;
 

@@ -4,13 +4,12 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>Galaxon.Time</AssemblyName>
-        <RootNamespace>Galaxon.Time</RootNamespace>
+        <AssemblyName>Galaxon.Numerics.Extensions</AssemblyName>
+        <RootNamespace>Galaxon.Numerics.Extensions</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\Numerics\Extensions\Extensions.csproj" />
+      <ProjectReference Include="..\..\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

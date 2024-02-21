@@ -1,6 +1,7 @@
 using DecimalMath;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>Extension methods for decimal.</summary>
 public static class DecimalExtensions
@@ -343,4 +344,35 @@ public static class DecimalExtensions
     }
 
     #endregion Miscellaneous methods
+
+    #region Testing
+
+    /// <summary>
+    /// Helper function to test if a double equals a decimal.
+    /// </summary>
+    /// <param name="expected">Expected double value</param>
+    /// <param name="actual">Actual decimal value</param>
+    public static void AreEqual(double expected, decimal actual)
+    {
+        // Doubles and decimals are only equal to a limited number of significant figures, so scale
+        // larger values to the range [0..10) before comparing.
+        Console.WriteLine($"Comparing {expected} with {actual}");
+        var a = actual;
+        var e = (decimal)expected;
+        if (actual != 0)
+        {
+            var m = (int)Math.Floor(Math.Log10(Math.Abs(expected)));
+            if (m > 0)
+            {
+                var scaleFactor = Exp10(m);
+                a /= scaleFactor;
+                e /= scaleFactor;
+            }
+        }
+
+        // Compare decimals.
+        Assert.AreEqual(e, a, 1e-13m);
+    }
+
+    #endregion Testing
 }

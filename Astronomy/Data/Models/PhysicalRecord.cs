@@ -1,4 +1,4 @@
-﻿using Galaxon.Core.Numbers;
+﻿using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Astronomy.Data.Models;
 
@@ -54,8 +54,7 @@ public class PhysicalRecord
     {
         get
         {
-            if (IsRound == null || RadiusA == null || RadiusB == null ||
-                RadiusC == null)
+            if (IsRound == null || RadiusA == null || RadiusB == null || RadiusC == null)
             {
                 throw new InvalidOperationException("Specify the size and shape first.");
             }

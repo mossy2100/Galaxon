@@ -1,8 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Functional;
-using Galaxon.Core.Strings;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>
 /// Extension methods for BigInteger.
@@ -47,7 +46,7 @@ public static class BigIntegerExtensions
     /// </summary>
     public static BigInteger Reverse(this BigInteger n)
     {
-        return BigInteger.Parse(n.ToString().Reverse());
+        return BigInteger.Parse(n.ToString().Reverse().ToString()!);
     }
 
     /// <summary>

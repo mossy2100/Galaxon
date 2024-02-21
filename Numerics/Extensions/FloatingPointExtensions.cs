@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Types;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>Extension methods for IFloatingPoint{T}.</summary>
 public static class FloatingPointExtensions
@@ -29,7 +29,7 @@ public static class FloatingPointExtensions
         {
             extensionTypeName = "DoubleExtensions";
         }
-        return Type.GetType($"Galaxon.Core.Numbers.Extensions.{extensionTypeName}");
+        return Type.GetType($"Galaxon.Numerics.Extensions.Extensions.{extensionTypeName}");
     }
 
     /// <summary>

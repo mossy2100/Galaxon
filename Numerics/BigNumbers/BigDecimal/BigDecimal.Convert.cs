@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Types;
 
 namespace Galaxon.Numerics.BigNumbers;

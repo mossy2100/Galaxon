@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>
 /// Extension methods for IBinaryInteger{T}.
@@ -71,6 +71,30 @@ public static class BinaryIntegerExtensions
     public static string ToSubscript<T>(this T n) where T : IBinaryInteger<T>
     {
         return $"{n}".ReplaceChars(SubscriptChars);
+    }
+
+    /// <summary>
+    /// Transform any digit characters in the string to their superscript version.
+    /// </summary>
+    /// <param name="str">The input string.</param>
+    /// <returns>The input string with digits converted to superscript.</returns>
+    public static string MakeDigitsSuperscript(string str)
+    {
+        Dictionary<char, string> charMap = SuperscriptChars;
+        charMap.Remove('-');
+        return str.ReplaceChars(charMap);
+    }
+
+    /// <summary>
+    /// Transform any digit characters in the string to their subscript version.
+    /// </summary>
+    /// <param name="str">The input string.</param>
+    /// <returns>The input string with digits converted to subscript.</returns>
+    public static string MakeDigitsSubscript(string str)
+    {
+        Dictionary<char, string> charMap = SubscriptChars;
+        charMap.Remove('-');
+        return str.ReplaceChars(charMap);
     }
 
     #endregion Superscript and subscript

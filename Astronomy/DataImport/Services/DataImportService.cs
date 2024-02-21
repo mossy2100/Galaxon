@@ -6,7 +6,7 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Strings;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities;

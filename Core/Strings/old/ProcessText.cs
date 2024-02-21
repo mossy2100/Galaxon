@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Strings;
 
 namespace Galaxon.Core.Program;

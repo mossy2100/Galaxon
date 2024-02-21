@@ -44,6 +44,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Core.csproj" />
+      <ProjectReference Include="..\..\Numerics\Extensions\Extensions.csproj" />
       <ProjectReference Include="..\..\Numerics\Geometry\Geometry.csproj" />
     </ItemGroup>
     

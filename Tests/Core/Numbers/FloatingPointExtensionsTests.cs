@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Tests.Core.Numbers;
 

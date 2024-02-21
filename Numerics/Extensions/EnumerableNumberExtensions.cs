@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>
 /// LINQ methods for IEnumerable{INumberBase}.

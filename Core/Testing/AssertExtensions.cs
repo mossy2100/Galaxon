@@ -1,5 +1,4 @@
-﻿using Galaxon.Core.Numbers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Galaxon.Core.Testing;
 
@@ -17,12 +16,12 @@ public static class AssertExtensions
     public static void AreEqual((double d, double m, double s) a, (double d, double m, double s) b,
         (double d, double m, double s) delta)
     {
-        static double DmsToDeg((double d, double m, double s) angle) =>
+        static double dmsToDeg((double d, double m, double s) angle) =>
             angle.d + 60 * angle.m + 3600 * angle.s;
 
-        var aDeg = DmsToDeg(a);
-        var bDeg = DmsToDeg(b);
-        var deltaDeg = DmsToDeg(delta);
+        var aDeg = dmsToDeg(a);
+        var bDeg = dmsToDeg(b);
+        var deltaDeg = dmsToDeg(delta);
 
         Assert.AreEqual(aDeg, bDeg, deltaDeg);
     }
@@ -52,33 +51,6 @@ public static class AssertExtensions
     {
         Assert.IsTrue(includeLower ? value >= lower : value > lower);
         Assert.IsTrue(includeUpper ? value <= upper : value < upper);
-    }
-
-    /// <summary>
-    /// Helper function to test if a double equals a decimal.
-    /// </summary>
-    /// <param name="expected">Expected double value</param>
-    /// <param name="actual">Actual decimal value</param>
-    public static void AreEqual(double expected, decimal actual)
-    {
-        // Doubles and decimals are only equal to a limited number of significant figures, so scale
-        // larger values to the range [0..10) before comparing.
-        Console.WriteLine($"Comparing {expected} with {actual}");
-        var a = actual;
-        var e = (decimal)expected;
-        if (actual != 0)
-        {
-            var m = (int)Math.Floor(Math.Log10(Math.Abs(expected)));
-            if (m > 0)
-            {
-                var scaleFactor = DecimalExtensions.Exp10(m);
-                a /= scaleFactor;
-                e /= scaleFactor;
-            }
-        }
-
-        // Compare decimals.
-        Assert.AreEqual(e, a, 1e-13m);
     }
 
     /// <summary>

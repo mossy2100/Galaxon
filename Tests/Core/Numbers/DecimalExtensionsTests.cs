@@ -1,6 +1,5 @@
 using DecimalMath;
-using Galaxon.Core.Numbers;
-using Galaxon.Core.Testing;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Tests.Core.Numbers;
 
@@ -16,27 +15,27 @@ public class DecimalExtensionsTests
         m = 0;
         actual = DecimalExtensions.Sinh(m);
         expected = Sinh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = 1;
         actual = DecimalExtensions.Sinh(m);
         expected = Sinh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.PiQuarter;
         actual = DecimalExtensions.Sinh(m);
         expected = Sinh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.Pi;
         actual = DecimalExtensions.Sinh(m);
         expected = Sinh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = -1;
         actual = DecimalExtensions.Sinh(m);
         expected = Sinh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
     }
 
     [TestMethod]
@@ -48,27 +47,27 @@ public class DecimalExtensionsTests
         m = 0;
         actual = DecimalExtensions.Cosh(m);
         expected = Cosh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = 1;
         actual = DecimalExtensions.Cosh(m);
         expected = Cosh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.PiQuarter;
         actual = DecimalExtensions.Cosh(m);
         expected = Cosh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.Pi;
         actual = DecimalExtensions.Cosh(m);
         expected = Cosh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = -1;
         actual = DecimalExtensions.Cosh(m);
         expected = Cosh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
     }
 
     [TestMethod]
@@ -80,27 +79,27 @@ public class DecimalExtensionsTests
         m = 0;
         actual = DecimalExtensions.Tanh(m);
         expected = Tanh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = 1;
         actual = DecimalExtensions.Tanh(m);
         expected = Tanh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.PiQuarter;
         actual = DecimalExtensions.Tanh(m);
         expected = Tanh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = DecimalEx.Pi;
         actual = DecimalExtensions.Tanh(m);
         expected = Tanh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
 
         m = -1;
         actual = DecimalExtensions.Tanh(m);
         expected = Tanh((double)m);
-        AssertExtensions.AreEqual(expected, actual);
+        DecimalExtensions.AreEqual(expected, actual);
     }
 
     [TestMethod]
@@ -123,46 +122,46 @@ public class DecimalExtensionsTests
         decimal m;
 
         m = 1;
-        AssertExtensions.AreEqual(0, DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(0, DecimalExtensions.Log(m));
 
         m = 2;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 10;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = DecimalEx.E;
-        AssertExtensions.AreEqual(1, DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(1, DecimalExtensions.Log(m));
 
         m = decimal.MaxValue;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = DecimalEx.SmallestNonZeroDec;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 1.23456789m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 9.87654321m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 123456789m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 9876543210m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 0.00000000000000000123456789m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
 
         m = 0.00000000000000000987654321m;
-        AssertExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
+        DecimalExtensions.AreEqual(Log((double)m), DecimalExtensions.Log(m));
     }
 
     [TestMethod]
     public void Log1Base0Returns0()
     {
-        AssertExtensions.AreEqual(0, DecimalExtensions.Log(1, 0));
+        DecimalExtensions.AreEqual(0, DecimalExtensions.Log(1, 0));
     }
 
     [TestMethod]

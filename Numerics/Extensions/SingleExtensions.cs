@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>Extension methods and other bonus stuff for float.</summary>
 public static class SingleExtensions

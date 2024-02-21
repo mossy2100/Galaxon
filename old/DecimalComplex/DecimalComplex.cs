@@ -1,6 +1,6 @@
 using System.Numerics;
 using DecimalMath;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Testing;
 
 namespace Galaxon.Numerics.Types;

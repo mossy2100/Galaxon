@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.BigNumbers;
 

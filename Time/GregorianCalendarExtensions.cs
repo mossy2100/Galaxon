@@ -1,5 +1,5 @@
 using System.Globalization;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Time;
 

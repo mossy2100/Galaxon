@@ -1,4 +1,4 @@
-namespace Galaxon.Core.Numbers;
+namespace Galaxon.Numerics.Extensions;
 
 /// <summary>Extension methods for sbyte.</summary>
 public static class SByteExtensions

@@ -1,4 +1,5 @@
 using Galaxon.Core.Strings;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Tests.Core.Strings;
 
@@ -12,15 +13,15 @@ public class StringExtensionsTests
         string s2;
 
         s1 = "x2";
-        s2 = s1.MakeDigitsSuperscript();
+        s2 = BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
         Assert.AreEqual("x²", s2);
 
         s1 = "m/s2";
-        s2 = s1.MakeDigitsSuperscript();
+        s2 = BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
         Assert.AreEqual("m/s²", s2);
 
         s1 = "23";
-        s2 = "6.02 * 10" + s1.MakeDigitsSuperscript();
+        s2 = "6.02 * 10" + BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
         Assert.AreEqual("6.02 * 10²³", s2);
     }
 
@@ -31,15 +32,15 @@ public class StringExtensionsTests
         string s2;
 
         s1 = "CH4";
-        s2 = s1.MakeDigitsSubscript();
+        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
         Assert.AreEqual("CH₄", s2);
 
         s1 = "CH3OH";
-        s2 = s1.MakeDigitsSubscript();
+        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
         Assert.AreEqual("CH₃OH", s2);
 
         s1 = "v0";
-        s2 = s1.MakeDigitsSubscript();
+        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
         Assert.AreEqual("v₀", s2);
     }
 

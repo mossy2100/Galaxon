@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Core.csproj" />
+      <ProjectReference Include="..\Extensions\Extensions.csproj" />
       <ProjectReference Include="..\Integers\Integers.csproj" />
     </ItemGroup>
 

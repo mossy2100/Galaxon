@@ -2,7 +2,7 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Numbers;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities;
 using Galaxon.Time;
