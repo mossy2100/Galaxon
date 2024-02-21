@@ -14,25 +14,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Core.csproj" />
+      <ProjectReference Include="..\..\Numerics\Algebra\Algebra.csproj" />
       <ProjectReference Include="..\..\Numerics\Geometry\Geometry.csproj" />
       <ProjectReference Include="..\..\Quantities\Quantities.csproj" />
       <ProjectReference Include="..\..\Time\Time.csproj" />
       <ProjectReference Include="..\Data\Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Galaxon.Core">
-        <HintPath>..\..\Core\Core\bin\Debug\net8.0\Galaxon.Core.dll</HintPath>
-      </Reference>
-      <Reference Include="Galaxon.Numerics.Algebra">
-        <HintPath>..\..\Numerics\Algebra\bin\Debug\net8.0\Galaxon.Numerics.Algebra.dll</HintPath>
-      </Reference>
-      <Reference Include="Galaxon.Numerics.Geometry">
-        <HintPath>..\..\Numerics\Geometry\bin\Debug\net8.0\Galaxon.Numerics.Geometry.dll</HintPath>
-      </Reference>
-      <Reference Include="Galaxon.Quantities">
-        <HintPath>..\..\Quantities\Quantities\bin\Debug\net8.0\Galaxon.Quantities.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

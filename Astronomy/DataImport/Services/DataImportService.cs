@@ -510,8 +510,10 @@ public class DataImportService(
 
             // Look for an existing record.
             VSOP87DRecord? record = astroDbContext.VSOP87DRecords.FirstOrDefault(record =>
-                record.AstroObjectId == planet.Id && record.Variable == variable &&
-                record.Exponent == exponent && record.Index == index);
+                record.AstroObjectId == planet.Id
+                && record.Variable == variable
+                && record.Exponent == exponent
+                && record.Index == index);
             if (record == null)
             {
                 // Add a new record.
@@ -528,7 +530,8 @@ public class DataImportService(
                 });
                 astroDbContext.SaveChanges();
             }
-            else if (!record.Amplitude.FuzzyEquals(amplitude) || !record.Phase.FuzzyEquals(phase)
+            else if (!record.Amplitude.FuzzyEquals(amplitude)
+                || !record.Phase.FuzzyEquals(phase)
                 || !record.Frequency.FuzzyEquals(frequency))
             {
                 // Update the record.

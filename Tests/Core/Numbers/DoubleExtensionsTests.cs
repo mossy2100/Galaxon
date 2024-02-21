@@ -1,6 +1,6 @@
 using Galaxon.Core.Numbers;
 
-namespace Galaxon.Tests.Core;
+namespace Galaxon.Tests.Core.Numbers;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
 [TestClass]

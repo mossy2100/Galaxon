@@ -5,7 +5,6 @@ using Galaxon.Numerics.Integers;
 namespace Galaxon.Tests.Numerics;
 
 [TestClass]
-[Ignore]
 public class PrimeTests
 {
     [TestMethod]

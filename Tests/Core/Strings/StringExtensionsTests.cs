@@ -1,6 +1,6 @@
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Tests.Core;
+namespace Galaxon.Tests.Core.Strings;
 
 [TestClass]
 public class StringExtensionsTests

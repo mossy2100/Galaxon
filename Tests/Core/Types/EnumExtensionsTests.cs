@@ -1,6 +1,6 @@
 using Galaxon.Core.Types;
 
-namespace Galaxon.Tests.Core;
+namespace Galaxon.Tests.Core.Types;
 
 [TestClass]
 public class EnumExtensionsTests

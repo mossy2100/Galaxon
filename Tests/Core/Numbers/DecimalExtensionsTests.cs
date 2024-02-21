@@ -2,7 +2,7 @@ using DecimalMath;
 using Galaxon.Core.Numbers;
 using Galaxon.Core.Testing;
 
-namespace Galaxon.Tests.Core;
+namespace Galaxon.Tests.Core.Numbers;
 
 [TestClass]
 public class DecimalExtensionsTests

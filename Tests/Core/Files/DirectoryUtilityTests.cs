@@ -30,7 +30,7 @@ public class DirectoryUtilityTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.IsTrue(result.EndsWith("/Galaxon/Galaxon"));
+        Assert.IsTrue(result.EndsWith("/Galaxon"));
         Assert.IsTrue(Directory.Exists(result));
     }
 
@@ -44,7 +44,7 @@ public class DirectoryUtilityTests
         Assert.IsNotNull(result);
 
         // Check directory.
-        Assert.IsTrue(result.EndsWith("/Galaxon/Galaxon"));
+        Assert.IsTrue(result.EndsWith("/Galaxon"));
         Assert.IsTrue(Directory.Exists(result));
     }
 
@@ -58,7 +58,7 @@ public class DirectoryUtilityTests
         Assert.IsNotNull(result);
 
         // Check directory.
-        Assert.IsTrue(result.EndsWith("/Galaxon/Galaxon/Tests"));
+        Assert.IsTrue(result.EndsWith("/Galaxon/Tests"));
         Assert.IsTrue(Directory.Exists(result));
     }
 }

@@ -27,7 +27,7 @@ public static class BigIntegerExtensions
         var bytes = n.ToByteArray().ToList();
 
         // Check the most-significant bit, and, if it's 1, add a zero byte to ensure the bytes are
-        // interpreted as a positive value when constructing the result BigInteger.
+        // interpreted as a positive value when reconstructing the result BigInteger.
         if ((bytes[^1] & 0b10000000) != 0)
         {
             bytes.Add(0);

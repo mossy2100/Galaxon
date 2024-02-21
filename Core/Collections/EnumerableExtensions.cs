@@ -13,22 +13,24 @@ public static class EnumerableExtensions
     /// For example, if list1 has two instances of "cat" and list2 has one instance of "cat", the
     /// result will have one instance of "cat".
     /// </summary>
-    public static IEnumerable<T> Diff<T>(this IEnumerable<T> A, IEnumerable<T> B)
+    public static List<T> Diff<T>(this IEnumerable<T> A, IEnumerable<T> B)
     {
-        var set2 = new HashSet<T>(B);
+        var result = new List<T>();
+        var listB = B.ToList();
 
         foreach (T item in A)
         {
-            if (!set2.Contains(item))
+            if (listB.Contains(item))
             {
-                yield return item;
+                listB.Remove(item);
             }
             else
             {
-                // Remove all occurrences of item from set2
-                set2.Remove(item);
+                result.Add(item);
             }
         }
+
+        return result;
     }
 
     /// <summary>
