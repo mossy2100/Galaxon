@@ -109,22 +109,11 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Reverse a string.
-    /// e.g. "You are awesome." becomes ".emosewa era uoY".
-    /// </summary>
-    public static string Reverse(this string str)
-    {
-        char[] chars = str.ToArray();
-        Array.Reverse(chars);
-        return new string(chars);
-    }
-
-    /// <summary>
     /// Check if a string is a palindrome.
     /// </summary>
     public static bool IsPalindrome(this string str)
     {
-        return str == str.Reverse();
+        return str == str.Reverse().ToString();
     }
 
     /// <summary>
