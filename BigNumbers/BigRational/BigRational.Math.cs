@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Numerics.Integers;
 
 namespace Galaxon.Numerics.BigNumbers;
 
@@ -52,7 +52,7 @@ public partial struct BigRational
         }
 
         // Get the greatest common divisor.
-        var gcd = XBigInteger.GreatestCommonDivisor(num, den);
+        var gcd = Divisors.GreatestCommonDivisor(num, den);
 
         // If we found one greater than 1, divide.
         if (gcd > 1)

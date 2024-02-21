@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Integers;
 
@@ -11,7 +11,7 @@ public class Pell
 {
     public static (BigInteger x, BigInteger y) Solve(int D)
     {
-        if (XDouble.IsPerfectSquare(D))
+        if (DoubleExtensions.IsPerfectSquare(D))
         {
             throw new ArgumentInvalidException(nameof(D), "Cannot be a perfect square.");
         }

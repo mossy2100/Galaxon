@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Functional;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Integers;
 
@@ -448,7 +448,7 @@ public static class Primes
 
     public static bool AreCoprime(ulong n1, ulong n2)
     {
-        return XBigInteger.GreatestCommonDivisor(n1, n2) == 1;
+        return Divisors.GreatestCommonDivisor(n1, n2) == 1;
     }
 
     /// <summary>

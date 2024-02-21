@@ -43,20 +43,29 @@ namespace Bases;
 ///
 /// The system used for base-32 encoding is known as base32hex or triacontakaidecimal. It is a
 /// simple continuation of hexadecimal that uses the English letters from g-v (or G-V) to
-/// represent the values 16-31. It is the same system used by JavaScript.
+/// represent the values 16-31. It is the same method as used by JavaScript.
 ///
 /// The system used for base-64 encoding is new. It could perhaps be called "base64hex". It's also
-/// a continuation of hexadecimal (and the above base32hex) that uses the letters w-z (or W-Z) to
-/// represent the values 32-35, and printable non-alphanumeric ASCII characters to represent the
-/// values 36-63. These characters are ordered by ASCII value. As there are 33 such characters, 5
-/// are excluded.
+/// a continuation of hexadecimal (and  base32hex) that uses the letters w-z (or W-Z) to represent
+/// the values 32-35, and 28 ASCII symbol characters to represent the values 36-63. These characters
+/// are ordered by ASCII value. As there are 32 symbol characters in the ASCII set, 4 are excluded.
 ///
-/// The excluded characters are those used for digit grouping or decimal separators:
-///   space ( )
-///   period (.)
-///   comma (,)
-///   apostrophe (')
-///   underscore (_)
+/// The excluded characters are as follows:
+///   period (.)        Indicates a decimal separator (and in some languages, digit grouping).
+///   comma (,)         Commonly used for digit grouping (and in some languages, the decimal separator).
+///   underscore (_)    Used for digit grouping in several programming languages (C#, Java, etc.)
+///   dash (-)          Indicates a negative sign.
+///
+/// At this stage the class doesn't support negative values or values with a fractional part, but
+/// it might do in the future.
+///
+/// Apostrophes (') are also valid for digit grouping in certain languages, and in C++, but they
+/// aren't very common, and there aren't enough ASCII symbol characters to exclude more than 4.
+///
+/// Any whitespace characters in a string being parsed are ignored.
+///
+/// Digit characters that are invalid for the specified base of the value will trigger an exception,
+/// as will any control characters.
 /// </summary>
 /// <see href="https://en.wikipedia.org/wiki/List_of_numeral_systems"/>
 /// <see href="https://en.wikipedia.org/wiki/Binary_number"/>
@@ -84,12 +93,7 @@ public static class ConvertBase
     /// Digit characters. The index of a character in the string equals its value.
     /// </summary>
     public const string DIGITS =
-        "0123456789abcdefghijklmnopqrstuvwxyz!\"#$%&()*+-/:;<=>?@[\\]^`{|}~";
-
-    /// <summary>
-    /// Digit grouping characters.
-    /// </summary>
-    public const string DIGIT_GROUPING_CHARACTERS = " ',._";
+        "0123456789abcdefghijklmnopqrstuvwxyz!\"#$%&'()*+/:;<=>?@[\\]^`{|}~";
 
     #endregion Constants
 
@@ -221,7 +225,8 @@ public static class ConvertBase
 
     /// <summary>
     /// Convert a string of digits in a given base into a ulong.
-    /// Group separator characters and decimal separators will be ignored.
+    /// Any whitespace characters in the input will be ignored.
+    /// Commas and underscores are taken to indicate digit grouping and are also ignored.
     /// </summary>
     /// <param name="digits">A string of digits in the specified base.</param>
     /// <param name="fromBase">The base that the digits in the string are in.</param>
@@ -239,6 +244,13 @@ public static class ConvertBase
             throw new ArgumentNullException(nameof(digits), "Cannot be empty or whitespace.");
         }
 
+        // Check for a negative value.
+        if (digits[0] == '-')
+        {
+            throw new ArgumentOutOfRangeException(nameof(digits),
+                "Parsing of negative values is unsupported.");
+        }
+
         // Check the base is valid. This could throw an ArgumentOutOfRangeException.
         if (fromBase is < MIN_BASE or > MAX_BASE)
         {
@@ -246,13 +258,8 @@ public static class ConvertBase
                 $"The base must be in the range {MIN_BASE}..{MAX_BASE}.");
         }
 
-        // Remove ignored characters (i.e. control characters and digit grouping characters) from
-        // the input.
-        // We'll allow digit grouping characters to be present anywhere in the input string without
-        // throwing an exception, even if they aren't in the technically correct positions.
-        // Any remaining characters that aren't valid for the specified base will cause an exception
-        // to be thrown.
-        digits = Regex.Replace(digits, @$"[\x00-\x1F\x7F{DIGIT_GROUPING_CHARACTERS}]", "");
+        // Ignore whitespace and digit grouping characters.
+        digits = Regex.Replace(digits, @$"[\s,_]", "");
 
         // Get a map of valid digits to their value, for this base.
         Dictionary<char, byte> digitValues = GetDigitValuesForBase(fromBase);
@@ -264,10 +271,16 @@ public static class ConvertBase
             // Try to get the character value from the map.
             if (!digitValues.TryGetValue(c, out byte digitValue))
             {
+                if (c == '.')
+                {
+                    throw new ArgumentInvalidException(nameof(digits),
+                        "The period character, indicating a decimal point, is invalid, as parsing of values with a fractional part is unsupported.");
+                }
+
                 char[] digitChars = digitValues.Select(kvp => kvp.Key).ToArray();
                 string digitList = string.Join(", ", digitChars[..^1]) + " and " + digitChars[^1];
                 throw new ArgumentInvalidException(nameof(digits),
-                    $"A string representing a number in base {fromBase} may only include the digits {digitList}.");
+                    $"A string representing a number in base {fromBase} may only include the digits {digitList}. Whitespace characters, commas, and underscores are allowed but ignored.");
             }
 
             // Add it to the result. Check for overflow.

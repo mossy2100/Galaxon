@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Integers;
 
@@ -46,7 +46,7 @@ public static class Digits
 
     public static BigInteger SumFactorialDigits(BigInteger n)
     {
-        return n.ToString().Select(c => XBigInteger.Factorial(c - '0')).Sum();
+        return n.ToString().Select(c => BigIntegerExtensions.Factorial(c - '0')).Sum();
     }
 
     /// <summary>

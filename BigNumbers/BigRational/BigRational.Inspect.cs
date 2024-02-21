@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.BigNumbers;
 
@@ -120,6 +120,6 @@ public partial struct BigRational
     /// <returns>If the value is a dyadic rational.</returns>
     public static bool IsDyadic(BigRational value)
     {
-        return XBigInteger.IsPowerOf2(value.Denominator);
+        return BigIntegerExtensions.IsPowerOf2(value.Denominator);
     }
 }

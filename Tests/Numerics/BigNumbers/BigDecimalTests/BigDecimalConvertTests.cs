@@ -1,4 +1,4 @@
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 using Galaxon.Numerics.BigNumbers;
 
 namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
@@ -1207,8 +1207,8 @@ public class BigDecimalConvertTests
     {
         get
         {
-            var minPosNorm = XFloatingPoint.GetMinPosNormalValue<Half>();
-            var maxPosSub = XFloatingPoint.GetMaxPosSubnormalValue<Half>();
+            var minPosNorm = FloatingPointExtensions.GetMinPosNormalValue<Half>();
+            var maxPosSub = FloatingPointExtensions.GetMaxPosSubnormalValue<Half>();
             return new[]
             {
                 new object[] { Half.MinValue },
@@ -1369,8 +1369,8 @@ public class BigDecimalConvertTests
     {
         get
         {
-            var minPosNorm = XFloatingPoint.GetMinPosNormalValue<float>();
-            var maxPosSub = XFloatingPoint.GetMaxPosSubnormalValue<float>();
+            var minPosNorm = FloatingPointExtensions.GetMinPosNormalValue<float>();
+            var maxPosSub = FloatingPointExtensions.GetMaxPosSubnormalValue<float>();
             return new[]
             {
                 new object[] { float.MinValue },
@@ -1554,8 +1554,8 @@ public class BigDecimalConvertTests
     {
         get
         {
-            var minPosNorm = XFloatingPoint.GetMinPosNormalValue<double>();
-            var maxPosSub = XFloatingPoint.GetMaxPosSubnormalValue<double>();
+            var minPosNorm = FloatingPointExtensions.GetMinPosNormalValue<double>();
+            var maxPosSub = FloatingPointExtensions.GetMaxPosSubnormalValue<double>();
             return new[]
             {
                 new object[] { double.MinValue },

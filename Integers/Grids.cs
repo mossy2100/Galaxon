@@ -1,5 +1,5 @@
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Integers;
 
@@ -121,7 +121,7 @@ public static class Grids
 
     public static void PrintGrid(uint?[,] grid)
     {
-        int size = XInt.Sqrt(grid.Length);
+        int size = Int32Extensions.Sqrt(grid.Length);
         for (var y = 0; y < size; y++)
         {
             Console.Write("[ ");

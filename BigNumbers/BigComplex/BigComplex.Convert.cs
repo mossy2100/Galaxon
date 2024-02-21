@@ -460,7 +460,7 @@ public partial struct BigComplex
         result = Zero;
 
         // See if we can cast it.
-        if (XReflection.CanCast<TOther, BigComplex>())
+        if (ReflectionExtensions.CanCast<TOther, BigComplex>())
         {
             result = (BigComplex)(object)value;
             return true;
@@ -561,7 +561,7 @@ public partial struct BigComplex
     {
         if (IsRealNumber(bc))
         {
-            return XReflection.Cast<BigDecimal, T>(bc.Real);
+            return ReflectionExtensions.Cast<BigDecimal, T>(bc.Real);
         }
 
         throw new InvalidCastException("Cannot cast a complex number to a real number.");

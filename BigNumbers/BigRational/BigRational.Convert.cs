@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.BigNumbers;
 
@@ -107,7 +107,7 @@ public partial struct BigRational
         var num = (signBit == 1 ? -1 : 1) * (BigInteger)intBits;
 
         // Get the denominator.
-        var den = XBigInteger.Exp10(scaleBits);
+        var den = BigIntegerExtensions.Exp10(scaleBits);
 
         // Construct and return the new value.
         return new BigRational(num, den);
@@ -119,7 +119,7 @@ public partial struct BigRational
         if (x.Exponent < 0)
         {
             // Negative exponent.
-            return new BigRational(x.Significand, XBigInteger.Exp10(-x.Exponent));
+            return new BigRational(x.Significand, BigIntegerExtensions.Exp10(-x.Exponent));
         }
         if (x.Exponent == 0)
         {
@@ -127,7 +127,7 @@ public partial struct BigRational
             return new BigRational(x.Significand);
         }
         // Positive exponent.
-        return new BigRational(x.Significand * XBigInteger.Exp10(x.Exponent));
+        return new BigRational(x.Significand * BigIntegerExtensions.Exp10(x.Exponent));
     }
 
     #endregion Casting to BigRational
@@ -585,7 +585,7 @@ public partial struct BigRational
         var (signBit, expBits, fracBits) = x.Disassemble();
 
         // Convert the fraction bits to a denominator.
-        var nFracBits = XFloatingPoint.GetNumFracBits<T>();
+        var nFracBits = FloatingPointExtensions.GetNumFracBits<T>();
         if (T.IsNormal(x))
         {
             // Set the top bit.
@@ -601,9 +601,9 @@ public partial struct BigRational
 
         // Apply the exponent.
         BigInteger den = 1;
-        var maxExp = XFloatingPoint.GetMaxExp<T>();
+        var maxExp = FloatingPointExtensions.GetMaxExp<T>();
         var exp = (short)(expBits - maxExp - nFracBits);
-        var pow = XBigInteger.Exp2(XShort.Abs(exp));
+        var pow = BigIntegerExtensions.Exp2(Int16Extensions.Abs(exp));
         if (exp < 0)
         {
             den = pow;

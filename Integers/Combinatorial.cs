@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Functional;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Integers;
 
@@ -54,7 +54,7 @@ public static class Combinatorial
     /// <returns></returns>
     public static BigInteger NumPermutations(long n, long r)
     {
-        return XBigInteger.Factorial(n) / XBigInteger.Factorial(n - r);
+        return BigIntegerExtensions.Factorial(n) / BigIntegerExtensions.Factorial(n - r);
     }
 
     /// <summary>
@@ -179,7 +179,7 @@ public static class Combinatorial
     /// <returns></returns>
     public static BigInteger NumCombinations(long n, long r)
     {
-        return XBigInteger.Factorial(n) / (XBigInteger.Factorial(r) * XBigInteger.Factorial(n - r));
+        return BigIntegerExtensions.Factorial(n) / (BigIntegerExtensions.Factorial(r) * BigIntegerExtensions.Factorial(n - r));
     }
 
     /// <summary>

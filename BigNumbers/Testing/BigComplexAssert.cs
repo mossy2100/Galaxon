@@ -3,6 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Galaxon.Numerics.BigNumbers.Testing;
 
+/// <summary>
+/// Methods for unit tests relating to BigComplex values.
+/// </summary>
 public class BigComplexAssert
 {
     /// <summary>

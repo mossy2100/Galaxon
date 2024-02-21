@@ -1,4 +1,4 @@
-﻿using Galaxon.Core.Numbers.Extensions;
+﻿using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.Geometry;
 

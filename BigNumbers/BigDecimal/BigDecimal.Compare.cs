@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 using Galaxon.Core.Types;
 
 namespace Galaxon.Numerics.BigNumbers;
@@ -57,7 +57,7 @@ public partial struct BigDecimal
             BigDecimal ulpOther;
 
             // See if the other value is a BigDecimal.
-            if (XNumber.IsIntegerType(type))
+            if (NumberExtensions.IsIntegerType(type))
             {
                 // For integers, the ULP is always 1.
                 ulpOther = 1;
@@ -236,13 +236,13 @@ public partial struct BigDecimal
         // Subnormal value.
         if (T.IsSubnormal(f))
         {
-            return XReflection.Cast<T, BigDecimal>(T.Epsilon);
+            return ReflectionExtensions.Cast<T, BigDecimal>(T.Epsilon);
         }
 
         // Normal value.
         var expBits = f.GetExpBits();
-        var expBias = XFloatingPoint.GetExpBias<T>();
-        var nFracBits = XFloatingPoint.GetNumFracBits<T>();
+        var expBias = FloatingPointExtensions.GetExpBias<T>();
+        var nFracBits = FloatingPointExtensions.GetNumFracBits<T>();
         return Exp2(expBits - expBias - nFracBits);
     }
 

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
+using Galaxon.Core.Numbers;
 using Galaxon.Core.Strings;
 
 namespace Galaxon.Numerics.BigNumbers;
@@ -420,7 +421,7 @@ public partial struct BigDecimal
         if (unicode)
         {
             // Prepend the x10 part and superscript the exponent.
-            return "×10" + exp.ToString("D", provider).ToSuperscript();
+            return "×10" + exp.ToSuperscript();
         }
 
         // Standard format.

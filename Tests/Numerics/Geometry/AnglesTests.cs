@@ -32,7 +32,7 @@ public class AnglesTests
         {
             double actual = WrapRadians(inputs[i]);
             double expected = outputs[i];
-            XAssert.IsInRange(actual, -PI, PI);
+            AssertExtensions.IsInRange(actual, -PI, PI);
             Assert.AreEqual(expected, actual, _Delta);
         }
     }
@@ -61,7 +61,7 @@ public class AnglesTests
         {
             double actual = WrapRadians(inputs[i], false);
             double expected = outputs[i];
-            XAssert.IsInRange(actual, 0, Tau);
+            AssertExtensions.IsInRange(actual, 0, Tau);
             Assert.AreEqual(expected, actual, _Delta);
         }
     }
@@ -90,7 +90,7 @@ public class AnglesTests
         {
             double actual = WrapDegrees(inputs[i]);
             double expected = outputs[i];
-            XAssert.IsInRange(actual, -180, 180);
+            AssertExtensions.IsInRange(actual, -180, 180);
             Assert.AreEqual(expected, actual, _Delta);
         }
     }
@@ -119,7 +119,7 @@ public class AnglesTests
         {
             double actual = WrapDegrees(inputs[i], false);
             double expected = outputs[i];
-            XAssert.IsInRange(actual, 0, 360);
+            AssertExtensions.IsInRange(actual, 0, 360);
             Assert.AreEqual(expected, actual, _Delta);
         }
     }
@@ -150,39 +150,39 @@ public class AnglesTests
         // Test 0.
         double deg = 0;
         (double, double, double) deltaAngle = (0, 0, _Delta);
-        XAssert.AreEqual((0, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((0, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test whole number of degrees.
         deg = 12;
-        XAssert.AreEqual((12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test degrees and minutes.
         deg = 12.5666666666667;
-        XAssert.AreEqual((12, 34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((12, 34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test degrees, minutes, and seconds.
         deg = 12.5822222222222;
-        XAssert.AreEqual((12, 34, 56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((12, 34, 56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test degrees, minutes, seconds, and milliseconds.
         deg = 12.5824413888889;
-        XAssert.AreEqual((12, 34, 56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((12, 34, 56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test whole negative degrees.
         deg = -12;
-        XAssert.AreEqual((-12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((-12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test negative degrees and minutes.
         deg = -12.5666666666667;
-        XAssert.AreEqual((-12, -34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((-12, -34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test negative degrees, minutes, and seconds.
         deg = -12.5822222222222;
-        XAssert.AreEqual((-12, -34, -56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((-12, -34, -56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
 
         // Test negative degrees, minutes, seconds, and milliseconds.
         deg = -12.5824413888889;
-        XAssert.AreEqual((-12, -34, -56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        AssertExtensions.AreEqual((-12, -34, -56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
     }
 
     [TestMethod]

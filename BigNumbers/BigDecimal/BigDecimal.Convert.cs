@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 using Galaxon.Core.Types;
 
 namespace Galaxon.Numerics.BigNumbers;
@@ -742,8 +742,8 @@ public partial struct BigDecimal
         var sign = signBit == 1 ? -1 : 1;
 
         // Get some information about the type.
-        var nFracBits = XFloatingPoint.GetNumFracBits<T>();
-        var maxExp = XFloatingPoint.GetMaxExp<T>();
+        var nFracBits = FloatingPointExtensions.GetNumFracBits<T>();
+        var maxExp = FloatingPointExtensions.GetMaxExp<T>();
 
         // Get the significand.
         // The bit values are taken to have the value 1..2^(nFracBits - 1) and the exponent is
@@ -793,28 +793,28 @@ public partial struct BigDecimal
         }
 
         // Check for -∞.
-        var minValue = XReflection.Cast<T, BigDecimal>(XNumber.GetMinValue<T>());
+        var minValue = ReflectionExtensions.Cast<T, BigDecimal>(NumberExtensions.GetMinValue<T>());
         if (bd < minValue)
         {
-            return XFloatingPoint.GetNegativeInfinity<T>();
+            return FloatingPointExtensions.GetNegativeInfinity<T>();
         }
 
         // Check for +∞.
-        var maxValue = XReflection.Cast<T, BigDecimal>(XNumber.GetMaxValue<T>());
+        var maxValue = ReflectionExtensions.Cast<T, BigDecimal>(NumberExtensions.GetMaxValue<T>());
         if (bd > maxValue)
         {
-            return XFloatingPoint.GetPositiveInfinity<T>();
+            return FloatingPointExtensions.GetPositiveInfinity<T>();
         }
 
         // Check if its subnormal.
-        var minPosNormalValue = XFloatingPoint.GetMinPosNormalValue<T>();
-        var bdMinPosNormalValue = XReflection.Cast<T, BigDecimal>(minPosNormalValue);
+        var minPosNormalValue = FloatingPointExtensions.GetMinPosNormalValue<T>();
+        var bdMinPosNormalValue = ReflectionExtensions.Cast<T, BigDecimal>(minPosNormalValue);
         var abs = Abs(bd);
         var isSubnormal = abs < bdMinPosNormalValue;
 
         // Get the minimum and maximum exponent.
-        var minExp = XFloatingPoint.GetMinExp<T>();
-        var maxExp = XFloatingPoint.GetMaxExp<T>();
+        var minExp = FloatingPointExtensions.GetMinExp<T>();
+        var maxExp = FloatingPointExtensions.GetMaxExp<T>();
 
         // Calculate the exponent.
         var exp = isSubnormal ? minExp : (BigInteger)Floor(Log2(abs));
@@ -823,7 +823,7 @@ public partial struct BigDecimal
         byte nextBit = 0;
 
         // Get the number of fraction bits.
-        var nFracBits = XFloatingPoint.GetNumFracBits<T>();
+        var nFracBits = FloatingPointExtensions.GetNumFracBits<T>();
 
         // Calculate fraction bits.
         for (var i = 0; i < nFracBits + 1; i++)
@@ -867,7 +867,7 @@ public partial struct BigDecimal
         }
 
         // Assemble the final value.
-        return XFloatingPoint.Assemble<T>(signBit, expBits, fracBits);
+        return FloatingPointExtensions.Assemble<T>(signBit, expBits, fracBits);
     }
 
     #endregion Helper methods

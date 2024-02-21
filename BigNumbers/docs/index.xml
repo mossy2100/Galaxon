@@ -2672,6 +2672,11 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigRational.TryFormat(System.Span{System.Char},System.Int32@,System.ReadOnlySpan{System.Char},System.IFormatProvider)">
             <inheritdoc/>
         </member>
+        <member name="T:Galaxon.Numerics.BigNumbers.Testing.BigComplexAssert">
+            <summary>
+            Methods for unit tests relating to BigComplex values.
+            </summary>
+        </member>
         <member name="M:Galaxon.Numerics.BigNumbers.Testing.BigComplexAssert.AreFuzzyEqual``1(``0,Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>
             See if an actual BigComplex value is effectively equal to to an expected number (real or

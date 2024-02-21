@@ -38,10 +38,5 @@
         <None Remove="Numbers\old\**"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Numbers\Bases\" />
-      <Folder Include="Numbers\Utilities\" />
-    </ItemGroup>
-
 
 </Project>

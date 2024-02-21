@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Strings;
+using Galaxon.Core.Numbers;
 using Galaxon.Numerics.BigNumbers;
 
 namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
@@ -70,7 +70,8 @@ public class BigDecimalStringsTests
         bd = BigDecimal.Pi;
         str = bd.ToString("DU");
         Assert.AreEqual("31415926535897932384626433832795028841971693993751058209749445923078164"
-            + "06286208998628034825342117068×10⁻" + "99".ToSuperscript(), str);
+            + "06286208998628034825342117068×10⁻"
+            + 99.ToSuperscript(), str);
     }
 
     [TestMethod]
@@ -150,28 +151,29 @@ public class BigDecimalStringsTests
 
         bd = 12345;
         str = bd.ToString("EU");
-        Assert.AreEqual("1.2345×10" + "4".ToSuperscript(), str);
+        Assert.AreEqual("1.2345×10" + 4.ToSuperscript(), str);
 
         bd = BigDecimal.Parse("12345e67");
         str = bd.ToString("EU");
-        Assert.AreEqual("1.2345×10" + "71".ToSuperscript(), str);
+        Assert.AreEqual("1.2345×10" + 71.ToSuperscript(), str);
 
         bd = BigDecimal.Parse("12345e-67");
         str = bd.ToString("EU");
-        Assert.AreEqual("1.2345×10" + "-63".ToSuperscript(), str);
+        Assert.AreEqual("1.2345×10" + (-63).ToSuperscript(), str);
 
         bd = BigDecimal.Parse("-12345e67");
         str = bd.ToString("EU");
-        Assert.AreEqual("-1.2345×10" + "71".ToSuperscript(), str);
+        Assert.AreEqual("-1.2345×10" + 71.ToSuperscript(), str);
 
         bd = BigDecimal.Parse("-12345e-67");
         str = bd.ToString("EU");
-        Assert.AreEqual("-1.2345×10" + "-63".ToSuperscript(), str);
+        Assert.AreEqual("-1.2345×10" + (-63).ToSuperscript(), str);
 
         bd = BigDecimal.Pi;
         str = bd.ToString("EU");
         Assert.AreEqual("3.141592653589793238462643383279502884197169399375105820974944592307816406"
-            + "286208998628034825342117068×10" + "0".ToSuperscript(), str);
+            + "286208998628034825342117068×10"
+            + 0.ToSuperscript(), str);
     }
 
     [TestMethod]
@@ -182,31 +184,31 @@ public class BigDecimalStringsTests
 
         bd = 1.2345;
         str = bd.ToString("E2U");
-        Assert.AreEqual("1.23×10" + "0".ToSuperscript(), str);
+        Assert.AreEqual("1.23×10" + 0.ToSuperscript(), str);
 
         bd = 12345;
         str = bd.ToString("E2U");
-        Assert.AreEqual("1.23×10" + "4".ToSuperscript(), str);
+        Assert.AreEqual("1.23×10" + 4.ToSuperscript(), str);
 
         bd = 12345e67;
         str = bd.ToString("E2U");
-        Assert.AreEqual("1.23×10" + "71".ToSuperscript(), str);
+        Assert.AreEqual("1.23×10" + 71.ToSuperscript(), str);
 
         bd = 12345e-67;
         str = bd.ToString("E2U");
-        Assert.AreEqual("1.23×10" + "-63".ToSuperscript(), str);
+        Assert.AreEqual("1.23×10" + (-63).ToSuperscript(), str);
 
         bd = -12345e67;
         str = bd.ToString("E2U");
-        Assert.AreEqual("-1.23×10" + "71".ToSuperscript(), str);
+        Assert.AreEqual("-1.23×10" + 71.ToSuperscript(), str);
 
         bd = -12345e-67;
         str = bd.ToString("E2U");
-        Assert.AreEqual("-1.23×10" + "-63".ToSuperscript(), str);
+        Assert.AreEqual("-1.23×10" + (-63).ToSuperscript(), str);
 
         bd = BigDecimal.Pi;
         str = bd.ToString("E2U");
-        Assert.AreEqual("3.14×10" + "0".ToSuperscript(), str);
+        Assert.AreEqual("3.14×10" + 0.ToSuperscript(), str);
     }
 
     [TestMethod]

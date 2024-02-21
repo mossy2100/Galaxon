@@ -1,5 +1,5 @@
 using System.Numerics;
-using Galaxon.Core.Numbers.Extensions;
+using Galaxon.Core.Numbers;
 
 namespace Galaxon.Numerics.BigNumbers;
 
@@ -307,7 +307,7 @@ public partial struct BigDecimal
         }
 
         // Return the shifted significand.
-        return x.Significand * XBigInteger.Exp10(x.Exponent - newExponent);
+        return x.Significand * BigIntegerExtensions.Exp10(x.Exponent - newExponent);
     }
 
     /// <summary>
