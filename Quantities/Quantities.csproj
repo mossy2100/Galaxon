@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Galaxon.Quantities</RootNamespace>
+        <Company>Astro Multimedia</Company>
+        <PackageId>Quantities</PackageId>
+        <AssemblyName>Galaxon.Quantities</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\Time\Time.csproj" />
+    </ItemGroup>
+
+</Project>

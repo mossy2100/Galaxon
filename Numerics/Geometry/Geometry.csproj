@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Galaxon.Numerics.Geometry</AssemblyName>
+        <RootNamespace>Galaxon.Numerics.Geometry</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Core\Core.csproj" />
+        <ProjectReference Include="..\Integers\Integers.csproj"/>
+    </ItemGroup>
+
+</Project>

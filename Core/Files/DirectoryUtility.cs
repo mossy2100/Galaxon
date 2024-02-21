@@ -45,7 +45,7 @@ public static class DirectoryUtility
     /// <returns>
     /// The path to the solution directory if found, or <c>null</c> if no solution file was found.
     /// </returns>
-    public static string? GetSolution()
+    public static string? GetSolutionDirectory()
     {
         return GetParentDirectoryByFileType("sln");
     }
@@ -56,7 +56,7 @@ public static class DirectoryUtility
     /// <returns>
     /// The path to the project directory if found, or <c>null</c> if no project file was found.
     /// </returns>
-    public static string? GetProject()
+    public static string? GetProjectDirectory()
     {
         return GetParentDirectoryByFileType("csproj");
     }

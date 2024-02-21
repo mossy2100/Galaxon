@@ -305,14 +305,14 @@ public static class GregorianCalendarExtensions
     ///
     /// Example: Get the 4th Thursday in January, 2023.
     /// <code>
-    /// DateOnly meetup = XDateOnly.GetNthWeekdayInMonth(2023, 1, 4, DayOfWeek.Thursday);
+    /// DateOnly meetup = DateOnlyExtensions.GetNthWeekdayInMonth(2023, 1, 4, DayOfWeek.Thursday);
     /// </code>
     ///
     /// A negative value for n means count from the end of the month.
     /// n = -1 means the last one in the month. n = -2 means the second-last, etc.
     /// Example: Get the last Monday in November, 2025.
     /// <code>
-    /// DateOnly meetup = XDateOnly.GetNthWeekdayInMonth(2025, 11, -1, DayOfWeek.Monday);
+    /// DateOnly meetup = DateOnlyExtensions.GetNthWeekdayInMonth(2025, 11, -1, DayOfWeek.Monday);
     /// </code>
     /// </summary>
     /// <param name="year">The year.</param>

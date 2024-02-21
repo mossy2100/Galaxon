@@ -22,11 +22,18 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Algebra\Algebra.csproj" />
+        <ProjectReference Include="..\Astronomy\Algorithms\Algorithms.csproj" />
         <ProjectReference Include="..\Bases\Bases.csproj" />
         <ProjectReference Include="..\BigNumbers\BigNumbers.csproj" />
         <ProjectReference Include="..\Core\Core.csproj"/>
+        <ProjectReference Include="..\Development\Web\Web.csproj" />
         <ProjectReference Include="..\Geometry\Geometry.csproj" />
         <ProjectReference Include="..\Integers\Integers.csproj" />
+        <ProjectReference Include="..\Numerics\Algebra\Algebra.csproj" />
+        <ProjectReference Include="..\Numerics\Bases\Bases.csproj" />
+        <ProjectReference Include="..\Numerics\BigNumbers\BigNumbers.csproj" />
+        <ProjectReference Include="..\Numerics\Geometry\Geometry.csproj" />
+        <ProjectReference Include="..\Numerics\Integers\Integers.csproj" />
         <ProjectReference Include="..\Time\Time.csproj" />
     </ItemGroup>
 

@@ -27,7 +27,7 @@ public static class FloatingPointExtensions
         }
         else if (type == typeof(double))
         {
-            extensionTypeName = "XDouble";
+            extensionTypeName = "DoubleExtensions";
         }
         return Type.GetType($"Galaxon.Core.Numbers.Extensions.{extensionTypeName}");
     }

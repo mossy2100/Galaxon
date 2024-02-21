@@ -203,7 +203,7 @@
             The path to the directory if found, or <c>null</c>.
             </returns>
         </member>
-        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetSolution">
+        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetSolutionDirectory">
             <summary>
             Gets the path to the directory containing the solution file (.sln).
             </summary>
@@ -211,7 +211,7 @@
             The path to the solution directory if found, or <c>null</c> if no solution file was found.
             </returns>
         </member>
-        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetProject">
+        <member name="M:Galaxon.Core.Files.DirectoryUtility.GetProjectDirectory">
             <summary>
             Gets the path to the directory containing the project file (.csproj).
             </summary>
