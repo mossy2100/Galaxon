@@ -38,13 +38,13 @@ public class TestCoordinates
         }
 
         // Paris.
-        double lat1 = Angles.DegreesMinutesSecondsToDegrees(48, 50, 11);
-        double long1 = Angles.DegreesMinutesSecondsToDegrees(-2, -20, -14);
+        double lat1 = Angles.DMSToDegrees(48, 50, 11);
+        double long1 = Angles.DMSToDegrees(-2, -20, -14);
         GeoCoordinate paris = new (lat1, long1);
 
         // Washington.
-        double lat2 = Angles.DegreesMinutesSecondsToDegrees(38, 55, 17);
-        double long2 = Angles.DegreesMinutesSecondsToDegrees(77, 3, 56);
+        double lat2 = Angles.DMSToDegrees(38, 55, 17);
+        double long2 = Angles.DMSToDegrees(77, 3, 56);
         GeoCoordinate washington = new (lat2, long2);
 
         // Calculate distance in metres.

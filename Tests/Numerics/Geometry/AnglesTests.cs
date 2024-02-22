@@ -1,4 +1,5 @@
 ﻿using Galaxon.Core.Testing;
+using Galaxon.Numerics.Extensions;
 using static Galaxon.Numerics.Geometry.Angles;
 
 namespace Galaxon.Tests.Numerics.Geometry;
@@ -6,8 +7,6 @@ namespace Galaxon.Tests.Numerics.Geometry;
 [TestClass]
 public class AnglesTests
 {
-    private const double _Delta = 1e-9;
-
     [TestMethod]
     public void TestNormalizeRadiansSigned()
     {
@@ -33,7 +32,7 @@ public class AnglesTests
             double actual = WrapRadians(inputs[i]);
             double expected = outputs[i];
             AssertExtensions.IsInRange(actual, -PI, PI);
-            Assert.AreEqual(expected, actual, _Delta);
+            Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
 
@@ -62,7 +61,7 @@ public class AnglesTests
             double actual = WrapRadians(inputs[i], false);
             double expected = outputs[i];
             AssertExtensions.IsInRange(actual, 0, Tau);
-            Assert.AreEqual(expected, actual, _Delta);
+            Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
 
@@ -91,7 +90,7 @@ public class AnglesTests
             double actual = WrapDegrees(inputs[i]);
             double expected = outputs[i];
             AssertExtensions.IsInRange(actual, -180, 180);
-            Assert.AreEqual(expected, actual, _Delta);
+            Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
 
@@ -120,104 +119,73 @@ public class AnglesTests
             double actual = WrapDegrees(inputs[i], false);
             double expected = outputs[i];
             AssertExtensions.IsInRange(actual, 0, 360);
-            Assert.AreEqual(expected, actual, _Delta);
+            Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
 
     [TestMethod]
     public void RadiansToDegreesTest()
     {
-        Assert.AreEqual(180, RadiansToDegrees(PI), _Delta);
-        Assert.AreEqual(90, RadiansToDegrees(PI / 2), _Delta);
-        Assert.AreEqual(60, RadiansToDegrees(PI / 3), _Delta);
-        Assert.AreEqual(45, RadiansToDegrees(PI / 4), _Delta);
-        Assert.AreEqual(360, RadiansToDegrees(Tau), _Delta);
+        Assert.AreEqual(180, RadiansToDegrees(PI), DoubleExtensions.DELTA);
+        Assert.AreEqual(90, RadiansToDegrees(PI / 2), DoubleExtensions.DELTA);
+        Assert.AreEqual(60, RadiansToDegrees(PI / 3), DoubleExtensions.DELTA);
+        Assert.AreEqual(45, RadiansToDegrees(PI / 4), DoubleExtensions.DELTA);
+        Assert.AreEqual(360, RadiansToDegrees(Tau), DoubleExtensions.DELTA);
     }
 
     [TestMethod]
     public void DegreesToRadiansTest()
     {
-        Assert.AreEqual(PI, DegreesToRadians(180), _Delta);
-        Assert.AreEqual(PI / 2, DegreesToRadians(90), _Delta);
-        Assert.AreEqual(PI / 3, DegreesToRadians(60), _Delta);
-        Assert.AreEqual(PI / 4, DegreesToRadians(45), _Delta);
-        Assert.AreEqual(Tau, DegreesToRadians(360), _Delta);
+        Assert.AreEqual(PI, DegreesToRadians(180), DoubleExtensions.DELTA);
+        Assert.AreEqual(PI / 2, DegreesToRadians(90), DoubleExtensions.DELTA);
+        Assert.AreEqual(PI / 3, DegreesToRadians(60), DoubleExtensions.DELTA);
+        Assert.AreEqual(PI / 4, DegreesToRadians(45), DoubleExtensions.DELTA);
+        Assert.AreEqual(Tau, DegreesToRadians(360), DoubleExtensions.DELTA);
     }
 
-    [TestMethod]
-    public void DegreesToDegreesMinutesSecondsTest()
+    [DataTestMethod]
+    [DataRow(0, 0, 0, 0)]
+    [DataRow(12, 12, 0, 0)]
+    [DataRow(12.5666666666667, 12, 34, 0)]
+    [DataRow(12.5822222222222, 12, 34, 56)]
+    [DataRow(12.5824413888889, 12, 34, 56.789)]
+    [DataRow(-12, -12, 0, 0)]
+    [DataRow(-12.5666666666667, -12, -34, 0)]
+    [DataRow(-12.5822222222222, -12, -34, -56)]
+    [DataRow(-12.5824413888889, -12, -34, -56.789)]
+    public void DegreesToDMS_ReturnsCorrectValue(double angle, int expectedD, int expectedM,
+        double expectedS)
     {
-        // Test 0.
-        double deg = 0;
-        (double, double, double) deltaAngle = (0, 0, _Delta);
-        AssertExtensions.AreEqual((0, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        // Act
+        (int actualD, int actualM, double actualS) = DegreesToDMS(angle);
 
-        // Test whole number of degrees.
-        deg = 12;
-        AssertExtensions.AreEqual((12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test degrees and minutes.
-        deg = 12.5666666666667;
-        AssertExtensions.AreEqual((12, 34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test degrees, minutes, and seconds.
-        deg = 12.5822222222222;
-        AssertExtensions.AreEqual((12, 34, 56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test degrees, minutes, seconds, and milliseconds.
-        deg = 12.5824413888889;
-        AssertExtensions.AreEqual((12, 34, 56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test whole negative degrees.
-        deg = -12;
-        AssertExtensions.AreEqual((-12, 0, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test negative degrees and minutes.
-        deg = -12.5666666666667;
-        AssertExtensions.AreEqual((-12, -34, 0), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test negative degrees, minutes, and seconds.
-        deg = -12.5822222222222;
-        AssertExtensions.AreEqual((-12, -34, -56), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
-
-        // Test negative degrees, minutes, seconds, and milliseconds.
-        deg = -12.5824413888889;
-        AssertExtensions.AreEqual((-12, -34, -56.789), DegreesToDegreesMinutesSeconds(deg), deltaAngle);
+        // Assert
+        Assert.AreEqual(expectedD, actualD, DoubleExtensions.DELTA);
+        Assert.AreEqual(expectedM, actualM, DoubleExtensions.DELTA);
+        Assert.AreEqual(expectedS, actualS, DoubleExtensions.DELTA);
     }
 
-    [TestMethod]
-    public void DegreesMinutesSecondsToDegreesTest()
+    [DataTestMethod]
+    [DataRow(0, 0, 0, 0)]
+    [DataRow(12, 12, 0, 0)]
+    [DataRow(12.5666666666667, 12, 34, 0)]
+    [DataRow(12.5822222222222, 12, 34, 56)]
+    [DataRow(12.5824413888889, 12, 34, 56.789)]
+    [DataRow(-12, -12, 0, 0)]
+    [DataRow(-12.5666666666667, -12, -34, 0)]
+    [DataRow(-12.5822222222222, -12, -34, -56)]
+    [DataRow(-12.5824413888889, -12, -34, -56.789)]
+    public void DMSToDegrees_ReturnsCorrectValue(double expected, int d, int m, double s)
     {
-        // Test 0.
-        Assert.AreEqual(0, DegreesMinutesSecondsToDegrees(0, 0), _Delta);
+        // Act
+        double actual = DMSToDegrees(d, m, s);
 
-        // Test whole number of degrees.
-        Assert.AreEqual(12, DegreesMinutesSecondsToDegrees(12, 0), _Delta);
-
-        // Test degrees and minutes.
-        Assert.AreEqual(12.5666666666667, DegreesMinutesSecondsToDegrees(12, 34), _Delta);
-
-        // Test degrees, minutes, and seconds.
-        Assert.AreEqual(12.5822222222222, DegreesMinutesSecondsToDegrees(12, 34, 56), _Delta);
-
-        // Test degrees, minutes, seconds, and milliseconds.
-        Assert.AreEqual(12.5824413888889, DegreesMinutesSecondsToDegrees(12, 34, 56.789), _Delta);
-
-        // Test negative whole number of degrees.
-        Assert.AreEqual(-12, DegreesMinutesSecondsToDegrees(-12, 0), _Delta);
-
-        // Test negative degrees and minutes.
-        Assert.AreEqual(-12.5666666666667, DegreesMinutesSecondsToDegrees(-12, -34), _Delta);
-
-        // Test negative degrees, minutes, and seconds.
-        Assert.AreEqual(-12.5822222222222, DegreesMinutesSecondsToDegrees(-12, -34, -56), _Delta);
-
-        // Test negative degrees, minutes, seconds, and milliseconds.
-        Assert.AreEqual(-12.5824413888889, DegreesMinutesSecondsToDegrees(-12, -34, -56.789), _Delta);
+        // Assert
+        Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
     }
 
     [TestMethod]
-    public void FormatDmsTest()
+    public void DegreesToString_ReturnsCorrectValue()
     {
         // Test 0.
         double deg = 0;

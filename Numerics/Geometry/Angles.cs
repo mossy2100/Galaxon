@@ -77,65 +77,7 @@ public static class Angles
 
     #endregion Normalize methods
 
-    #region Conversion Methods
-
-    /// <summary>
-    /// Converts degrees to radians.
-    /// </summary>
-    public static double DegreesToRadians(double degrees)
-    {
-        return degrees * RADIANS_PER_DEGREE;
-    }
-
-    /// <summary>
-    /// Converts radians to degrees.
-    /// </summary>
-    public static double RadiansToDegrees(double radians)
-    {
-        return radians * DEGREES_PER_RADIAN;
-    }
-
-    /// <summary>
-    /// Converts degrees, arcminutes, and (optionally) arcseconds to decimal degrees.
-    /// </summary>
-    public static double DegreesMinutesSecondsToDegrees(double degrees, double arcminutes,
-        double arcseconds = 0)
-    {
-        return degrees
-            + (arcminutes / ARCMINUTES_PER_DEGREE)
-            + (arcseconds / ARCSECONDS_PER_DEGREE);
-    }
-
-    /// <summary>
-    /// Converts decimal degrees to degrees, arcminutes, and arcseconds.
-    /// </summary>
-    public static (double degrees, double arcminutes, double arcseconds)
-        DegreesToDegreesMinutesSeconds(double degrees)
-    {
-        double wholeDegrees = Truncate(degrees);
-        double fracDegrees = degrees - wholeDegrees;
-        double arcminutes = fracDegrees * ARCMINUTES_PER_DEGREE;
-        double wholeArcminutes = Truncate(arcminutes);
-        double fracArcminutes = arcminutes - wholeArcminutes;
-        double arcseconds = fracArcminutes * ARCSECONDS_PER_ARCMINUTE;
-        return (wholeDegrees, wholeArcminutes, arcseconds);
-    }
-
-    public static double DegreesMinutesSecondsToRadians(double degrees, double arcminutes,
-        double arcseconds = 0)
-    {
-        return DegreesToRadians(DegreesMinutesSecondsToDegrees(degrees, arcminutes, arcseconds));
-    }
-
-    public static (double degrees, double arcminutes, double arcseconds)
-        RadiansToDegreesMinutesSeconds(double radians)
-    {
-        return DegreesToDegreesMinutesSeconds(RadiansToDegrees(radians));
-    }
-
-    #endregion Conversion Methods
-
-    #region Trigonometric Methods
+    #region Trigonometric methods
 
     /// <summary>
     /// Calculates the square of the sine of an angle in radians.
@@ -185,14 +127,72 @@ public static class Angles
         return Tan(DegreesToRadians(degrees));
     }
 
-    #endregion Trigonometric Methods
+    #endregion Trigonometric methods
 
-    #region ToString Methods
+    #region Conversion methods
+
+    /// <summary>
+    /// Converts degrees to radians.
+    /// </summary>
+    public static double DegreesToRadians(double degrees)
+    {
+        return degrees * RADIANS_PER_DEGREE;
+    }
+
+    /// <summary>
+    /// Converts radians to degrees.
+    /// </summary>
+    public static double RadiansToDegrees(double radians)
+    {
+        return radians * DEGREES_PER_RADIAN;
+    }
+
+    /// <summary>
+    /// Converts degrees, arcminutes, and (optionally) arcseconds to decimal degrees.
+    /// </summary>
+    public static double DMSToDegrees(double degrees, double arcminutes,
+        double arcseconds = 0)
+    {
+        return degrees
+            + (arcminutes / ARCMINUTES_PER_DEGREE)
+            + (arcseconds / ARCSECONDS_PER_DEGREE);
+    }
+
+    /// <summary>
+    /// Converts decimal degrees to degrees, arcminutes, and arcseconds.
+    /// </summary>
+    public static (int degrees, int arcminutes, double arcseconds) DegreesToDMS(
+        double degrees)
+    {
+        int wholeDegrees = (int)Truncate(degrees);
+        double fracDegrees = degrees - wholeDegrees;
+        double arcminutes = fracDegrees * ARCMINUTES_PER_DEGREE;
+        int wholeArcminutes = (int)Truncate(arcminutes);
+        double fracArcminutes = arcminutes - wholeArcminutes;
+        double arcseconds = fracArcminutes * ARCSECONDS_PER_ARCMINUTE;
+        return (wholeDegrees, wholeArcminutes, arcseconds);
+    }
+
+    public static double DMSToRadians(double degrees, double arcminutes,
+        double arcseconds = 0)
+    {
+        return DegreesToRadians(DMSToDegrees(degrees, arcminutes, arcseconds));
+    }
+
+    public static (double degrees, double arcminutes, double arcseconds)
+        RadiansToDMS(double radians)
+    {
+        return DegreesToDMS(RadiansToDegrees(radians));
+    }
+
+    #endregion Conversion methods
+
+    #region ToString methods
 
     /// <summary>
     /// Converts decimal degrees, arcminutes, and arcseconds to string representation.
     /// </summary>
-    public static string DegreesMinutesSecondsToString(double degrees, double arcminutes,
+    public static string DMSToString(double degrees, double arcminutes,
         double arcseconds, byte precision = 0)
     {
         // Check all parts have the same sign.
@@ -207,7 +207,7 @@ public static class Angles
         if (degrees < 0)
         {
             return '-'
-                + DegreesMinutesSecondsToString(-degrees, -arcminutes, -arcseconds, precision);
+                + DMSToString(-degrees, -arcminutes, -arcseconds, precision);
         }
 
         var sArcSeconds = arcseconds.ToString($"F{precision}");
@@ -219,9 +219,9 @@ public static class Angles
     /// </summary>
     public static string DegreesToString(double n, byte precision = 0)
     {
-        (double degrees, double arcminutes, double arcseconds) = DegreesToDegreesMinutesSeconds(n);
-        return DegreesMinutesSecondsToString(degrees, arcminutes, arcseconds, precision);
+        (double degrees, double arcminutes, double arcseconds) = DegreesToDMS(n);
+        return DMSToString(degrees, arcminutes, arcseconds, precision);
     }
 
-    #endregion ToString Methods
+    #endregion ToString methods
 }

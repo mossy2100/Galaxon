@@ -5,9 +5,8 @@ public static class Int16Extensions
 {
     /// <summary>
     /// Return the absolute value of a short as a ushort.
-    /// This addresses an issue with short.Abs(), which is that Abs(short.MinValue) can't be expressed
-    /// as a short, and so wrap-around occurs.
-    /// Unsigned integer types don't have an Abs() method, so there's no collision.
+    /// This addresses an issue with short.Abs(), which is that Abs(short.MinValue) can't be
+    /// expressed as a short, and so wrap-around occurs.
     /// </summary>
     /// <param name="n">A short value.</param>
     /// <returns>The absolute value as a ushort.</returns>
@@ -17,7 +16,7 @@ public static class Int16Extensions
         {
             short.MinValue => short.MaxValue + 1,
             >= 0 => (ushort)n,
-            _ => (ushort)-n
+            _ => (ushort)(-n)
         };
     }
 }

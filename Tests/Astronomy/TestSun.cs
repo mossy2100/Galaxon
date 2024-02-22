@@ -39,8 +39,8 @@ public class TestSun
         double JD_TT = 2448908.5;
         (double actualL, double actualB) = _sunService!.CalcPosition(JD_TT);
 
-        double expectedL = Angles.WrapRadians(Angles.DegreesMinutesSecondsToRadians(199, 54, 21.82));
-        double expectedB = Angles.WrapRadians(Angles.DegreesMinutesSecondsToRadians(0, 0, 0.62));
+        double expectedL = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 21.82));
+        double expectedB = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.62));
 
         // Note the large delta necessary for the test to pass. This is probably
         // because the calculation in AA2 uses the 1980 method for calculating

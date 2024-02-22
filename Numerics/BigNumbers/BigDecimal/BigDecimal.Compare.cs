@@ -40,13 +40,9 @@ public partial struct BigDecimal
         var type = typeof(T);
 
         // Get the "other" value as a BigDecimal for the purpose of the comparison.
-        if (other is not BigDecimal bd)
+        if (other is not BigDecimal bd && !TryConvertFromChecked(other, out bd))
         {
-            var ok = TryConvertFromChecked(other, out bd);
-            if (!ok)
-            {
-                throw new ArgumentInvalidException(type.Name, "Unsupported type.");
-            }
+            throw new ArgumentInvalidException(type.Name, "Unsupported type.");
         }
 
         // If unspecified, calculate a reasonable delta.

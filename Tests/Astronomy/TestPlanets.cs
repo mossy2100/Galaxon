@@ -37,9 +37,9 @@ public class TestPlanets
     public void TestERA()
     {
         DateTime dt = new (2017, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        double expected = Angles.DegreesMinutesSecondsToRadians(100, 37, 12.4365);
+        double expected = Angles.DMSToRadians(100, 37, 12.4365);
         double actual = EarthService.CalcEarthRotationAngle(dt);
-        double delta = Angles.DegreesMinutesSecondsToRadians(0, 0, 1e-3);
+        double delta = Angles.DMSToRadians(0, 0, 1e-3);
         Assert.AreEqual(expected, actual, delta);
     }
 

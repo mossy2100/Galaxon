@@ -177,8 +177,8 @@ public class SunService(
         double lambdaPrime = lngSun
             - Angles.DegreesToRadians(1.397) * julCen
             - Angles.DegreesToRadians(0.000_31) * julCen * julCen;
-        lngSun -= Angles.DegreesMinutesSecondsToRadians(0, 0, 0.090_33);
-        latSun += Angles.DegreesMinutesSecondsToRadians(0, 0, 0.039_16)
+        lngSun -= Angles.DMSToRadians(0, 0, 0.090_33);
+        latSun += Angles.DMSToRadians(0, 0, 0.039_16)
             * (Cos(lambdaPrime) - Sin(lambdaPrime));
 
         // TODO

@@ -1,6 +1,7 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Core.Testing;
+using Galaxon.Time;
 
 namespace Galaxon.Tests.Astronomy;
 
@@ -16,6 +17,6 @@ public class TestSeasonalMarker
         var dt2 = new DateTime(1962, 6, 21, 21, 25, 8);
         // Check they match within 1 second.
         var delta = new TimeSpan(TimeSpan.TicksPerSecond);
-        AssertExtensions.AreEqual(dt, dt2, delta);
+        DateTimeAssert.AreEqual(dt, dt2, delta);
     }
 }
