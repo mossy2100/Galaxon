@@ -78,7 +78,7 @@ public static class BinaryIntegerExtensions
     /// </summary>
     /// <param name="str">The input string.</param>
     /// <returns>The input string with digits converted to superscript.</returns>
-    public static string MakeDigitsSuperscript(string str)
+    public static string DigitsToSuperscript(string str)
     {
         Dictionary<char, string> charMap = SuperscriptChars;
         charMap.Remove('-');
@@ -90,7 +90,7 @@ public static class BinaryIntegerExtensions
     /// </summary>
     /// <param name="str">The input string.</param>
     /// <returns>The input string with digits converted to subscript.</returns>
-    public static string MakeDigitsSubscript(string str)
+    public static string DigitsToSubscript(string str)
     {
         Dictionary<char, string> charMap = SubscriptChars;
         charMap.Remove('-');

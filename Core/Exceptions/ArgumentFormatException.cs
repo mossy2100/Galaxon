@@ -2,8 +2,11 @@
 
 /// <summary>
 /// This exception type is useful for an ArgumentException that is also a FormatException.
+///
+/// It has the advantage over FormatException of allowing the name of the parameter to be specified.
 /// The usual FormatException is probably best reserved for situations not involving method
 /// parameters, e.g. parsing a file.
+///
 /// I'm using the same parameter order here as used by ArgumentNullException and
 /// ArgumentOutOfRangeException.
 /// i.e. (paramName, message), for consistency. The base class, ArgumentException,
@@ -15,6 +18,7 @@
 /// should be done using nameof()), unless there are several, in which case the offending arguments
 /// can be identified in the message.
 /// </summary>
+/// <see cref="FormatException"/>
 /// <see cref="ArgumentException"/>
 /// <see cref="ArgumentNullException"/>
 /// <see cref="ArgumentOutOfRangeException"/>

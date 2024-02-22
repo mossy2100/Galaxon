@@ -9,47 +9,17 @@ public static class FloatingPointExtensions
     #region Methods for getting information about a standard floating point type.
 
     /// <summary>
-    /// Get the Galaxon extension type for this floating point type.
-    /// </summary>
-    /// <typeparam name="T">The standard floating point type.</typeparam>
-    /// <returns>The corresponding extension type.</returns>
-    public static Type? GetExtensionType<T>() where T : IFloatingPointIeee754<T>
-    {
-        string extensionTypeName = "";
-        Type type = typeof(T);
-        if (type == typeof(Half))
-        {
-            extensionTypeName = "XHalf";
-        }
-        else if (type == typeof(float))
-        {
-            extensionTypeName = "XFloat";
-        }
-        else if (type == typeof(double))
-        {
-            extensionTypeName = "DoubleExtensions";
-        }
-        return Type.GetType($"Galaxon.Numerics.Extensions.Extensions.{extensionTypeName}");
-    }
-
-    /// <summary>
     /// Get the total number of bits in values of this type.
     /// </summary>
     public static byte GetTotalNumBits<T>() where T : IFloatingPointIeee754<T>
     {
-        if (GetExtensionType<T>() is { } extensionType)
+        return T.Zero switch
         {
-            try
-            {
-                return ReflectionExtensions.GetStaticFieldValue<byte>(extensionType, "TOTAL_NUM_BITS");
-            }
-            catch
-            {
-                // Exception thrown below.
-            }
-        }
-
-        throw new InvalidOperationException($"The type {typeof(T).Name} is unsupported.");
+            Half => HalfExtensions.TOTAL_NUM_BITS,
+            Single => SingleExtensions.TOTAL_NUM_BITS,
+            Double => DoubleExtensions.TOTAL_NUM_BITS,
+            _ => throw new InvalidOperationException($"Unsupported type: {typeof(T).Name}.")
+        };
     }
 
     /// <summary>
@@ -57,19 +27,13 @@ public static class FloatingPointExtensions
     /// </summary>
     public static byte GetNumFracBits<T>() where T : IFloatingPointIeee754<T>
     {
-        if (GetExtensionType<T>() is { } extensionType)
+        return T.Zero switch
         {
-            try
-            {
-                return ReflectionExtensions.GetStaticFieldValue<byte>(extensionType, "NUM_FRAC_BITS");
-            }
-            catch
-            {
-                // Exception thrown below.
-            }
-        }
-
-        throw new InvalidOperationException("Unsupported type.");
+            Half => HalfExtensions.NUM_FRAC_BITS,
+            Single => SingleExtensions.NUM_FRAC_BITS,
+            Double => DoubleExtensions.NUM_FRAC_BITS,
+            _ => throw new InvalidOperationException($"Unsupported type: {typeof(T).Name}.")
+        };
     }
 
     /// <summary>

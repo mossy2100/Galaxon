@@ -69,24 +69,28 @@
             </returns>
         </member>
         <member name="T:Galaxon.Core.Exceptions.ArgumentFormatException">
-            <summary>
-            This exception type is useful for an ArgumentException that is also a FormatException.
-            The usual FormatException is probably best reserved for situations not involving method
-            parameters, e.g. parsing a file.
-            I'm using the same parameter order here as used by ArgumentNullException and
-            ArgumentOutOfRangeException.
-            i.e. (paramName, message), for consistency. The base class, ArgumentException,
-            has the parameters in a different order, i.e. (message, paramName), which can be confusing.
-            For this reason, I've resolved not to use ArgumentException anymore but to treat it as an
-            abstract base class.
-            This will avoid the issue with the arguments being out of order, and the lack of specificity.
-            Normally for any ArgumentException we want to identify the argument causing the exception (which
-            should be done using nameof()), unless there are several, in which case the offending arguments
-            can be identified in the message.
-            </summary>
-            <see cref="T:System.ArgumentException"/>
-            <see cref="T:System.ArgumentNullException"/>
-            <see cref="T:System.ArgumentOutOfRangeException"/>
+             <summary>
+             This exception type is useful for an ArgumentException that is also a FormatException.
+            
+             It has the advantage over FormatException of allowing the name of the parameter to be specified.
+             The usual FormatException is probably best reserved for situations not involving method
+             parameters, e.g. parsing a file.
+            
+             I'm using the same parameter order here as used by ArgumentNullException and
+             ArgumentOutOfRangeException.
+             i.e. (paramName, message), for consistency. The base class, ArgumentException,
+             has the parameters in a different order, i.e. (message, paramName), which can be confusing.
+             For this reason, I've resolved not to use ArgumentException anymore but to treat it as an
+             abstract base class.
+             This will avoid the issue with the arguments being out of order, and the lack of specificity.
+             Normally for any ArgumentException we want to identify the argument causing the exception (which
+             should be done using nameof()), unless there are several, in which case the offending arguments
+             can be identified in the message.
+             </summary>
+             <see cref="T:System.FormatException"/>
+             <see cref="T:System.ArgumentException"/>
+             <see cref="T:System.ArgumentNullException"/>
+             <see cref="T:System.ArgumentOutOfRangeException"/>
         </member>
         <member name="M:Galaxon.Core.Exceptions.ArgumentFormatException.#ctor">
             <summary>
@@ -254,6 +258,12 @@
             simple for now.
             </summary>
         </member>
+        <member name="F:Galaxon.Core.Strings.EStringCase.None">
+            <summary>
+            No case. Applies to empty strings, or strings of whitespace, or strings not containing
+            letters (e.g. numbers).
+            </summary>
+        </member>
         <member name="F:Galaxon.Core.Strings.EStringCase.Lower">
             <summary>
             Lower case.
@@ -271,14 +281,15 @@
         </member>
         <member name="F:Galaxon.Core.Strings.EStringCase.Proper">
             <summary>
-            Proper case. This is not the same as title case.
+            Proper case.
+            NB: This is not the same as title case.
             In proper case, every word has the first letter upper case, and other letters lower-case.
             In title case, some short words like articles and prepositions are all lower-case.
             </summary>
         </member>
         <member name="F:Galaxon.Core.Strings.EStringCase.Mixed">
             <summary>
-            Mixed case (i.e. none of the above).
+            Mixed case.
             </summary>
         </member>
         <member name="T:Galaxon.Core.Strings.StringBuilderExtensions">
@@ -297,15 +308,13 @@
             Extension methods for String.
             </summary>
         </member>
-        <member name="F:Galaxon.Core.Strings.StringExtensions.SmallCapsChars">
-            <summary>
-            Map from lower-case letters to their Unicode small caps equivalents.
-            </summary>
-        </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.EqualsIgnoreCase(System.String,System.String)">
             <summary>
-            See if 2 strings are equal, ignoring case.
+            Determines whether two strings are equal, ignoring case sensitivity.
             </summary>
+            <param name="str1">The first string to compare.</param>
+            <param name="str2">The second string to compare.</param>
+            <returns>True if the strings are equal, ignoring case; otherwise, false.</returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ReplaceChars(System.String,System.Collections.Generic.Dictionary{System.Char,System.String},System.Boolean)">
             <summary>
@@ -326,25 +335,18 @@
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.Repeat(System.String,System.Int32)">
             <summary>
-            Construct a new string by repeating a string multiple times.
+            Constructs a new string by repeating a specified string a specified number of times.
             </summary>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.IsPalindrome(System.String)">
-            <summary>
-            Check if a string is a palindrome.
-            </summary>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.StripWhitespace(System.String)">
-            <summary>
-            Remove whitespace from a string.
-            </summary>
-            <see href="https://www.compart.com/en/unicode/category/Zs"/>
-            <param name="str">The string to process.</param>
-            <returns>The string with whitespace characters removed.</returns>
+            <param name="s">The string to repeat.</param>
+            <param name="n">The number of times to repeat the string.</param>
+            <returns>A new string that consists of 'n' repetitions of the input string.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when 'n' is negative.</exception>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.StripBrackets(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
-            Remove brackets (and whatever's between them) from a string.
+            Remove brackets (and whatever is between them) from a string.
+            One use case is stripping HTML tags.
+            TODO Unit tests, if I decide to keep this method.
             </summary>
             <param name="str">The string to process.</param>
             <param name="round">If round brackets should be removed.</param>
@@ -354,7 +356,10 @@
             <returns>The string with brackets removed.</returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.StripTags(System.String)">
-            <summary>Strip HTML tags from a string.</summary>
+            <summary>
+            Strip HTML tags from a string.
+            TODO Unit tests, if I decide to keep this method.
+            </summary>
             <param name="str">The string to process.</param>
             <returns>The string with HTML tags removed.</returns>
         </member>
@@ -363,15 +368,30 @@
             Check if a string contains only ASCII characters.
             </summary>
             <param name="str">The string to check.</param>
-            <returns></returns>
+            <returns>If the string is empty or fully ASCII.</returns>
+        </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.IsPalindrome(System.String)">
+            <summary>
+            Check if a string is a palindrome.
+            </summary>
+        </member>
+        <member name="F:Galaxon.Core.Strings.StringExtensions.SmallCapsChars">
+            <summary>
+            Map from lower-case letters to their Unicode small caps equivalents.
+            </summary>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ToSmallCaps(System.String)">
             <summary>
             Convert all lower-case letters in a string to their Unicode small caps variant.
-            Only works for English letters, so, if necessary (e.g. if the string is in a different
-            language), you may wish to call AnyAscii.Transliterate() on the string first.
             </summary>
-            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.ToUpperFirstLetter(System.String)">
+            <summary>
+            Return the string with the first letter converted to upper-case.
+            The other letters aren't changed.
+            </summary>
+            <param name="str">The original string.</param>
+            <returns>The string with the first letter upper-cased.</returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ToProper(System.String)">
             <summary>
@@ -382,11 +402,6 @@
             </summary>
             <param name="str">The original string.</param>
             <returns>The string with the first letter of each word upper-cased.</returns>
-            <remarks>
-            A method ToTitle() could be developed based on this one, but it would require extracting the
-            words first, then seeing which ones should be all lower-case (a, an, for, to, etc.) and
-            which should have the first letter upper-cased.
-            </remarks>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.GetCase(System.String)">
             <summary>
@@ -404,59 +419,72 @@
             <param name="stringCase">The string case to convert to.</param>
             <returns>The new string.</returns>
         </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.ToUpperFirstLetter(System.String)">
-            <summary>
-            Return the string with the first letter converted to upper-case.
-            The other letters aren't changed.
-            </summary>
-            <param name="str">The original string.</param>
-            <returns>The string with the first letter upper-cased.</returns>
-        </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ZeroPad(System.String,System.Int32)">
             <summary>
-            Pad a string on the left with 0s to make it up to a certain width.
+            Pad a string on the left with zeroes to make it up to a certain width.
             </summary>
-            <param name="str">The string.</param>
-            <param name="width">The minimum number of characters in the the result.</param>
+            <param name="str">The string to pad.</param>
+            <param name="width">
+            The minimum number of characters in the resulting string.
+            Default is 2, which is useful for times and dates.
+            </param>
             <returns>The zero-padded string.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="str"/> is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Thrown when <paramref name="width"/> is not positive.
+            </exception>
         </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.GroupDigits(System.String,System.Char,System.Byte)">
+        <member name="M:Galaxon.Core.Strings.StringExtensions.GroupDigits(System.String,System.Char,System.Int32)">
             <summary>
-            Given a string of digits, format in groups using the specified group separator and group
-            size.
-            This method is designed for formatting numbers but it could be used for other purposes,
-            since the method doesn't check if the characters are actually digits. It just assumes they
-            are. Apart from saving time, it allows the method to be used for hexadecimal or other bases.
-            Grouping starts from the right. Here's how you would format an integer:
-            "12345678".GroupDigits(',', 3) => "12,345,678"
-            You can chain methods if you need to, e.g.
+            Formats a string of digits into groups using the specified group separator and size.
+            </summary>
+            <remarks>
+            This method is designed primarily for formatting integers but can be used for other
+            purposes, assuming the characters are digits. It allows formatting numbers in different
+            bases like hexadecimal. However, it doesn't handle numbers with a fractional part.
+            </remarks>
+            <example>
+            To format a decimal integer:
+            <code>
+            "12345678".GroupDigits() => "12,345,678"
+            </code>
+            You can chain methods:
+            <code>
             "11111000000001010101".ZeroPad(24).GroupDigits('_', 8) => "00001111_10000000_01010101"
             123456789.ToHex().ZeroPad(8).GroupDigits(' ') => "075b cd15"
-            </summary>
-            <param name="str">The string, nominally of digits, but can be whatever.</param>
-            <param name="separator">The group separator character.</param>
-            <param name="size">The group size.</param>
+            </code>
+            </example>
+            <param name="str">The string of digits to format.</param>
+            <param name="separator">The group separator character. Default is ','.</param>
+            <param name="size">The size of each group. Default is 3.</param>
             <returns>The formatted string.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="str"/> is null.
+            </exception>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ToInt(System.String)">
             <summary>
-            Convert nullable string to nullable int without throwing.
-            If the string cannot be parsed into an int, return null.
-            Of course, TryParse() can be used, but this method is a bit more concise, and saves time
-            thinking about nulls.
+            Convert a nullable string to a nullable integer without throwing an exception.
+            If the input string is null or cannot be parsed into an integer, returns null.
             </summary>
+            <param name="str">The nullable string to convert to an integer.</param>
+            <returns>
+            A nullable integer representing the parsed value of the input string,
+            or null if the input string is null or cannot be parsed.
+            </returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ToDouble(System.String)">
             <summary>
-            Convert nullable string to nullable double without throwing.
-            If the string cannot be parsed into a double, return null.
+            Convert a nullable string to a nullable double without throwing an exception.
+            If the input string is null or cannot be parsed into an double, returns null.
             </summary>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.ToDecimal(System.String)">
-            <summary>
-            Convert nullable string to nullable decimal without throwing.
-            If the string cannot be parsed into a decimal, return null.
-            </summary>
+            <param name="str">The nullable string to convert to an double.</param>
+            <returns>
+            A nullable double representing the parsed value of the input string,
+            or null if the input string is null or cannot be parsed.
+            </returns>
         </member>
         <member name="T:Galaxon.Core.Testing.AssertExtensions">
             <summary>

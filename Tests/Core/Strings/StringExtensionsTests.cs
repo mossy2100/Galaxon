@@ -1,51 +1,385 @@
 using Galaxon.Core.Strings;
-using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Tests.Core.Strings;
 
 [TestClass]
 public class StringExtensionsTests
 {
+    #region EqualsIgnoreCase
+
     [TestMethod]
-    public void MakeDigitsSuperscript_ReturnsCorrectValues()
+    public void EqualsIgnoreCase_TwoEmptyStrings_ReturnsTrue()
     {
-        string s1;
-        string s2;
+        // Arrange
+        string str1 = "";
+        string str2 = "";
 
-        s1 = "x2";
-        s2 = BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
-        Assert.AreEqual("x²", s2);
+        // Act
+        bool result = str1.EqualsIgnoreCase(str2);
 
-        s1 = "m/s2";
-        s2 = BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
-        Assert.AreEqual("m/s²", s2);
+        // Assert
+        Assert.IsTrue(result);
+    }
 
-        s1 = "23";
-        s2 = "6.02 * 10" + BinaryIntegerExtensions.MakeDigitsSuperscript(s1);
-        Assert.AreEqual("6.02 * 10²³", s2);
+    [DataTestMethod]
+    [DataRow("hello", "hello")]
+    [DataRow("hello", "Hello")]
+    [DataRow("Hello", "hello")]
+    [DataRow("hello", "HELLO")]
+    [DataRow("HELLO", "hello")]
+    public void EqualsIgnoreCase_TwoEqualStrings_ReturnsTrue(string str1, string str2)
+    {
+        // Act
+        bool result = str1.EqualsIgnoreCase(str2);
+
+        // Assert
+        Assert.IsTrue(result);
     }
 
     [TestMethod]
-    public void MakeDigitsSubscript_ReturnsCorrectValues()
+    public void EqualsIgnoreCase_TwoDifferentStrings_ReturnsFalse()
     {
-        string s1;
-        string s2;
+        // Arrange
+        string str1 = "Hello";
+        string str2 = "World";
 
-        s1 = "CH4";
-        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
-        Assert.AreEqual("CH₄", s2);
+        // Act
+        bool result = str1.EqualsIgnoreCase(str2);
 
-        s1 = "CH3OH";
-        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
-        Assert.AreEqual("CH₃OH", s2);
-
-        s1 = "v0";
-        s2 = BinaryIntegerExtensions.MakeDigitsSubscript(s1);
-        Assert.AreEqual("v₀", s2);
+        // Assert
+        Assert.IsFalse(result);
     }
 
     [TestMethod]
-    public void TestStringToSmallCaps()
+    public void EqualsIgnoreCase_EmptyAndNull_ReturnsFalse()
+    {
+        // Arrange
+        string str1 = "";
+        string? str2 = null;
+
+        // Act
+        bool result = str1.EqualsIgnoreCase(str2);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void EqualsIgnoreCase_NonEmptyAndNull_ReturnsFalse()
+    {
+        // Arrange
+        string str1 = "Hello";
+        string? str2 = null;
+
+        // Act
+        bool result = str1.EqualsIgnoreCase(str2);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion EqualsIgnoreCase
+
+    #region ReplaceChars
+
+    [TestMethod]
+    public void ReplaceChars_WithValidCharMap_ReturnsTransformedString()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = new Dictionary<char, string>
+        {
+            { 'H', "X" },
+            { 'e', "Y" },
+            { 'l', "Z" },
+            { 'o', "W" }
+        };
+        string expected = "XYZZW";
+
+        // Act
+        string result = original.ReplaceChars(charMap);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ReplaceChars_WithEmptyCharMap_ReturnsOriginalString()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = new Dictionary<char, string>();
+        string expected = "Hello";
+
+        // Act
+        string result = original.ReplaceChars(charMap);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ReplaceChars_WithNullCharMapAndKeepCharsNotInMapTrue_ReturnsOriginalString()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = null;
+        string expected = "Hello";
+
+        // Act
+        string result = original.ReplaceChars(charMap, true);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ReplaceChars_WithNullCharMapAndKeepCharsNotInMapFalse_ReturnsEmptyString()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = null;
+        string expected = "";
+
+        // Act
+        string result = original.ReplaceChars(charMap, false);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ReplaceChars_WithKeepCharsNotInMapTrue_ReturnsStringWithUnmappedChars()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = new Dictionary<char, string>
+        {
+            { 'H', "X" },
+            { 'e', "Y" },
+        };
+        string expected = "XYllo";
+
+        // Act
+        string result = original.ReplaceChars(charMap, true);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ReplaceChars_WithKeepCharsNotInMapFalse_ReturnsStringWithoutUnmappedChars()
+    {
+        // Arrange
+        string original = "Hello";
+        Dictionary<char, string> charMap = new Dictionary<char, string>
+        {
+            { 'H', "X" },
+            { 'e', "Y" },
+        };
+        string expected = "XY";
+
+        // Act
+        string result = original.ReplaceChars(charMap, false);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    #endregion ReplaceChars
+
+    #region Repeat
+
+    [TestMethod]
+    public void Repeat_WithPositiveNumber_ReturnsRepeatedString()
+    {
+        // Arrange
+        string inputString = "abc";
+        int repeatCount = 3;
+        string expected = "abcabcabc";
+
+        // Act
+        string result = inputString.Repeat(repeatCount);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void Repeat_WithZero_ReturnsEmptyString()
+    {
+        // Arrange
+        string inputString = "abc";
+        int repeatCount = 0;
+        string expected = "";
+
+        // Act
+        string result = inputString.Repeat(repeatCount);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void Repeat_WithEmptyString_ReturnsEmptyString()
+    {
+        // Arrange
+        string inputString = "";
+        int repeatCount = 5;
+        string expected = "";
+
+        // Act
+        string result = inputString.Repeat(repeatCount);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void Repeat_WithNegativeNumber_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        string inputString = "abc";
+        int repeatCount = -2;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        {
+            inputString.Repeat(repeatCount);
+        });
+    }
+
+    #endregion Repeat
+
+    #region IsAscii
+
+    [TestMethod]
+    public void IsAscii_WithAsciiCharacters_ReturnsTrue()
+    {
+        // Arrange
+        string input = "Hello, world!";
+
+        // Act
+        bool result = input.IsAscii();
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsAscii_WithNonAsciiCharacters_ReturnsFalse()
+    {
+        // Arrange
+        string input = "Привет, мир!";
+
+        // Act
+        bool result = input.IsAscii();
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsAscii_WithEmptyString_ReturnsTrue()
+    {
+        // Arrange
+        string input = "";
+
+        // Act
+        bool result = input.IsAscii();
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsAscii_WithNullString_ReturnsFalse()
+    {
+        // Arrange
+        string input = null;
+
+        // Act
+        bool result = input.IsAscii();
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion IsAscii
+
+    #region IsPalindrome
+
+    [TestMethod]
+    public void IsPalindrome_WithPalindromeString_ReturnsTrue()
+    {
+        // Arrange
+        string palindrome = "racecar";
+
+        // Act
+        bool result = palindrome.IsPalindrome();
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsPalindrome_WithNonPalindromeString_ReturnsFalse()
+    {
+        // Arrange
+        string nonPalindrome = "hello";
+
+        // Act
+        bool result = nonPalindrome.IsPalindrome();
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsPalindrome_WithEmptyString_ReturnsTrue()
+    {
+        // Arrange
+        string emptyString = "";
+
+        // Act
+        bool result = emptyString.IsPalindrome();
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsPalindrome_WithSingleCharacterString_ReturnsTrue()
+    {
+        // Arrange
+        string singleCharString = "a";
+
+        // Act
+        bool result = singleCharString.IsPalindrome();
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsPalindrome_WithNullString_ReturnsFalse()
+    {
+        // Arrange
+        string nullString = null;
+
+        // Act
+        bool result = nullString.IsPalindrome();
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion IsPalindrome
+
+    #region Small caps
+
+    [TestMethod]
+    public void ToSmallCaps_ReturnsCorrectValue()
     {
         var s1 = "A quick brown fox jumps over the lazy dog.";
         var s2 = s1.ToSmallCaps();
@@ -58,7 +392,82 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void ToProperReturnsEmptyStringGivenEmptyString()
+    public void ToSmallCaps_WithEmptyString_ReturnsEmptyString()
+    {
+        // Arrange
+        string s1 = "";
+
+        // Act
+        string s2 = s1.ToSmallCaps();
+
+        // Assert
+        Assert.AreEqual("", s2);
+    }
+
+    #endregion Small caps
+
+    #region ToUpperFirstLetter
+
+    [TestMethod]
+    public void ToUpperFirstLetter_NullString_ReturnsNull()
+    {
+        // Arrange
+        string input = null;
+
+        // Act
+        string result = input.ToUpperFirstLetter();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void ToUpperFirstLetter_EmptyString_ReturnsEmptyString()
+    {
+        // Arrange
+        string input = "";
+
+        // Act
+        string result = input.ToUpperFirstLetter();
+
+        // Assert
+        Assert.AreEqual("", result);
+    }
+
+    [TestMethod]
+    public void
+        ToUpperFirstLetter_StringWithLowercaseFirstLetter_ReturnsStringWithUppercaseFirstLetter()
+    {
+        // Arrange
+        string input = "hello world";
+        string expected = "Hello world";
+
+        // Act
+        string result = input.ToUpperFirstLetter();
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ToUpperFirstLetter_StringWithUppercaseFirstLetter_ReturnsSameString()
+    {
+        // Arrange
+        string input = "Hello World";
+
+        // Act
+        string result = input.ToUpperFirstLetter();
+
+        // Assert
+        Assert.AreEqual(input, result);
+    }
+
+    #endregion ToUpperFirstLetter
+
+    #region ToProper
+
+    [TestMethod]
+    public void ToProper_GivenEmptyString_ReturnsEmptyString()
     {
         string expected = "";
         string actual = expected.ToProper();
@@ -66,7 +475,7 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void ToProperReturnsWordWithFirstLetterUpperCase()
+    public void ToProper_OneWord_ReturnsCorrectValue()
     {
         string source = "cat";
         string expected = "Cat";
@@ -75,7 +484,7 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void ToProperMakesFirstLetterOfEachWordUpperCase()
+    public void ToProper_Title_ReturnsCorrectValue()
     {
         string source = "How to cook dairy-free macaroni";
         string expected = "How To Cook Dairy-Free Macaroni";
@@ -88,7 +497,7 @@ public class StringExtensionsTests
     /// Also shows one way to solve this problem.
     /// </summary>
     [TestMethod]
-    public void ToProperMakesCorrectLettersLowerCase()
+    public void ToProper_AllUpperCase_ReturnsCorrectValue()
     {
         string source = "HERE IS A SIMPLE TITLE, ALL UPPER-CASE";
         string expected = "HERE IS A SIMPLE TITLE, ALL UPPER-CASE";
@@ -110,7 +519,7 @@ public class StringExtensionsTests
     /// Test handling of ASCII apostrophe.
     /// </summary>
     [TestMethod]
-    public void ToProperHandlesAsciiApostrophe()
+    public void ToProper_WithAsciiApostrophe_ReturnsCorrectValue()
     {
         string source = "I can't believe it's not Java!";
         string expected = "I Can't Believe It's Not Java!";
@@ -122,7 +531,7 @@ public class StringExtensionsTests
     /// Test handling of Unicode apostrophe.
     /// </summary>
     [TestMethod]
-    public void ToProperHandlesUnicodeApostrophe()
+    public void ToProper_WithUnicodeApostrophe_ReturnsCorrectValue()
     {
         string source = "let’s cook bill’s and your friends’ meals.";
         string expected = "Let’s Cook Bill’s And Your Friends’ Meals.";
@@ -134,7 +543,7 @@ public class StringExtensionsTests
     /// Test handling of words beginning with or preceded by apostrophes.
     /// </summary>
     [TestMethod]
-    public void ToProperHandlesApostrophesAtStartOfWords()
+    public void ToProper_ApostrophesAtStartOfWords_ReturnsCorrectValue()
     {
         string source = "'don’t worry ’bout a thing,' she said.";
         string expected = "'Don’t Worry ’Bout A Thing,' She Said.";
@@ -147,7 +556,7 @@ public class StringExtensionsTests
     /// preserving proper nouns with apostrophes.
     /// </summary>
     [TestMethod]
-    public void ToProperHandlesProperNounsWithApostrophes()
+    public void ToProper_NounsWithApostrophes_ReturnsCorrectValue()
     {
         string source = "Seamus O'Henry loves pretending he's T'Challa.";
         string expected = "Seamus O'Henry Loves Pretending He's T'Challa.";
@@ -156,11 +565,10 @@ public class StringExtensionsTests
     }
 
     /// <summary>
-    /// Show how the method doesn't properly handle camel case variable, method (etc.) names,
-    /// because it doesn't know they aren't normal words.
+    /// Show how the ToProper method doesn't recognise lower camel case names.
     /// </summary>
     [TestMethod]
-    public void ToProperDoesNotRecogniseCamelCase()
+    public void ToProper_CamelCase_DoesNotRecognise()
     {
         string source = "Correct use of the JavaScript method getElementById().";
         string expected = "Correct Use Of The JavaScript Method GetElementById().";
@@ -172,11 +580,545 @@ public class StringExtensionsTests
     /// Show how the method properly handles acronyms.
     /// </summary>
     [TestMethod]
-    public void ToProperHandlesAcronyms()
+    public void ToProper_Acronyms_ReturnsCorrect_Value()
     {
         string source = "How to work for NASA on UAVs and HLVs.";
         string expected = "How To Work For NASA On UAVs And HLVs.";
         string actual = source.ToProper();
         Assert.AreEqual(expected, actual);
     }
+
+    /// <summary>
+    /// Show how the method properly handles hyphens.
+    /// </summary>
+    [TestMethod]
+    public void ToProper_Hyphens_ReturnsCorrect_Value()
+    {
+        string source = "Olivia Newton-John: How to thrive in a fast-changing world.";
+        string expected = "Olivia Newton-John: How To Thrive In A Fast-Changing World.";
+        string actual = source.ToProper();
+        Assert.AreEqual(expected, actual);
+    }
+
+    #endregion ToProper
+
+    #region GetCase
+
+    [TestMethod]
+    public void GetCase_NullString_ReturnsNone()
+    {
+        // Arrange
+        string input = null;
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.None, result);
+    }
+
+    [TestMethod]
+    public void GetCase_EmptyString_ReturnsNone()
+    {
+        // Arrange
+        string input = "";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.None, result);
+    }
+
+    [TestMethod]
+    public void GetCase_NumericString_ReturnsNone()
+    {
+        // Arrange
+        string input = "3.1416";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.None, result);
+    }
+
+    [TestMethod]
+    public void GetCase_LowerCaseString_ReturnsLower()
+    {
+        // Arrange
+        string input = "hello world";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.Lower, result);
+    }
+
+    [TestMethod]
+    public void GetCase_UpperCaseString_ReturnsUpper()
+    {
+        // Arrange
+        string input = "HELLO WORLD";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.Upper, result);
+    }
+
+    [TestMethod]
+    public void GetCase_ProperCaseString_ReturnsProper()
+    {
+        // Arrange
+        string input = "Hello World";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.Proper, result);
+    }
+
+    [TestMethod]
+    public void GetCase_UpperFirstLetterString_ReturnsUpperFirstLetter()
+    {
+        // Arrange
+        string input = "Hello world";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.UpperFirstLetter, result);
+    }
+
+    [TestMethod]
+    public void GetCase_MixedcaseString_ReturnsMixed()
+    {
+        // Arrange
+        string input = "hElLo WoRlD";
+
+        // Act
+        EStringCase result = input.GetCase();
+
+        // Assert
+        Assert.AreEqual(EStringCase.Mixed, result);
+    }
+
+    #endregion GetCase
+
+    #region SetCase
+
+    [TestMethod]
+    public void SetCase_ConvertToLower_Success()
+    {
+        // Arrange
+        string input = "HELLO";
+        string expected = "hello";
+
+        // Act
+        string result = input.SetCase(EStringCase.Lower);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_ConvertToUpper_Success()
+    {
+        // Arrange
+        string input = "hello";
+        string expected = "HELLO";
+
+        // Act
+        string result = input.SetCase(EStringCase.Upper);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_ConvertToProper_Success()
+    {
+        // Arrange
+        string input = "hello world";
+        string expected = "Hello World";
+
+        // Act
+        string result = input.SetCase(EStringCase.Proper);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_ConvertToUpperFirstLetter_Success()
+    {
+        // Arrange
+        string input = "hello world";
+        string expected = "Hello world";
+
+        // Act
+        string result = input.SetCase(EStringCase.UpperFirstLetter);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_InputHasNoCase_ReturnsSameString()
+    {
+        // Arrange
+        string input = "123";
+        string expected = input;
+
+        // Act
+        string result = input.SetCase(EStringCase.Lower);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_InputNull_ReturnsNull()
+    {
+        // Arrange
+        string input = null;
+        string expected = null;
+
+        // Act
+        string result = input.SetCase(EStringCase.Lower);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_InputEmptyString_ReturnsEmptyString()
+    {
+        // Arrange
+        string input = "";
+        string expected = "";
+
+        // Act
+        string result = input.SetCase(EStringCase.Lower);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_InputHasLettersAndDesiredCaseIsNone_ThrowsException()
+    {
+        // Arrange
+        string input = "Hello";
+
+        // Act & Assert
+        Assert.ThrowsException<InvalidOperationException>(() => input.SetCase(EStringCase.None));
+    }
+
+    #endregion SetCase
+
+    #region ZeroPad
+
+    [TestMethod]
+    public void ZeroPad_WidthGreaterThanStringLength_ReturnsPaddedString()
+    {
+        // Arrange
+        string input = "123";
+        int width = 5;
+        string expected = "00123";
+
+        // Act
+        string result = input.ZeroPad(width);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ZeroPad_WidthEqualsStringLength_ReturnsOriginalString()
+    {
+        // Arrange
+        string input = "123";
+        int width = 3;
+        string expected = input;
+
+        // Act
+        string result = input.ZeroPad(width);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ZeroPad_WidthLessThanStringLength_ReturnsOriginalString()
+    {
+        // Arrange
+        string input = "123";
+        int width = 2;
+        string expected = input;
+
+        // Act
+        string result = input.ZeroPad(width);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ZeroPad_InputIsNull_ThrowsException()
+    {
+        // Arrange
+        string input = null;
+        int width = 5;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() =>
+        {
+            string result = input.ZeroPad(width);
+        });
+    }
+
+    [TestMethod]
+    public void ZeroPad_WidthIsZero_ThrowsException()
+    {
+        // Arrange
+        string input = "123";
+        int width = 0;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        {
+            string result = input.ZeroPad(width);
+        });
+    }
+
+    [TestMethod]
+    public void ZeroPad_WidthIsNegative_ThrowsException()
+    {
+        // Arrange
+        string input = "123";
+        int width = -5;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        {
+            string result = input.ZeroPad(width);
+        });
+    }
+
+    #endregion ZeroPad
+
+    #region GroupDigits
+
+    [TestMethod]
+    public void GroupDigits_DefaultSeparatorAndSize()
+    {
+        // Arrange
+        string input = "1234567890";
+        string expected = "1,234,567,890";
+
+        // Act
+        string result = input.GroupDigits();
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void GroupDigits_CustomSeparator()
+    {
+        // Arrange
+        string input = "1234567890";
+        string expected = "1_234_567_890";
+
+        // Act
+        string result = input.GroupDigits('_');
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void GroupDigits_CustomSize()
+    {
+        // Arrange
+        string input = "1234567890";
+        string expected = "12,3456,7890";
+
+        // Act
+        string result = input.GroupDigits(',', 4);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void GroupDigits_HexadecimalWithZeroPad()
+    {
+        // Arrange
+        string input = "4169e1";
+        string expected = "0041_69e1";
+
+        // Act
+        string result = input.ZeroPad(8).GroupDigits('_', 4);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void GroupDigits_EmptyString()
+    {
+        // Arrange
+        string input = "";
+        string expected = "";
+
+        // Act
+        string result = input.GroupDigits();
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void GroupDigits_NullString()
+    {
+        // Arrange
+        string input = null;
+
+        // Act & Assert
+        Assert.ThrowsException<System.ArgumentNullException>(() => input.GroupDigits());
+    }
+
+    #endregion GroupDigits
+
+    #region ToInt
+
+    [TestMethod]
+    public void ToNullableInt_WithValidString_ReturnsIntValue()
+    {
+        // Arrange
+        string input = "123";
+
+        // Act
+        int? result = input.ToInt();
+
+        // Assert
+        Assert.AreEqual(123, result);
+    }
+
+    [TestMethod]
+    public void ToNullableInt_WithValidNegativeString_ReturnsIntValue()
+    {
+        // Arrange
+        string input = "-456";
+
+        // Act
+        int? result = input.ToInt();
+
+        // Assert
+        Assert.AreEqual(-456, result);
+    }
+
+    [TestMethod]
+    public void ToNullableInt_WithNullString_ReturnsNull()
+    {
+        // Arrange
+        string input = null;
+
+        // Act
+        int? result = input.ToInt();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void ToNullableInt_WithInvalidString_ReturnsNull()
+    {
+        // Arrange
+        string input = "abc";
+
+        // Act
+        int? result = input.ToInt();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    #endregion ToInt
+
+    #region ToDouble
+
+    [TestMethod]
+    public void ToNullableDouble_WithValidString_ReturnsDoubleValue()
+    {
+        // Arrange
+        string input = "123.456";
+
+        // Act
+        double? result = input.ToDouble();
+
+        // Assert
+        Assert.AreEqual(123.456, result);
+    }
+
+    [TestMethod]
+    public void ToNullableDouble_WithValidNegativeString_ReturnsDoubleValue()
+    {
+        // Arrange
+        string input = "-456.789";
+
+        // Act
+        double? result = input.ToDouble();
+
+        // Assert
+        Assert.AreEqual(-456.789, result);
+    }
+
+    [TestMethod]
+    public void ToNullableDouble_WithValidStringWithExponent_ReturnsDoubleValue()
+    {
+        // Arrange
+        string input = "123.456E+78";
+
+        // Act
+        double? result = input.ToDouble();
+
+        // Assert
+        Assert.AreEqual(123.456e78, result);
+    }
+
+    [TestMethod]
+    public void ToNullableDouble_WithNullString_ReturnsNull()
+    {
+        // Arrange
+        string input = null;
+
+        // Act
+        double? result = input.ToDouble();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void ToNullableDouble_WithInvalidString_ReturnsNull()
+    {
+        // Arrange
+        string input = "abc";
+
+        // Act
+        double? result = input.ToDouble();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    #endregion ToDouble
 }

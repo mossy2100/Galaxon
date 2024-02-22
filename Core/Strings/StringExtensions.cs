@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using Galaxon.Core.Collections;
 
 namespace Galaxon.Core.Strings;
 
@@ -8,44 +9,14 @@ namespace Galaxon.Core.Strings;
 /// </summary>
 public static class StringExtensions
 {
-    /// <summary>
-    /// Map from lower-case letters to their Unicode small caps equivalents.
-    /// </summary>
-    public static readonly Dictionary<char, string> SmallCapsChars = new ()
-    {
-        { 'a', "ᴀ" },
-        { 'b', "ʙ" },
-        { 'c', "ᴄ" },
-        { 'd', "ᴅ" },
-        { 'e', "ᴇ" },
-        { 'f', "ꜰ" },
-        { 'g', "ɢ" },
-        { 'h', "ʜ" },
-        { 'i', "ɪ" },
-        { 'j', "ᴊ" },
-        { 'k', "ᴋ" },
-        { 'l', "ʟ" },
-        { 'm', "ᴍ" },
-        { 'n', "ɴ" },
-        { 'o', "ᴏ" },
-        { 'p', "ᴘ" },
-        { 'q', "ꞯ" },
-        { 'r', "ʀ" },
-        { 's', "ꜱ" },
-        { 't', "ᴛ" },
-        { 'u', "ᴜ" },
-        { 'v', "ᴠ" },
-        { 'w', "ᴡ" },
-        // Note: there is no Unicode small caps variant for 'x'. The character used here is the
-        // lower-case 'x' (i.e. same as the original character).
-        { 'x', "x" },
-        { 'y', "ʏ" },
-        { 'z', "ᴢ" }
-    };
+    #region Extension methods
 
     /// <summary>
-    /// See if 2 strings are equal, ignoring case.
+    /// Determines whether two strings are equal, ignoring case sensitivity.
     /// </summary>
+    /// <param name="str1">The first string to compare.</param>
+    /// <param name="str2">The second string to compare.</param>
+    /// <returns>True if the strings are equal, ignoring case; otherwise, false.</returns>
     public static bool EqualsIgnoreCase(this string str1, string? str2)
     {
         return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
@@ -69,6 +40,12 @@ public static class StringExtensions
     public static string ReplaceChars(this string str, Dictionary<char, string> charMap,
         bool keepCharsNotInMap = true)
     {
+        // Optimization.
+        if (charMap.IsEmpty())
+        {
+            return keepCharsNotInMap ? str : "";
+        }
+
         StringBuilder sb = new ();
 
         foreach (char original in str)
@@ -90,9 +67,13 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Construct a new string by repeating a string multiple times.
+    /// Constructs a new string by repeating a specified string a specified number of times.
     /// </summary>
-    public static string Repeat(string s, int n)
+    /// <param name="s">The string to repeat.</param>
+    /// <param name="n">The number of times to repeat the string.</param>
+    /// <returns>A new string that consists of 'n' repetitions of the input string.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when 'n' is negative.</exception>
+    public static string Repeat(this string s, int n)
     {
         // Guard.
         if (n < 0)
@@ -100,37 +81,19 @@ public static class StringExtensions
             throw new ArgumentOutOfRangeException(nameof(n), "Cannot be negative.");
         }
 
-        StringBuilder sb = new ();
-        for (var i = 0; i < n; i++)
-        {
-            sb.Append(s);
-        }
-        return sb.ToString();
+        // Using Enumerable.Repeat to create an IEnumerable<string> of length 'n'
+        // Then, string.Concat joins all the strings in the IEnumerable into one string.
+        return string.Concat(Enumerable.Repeat(s, n));
     }
 
-    /// <summary>
-    /// Check if a string is a palindrome.
-    /// </summary>
-    public static bool IsPalindrome(this string str)
-    {
-        return str == str.Reverse().ToString();
-    }
+    #endregion Extension methods
+
+    #region Strip brackets
 
     /// <summary>
-    /// Remove whitespace from a string.
-    /// </summary>
-    /// <see href="https://www.compart.com/en/unicode/category/Zs"/>
-    /// <param name="str">The string to process.</param>
-    /// <returns>The string with whitespace characters removed.</returns>
-    public static string StripWhitespace(this string str)
-    {
-        return Regex.Replace(str,
-            @"[\s\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008"
-            + @"\u2009\u200A\u202F\u205F\u3000]", "");
-    }
-
-    /// <summary>
-    /// Remove brackets (and whatever's between them) from a string.
+    /// Remove brackets (and whatever is between them) from a string.
+    /// One use case is stripping HTML tags.
+    /// TODO Unit tests, if I decide to keep this method.
     /// </summary>
     /// <param name="str">The string to process.</param>
     /// <param name="round">If round brackets should be removed.</param>
@@ -164,7 +127,10 @@ public static class StringExtensions
         return str;
     }
 
-    /// <summary>Strip HTML tags from a string.</summary>
+    /// <summary>
+    /// Strip HTML tags from a string.
+    /// TODO Unit tests, if I decide to keep this method.
+    /// </summary>
     /// <param name="str">The string to process.</param>
     /// <returns>The string with HTML tags removed.</returns>
     public static string StripTags(this string str)
@@ -172,25 +138,94 @@ public static class StringExtensions
         return str.StripBrackets(false, false, false);
     }
 
+    #endregion Strip brackets
+
+    #region Inspect string
+
     /// <summary>
     /// Check if a string contains only ASCII characters.
     /// </summary>
     /// <param name="str">The string to check.</param>
-    /// <returns></returns>
+    /// <returns>If the string is empty or fully ASCII.</returns>
     public static bool IsAscii(this string str)
     {
-        return str.All(char.IsAscii);
+        return str != null && str.All(char.IsAscii);
     }
 
     /// <summary>
-    /// Convert all lower-case letters in a string to their Unicode small caps variant.
-    /// Only works for English letters, so, if necessary (e.g. if the string is in a different
-    /// language), you may wish to call AnyAscii.Transliterate() on the string first.
+    /// Check if a string is a palindrome.
     /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
+    public static bool IsPalindrome(this string str)
+    {
+        return str != null && str == string.Concat(str.Reverse());
+    }
+
+    #endregion Inspect string
+
+    #region Small caps
+
+    /// <summary>
+    /// Map from lower-case letters to their Unicode small caps equivalents.
+    /// </summary>
+    public static readonly Dictionary<char, string> SmallCapsChars = new ()
+    {
+        { 'a', "ᴀ" },
+        { 'b', "ʙ" },
+        { 'c', "ᴄ" },
+        { 'd', "ᴅ" },
+        { 'e', "ᴇ" },
+        { 'f', "ꜰ" },
+        { 'g', "ɢ" },
+        { 'h', "ʜ" },
+        { 'i', "ɪ" },
+        { 'j', "ᴊ" },
+        { 'k', "ᴋ" },
+        { 'l', "ʟ" },
+        { 'm', "ᴍ" },
+        { 'n', "ɴ" },
+        { 'o', "ᴏ" },
+        { 'p', "ᴘ" },
+        { 'q', "ꞯ" },
+        { 'r', "ʀ" },
+        { 's', "ꜱ" },
+        { 't', "ᴛ" },
+        { 'u', "ᴜ" },
+        { 'v', "ᴠ" },
+        { 'w', "ᴡ" },
+        // Note: there is no Unicode small caps variant for 'x'. The character used here is the
+        // lower-case 'x', which is the same as the original character.
+        { 'x', "x" },
+        { 'y', "ʏ" },
+        { 'z', "ᴢ" }
+    };
+
+    /// <summary>
+    /// Convert all lower-case letters in a string to their Unicode small caps variant.
+    /// </summary>
     public static string ToSmallCaps(this string str)
     {
         return str.ReplaceChars(SmallCapsChars);
+    }
+
+    #endregion Small caps
+
+    #region String case
+
+    /// <summary>
+    /// Return the string with the first letter converted to upper-case.
+    /// The other letters aren't changed.
+    /// </summary>
+    /// <param name="str">The original string.</param>
+    /// <returns>The string with the first letter upper-cased.</returns>
+    public static string ToUpperFirstLetter(this string str)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
+        // Return upper-case first letter concatentated with remaining substring.
+        return char.ToUpper(str[0]) + str[1..];
     }
 
     /// <summary>
@@ -201,15 +236,9 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">The original string.</param>
     /// <returns>The string with the first letter of each word upper-cased.</returns>
-    /// <remarks>
-    /// A method ToTitle() could be developed based on this one, but it would require extracting the
-    /// words first, then seeing which ones should be all lower-case (a, an, for, to, etc.) and
-    /// which should have the first letter upper-cased.
-    /// </remarks>
     public static string ToProper(this string str)
     {
-        // Guard.
-        if (string.IsNullOrEmpty(str))
+        if (string.IsNullOrWhiteSpace(str))
         {
             return str;
         }
@@ -252,27 +281,48 @@ public static class StringExtensions
     /// <returns>The string's case.</returns>
     public static EStringCase GetCase(this string str)
     {
-        if (str == str.ToLower())
+        // Test for empty string.
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return EStringCase.None;
+        }
+
+        // Prepare.
+        string upper = str.ToUpper();
+        string lower = str.ToLower();
+
+        // Test for no case.
+        if (upper == lower)
+        {
+            return EStringCase.None;
+        }
+
+        // Test for lower case.
+        if (str == lower)
         {
             return EStringCase.Lower;
         }
 
-        if (str == str.ToUpper())
+        // Test for upper case.
+        if (str == upper)
         {
             return EStringCase.Upper;
         }
 
+        // Test for proper case.
         if (str == str.ToProper())
         {
             return EStringCase.Proper;
         }
 
-        // This has to come after ToUpper() and ToProper() otherwise they wouldn't ever be detected.
+        // Test for upper case first letter.
+        // This has to come after ToUpper() and ToProper() or they would never be detected.
         if (str == str.ToUpperFirstLetter())
         {
             return EStringCase.UpperFirstLetter;
         }
 
+        // Something else. Could be title case, lower camel case, etc.
         return EStringCase.Mixed;
     }
 
@@ -284,132 +334,152 @@ public static class StringExtensions
     /// <returns>The new string.</returns>
     public static string SetCase(this string str, EStringCase stringCase)
     {
-        if (stringCase == EStringCase.Lower)
+        // If the string's case is already None there's nothing to do.
+        if (str.GetCase() == EStringCase.None)
         {
-            return str.ToLower();
+            return str;
         }
 
-        if (stringCase == EStringCase.Upper)
+        // Can't set a string with letters (which means it has a case) to having no case.
+        if (stringCase == EStringCase.None)
         {
-            return str.ToUpper();
+            throw new InvalidOperationException(
+                "You can't set the case of a string to None if it contains letters.");
         }
 
-        if (stringCase == EStringCase.UpperFirstLetter)
+        // Change the case.
+        return stringCase switch
         {
-            return str.ToUpperFirstLetter();
-        }
-
-        if (stringCase == EStringCase.Proper)
-        {
-            return str.ToProper();
-        }
-
-        return str;
+            EStringCase.Lower => str.ToLower(),
+            EStringCase.Upper => str.ToUpper(),
+            EStringCase.UpperFirstLetter => str.ToUpperFirstLetter(),
+            EStringCase.Proper => str.ToProper(),
+            // Default case, return the original string.
+            _ => str
+        };
     }
 
-    /// <summary>
-    /// Return the string with the first letter converted to upper-case.
-    /// The other letters aren't changed.
-    /// </summary>
-    /// <param name="str">The original string.</param>
-    /// <returns>The string with the first letter upper-cased.</returns>
-    public static string ToUpperFirstLetter(this string str)
-    {
-        // Check for empty string.
-        if (str == "")
-        {
-            return "";
-        }
+    #endregion String case
 
-        // Return char and concat substring.
-        return char.ToUpper(str[0]) + str[1..];
-    }
-
-    #region Methods for formatting numbers
+    #region Format numbers
 
     /// <summary>
-    /// Pad a string on the left with 0s to make it up to a certain width.
+    /// Pad a string on the left with zeroes to make it up to a certain width.
     /// </summary>
-    /// <param name="str">The string.</param>
-    /// <param name="width">The minimum number of characters in the the result.</param>
+    /// <param name="str">The string to pad.</param>
+    /// <param name="width">
+    /// The minimum number of characters in the resulting string.
+    /// Default is 2, which is useful for times and dates.
+    /// </param>
     /// <returns>The zero-padded string.</returns>
-    public static string ZeroPad(this string str, int width)
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="str"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="width"/> is not positive.
+    /// </exception>
+    public static string ZeroPad(this string str, int width = 2)
     {
+        // Guards.
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str), "Cannot be null.");
+        }
+        if (width <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(width), "Must be positive.");
+        }
+
         return str.PadLeft(width, '0');
     }
 
     /// <summary>
-    /// Given a string of digits, format in groups using the specified group separator and group
-    /// size.
-    /// This method is designed for formatting numbers but it could be used for other purposes,
-    /// since the method doesn't check if the characters are actually digits. It just assumes they
-    /// are. Apart from saving time, it allows the method to be used for hexadecimal or other bases.
-    /// Grouping starts from the right. Here's how you would format an integer:
-    /// "12345678".GroupDigits(',', 3) => "12,345,678"
-    /// You can chain methods if you need to, e.g.
+    /// Formats a string of digits into groups using the specified group separator and size.
+    /// </summary>
+    /// <remarks>
+    /// This method is designed primarily for formatting integers but can be used for other
+    /// purposes, assuming the characters are digits. It allows formatting numbers in different
+    /// bases like hexadecimal. However, it doesn't handle numbers with a fractional part.
+    /// </remarks>
+    /// <example>
+    /// To format a decimal integer:
+    /// <code>
+    /// "12345678".GroupDigits() => "12,345,678"
+    /// </code>
+    /// You can chain methods:
+    /// <code>
     /// "11111000000001010101".ZeroPad(24).GroupDigits('_', 8) => "00001111_10000000_01010101"
     /// 123456789.ToHex().ZeroPad(8).GroupDigits(' ') => "075b cd15"
-    /// </summary>
-    /// <param name="str">The string, nominally of digits, but can be whatever.</param>
-    /// <param name="separator">The group separator character.</param>
-    /// <param name="size">The group size.</param>
+    /// </code>
+    /// </example>
+    /// <param name="str">The string of digits to format.</param>
+    /// <param name="separator">The group separator character. Default is ','.</param>
+    /// <param name="size">The size of each group. Default is 3.</param>
     /// <returns>The formatted string.</returns>
-    public static string GroupDigits(this string str, char separator = '_', byte size = 4)
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="str"/> is null.
+    /// </exception>
+    public static string GroupDigits(this string str, char separator = ',', int size = 3)
     {
-        StringBuilder sb = new ();
-        while (true)
+        // Guard clauses.
+        if (str == null)
         {
-            if (str == "")
+            throw new ArgumentNullException(nameof(str), "Cannot be null.");
+        }
+        if (str.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        // Iterate through the string to group digits.
+        StringBuilder sb = new();
+        int groupStart = str.Length % size; // Start index of the first group.
+        if (groupStart > 0)
+        {
+            sb.Append(str.Substring(0, groupStart));
+        }
+        for (int i = groupStart; i < str.Length; i += size)
+        {
+            if (sb.Length > 0)
             {
-                break;
+                sb.Append(separator);
             }
-            string group = str.Length > size ? str[^size..] : str;
-            if (sb.Length != 0)
-            {
-                sb.Prepend(separator);
-            }
-            sb.Prepend(group);
-            if (str.Length <= size)
-            {
-                break;
-            }
-            str = str[..^size];
+            sb.Append(str.Substring(i, Math.Min(size, str.Length - i)));
         }
         return sb.ToString();
     }
 
-    #endregion Methods for formatting numbers
+    #endregion Format numbers
 
-    #region Methods for converting strings to numbers
+    #region Convert strings to numbers
 
     /// <summary>
-    /// Convert nullable string to nullable int without throwing.
-    /// If the string cannot be parsed into an int, return null.
-    /// Of course, TryParse() can be used, but this method is a bit more concise, and saves time
-    /// thinking about nulls.
+    /// Convert a nullable string to a nullable integer without throwing an exception.
+    /// If the input string is null or cannot be parsed into an integer, returns null.
     /// </summary>
+    /// <param name="str">The nullable string to convert to an integer.</param>
+    /// <returns>
+    /// A nullable integer representing the parsed value of the input string,
+    /// or null if the input string is null or cannot be parsed.
+    /// </returns>
     public static int? ToInt(this string? str)
     {
-        return int.TryParse(str, out int i) ? i : null;
+        return int.TryParse(str, out int result) ? result : null;
     }
 
     /// <summary>
-    /// Convert nullable string to nullable double without throwing.
-    /// If the string cannot be parsed into a double, return null.
+    /// Convert a nullable string to a nullable double without throwing an exception.
+    /// If the input string is null or cannot be parsed into an double, returns null.
     /// </summary>
+    /// <param name="str">The nullable string to convert to an double.</param>
+    /// <returns>
+    /// A nullable double representing the parsed value of the input string,
+    /// or null if the input string is null or cannot be parsed.
+    /// </returns>
     public static double? ToDouble(this string? str)
     {
         return double.TryParse(str, out double d) ? d : null;
     }
 
-    /// <summary>
-    /// Convert nullable string to nullable decimal without throwing.
-    /// If the string cannot be parsed into a decimal, return null.
-    /// </summary>
-    public static decimal? ToDecimal(this string? str)
-    {
-        return decimal.TryParse(str, out decimal m) ? m : null;
-    }
-
-    #endregion Methods for converting strings to numbers
+    #endregion Convert strings to numbers
 }
