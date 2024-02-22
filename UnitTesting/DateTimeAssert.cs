@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Galaxon.Time;
+namespace Galaxon.UnitTesting;
 
 /// <summary>
 /// Methods relating to DateTime values for use in unit tests.

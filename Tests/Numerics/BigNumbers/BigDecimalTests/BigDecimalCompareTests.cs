@@ -1,6 +1,6 @@
 using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.BigNumbers;
-using Galaxon.Numerics.BigNumbers.Testing;
+using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 

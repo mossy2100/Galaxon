@@ -1,5 +1,5 @@
-﻿using Galaxon.Core.Testing;
-using Galaxon.Numerics.Extensions;
+﻿using Galaxon.Numerics.Extensions;
+using Galaxon.UnitTesting;
 using static Galaxon.Numerics.Geometry.Angles;
 
 namespace Galaxon.Tests.Numerics.Geometry;
@@ -31,7 +31,7 @@ public class AnglesTests
         {
             double actual = WrapRadians(inputs[i]);
             double expected = outputs[i];
-            AssertExtensions.IsInRange(actual, -PI, PI);
+            DoubleAssert.IsInRange(actual, -PI, PI);
             Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
@@ -60,7 +60,7 @@ public class AnglesTests
         {
             double actual = WrapRadians(inputs[i], false);
             double expected = outputs[i];
-            AssertExtensions.IsInRange(actual, 0, Tau);
+            DoubleAssert.IsInRange(actual, 0, Tau);
             Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
@@ -89,7 +89,7 @@ public class AnglesTests
         {
             double actual = WrapDegrees(inputs[i]);
             double expected = outputs[i];
-            AssertExtensions.IsInRange(actual, -180, 180);
+            DoubleAssert.IsInRange(actual, -180, 180);
             Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }
@@ -118,7 +118,7 @@ public class AnglesTests
         {
             double actual = WrapDegrees(inputs[i], false);
             double expected = outputs[i];
-            AssertExtensions.IsInRange(actual, 0, 360);
+            DoubleAssert.IsInRange(actual, 0, 360);
             Assert.AreEqual(expected, actual, DoubleExtensions.DELTA);
         }
     }

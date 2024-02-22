@@ -1,7 +1,8 @@
 using System.Numerics;
+using Galaxon.Numerics.BigNumbers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Galaxon.Numerics.BigNumbers.Testing;
+namespace Galaxon.UnitTesting;
 
 /// <summary>
 /// Methods for unit tests relating to BigComplex values.

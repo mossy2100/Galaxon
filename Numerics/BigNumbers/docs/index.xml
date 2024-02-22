@@ -2662,44 +2662,6 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigRational.TryFormat(System.Span{System.Char},System.Int32@,System.ReadOnlySpan{System.Char},System.IFormatProvider)">
             <inheritdoc/>
         </member>
-        <member name="T:Galaxon.Numerics.BigNumbers.Testing.BigComplexAssert">
-            <summary>
-            Methods for unit tests relating to BigComplex values.
-            </summary>
-        </member>
-        <member name="M:Galaxon.Numerics.BigNumbers.Testing.BigComplexAssert.AreFuzzyEqual``1(``0,Galaxon.Numerics.BigNumbers.BigComplex)">
-            <summary>
-            See if an actual BigComplex value is effectively equal to to an expected number (real or
-            complex).
-            </summary>
-            <param name="expected">The expected value.</param>
-            <param name="actual">The actual value.</param>
-            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">If the values are not effectively equal.</exception>
-        </member>
-        <member name="T:Galaxon.Numerics.BigNumbers.Testing.BigDecimalAssert">
-            <summary>
-            Assert methods for BigDecimal. Analogous to StringAssert.
-            </summary>
-        </member>
-        <member name="M:Galaxon.Numerics.BigNumbers.Testing.BigDecimalAssert.AreFuzzyEqual``1(``0,Galaxon.Numerics.BigNumbers.BigDecimal,System.Nullable{Galaxon.Numerics.BigNumbers.BigDecimal})">
-            <summary>
-            See if an actual BigDecimal value is approximately equal to an expected value, which can be
-            any supported real number type (i.e. all standard real number types, and BigDecimal).
-            </summary>
-            <param name="expected">The expected value.</param>
-            <param name="actual">The actual value.</param>
-            <param name="delta">The maximum acceptable difference between the 2 values.</param>
-            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"></exception>
-        </member>
-        <member name="M:Galaxon.Numerics.BigNumbers.Testing.BigDecimalAssert.AreEqual``1(``0,Galaxon.Numerics.BigNumbers.BigDecimal)">
-            <summary>
-            See if an actual BigDecimal value is exactly equal to an expected value, which can be
-            any supported real number type (i.e. all standard real number types, and BigDecimal).
-            </summary>
-            <param name="expected">The expected value.</param>
-            <param name="actual">The actual value.</param>
-            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"></exception>
-        </member>
         <member name="T:System.Text.RegularExpressions.Generated.FormatRegex_0">
             <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the FormatRegex method.</summary>
         </member>

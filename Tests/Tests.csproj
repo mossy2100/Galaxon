@@ -30,6 +30,7 @@
         <ProjectReference Include="..\Numerics\Geometry\Geometry.csproj" />
         <ProjectReference Include="..\Numerics\Integers\Integers.csproj" />
         <ProjectReference Include="..\Time\Time.csproj" />
+        <ProjectReference Include="..\UnitTesting\UnitTesting.csproj" />
     </ItemGroup>
 
 </Project>

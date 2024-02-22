@@ -489,27 +489,6 @@
             or null if the input string is null or cannot be parsed.
             </returns>
         </member>
-        <member name="T:Galaxon.Core.Testing.AssertExtensions">
-            <summary>
-            Container for my own custom Assert methods.
-            </summary>
-        </member>
-        <member name="M:Galaxon.Core.Testing.AssertExtensions.IsInRange(System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
-            <summary>
-            Check if a value is in a given range.
-            </summary>
-            <param name="value">The value to test.</param>
-            <param name="lower">The lower value.</param>
-            <param name="upper">The upper value.</param>
-            <param name="includeLower">Include lower value in the range.</param>
-            <param name="includeUpper">Include upper value in the range.</param>
-        </member>
-        <member name="M:Galaxon.Core.Testing.AssertExtensions.AreEqualWithinPercent(System.Double,System.Double,System.Double)">
-            <summary>
-            Compare two double values for equality, with the delta expressed as percentage of the
-            expected value rather than an absolute value.
-            </summary>
-        </member>
         <member name="T:Galaxon.Core.Types.EnumExtensions">
             <summary>
             Extension methods for enum types.

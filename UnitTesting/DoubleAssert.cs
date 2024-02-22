@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Galaxon.Core.Testing;
+namespace Galaxon.UnitTesting;
 
 /// <summary>
 /// Container for my own custom Assert methods.
 /// </summary>
-public static class AssertExtensions
+public static class DoubleAssert
 {
     /// <summary>
     /// Check if a value is in a given range.

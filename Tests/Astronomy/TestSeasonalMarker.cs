@@ -1,7 +1,6 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
-using Galaxon.Core.Testing;
-using Galaxon.Time;
+using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Astronomy;
 
