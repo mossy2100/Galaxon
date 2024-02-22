@@ -28,8 +28,4 @@
       <ProjectReference Include="..\Integers\Integers.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Testing\" />
-    </ItemGroup>
-
 </Project>
