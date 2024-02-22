@@ -299,9 +299,12 @@
         </member>
         <member name="M:Galaxon.Core.Strings.StringBuilderExtensions.Prepend(System.Text.StringBuilder,System.Object)">
             <summary>
-            Prepends a StringBuilder with a string.
-            Reflects Append().
+            Inserts the string representation of the specified object at the beginning of the current
+            StringBuilder.
             </summary>
+            <param name="sb">The StringBuilder instance.</param>
+            <param name="value">The object to prepend. If null, no action is taken.</param>
+            <returns>The current StringBuilder instance.</returns>
         </member>
         <member name="T:Galaxon.Core.Strings.StringExtensions">
             <summary>
