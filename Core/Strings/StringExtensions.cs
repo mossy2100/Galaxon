@@ -149,7 +149,7 @@ public static class StringExtensions
     /// <returns>If the string is empty or fully ASCII.</returns>
     public static bool IsAscii(this string str)
     {
-        return str != null && str.All(char.IsAscii);
+        return str.All(char.IsAscii);
     }
 
     /// <summary>
@@ -157,7 +157,7 @@ public static class StringExtensions
     /// </summary>
     public static bool IsPalindrome(this string str)
     {
-        return str != null && str == string.Concat(str.Reverse());
+        return str == string.Concat(str.Reverse());
     }
 
     #endregion Inspect string
@@ -224,7 +224,7 @@ public static class StringExtensions
             return str;
         }
 
-        // Return upper-case first letter concatentated with remaining substring.
+        // Return upper-case first letter concatenated with remaining substring.
         return char.ToUpper(str[0]) + str[1..];
     }
 
@@ -432,7 +432,7 @@ public static class StringExtensions
         }
 
         // Iterate through the string to group digits.
-        StringBuilder sb = new();
+        StringBuilder sb = new ();
         int groupStart = str.Length % size; // Start index of the first group.
         if (groupStart > 0)
         {

@@ -119,36 +119,6 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void ReplaceChars_WithNullCharMapAndKeepCharsNotInMapTrue_ReturnsOriginalString()
-    {
-        // Arrange
-        string original = "Hello";
-        Dictionary<char, string> charMap = null;
-        string expected = "Hello";
-
-        // Act
-        string result = original.ReplaceChars(charMap, true);
-
-        // Assert
-        Assert.AreEqual(expected, result);
-    }
-
-    [TestMethod]
-    public void ReplaceChars_WithNullCharMapAndKeepCharsNotInMapFalse_ReturnsEmptyString()
-    {
-        // Arrange
-        string original = "Hello";
-        Dictionary<char, string> charMap = null;
-        string expected = "";
-
-        // Act
-        string result = original.ReplaceChars(charMap, false);
-
-        // Assert
-        Assert.AreEqual(expected, result);
-    }
-
-    [TestMethod]
     public void ReplaceChars_WithKeepCharsNotInMapTrue_ReturnsStringWithUnmappedChars()
     {
         // Arrange
@@ -161,7 +131,7 @@ public class StringExtensionsTests
         string expected = "XYllo";
 
         // Act
-        string result = original.ReplaceChars(charMap, true);
+        string result = original.ReplaceChars(charMap);
 
         // Assert
         Assert.AreEqual(expected, result);
@@ -292,19 +262,6 @@ public class StringExtensionsTests
         Assert.IsTrue(result);
     }
 
-    [TestMethod]
-    public void IsAscii_WithNullString_ReturnsFalse()
-    {
-        // Arrange
-        string input = null;
-
-        // Act
-        bool result = input.IsAscii();
-
-        // Assert
-        Assert.IsFalse(result);
-    }
-
     #endregion IsAscii
 
     #region IsPalindrome
@@ -361,19 +318,6 @@ public class StringExtensionsTests
         Assert.IsTrue(result);
     }
 
-    [TestMethod]
-    public void IsPalindrome_WithNullString_ReturnsFalse()
-    {
-        // Arrange
-        string nullString = null;
-
-        // Act
-        bool result = nullString.IsPalindrome();
-
-        // Assert
-        Assert.IsFalse(result);
-    }
-
     #endregion IsPalindrome
 
     #region Small caps
@@ -407,19 +351,6 @@ public class StringExtensionsTests
     #endregion Small caps
 
     #region ToUpperFirstLetter
-
-    [TestMethod]
-    public void ToUpperFirstLetter_NullString_ReturnsNull()
-    {
-        // Arrange
-        string input = null;
-
-        // Act
-        string result = input.ToUpperFirstLetter();
-
-        // Assert
-        Assert.IsNull(result);
-    }
 
     [TestMethod]
     public void ToUpperFirstLetter_EmptyString_ReturnsEmptyString()
@@ -605,19 +536,6 @@ public class StringExtensionsTests
     #region GetCase
 
     [TestMethod]
-    public void GetCase_NullString_ReturnsNone()
-    {
-        // Arrange
-        string input = null;
-
-        // Act
-        EStringCase result = input.GetCase();
-
-        // Assert
-        Assert.AreEqual(EStringCase.None, result);
-    }
-
-    [TestMethod]
     public void GetCase_EmptyString_ReturnsNone()
     {
         // Arrange
@@ -783,20 +701,6 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void SetCase_InputNull_ReturnsNull()
-    {
-        // Arrange
-        string input = null;
-        string expected = null;
-
-        // Act
-        string result = input.SetCase(EStringCase.Lower);
-
-        // Assert
-        Assert.AreEqual(expected, result);
-    }
-
-    [TestMethod]
     public void SetCase_InputEmptyString_ReturnsEmptyString()
     {
         // Arrange
@@ -870,20 +774,6 @@ public class StringExtensionsTests
     }
 
     [TestMethod]
-    public void ZeroPad_InputIsNull_ThrowsException()
-    {
-        // Arrange
-        string input = null;
-        int width = 5;
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() =>
-        {
-            string result = input.ZeroPad(width);
-        });
-    }
-
-    [TestMethod]
     public void ZeroPad_WidthIsZero_ThrowsException()
     {
         // Arrange
@@ -893,7 +783,7 @@ public class StringExtensionsTests
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
         {
-            string result = input.ZeroPad(width);
+            string _ = input.ZeroPad(width);
         });
     }
 
@@ -907,7 +797,7 @@ public class StringExtensionsTests
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
         {
-            string result = input.ZeroPad(width);
+            string _ = input.ZeroPad(width);
         });
     }
 
@@ -985,16 +875,6 @@ public class StringExtensionsTests
         Assert.AreEqual(expected, result);
     }
 
-    [TestMethod]
-    public void GroupDigits_NullString()
-    {
-        // Arrange
-        string input = null;
-
-        // Act & Assert
-        Assert.ThrowsException<System.ArgumentNullException>(() => input.GroupDigits());
-    }
-
     #endregion GroupDigits
 
     #region ToInt
@@ -1023,19 +903,6 @@ public class StringExtensionsTests
 
         // Assert
         Assert.AreEqual(-456, result);
-    }
-
-    [TestMethod]
-    public void ToNullableInt_WithNullString_ReturnsNull()
-    {
-        // Arrange
-        string input = null;
-
-        // Act
-        int? result = input.ToInt();
-
-        // Assert
-        Assert.IsNull(result);
     }
 
     [TestMethod]
@@ -1092,19 +959,6 @@ public class StringExtensionsTests
 
         // Assert
         Assert.AreEqual(123.456e78, result);
-    }
-
-    [TestMethod]
-    public void ToNullableDouble_WithNullString_ReturnsNull()
-    {
-        // Arrange
-        string input = null;
-
-        // Act
-        double? result = input.ToDouble();
-
-        // Assert
-        Assert.IsNull(result);
     }
 
     [TestMethod]

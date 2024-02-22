@@ -41,7 +41,7 @@ public class Program
         try
         {
             // await ImportLeapSeconds();
-            await ImportEasterDates();
+            ImportEasterDates();
         }
         catch (Exception ex)
         {
@@ -64,7 +64,7 @@ public class Program
         await leapSecondImportService.ImportIersBulletins();
     }
 
-    public static async Task ImportEasterDates()
+    public static void ImportEasterDates()
     {
         // Parse leap seconds and copy into database.
         EasterDateImportService easterDateImportService =
