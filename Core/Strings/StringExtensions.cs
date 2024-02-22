@@ -372,19 +372,12 @@ public static class StringExtensions
     /// Default is 2, which is useful for times and dates.
     /// </param>
     /// <returns>The zero-padded string.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="str"/> is null.
-    /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="width"/> is not positive.
     /// </exception>
     public static string ZeroPad(this string str, int width = 2)
     {
-        // Guards.
-        if (str == null)
-        {
-            throw new ArgumentNullException(nameof(str), "Cannot be null.");
-        }
+        // Guard.
         if (width <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(width), "Must be positive.");
@@ -416,16 +409,9 @@ public static class StringExtensions
     /// <param name="separator">The group separator character. Default is ','.</param>
     /// <param name="size">The size of each group. Default is 3.</param>
     /// <returns>The formatted string.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="str"/> is null.
-    /// </exception>
     public static string GroupDigits(this string str, char separator = ',', int size = 3)
     {
-        // Guard clauses.
-        if (str == null)
-        {
-            throw new ArgumentNullException(nameof(str), "Cannot be null.");
-        }
+        // Guard clause.
         if (str.Length == 0)
         {
             return string.Empty;
@@ -450,36 +436,4 @@ public static class StringExtensions
     }
 
     #endregion Format numbers
-
-    #region Convert strings to numbers
-
-    /// <summary>
-    /// Convert a nullable string to a nullable integer without throwing an exception.
-    /// If the input string is null or cannot be parsed into an integer, returns null.
-    /// </summary>
-    /// <param name="str">The nullable string to convert to an integer.</param>
-    /// <returns>
-    /// A nullable integer representing the parsed value of the input string,
-    /// or null if the input string is null or cannot be parsed.
-    /// </returns>
-    public static int? ToInt(this string? str)
-    {
-        return int.TryParse(str, out int result) ? result : null;
-    }
-
-    /// <summary>
-    /// Convert a nullable string to a nullable double without throwing an exception.
-    /// If the input string is null or cannot be parsed into an double, returns null.
-    /// </summary>
-    /// <param name="str">The nullable string to convert to an double.</param>
-    /// <returns>
-    /// A nullable double representing the parsed value of the input string,
-    /// or null if the input string is null or cannot be parsed.
-    /// </returns>
-    public static double? ToDouble(this string? str)
-    {
-        return double.TryParse(str, out double d) ? d : null;
-    }
-
-    #endregion Convert strings to numbers
 }

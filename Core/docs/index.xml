@@ -432,9 +432,6 @@
             Default is 2, which is useful for times and dates.
             </param>
             <returns>The zero-padded string.</returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when <paramref name="str"/> is null.
-            </exception>
             <exception cref="T:System.ArgumentOutOfRangeException">
             Thrown when <paramref name="width"/> is not positive.
             </exception>
@@ -463,31 +460,6 @@
             <param name="separator">The group separator character. Default is ','.</param>
             <param name="size">The size of each group. Default is 3.</param>
             <returns>The formatted string.</returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when <paramref name="str"/> is null.
-            </exception>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.ToInt(System.String)">
-            <summary>
-            Convert a nullable string to a nullable integer without throwing an exception.
-            If the input string is null or cannot be parsed into an integer, returns null.
-            </summary>
-            <param name="str">The nullable string to convert to an integer.</param>
-            <returns>
-            A nullable integer representing the parsed value of the input string,
-            or null if the input string is null or cannot be parsed.
-            </returns>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.ToDouble(System.String)">
-            <summary>
-            Convert a nullable string to a nullable double without throwing an exception.
-            If the input string is null or cannot be parsed into an double, returns null.
-            </summary>
-            <param name="str">The nullable string to convert to an double.</param>
-            <returns>
-            A nullable double representing the parsed value of the input string,
-            or null if the input string is null or cannot be parsed.
-            </returns>
         </member>
         <member name="T:Galaxon.Core.Types.EnumExtensions">
             <summary>

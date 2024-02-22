@@ -252,39 +252,39 @@ public class DataImportService(
 
             // Apoapsis is provided in km, convert to m.
             const double kilo = 1000;
-            var apoapsis = csv.GetField(3).ToDouble();
+            var apoapsis = double.Parse(csv.GetField(3));
             planet.Orbit.Apoapsis = Quantity.ConvertAmount(apoapsis, "km", "m");
 
             // Periapsis is provided in km, convert to m.
-            var periapsis = csv.GetField(4).ToDouble();
+            var periapsis = double.Parse(csv.GetField(4));
             planet.Orbit.Periapsis = Quantity.ConvertAmount(periapsis, "km", "m");
 
             // Semi-major axis is provided in km, convert to m.
-            planet.Orbit.SemiMajorAxis = csv.GetField(5).ToDouble() * kilo;
-            planet.Orbit.Eccentricity = csv.GetField(6).ToDouble();
+            planet.Orbit.SemiMajorAxis = double.Parse(csv.GetField(5)) * kilo;
+            planet.Orbit.Eccentricity = double.Parse(csv.GetField(6));
 
             // Sidereal orbit period is provided in days, convert to seconds.
             planet.Orbit.SiderealOrbitPeriod =
-                csv.GetField(7).ToDouble() * TimeSpanExtensions.SECONDS_PER_DAY;
+                double.Parse(csv.GetField(7)) * TimeSpanExtensions.SECONDS_PER_DAY;
 
             // Synodic orbit period is provided in days, convert to seconds.
-            var synodicPeriod = csv.GetField(8).ToDouble();
+            var synodicPeriod = double.Parse(csv.GetField(8));
             planet.Orbit.SynodicOrbitPeriod = synodicPeriod * TimeSpanExtensions.SECONDS_PER_DAY;
 
             // Avg orbital speed is provided in km/s, convert to m/s.
-            planet.Orbit.AvgOrbitSpeed = csv.GetField(9).ToDouble() * kilo;
+            planet.Orbit.AvgOrbitSpeed = double.Parse(csv.GetField(9)) * kilo;
 
             // Mean anomaly is provided in degrees, convert to radians.
-            planet.Orbit.MeanAnomaly = csv.GetField(10).ToDouble() * Angles.RADIANS_PER_DEGREE;
+            planet.Orbit.MeanAnomaly = double.Parse(csv.GetField(10)) * Angles.RADIANS_PER_DEGREE;
 
             // Inclination is provided in degrees, convert to radians.
-            planet.Orbit.Inclination = csv.GetField(11).ToDouble() * Angles.RADIANS_PER_DEGREE;
+            planet.Orbit.Inclination = double.Parse(csv.GetField(11)) * Angles.RADIANS_PER_DEGREE;
 
             // Long. of asc. node is provided in degrees, convert to radians.
-            planet.Orbit.LongAscNode = csv.GetField(12).ToDouble() * Angles.RADIANS_PER_DEGREE;
+            planet.Orbit.LongAscNode = double.Parse(csv.GetField(12)) * Angles.RADIANS_PER_DEGREE;
 
             // Arg. of perihelion is provided in degrees, convert to radians.
-            planet.Orbit.ArgPeriapsis = csv.GetField(13).ToDouble() * Angles.RADIANS_PER_DEGREE;
+            planet.Orbit.ArgPeriapsis = double.Parse(csv.GetField(13)) * Angles.RADIANS_PER_DEGREE;
 
             // Calculate the mean motion in rad/s.
             planet.Orbit.MeanMotion = Math.Tau / planet.Orbit.SiderealOrbitPeriod;
@@ -294,47 +294,46 @@ public class DataImportService(
 
             // Physical parameters.
             planet.Physical ??= new PhysicalRecord();
-            double? equatRadius = csv.GetField(15).ToDouble() * kilo;
-            double? polarRadius = csv.GetField(16).ToDouble() * kilo;
+            double? equatRadius = double.Parse(csv.GetField(15)) * kilo;
+            double? polarRadius = double.Parse(csv.GetField(16)) * kilo;
             planet.Physical.SetSpheroidalShape(equatRadius ?? 0, polarRadius ?? 0);
-            planet.Physical.MeanRadius = csv.GetField(14).ToDouble() * kilo;
-            planet.Physical.Flattening = csv.GetField(17).ToDouble();
-            planet.Physical.SurfaceArea = csv.GetField(18).ToDouble() * kilo * kilo;
-            planet.Physical.Volume = csv.GetField(19).ToDouble() * Math.Pow(kilo, 3);
-            planet.Physical.Mass = csv.GetField(20).ToDouble();
-            planet.Physical.Density =
-                Density.GramsPerCm3ToKgPerM3(csv.GetField(21).ToDouble() ?? 0);
-            planet.Physical.SurfaceGrav = csv.GetField(22).ToDouble();
-            planet.Physical.MomentOfInertiaFactor = csv.GetField(23).ToDouble();
-            planet.Physical.EscapeVelocity = csv.GetField(24).ToDouble() * kilo;
-            planet.Physical.StdGravParam = csv.GetField(25).ToDouble();
-            planet.Physical.GeometricAlbedo = csv.GetField(26).ToDouble();
-            planet.Physical.SolarIrradiance = csv.GetField(27).ToDouble();
+            planet.Physical.MeanRadius = double.Parse(csv.GetField(14)) * kilo;
+            planet.Physical.Flattening = double.Parse(csv.GetField(17));
+            planet.Physical.SurfaceArea = double.Parse(csv.GetField(18)) * kilo * kilo;
+            planet.Physical.Volume = double.Parse(csv.GetField(19)) * Math.Pow(kilo, 3);
+            planet.Physical.Mass = double.Parse(csv.GetField(20));
+            planet.Physical.Density = Density.GramsPerCm3ToKgPerM3(double.Parse(csv.GetField(21)));
+            planet.Physical.SurfaceGrav = double.Parse(csv.GetField(22));
+            planet.Physical.MomentOfInertiaFactor = double.Parse(csv.GetField(23));
+            planet.Physical.EscapeVelocity = double.Parse(csv.GetField(24)) * kilo;
+            planet.Physical.StdGravParam = double.Parse(csv.GetField(25));
+            planet.Physical.GeometricAlbedo = double.Parse(csv.GetField(26));
+            planet.Physical.SolarIrradiance = double.Parse(csv.GetField(27));
             planet.Physical.HasGlobalMagField = csv.GetField(28) == "Y";
             planet.Physical.HasRingSystem = csv.GetField(29) == "Y";
-            planet.Physical.MinSurfaceTemp = csv.GetField(36).ToDouble();
-            planet.Physical.MeanSurfaceTemp = csv.GetField(37).ToDouble();
-            planet.Physical.MaxSurfaceTemp = csv.GetField(38).ToDouble();
+            planet.Physical.MinSurfaceTemp = double.Parse(csv.GetField(36));
+            planet.Physical.MeanSurfaceTemp = double.Parse(csv.GetField(37));
+            planet.Physical.MaxSurfaceTemp = double.Parse(csv.GetField(38));
             astroDbContext.SaveChanges();
 
             // Rotational parameters.
             planet.Rotation ??= new RotationalRecord();
             planet.Rotation.SynodicRotationPeriod =
-                csv.GetField(30).ToDouble() * TimeSpanExtensions.SECONDS_PER_DAY;
+                double.Parse(csv.GetField(30)) * TimeSpanExtensions.SECONDS_PER_DAY;
             planet.Rotation.SiderealRotationPeriod =
-                csv.GetField(31).ToDouble() * TimeSpanExtensions.SECONDS_PER_DAY;
-            planet.Rotation.EquatRotationVelocity = csv.GetField(32).ToDouble();
-            planet.Rotation.Obliquity = csv.GetField(33).ToDouble() * Angles.RADIANS_PER_DEGREE;
+                double.Parse(csv.GetField(31)) * TimeSpanExtensions.SECONDS_PER_DAY;
+            planet.Rotation.EquatRotationVelocity = double.Parse(csv.GetField(32));
+            planet.Rotation.Obliquity = double.Parse(csv.GetField(33)) * Angles.RADIANS_PER_DEGREE;
             planet.Rotation.NorthPoleRightAscension =
-                csv.GetField(34).ToDouble() * Angles.RADIANS_PER_DEGREE;
+                double.Parse(csv.GetField(34)) * Angles.RADIANS_PER_DEGREE;
             planet.Rotation.NorthPoleDeclination =
-                csv.GetField(35).ToDouble() * Angles.RADIANS_PER_DEGREE;
+                double.Parse(csv.GetField(35)) * Angles.RADIANS_PER_DEGREE;
             astroDbContext.SaveChanges();
 
             // Atmosphere.
             planet.Atmosphere ??= new AtmosphereRecord();
-            planet.Atmosphere.SurfacePressure = csv.GetField(40).ToDouble();
-            planet.Atmosphere.ScaleHeight = csv.GetField(41).ToDouble() * kilo;
+            planet.Atmosphere.SurfacePressure = double.Parse(csv.GetField(40));
+            planet.Atmosphere.ScaleHeight = double.Parse(csv.GetField(41)) * kilo;
             planet.Atmosphere.IsSurfaceBoundedExosphere = name == "Mercury";
             astroDbContext.SaveChanges();
         }
