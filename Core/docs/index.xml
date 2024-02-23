@@ -468,18 +468,31 @@
         </member>
         <member name="M:Galaxon.Core.Types.EnumExtensions.GetDescription(System.Enum)">
             <summary>
-            Get the value of the Description attribute for the enum value, or, if not provided,
-            the name of the value (same as ToString()).
+            Get the value of the Description attribute for the enum value.
+            If there is no Description attribute, returns an empty string.
             </summary>
-            <param name="value"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <param name="value">An enum value.</param>
+            <returns>The value's description.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            If the value is not valid for the Enum type.
+            </exception>
+        </member>
+        <member name="M:Galaxon.Core.Types.EnumExtensions.GetDescriptionOrName(System.Enum)">
+            <summary>
+            Get the value of the Description attribute for the enum value, or, if not provided,
+            the name of the value (which is the same as ToString()).
+            </summary>
+            <param name="value">An enum value.</param>
+            <returns>The value's description or name.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            If the value is not valid for the Enum type.
+            </exception>
         </member>
         <member name="M:Galaxon.Core.Types.EnumExtensions.TryParse``1(System.String,``0@)">
             <summary>
             Similar to Enum.TryParse(), this method finds an enum value given a name or description.
             If no values are found with a matching name, looks for a match on description.
-            Must match exactly (case-sensitive) the value name or the Description attribute.
+            Must match exactly (case-sensitive) the value's name or description.
             </summary>
             <param name="nameOrDescription">The enum value's name or description.</param>
             <param name="value">The matching enum value, or default if not found.</param>
@@ -488,6 +501,27 @@
             <exception cref="T:System.ArgumentOutOfRangeException">
             If the type param is not an enum.
             </exception>
+        </member>
+        <member name="T:Galaxon.Core.Types.FieldInfoExtensions">
+            <summary>
+            Extension methods for FieldInfo.
+            </summary>
+        </member>
+        <member name="M:Galaxon.Core.Types.FieldInfoExtensions.GetValue(System.Reflection.FieldInfo)">
+            <summary>
+            Get the value of a static field.
+            </summary>
+            <param name="field">A FieldInfo object.</param>
+            <returns>The value of the field, or null.</returns>
+            <exception cref="T:System.Reflection.TargetException">Thrown if field is an instance field.</exception>
+        </member>
+        <member name="M:Galaxon.Core.Types.FieldInfoExtensions.GetDescription(System.Reflection.FieldInfo)">
+            <summary>
+            Get the value of the Description attribute for a field.
+            If there is no Description attribute, returns an empty string.
+            </summary>
+            <param name="field">A FieldInfo object.</param>
+            <returns>The field's description.</returns>
         </member>
         <member name="T:Galaxon.Core.Types.ReflectionExtensions">
             <summary>

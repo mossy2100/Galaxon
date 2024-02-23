@@ -2,21 +2,21 @@ using Galaxon.Core.Types;
 
 namespace Galaxon.Tests.Core.Types;
 
-class Example
-{
-    public static readonly int someField = 10;
-
-    public static string SomeProperty { get; set; } = "Hello, world!";
-}
-
 [TestClass]
 public class ReflectionExtensionsTests
 {
+    class TestClass
+    {
+        public static readonly int SomeField = 10;
+
+        public static string SomeProperty => "Hello, world!";
+    }
+
     [TestMethod]
     public void GetStaticFieldValueWorks()
     {
-        int expected = Example.someField;
-        int actual = ReflectionExtensions.GetStaticFieldValue<Example, int>("someField");
+        int expected = TestClass.SomeField;
+        int actual = ReflectionExtensions.GetStaticFieldValue<TestClass, int>("SomeField");
         Assert.AreEqual(expected, actual);
     }
 
@@ -25,7 +25,7 @@ public class ReflectionExtensionsTests
     {
         try
         {
-            ReflectionExtensions.GetStaticFieldValue<Example, int>("nonexistentField");
+            ReflectionExtensions.GetStaticFieldValue<TestClass, int>("nonexistentField");
             Assert.Fail("A MissingFieldException should be thrown.");
         }
         catch (MissingFieldException ex)
@@ -37,8 +37,8 @@ public class ReflectionExtensionsTests
     [TestMethod]
     public void GetStaticPropertyValueWorks()
     {
-        string expected = Example.SomeProperty;
-        string actual = ReflectionExtensions.GetStaticPropertyValue<Example, string>("SomeProperty");
+        string expected = TestClass.SomeProperty;
+        string actual = ReflectionExtensions.GetStaticPropertyValue<TestClass, string>("SomeProperty");
         Assert.AreEqual(expected, actual);
     }
 
@@ -47,7 +47,7 @@ public class ReflectionExtensionsTests
     {
         try
         {
-            ReflectionExtensions.GetStaticPropertyValue<Example, int>("nonexistentProperty");
+            ReflectionExtensions.GetStaticPropertyValue<TestClass, int>("nonexistentProperty");
             Assert.Fail("A MissingMemberException should be thrown.");
         }
         catch (MissingMemberException ex)
@@ -59,12 +59,12 @@ public class ReflectionExtensionsTests
     [TestMethod]
     public void GetStaticFieldOrPropertyValueWorks()
     {
-        int expected = Example.someField;
-        int actual = ReflectionExtensions.GetStaticFieldOrPropertyValue<Example, int>("someField");
+        int expected = TestClass.SomeField;
+        int actual = ReflectionExtensions.GetStaticFieldOrPropertyValue<TestClass, int>("SomeField");
         Assert.AreEqual(expected, actual);
 
-        string expected2 = Example.SomeProperty;
-        string actual2 = ReflectionExtensions.GetStaticFieldOrPropertyValue<Example, string>("SomeProperty");
+        string expected2 = TestClass.SomeProperty;
+        string actual2 = ReflectionExtensions.GetStaticFieldOrPropertyValue<TestClass, string>("SomeProperty");
         Assert.AreEqual(expected2, actual2);
     }
 
@@ -73,7 +73,7 @@ public class ReflectionExtensionsTests
     {
         try
         {
-            ReflectionExtensions.GetStaticFieldOrPropertyValue<Example, int>("nonexistentField");
+            ReflectionExtensions.GetStaticFieldOrPropertyValue<TestClass, int>("nonexistentField");
             Assert.Fail("A MissingFieldException should be thrown.");
         }
         catch (MissingMemberException ex)
@@ -83,7 +83,7 @@ public class ReflectionExtensionsTests
 
         try
         {
-            ReflectionExtensions.GetStaticFieldOrPropertyValue<Example, int>("nonexistentProperty");
+            ReflectionExtensions.GetStaticFieldOrPropertyValue<TestClass, int>("nonexistentProperty");
             Assert.Fail("A MissingMemberException should be thrown.");
         }
         catch (MissingMemberException ex)

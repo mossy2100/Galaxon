@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Reflection;
 
 namespace Galaxon.Core.Types;
@@ -9,12 +8,14 @@ namespace Galaxon.Core.Types;
 public static class EnumExtensions
 {
     /// <summary>
-    /// Get the value of the Description attribute for the enum value, or, if not provided,
-    /// the name of the value (same as ToString()).
+    /// Get the value of the Description attribute for the enum value.
+    /// If there is no Description attribute, returns an empty string.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <param name="value">An enum value.</param>
+    /// <returns>The value's description.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If the value is not valid for the Enum type.
+    /// </exception>
     public static string GetDescription(this Enum value)
     {
         // Get the value name.
@@ -29,18 +30,29 @@ public static class EnumExtensions
             throw new ArgumentOutOfRangeException(nameof(value), "Invalid enum value.");
         }
 
-        // Get the attributes attached to the value.
-        var attributes =
-            (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+        // Get the field description.
+        return field.GetDescription();
+    }
 
-        // Return the Description if set, otherwise the name.
-        return attributes.Length > 0 ? attributes[0].Description : name;
+    /// <summary>
+    /// Get the value of the Description attribute for the enum value, or, if not provided,
+    /// the name of the value (which is the same as ToString()).
+    /// </summary>
+    /// <param name="value">An enum value.</param>
+    /// <returns>The value's description or name.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If the value is not valid for the Enum type.
+    /// </exception>
+    public static string GetDescriptionOrName(this Enum value)
+    {
+        string description = value.GetDescription();
+        return (description != "") ? description : value.ToString();
     }
 
     /// <summary>
     /// Similar to Enum.TryParse(), this method finds an enum value given a name or description.
     /// If no values are found with a matching name, looks for a match on description.
-    /// Must match exactly (case-sensitive) the value name or the Description attribute.
+    /// Must match exactly (case-sensitive) the value's name or description.
     /// </summary>
     /// <param name="nameOrDescription">The enum value's name or description.</param>
     /// <param name="value">The matching enum value, or default if not found.</param>
@@ -49,16 +61,8 @@ public static class EnumExtensions
     /// <exception cref="ArgumentOutOfRangeException">
     /// If the type param is not an enum.
     /// </exception>
-    public static bool TryParse<T>(string nameOrDescription, out T value) where T : struct
+    public static bool TryParse<T>(string nameOrDescription, out T value) where T : struct, Enum
     {
-        // Make sure this is being used with an enum type.
-        Type enumType = typeof(T);
-        if (!enumType.IsEnum)
-        {
-            throw new ArgumentOutOfRangeException(nameof(T),
-                "The provided type must be an enum type.");
-        }
-
         // Look for a matching name.
         if (Enum.TryParse(nameOrDescription, out T result))
         {
@@ -66,21 +70,18 @@ public static class EnumExtensions
             return true;
         }
 
-        // Look for matching description.
-        foreach (FieldInfo field in enumType.GetFields())
+        // Look for a matching description.
+        foreach (FieldInfo field in typeof(T).GetFields()
+            .Where(field => field.GetDescription() == nameOrDescription))
         {
-            // Check the description attribute.
-            if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is
-                DescriptionAttribute attribute)
-            {
-                if (attribute.Description == nameOrDescription)
-                {
-                    value = (T)field.GetValue(null)!;
-                    return true;
-                }
-            }
+            value = (T)field.GetValue()!;
+            return true;
         }
 
+        // No match, but we have to set the out parameter to something, so let's use the default.
+        // We could make the out parameter nullable, and set the value to null, but I think that
+        // would make the method less usable (especially since we won't even look at the out
+        // parameter if the method returns false).
         value = default(T);
         return false;
     }
