@@ -793,14 +793,14 @@ public partial struct BigDecimal
         }
 
         // Check for -∞.
-        var minValue = ReflectionExtensions.Cast<T, BigDecimal>(NumberExtensions.GetMinValue<T>());
+        var minValue = ReflectionExtensions.Convert<T, BigDecimal>(NumberExtensions.GetMinValue<T>());
         if (bd < minValue)
         {
             return FloatingPointExtensions.GetNegativeInfinity<T>();
         }
 
         // Check for +∞.
-        var maxValue = ReflectionExtensions.Cast<T, BigDecimal>(NumberExtensions.GetMaxValue<T>());
+        var maxValue = ReflectionExtensions.Convert<T, BigDecimal>(NumberExtensions.GetMaxValue<T>());
         if (bd > maxValue)
         {
             return FloatingPointExtensions.GetPositiveInfinity<T>();
@@ -808,7 +808,7 @@ public partial struct BigDecimal
 
         // Check if its subnormal.
         var minPosNormalValue = FloatingPointExtensions.GetMinPosNormalValue<T>();
-        var bdMinPosNormalValue = ReflectionExtensions.Cast<T, BigDecimal>(minPosNormalValue);
+        var bdMinPosNormalValue = ReflectionExtensions.Convert<T, BigDecimal>(minPosNormalValue);
         var abs = Abs(bd);
         var isSubnormal = abs < bdMinPosNormalValue;
 

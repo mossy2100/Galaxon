@@ -7,7 +7,7 @@ namespace Galaxon.Core.Types;
 /// </summary>
 public static class ReflectionExtensions
 {
-    #region Methods for accessing static members of a type
+    #region Access static field or property
 
     /// <summary>
     /// Get the value of a static field.
@@ -16,7 +16,7 @@ public static class ReflectionExtensions
     /// <param name="name">The name of the field.</param>
     /// <typeparam name="TField">The field type.</typeparam>
     /// <returns>The value of the static field.</returns>
-    /// <exception cref="MissingMemberException">
+    /// <exception cref="MissingFieldException">
     /// If the static field doesn't exist on the specified type.
     /// </exception>
     public static TField GetStaticFieldValue<TField>(Type classType, string name)
@@ -38,7 +38,7 @@ public static class ReflectionExtensions
     /// <typeparam name="TClass">The class type.</typeparam>
     /// <typeparam name="TField">The field type.</typeparam>
     /// <returns>The value of the static field.</returns>
-    /// <exception cref="MissingMemberException">
+    /// <exception cref="MissingFieldException">
     /// If the static field doesn't exist on the specified type.
     /// </exception>
     public static TField GetStaticFieldValue<TClass, TField>(string name)
@@ -102,7 +102,7 @@ public static class ReflectionExtensions
             // Try to get the field.
             return GetStaticFieldValue<TMember>(classType, name);
         }
-        catch (MissingMemberException)
+        catch (MissingFieldException)
         {
             // Field not found, let's try the property.
             try
@@ -133,71 +133,79 @@ public static class ReflectionExtensions
         return GetStaticFieldOrPropertyValue<TMember>(classType, name);
     }
 
-    #endregion Methods for accessing static members of a type
+    #endregion Access static field or property
 
-    #region Check for cast operators
-
-    /// <summary>
-    /// See if a cast operator exists from one type to another.
-    /// </summary>
-    /// <param name="sourceType">The source type.</param>
-    /// <param name="targetType">The target type.</param>
-    /// <returns>If a cast operator exists.</returns>
-    public static bool CanCast(Type sourceType, Type targetType)
-    {
-        // Search for explicit and implicit cast operators.
-        return targetType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Any(m =>
-            {
-                var parameters = m.GetParameters();
-                return m.Name is "op_Implicit" or "op_Explicit"
-                    && m.ReturnType == targetType
-                    && parameters.Length == 1
-                    && parameters[0].ParameterType == sourceType;
-            });
-    }
+    #region Type conversion
 
     /// <summary>
-    /// Get the info for a method that casts one type to another.
+    /// Get the method that converts one type to another, if it exists, otherwise null.
     /// </summary>
     /// <param name="sourceType">The source type.</param>
     /// <param name="targetType">The target type.</param>
     /// <returns>The method info.</returns>
-    public static MethodInfo? GetCastMethod(Type sourceType, Type targetType)
+    public static MethodInfo? GetConversionMethod(Type sourceType, Type targetType)
     {
-        // Check the target type.
-        var targetTypeMethod = targetType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .FirstOrDefault(m =>
+        // Search methods on the System.Convert type, the source type, and the target type, for a
+        // method with a name of the form "ToType" or "FromType", or a user-defined cast operator.
+        Type[] types = [typeof(Convert), sourceType, targetType];
+        foreach (Type type in types)
+        {
+            IEnumerable<MethodInfo> methods =
+                type.GetMethods(BindingFlags.Public | BindingFlags.Static);
+            foreach (MethodInfo method in methods)
             {
-                var parameters = m.GetParameters();
-                return m.Name is "op_Implicit" or "op_Explicit"
-                    && m.ReturnType == targetType
-                    && parameters.Length == 1
-                    && parameters[0].ParameterType == sourceType;
-            });
-        if (targetTypeMethod != null) return targetTypeMethod;
+                if ((method.Name == "op_Implicit"
+                        || method.Name == "op_Explicit"
+                        || method.Name == "To" + targetType.Name
+                        || method.Name == "From" + sourceType.Name
+                        || (method.Name == "Parse" && sourceType == typeof(string)))
+                    && method.ReturnType == targetType)
+                {
+                    ParameterInfo[] parameters = method.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].ParameterType == sourceType)
+                    {
+                        // Return the first matching method.
+                        return method;
+                    }
+                }
+            }
+        }
 
-        // Check the source type.
-        return sourceType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .FirstOrDefault(m =>
-            {
-                var parameters = m.GetParameters();
-                return m.Name is "op_Implicit" or "op_Explicit"
-                    && m.ReturnType == sourceType
-                    && parameters.Length == 1
-                    && parameters[0].ParameterType == targetType;
-            });
+        // No matching conversion method found, return null.
+        return null;
     }
 
     /// <summary>
-    /// See if a cast operator exists from one type to another.
+    /// Get the method that converts one type to another, if it exists, otherwise null.
     /// </summary>
     /// <typeparam name="TSource">The source type.</typeparam>
     /// <typeparam name="TTarget">The target type.</typeparam>
-    /// <returns>If a cast operator exists.</returns>
-    public static bool CanCast<TSource, TTarget>()
+    /// <returns>The method info.</returns>
+    public static MethodInfo? GetConversionMethod<TSource, TTarget>()
     {
-        return CanCast(typeof(TSource), typeof(TTarget));
+        return GetConversionMethod(typeof(TSource), typeof(TTarget));
+    }
+
+    /// <summary>
+    /// See if a conversion operator exists from one type to another.
+    /// </summary>
+    /// <param name="sourceType">The source type.</param>
+    /// <param name="targetType">The target type.</param>
+    /// <returns>If a conversion operator exists.</returns>
+    private static bool CanConvert(Type sourceType, Type targetType)
+    {
+        return GetConversionMethod(sourceType, targetType) != null;
+    }
+
+    /// <summary>
+    /// See if a conversion operator exists from one type to another.
+    /// </summary>
+    /// <typeparam name="TSource">The source type.</typeparam>
+    /// <typeparam name="TTarget">The target type.</typeparam>
+    /// <returns>If a conversion operator exists.</returns>
+    public static bool CanConvert<TSource, TTarget>()
+    {
+        return CanConvert(typeof(TSource), typeof(TTarget));
     }
 
     /// <summary>
@@ -207,30 +215,47 @@ public static class ReflectionExtensions
     /// <typeparam name="TTarget">The target type.</typeparam>
     /// <param name="src">The source value.</param>
     /// <returns>The target value.</returns>
-    /// <exception cref="InvalidCastException">If the cast failed.</exception>
-    public static TTarget Cast<TSource, TTarget>(TSource src)
+    /// <exception cref="InvalidCastException">If the conversion failed.</exception>
+    public static TTarget Convert<TSource, TTarget>(TSource src)
     {
-        var typeSource = typeof(TSource);
-        var typeTarget = typeof(TTarget);
+        Type sourceType = typeof(TSource);
+        Type targetType = typeof(TTarget);
 
-        var methodInfo = GetCastMethod(typeSource, typeTarget);
+        // Get the conversion method, if it exists.
+        MethodInfo? methodInfo = GetConversionMethod(sourceType, targetType);
         if (methodInfo == null)
         {
             throw new InvalidCastException(
-                $"No operator exists for casting from {typeSource.Name} to {typeTarget.Name}.");
+                $"No operator exists for converting from {sourceType.Name} to {targetType.Name}.");
         }
 
-        var tmp = methodInfo.Invoke(null, new object?[] { src });
-        if (tmp == null)
+        // Try to do the conversion.
+        bool ok;
+        Exception? innerException = null;
+        object? result = null;
+        try
+        {
+            result = methodInfo.Invoke(null, [src]);
+            // We'll assume a null result means the conversion failed.
+            ok = result != null;
+        }
+        catch (Exception ex)
+        {
+            ok = false;
+            innerException = ex;
+        }
+
+        // If it didn't work, throw an exception.
+        if (!ok)
         {
             throw new InvalidCastException(
-                $"Cast from {typeSource.Name} to {typeTarget.Name} failed.");
+                $"Converting from {sourceType.Name} to {targetType.Name} failed.", innerException);
         }
 
-        return (TTarget)tmp;
+        return (TTarget)result!;
     }
 
-    #endregion Check for cast operators
+    #endregion Type conversion
 
     #region Check for interface implementation
 
@@ -246,17 +271,6 @@ public static class ReflectionExtensions
     }
 
     /// <summary>
-    /// Check if a type implements an interface.
-    /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <typeparam name="TInterface">The interface type.</typeparam>
-    /// <returns>True if the specified type implements the specified interface.</returns>
-    public static bool ImplementsInterface<T, TInterface>()
-    {
-        return ImplementsInterface(typeof(T), typeof(TInterface));
-    }
-
-    /// <summary>
     /// Check if a type implements a generic interface.
     /// </summary>
     /// <param name="type">The type.</param>
@@ -266,17 +280,6 @@ public static class ReflectionExtensions
     {
         return type.GetInterfaces().Any(i => i.IsGenericType
             && i.GetGenericTypeDefinition() == interfaceType);
-    }
-
-    /// <summary>
-    /// Check if a type implements an generic interface.
-    /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <typeparam name="TInterface">The generic interface type.</typeparam>
-    /// <returns>True if the specified type implements the specified interface.</returns>
-    public static bool ImplementsGenericInterface<T, TInterface>()
-    {
-        return ImplementsGenericInterface(typeof(T), typeof(TInterface));
     }
 
     /// <summary>
@@ -292,17 +295,6 @@ public static class ReflectionExtensions
         return type.GetInterfaces().Any(i => i.IsGenericType
             && i.GetGenericTypeDefinition() == interfaceType
             && i.GenericTypeArguments[0] == type);
-    }
-
-    /// <summary>
-    /// Check if a type implements an self-referencing generic interface.
-    /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <typeparam name="TInterface">The self-referencing generic interface type.</typeparam>
-    /// <returns>True if the specified type implements the specified interface.</returns>
-    public static bool ImplementsSelfReferencingGenericInterface<T, TInterface>()
-    {
-        return ImplementsSelfReferencingGenericInterface(typeof(T), typeof(TInterface));
     }
 
     #endregion Check for interface implementation

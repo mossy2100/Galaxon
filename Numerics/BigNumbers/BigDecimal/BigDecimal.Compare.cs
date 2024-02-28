@@ -232,7 +232,7 @@ public partial struct BigDecimal
         // Subnormal value.
         if (T.IsSubnormal(f))
         {
-            return ReflectionExtensions.Cast<T, BigDecimal>(T.Epsilon);
+            return ReflectionExtensions.Convert<T, BigDecimal>(T.Epsilon);
         }
 
         // Normal value.

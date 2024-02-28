@@ -536,7 +536,7 @@
             <param name="name">The name of the field.</param>
             <typeparam name="TField">The field type.</typeparam>
             <returns>The value of the static field.</returns>
-            <exception cref="T:System.MissingMemberException">
+            <exception cref="T:System.MissingFieldException">
             If the static field doesn't exist on the specified type.
             </exception>
         </member>
@@ -548,7 +548,7 @@
             <typeparam name="TClass">The class type.</typeparam>
             <typeparam name="TField">The field type.</typeparam>
             <returns>The value of the static field.</returns>
-            <exception cref="T:System.MissingMemberException">
+            <exception cref="T:System.MissingFieldException">
             If the static field doesn't exist on the specified type.
             </exception>
         </member>
@@ -600,31 +600,39 @@
             If the static field or property doesn't exist on the specified type.
             </exception>
         </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.CanCast(System.Type,System.Type)">
+        <member name="M:Galaxon.Core.Types.ReflectionExtensions.GetConversionMethod(System.Type,System.Type)">
             <summary>
-            See if a cast operator exists from one type to another.
-            </summary>
-            <param name="sourceType">The source type.</param>
-            <param name="targetType">The target type.</param>
-            <returns>If a cast operator exists.</returns>
-        </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.GetCastMethod(System.Type,System.Type)">
-            <summary>
-            Get the info for a method that casts one type to another.
+            Get the method that converts one type to another, if it exists, otherwise null.
             </summary>
             <param name="sourceType">The source type.</param>
             <param name="targetType">The target type.</param>
             <returns>The method info.</returns>
         </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.CanCast``2">
+        <member name="M:Galaxon.Core.Types.ReflectionExtensions.GetConversionMethod``2">
             <summary>
-            See if a cast operator exists from one type to another.
+            Get the method that converts one type to another, if it exists, otherwise null.
             </summary>
             <typeparam name="TSource">The source type.</typeparam>
             <typeparam name="TTarget">The target type.</typeparam>
-            <returns>If a cast operator exists.</returns>
+            <returns>The method info.</returns>
         </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.Cast``2(``0)">
+        <member name="M:Galaxon.Core.Types.ReflectionExtensions.CanConvert(System.Type,System.Type)">
+            <summary>
+            See if a conversion operator exists from one type to another.
+            </summary>
+            <param name="sourceType">The source type.</param>
+            <param name="targetType">The target type.</param>
+            <returns>If a conversion operator exists.</returns>
+        </member>
+        <member name="M:Galaxon.Core.Types.ReflectionExtensions.CanConvert``2">
+            <summary>
+            See if a conversion operator exists from one type to another.
+            </summary>
+            <typeparam name="TSource">The source type.</typeparam>
+            <typeparam name="TTarget">The target type.</typeparam>
+            <returns>If a conversion operator exists.</returns>
+        </member>
+        <member name="M:Galaxon.Core.Types.ReflectionExtensions.Convert``2(``0)">
             <summary>
             Case a value from a source type to a target type.
             </summary>
@@ -632,7 +640,7 @@
             <typeparam name="TTarget">The target type.</typeparam>
             <param name="src">The source value.</param>
             <returns>The target value.</returns>
-            <exception cref="T:System.InvalidCastException">If the cast failed.</exception>
+            <exception cref="T:System.InvalidCastException">If the conversion failed.</exception>
         </member>
         <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsInterface(System.Type,System.Type)">
             <summary>
@@ -640,14 +648,6 @@
             </summary>
             <param name="type">The type.</param>
             <param name="interfaceType">The interface type.</param>
-            <returns>True if the specified type implements the specified interface.</returns>
-        </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsInterface``2">
-            <summary>
-            Check if a type implements an interface.
-            </summary>
-            <typeparam name="T">The type.</typeparam>
-            <typeparam name="TInterface">The interface type.</typeparam>
             <returns>True if the specified type implements the specified interface.</returns>
         </member>
         <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsGenericInterface(System.Type,System.Type)">
@@ -658,14 +658,6 @@
             <param name="interfaceType">The generic interface type.</param>
             <returns>True if the specified type implements the specified interface.</returns>
         </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsGenericInterface``2">
-            <summary>
-            Check if a type implements an generic interface.
-            </summary>
-            <typeparam name="T">The type.</typeparam>
-            <typeparam name="TInterface">The generic interface type.</typeparam>
-            <returns>True if the specified type implements the specified interface.</returns>
-        </member>
         <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsSelfReferencingGenericInterface(System.Type,System.Type)">
             <summary>
             Check if a type implements a self-referencing generic interface
@@ -674,14 +666,6 @@
             </summary>
             <param name="type">The type.</param>
             <param name="interfaceType">The self-referencing generic interface.</param>
-            <returns>True if the specified type implements the specified interface.</returns>
-        </member>
-        <member name="M:Galaxon.Core.Types.ReflectionExtensions.ImplementsSelfReferencingGenericInterface``2">
-            <summary>
-            Check if a type implements an self-referencing generic interface.
-            </summary>
-            <typeparam name="T">The type.</typeparam>
-            <typeparam name="TInterface">The self-referencing generic interface type.</typeparam>
             <returns>True if the specified type implements the specified interface.</returns>
         </member>
     </members>

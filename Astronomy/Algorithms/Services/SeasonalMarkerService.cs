@@ -52,12 +52,12 @@ public class SeasonalMarkerService(SunService sunService)
     /// <returns></returns>
     public static double CalcSeasonalMarkerMean(int year, ESeasonalMarker markerNumber)
     {
+        // Guards.
         if (year is < -1000 or > 3000)
         {
             throw new ArgumentOutOfRangeException(nameof(year),
                 "Must be in the range -1000..3000.");
         }
-
         if (markerNumber is < ESeasonalMarker.NorthwardEquinox
             or > ESeasonalMarker.SouthernSolstice)
         {
@@ -191,19 +191,22 @@ public class SeasonalMarkerService(SunService sunService)
         double JD = CalcSeasonalMarkerMean(year, markerNumber);
         double k = (int)markerNumber;
         double targetLs = k * PI / 2;
-        bool done;
         const double delta = 1E-9;
         do
         {
             (double _, double Ls) = sunService.CalcPosition(JD);
             double diffLs = targetLs - Ls;
-            done = Abs(diffLs) < delta;
-            if (!done)
+
+            // Check if we're done.
+            if (Abs(diffLs) < delta)
             {
-                double correction = 58 * Sin(diffLs);
-                JD += correction;
+                break;
             }
-        } while (!done);
+
+            double correction = 58 * Sin(diffLs);
+            JD += correction;
+        }
+        while (true);
 
         return JulianDateUtility.JulianDate_to_DateTime(JD);
     }
