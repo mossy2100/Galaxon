@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Galaxon.Astronomy;
+namespace Galaxon.ConsoleApp;
 
 public delegate double ToJulianDate(DateTime dt);
 
@@ -23,7 +23,7 @@ public class SpeedTest
 
     private static bool ApproxEqual(double d1, double d2)
     {
-        return Abs(d1 - d2) < 1e-9;
+        return Math.Abs(d1 - d2) < 1e-9;
     }
 
     /*

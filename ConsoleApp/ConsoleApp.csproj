@@ -9,4 +9,9 @@
         <RootNamespace>Galaxon.ConsoleApp</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Astronomy\Algorithms\Algorithms.csproj" />
+      <ProjectReference Include="..\Time\Time.csproj" />
+    </ItemGroup>
+
 </Project>

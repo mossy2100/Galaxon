@@ -1,8 +1,8 @@
-﻿using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Services;
 
-namespace Galaxon.Astronomy;
+namespace Galaxon.ConsoleApp;
 
-public class Program
+public static class Astro
 {
     /// <summary>
     /// The goal here is to generate a chart to show the difference between the 2 methods.
@@ -19,7 +19,7 @@ public class Program
         {
             double deltaTNasa = TimeScaleService.CalcDeltaTNASA(y);
             double deltaTMeeus = TimeScaleService.CalcDeltaTMeeus(y);
-            double diff = Abs(deltaTMeeus - deltaTNasa);
+            double diff = Math.Abs(deltaTMeeus - deltaTNasa);
 
             string grade = diff switch
             {
@@ -46,14 +46,8 @@ public class Program
         {
             double deltaTNasa = TimeScaleService.CalcDeltaTNASA(y);
             double deltaTMeeus = TimeScaleService.CalcDeltaTMeeus(y);
-            double diff = Abs(deltaTMeeus - deltaTNasa);
+            double diff = Math.Abs(deltaTMeeus - deltaTNasa);
             writer.WriteLine($"{y},{deltaTNasa},{deltaTMeeus},{diff}");
         }
-    }
-
-    public static void Main()
-    {
-        // CompareDeltaTCalcs();
-        GenerateDeltaTCsvFile();
     }
 }

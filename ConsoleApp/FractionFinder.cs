@@ -1,6 +1,6 @@
 ﻿using Galaxon.Time;
 
-namespace Galaxon.Astronomy;
+namespace Galaxon.ConsoleApp;
 
 public class FractionFinder
 {
@@ -12,21 +12,21 @@ public class FractionFinder
         for (var d = 1; d < 12369; d++)
         {
             //Console.WriteLine($"Testing d = {d}...");
-            var n = (int)Round(frac * d);
+            var n = (int)Math.Round(frac * d);
             if (n == 0)
             {
                 continue;
             }
 
             double frac2 = n / (double)d;
-            double diff = Abs(frac - frac2);
+            double diff = Math.Abs(frac - frac2);
             if (!(diff <= epsilon) || (bestDiff != null && !(diff < bestDiff)))
             {
                 continue;
             }
 
             bestDiff = diff;
-            var nSeconds = (int)Round(diff * TimeSpanExtensions.SECONDS_PER_DAY);
+            var nSeconds = (int)Math.Round(diff * TimeSpanExtensions.SECONDS_PER_DAY);
             Console.WriteLine(
                 $"Better match: {n} / {d} = {frac2} (diff is about {nSeconds} seconds in {d} months)");
             var m = (int)(1 / frac2);
@@ -76,7 +76,7 @@ public class FractionFinder
         double calMonthLengthDays = 29 + longMonthCount / (double)monthsPerCycle;
         Console.WriteLine(
             $"This gives {longMonthCount} long months per {monthsPerCycle} months, which is an average of {calMonthLengthDays} days per month.");
-        double driftDaysPerMonth = Abs(calMonthLengthDays - TimeSpanExtensions.DAYS_PER_LUNATION);
+        double driftDaysPerMonth = Math.Abs(calMonthLengthDays - TimeSpanExtensions.DAYS_PER_LUNATION);
         double driftSecondsPerMonth = driftDaysPerMonth * TimeSpanExtensions.SECONDS_PER_DAY;
         Console.WriteLine(
             $"The drift is about {driftDaysPerMonth:N9} days or {driftSecondsPerMonth:N3} seconds per month.");
@@ -97,7 +97,7 @@ public class FractionFinder
         for (var d = 1; d <= 10000; d++)
         {
             // Console.WriteLine($"Testing d = {d}...");
-            var n = (int)Round(frac * d);
+            var n = (int)Math.Round(frac * d);
             if (n == 0)
             {
                 continue;
@@ -112,7 +112,7 @@ public class FractionFinder
             }
             fractions.Add(frac2);
 
-            double diffDays = Abs(frac - frac2);
+            double diffDays = Math.Abs(frac - frac2);
             double diffSeconds = diffDays * TimeSpanExtensions.SECONDS_PER_DAY;
             if (diffSeconds <= 1)
             {
@@ -153,7 +153,7 @@ public class FractionFinder
         double calYearLengthDays = 365 + leapYearCount / (double)yearsPerCycle;
         Console.WriteLine(
             $"This gives {leapYearCount} leap years per {yearsPerCycle} years, which is an average of {calYearLengthDays} days per year.");
-        double driftDaysPerYear = Abs(calYearLengthDays - TimeSpanExtensions.DAYS_PER_TROPICAL_YEAR);
+        double driftDaysPerYear = Math.Abs(calYearLengthDays - TimeSpanExtensions.DAYS_PER_TROPICAL_YEAR);
         double driftSecondsPerYear = driftDaysPerYear * TimeSpanExtensions.SECONDS_PER_DAY;
         double driftSecondsPerCycle = driftSecondsPerYear * yearsPerCycle;
         Console.WriteLine(
@@ -182,7 +182,7 @@ public class FractionFinder
         double calYearLengthDays = 365 + leapYearCount / (double)a;
         Console.WriteLine(
             $"This gives {leapYearCount} leap years per {a} years, which is an average of {calYearLengthDays} days per year.");
-        double driftDaysPerYear = Abs(calYearLengthDays - TimeSpanExtensions.DAYS_PER_TROPICAL_YEAR);
+        double driftDaysPerYear = Math.Abs(calYearLengthDays - TimeSpanExtensions.DAYS_PER_TROPICAL_YEAR);
         double driftSecondsPerYear = driftDaysPerYear * TimeSpanExtensions.SECONDS_PER_DAY;
         double driftSecondsPerCycle = driftSecondsPerYear * a;
         Console.WriteLine(
