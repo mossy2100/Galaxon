@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Galaxon.Core.Exceptions;
 
 namespace Galaxon.Numerics.Algebra;
 
