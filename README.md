@@ -1,5 +1,8 @@
 # Galaxon
 
+**This needs fully updating. Currently in the process of merging all Galaxon projects into a single solution and repo, and updating all unit tests.**
+
+
 ---
 
 ## Galaxon.Core
