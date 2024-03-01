@@ -64,24 +64,27 @@ public class Polynomials
 
     /// <summary>
     /// Solve a quadratic equation of the form ax^2 + bx + c = 0
+    /// Returns solutions as doubles. Does not find complex solutions.
     /// </summary>
     /// <param name="a">The coefficient of x^2.</param>
     /// <param name="b">The coefficient of x.</param>
     /// <param name="c">The constant term.</param>
-    /// <returns>0, 1, or 2 solutions to the equation, as complex numbers.</returns>
-    public static List<Complex> SolveQuadratic(double a, double b, double c)
+    /// <returns>0, 1, or 2 solutions to the equation, as doubles.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If a == 0 and b == 0.</exception>
+    public static List<double> SolveQuadratic(double a, double b, double c)
     {
-        List<Complex> result = [];
+        // Guard.
+        if (a == 0 && b == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(b),
+                "If a and b are both zero then the equation is unsolvable.");
+        }
 
-        // Check for a == 0.
+        List<double> result = [];
+
+        // If a == 0, the expression is bx + c = 0, which gives x = -c/b.
         if (a == 0)
         {
-            if (b == 0)
-            {
-                throw new ArgumentInvalidException(nameof(b),
-                    "If a and b are both odd then the equation is unsolvable.");
-            }
-
             result.Add(-c / b);
             return result;
         }
@@ -89,14 +92,70 @@ public class Polynomials
         // Calculate the discriminant.
         double d = b * b - 4 * a * c;
 
-        // Check for no solutions.
+        // Check for no real solutions.
         if (d < 0)
         {
             return result;
         }
 
-        // Prep useful value to reduce number of multiplications.
-        double twoA = 2 * a;
+        // Calculate intermediate value to reduce number of multiplications.
+        double twoA = 2.0 * a;
+
+        // Check for one real solution.
+        if (d == 0)
+        {
+            result.Add(-b / twoA);
+            return result;
+        }
+
+        // There are 2 solutions.
+        double sqrtD = Math.Sqrt(d);
+        result.Add((-b + sqrtD) / twoA);
+        result.Add((-b - sqrtD) / twoA);
+        // Order the solutions so the results are predictable and testable.
+        result.Sort();
+        return result;
+    }
+
+    /// <summary>
+    /// Solve a quadratic equation of the form ax^2 + bx + c = 0
+    /// Returns complex numbers.
+    /// </summary>
+    /// <param name="a">The coefficient of x^2.</param>
+    /// <param name="b">The coefficient of x.</param>
+    /// <param name="c">The constant term.</param>
+    /// <returns>0, 1, or 2 solutions to the equation, as complex numbers.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If a == 0 and b == 0.</exception>
+    public static List<Complex> SolveQuadraticComplex(double a, double b, double c)
+    {
+        // Guard.
+        if (a == 0 && b == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(b),
+                "If a and b are both zero then the equation is unsolvable.");
+        }
+
+        List<Complex> result = [];
+
+        // If a == 0, the expression is bx + c = 0, which gives x = -c/b.
+        if (a == 0)
+        {
+            result.Add(-c / b);
+            return result;
+        }
+
+        // If b == 0, the expression is ax^2 + c = 0, which gives x = sqrt(-c/a).
+        if (b == 0)
+        {
+            result.Add(Complex.Sqrt(-c / a));
+            return result;
+        }
+
+        // Calculate the discriminant.
+        double d = b * b - 4 * a * c;
+
+        // Calculate intermediate value to reduce number of multiplications.
+        double twoA = 2.0 * a;
 
         // Check for one solution.
         if (d == 0)
@@ -106,9 +165,12 @@ public class Polynomials
         }
 
         // There are 2 solutions.
-        var sqrtD = Complex.Sqrt(d);
+        // If they are complex, one will be the complex conjugate of the other.
+        Complex sqrtD = Complex.Sqrt(d);
         result.Add((-b + sqrtD) / twoA);
         result.Add((-b - sqrtD) / twoA);
+        // Order them so the results are predictable and testable.
+        result.Sort(new ComplexComparer());
         return result;
     }
 }
