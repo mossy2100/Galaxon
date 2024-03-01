@@ -10,6 +10,7 @@ public static class Analysis
 
     /// <summary>
     /// Calculate a Bernoulli number.
+    /// NB: The Bernoulli number for n=1 can be ±1/2. This method returns 1/2.
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Bernoulli_number"/>
     /// <param name="n">The index of the Bernoulli number to calculate.</param>
@@ -40,7 +41,9 @@ public static class Analysis
         return b;
     }
 
-    /// <summary>Calculate a Bernoulli number.</summary>
+    /// <summary>
+    /// Calculate a Bernoulli number.
+    /// </summary>
     /// <returns>The memoized version of the method.</returns>
     public static readonly Func<int, BigRational> Bernoulli =
         Memoization.Memoize<int, BigRational>(_Bernoulli);

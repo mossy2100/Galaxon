@@ -25,14 +25,14 @@ public class Polynomials
     /// <exception cref="ArgumentException">If </exception>
     public static Func<double, double> ConstructPolynomial(double[] coeffs)
     {
-        // Ensure there are coefficients provided.
+        // Guard. Ensure coefficients are provided.
         if (coeffs.Length == 0)
         {
             throw new ArgumentException("At least one coefficient must be provided.");
         }
 
         // Create a delegate for the polynomial function.
-        double polynomial(double x)
+        return x =>
         {
             // Initialize the result with the highest order term.
             double result = coeffs[^1];
@@ -47,9 +47,7 @@ public class Polynomials
             }
 
             return result;
-        }
-
-        return polynomial;
+        };
     }
 
     /// <summary>
