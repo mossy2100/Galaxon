@@ -1,4 +1,6 @@
-﻿namespace Galaxon.Numerics.Geometry;
+﻿using Galaxon.Numerics.Bases;
+
+namespace Galaxon.Numerics.Geometry;
 
 /// <summary>
 /// Stuff related to angles.
@@ -11,11 +13,7 @@ public static class Angles
 
     public const long DEGREES_PER_SEMICIRCLE = DEGREES_PER_CIRCLE / 2;
 
-    public const long DEGREES_PER_QUADRANT = DEGREES_PER_CIRCLE / 4;
-
     public const long ARCMINUTES_PER_DEGREE = 60;
-
-    public const long ARCMINUTES_PER_CIRCLE = ARCMINUTES_PER_DEGREE * DEGREES_PER_CIRCLE;
 
     public const long ARCSECONDS_PER_ARCMINUTE = 60;
 
@@ -27,13 +25,9 @@ public static class Angles
 
     public const double RADIANS_PER_SEMICIRCLE = PI;
 
-    public const double RADIANS_PER_QUADRANT = PI / 2;
-
     public const double RADIANS_PER_DEGREE = RADIANS_PER_CIRCLE / DEGREES_PER_CIRCLE;
 
     public const double DEGREES_PER_RADIAN = DEGREES_PER_CIRCLE / RADIANS_PER_CIRCLE;
-
-    public const double RADIANS_PER_ARCSECOND = RADIANS_PER_CIRCLE / ARCSECONDS_PER_CIRCLE;
 
     public const double ARCSECONDS_PER_RADIAN = ARCSECONDS_PER_CIRCLE / RADIANS_PER_CIRCLE;
 
@@ -153,24 +147,15 @@ public static class Angles
     public static double DMSToDegrees(double degrees, double arcminutes,
         double arcseconds = 0)
     {
-        return degrees
-            + (arcminutes / ARCMINUTES_PER_DEGREE)
-            + (arcseconds / ARCSECONDS_PER_DEGREE);
+        return Sexagesimal.FromUnitsMinutesSeconds(degrees, arcminutes, arcseconds);
     }
 
     /// <summary>
     /// Converts decimal degrees to degrees, arcminutes, and arcseconds.
     /// </summary>
-    public static (int degrees, int arcminutes, double arcseconds) DegreesToDMS(
-        double degrees)
+    public static (int degrees, int arcminutes, double arcseconds) DegreesToDMS(double degrees)
     {
-        int wholeDegrees = (int)Truncate(degrees);
-        double fracDegrees = degrees - wholeDegrees;
-        double arcminutes = fracDegrees * ARCMINUTES_PER_DEGREE;
-        int wholeArcminutes = (int)Truncate(arcminutes);
-        double fracArcminutes = arcminutes - wholeArcminutes;
-        double arcseconds = fracArcminutes * ARCSECONDS_PER_ARCMINUTE;
-        return (wholeDegrees, wholeArcminutes, arcseconds);
+        return Sexagesimal.ToUnitsMinutesSeconds(degrees);
     }
 
     public static double DMSToRadians(double degrees, double arcminutes,
@@ -179,8 +164,8 @@ public static class Angles
         return DegreesToRadians(DMSToDegrees(degrees, arcminutes, arcseconds));
     }
 
-    public static (double degrees, double arcminutes, double arcseconds)
-        RadiansToDMS(double radians)
+    public static (double degrees, double arcminutes, double arcseconds) RadiansToDMS(
+        double radians)
     {
         return DegreesToDMS(RadiansToDegrees(radians));
     }
@@ -192,32 +177,36 @@ public static class Angles
     /// <summary>
     /// Converts decimal degrees, arcminutes, and arcseconds to string representation.
     /// </summary>
-    public static string DMSToString(double degrees, double arcminutes,
-        double arcseconds, byte precision = 0)
+    public static string DMSToString(double degrees, double arcminutes, double arcseconds,
+        byte? precision = null)
     {
-        // Check all parts have the same sign.
-        if (!(degrees <= 0 && arcminutes <= 0 && arcseconds <= 0)
-            && !(degrees >= 0 && arcminutes >= 0 && arcseconds >= 0))
+        // Check all parts have the same sign (or are zero).
+        int sign =
+            (degrees >= 0 && arcminutes >= 0 && arcseconds >= 0) ? 1 :
+            (degrees <= 0 && arcminutes <= 0 && arcseconds <= 0) ? -1 : 0;
+
+        // If signs are inconsistent, throw.
+        if (sign == 0)
         {
             throw new ArgumentOutOfRangeException(nameof(degrees),
                 "All parts of the value must have the same sign (unless they are zero).");
         }
 
         // Handle negative values.
-        if (degrees < 0)
+        if (sign == -1)
         {
-            return '-'
-                + DMSToString(-degrees, -arcminutes, -arcseconds, precision);
+            return '-' + DMSToString(-degrees, -arcminutes, -arcseconds, precision);
         }
 
-        var sArcSeconds = arcseconds.ToString($"F{precision}");
+        string sArcSeconds =
+            precision == null ? $"{arcseconds}" : arcseconds.ToString($"F{precision}");
         return $"{degrees}°{arcminutes}′{sArcSeconds}″";
     }
 
     /// <summary>
     /// Converts decimal degrees to degrees, arcminutes, and arcseconds notation.
     /// </summary>
-    public static string DegreesToString(double n, byte precision = 0)
+    public static string DegreesToString(double n, byte? precision = null)
     {
         (double degrees, double arcminutes, double arcseconds) = DegreesToDMS(n);
         return DMSToString(degrees, arcminutes, arcseconds, precision);

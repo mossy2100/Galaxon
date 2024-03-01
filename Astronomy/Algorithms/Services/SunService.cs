@@ -212,7 +212,7 @@ public class SunService(
             + 0.021 * julMil2 * Angles.SinDegrees(205.0482 + 719_987.4571 * julMil)
             + 0.004 * julMil2 * Angles.SinDegrees(297.8610 + 4452_671.1152 * julMil)
             + 0.010 * julMil2 * Angles.SinDegrees(154.7066 + 359_993.7286 * julMil);
-        double dLambda_rad = dLambda_as * Angles.RADIANS_PER_ARCSECOND;
+        double dLambda_rad = dLambda_as / Angles.ARCSECONDS_PER_RADIAN;
         double R_AU = R_m / Length.MetresPerAu;
         double aberration = -0.005_775_518 * R_AU * dLambda_rad;
         lngSun += aberration;

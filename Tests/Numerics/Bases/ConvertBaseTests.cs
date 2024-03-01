@@ -1,5 +1,5 @@
-using Bases;
 using Galaxon.Core.Exceptions;
+using Galaxon.Numerics.Bases;
 
 namespace Galaxon.Tests.Numerics.Bases;
 

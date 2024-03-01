@@ -1,4 +1,4 @@
-namespace Bases;
+namespace Galaxon.Numerics.Bases;
 
 /// <summary>
 /// Utility class for converting floating point values to sexagesimal values.
@@ -28,16 +28,16 @@ public static class Sexagesimal
     /// A tuple representing the units (hours or degrees), minutes (or arcminutes), and seconds (or
     /// arcseconds).
     /// </returns>
-    public static (long, sbyte, double) ToUnitsMinutesSeconds(double n)
+    public static (int, int, double) ToUnitsMinutesSeconds(double n)
     {
         // Calculate the units part.
         // This will throw an exception if the truncated value of n is outside the valid range for
         // long. We could make units a BigInteger but that seems unnecessary at this stage.
-        var units = (long)Math.Truncate(n);
+        var units = (int)Math.Truncate(n);
 
         // Calculate the minutes part.
         double decimalMinutes = (n - units) * BASE;
-        var minutes = (sbyte)Math.Truncate(decimalMinutes);
+        var minutes = (int)Math.Truncate(decimalMinutes);
 
         // Calculate the seconds part.
         double seconds = (decimalMinutes - minutes) * BASE;

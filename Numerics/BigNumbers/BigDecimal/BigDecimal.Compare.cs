@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
-using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Types;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.BigNumbers;
 

@@ -1,6 +1,6 @@
 using System.Numerics;
-using Galaxon.Numerics.Extensions;
 using Galaxon.Core.Types;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.BigNumbers;
 

@@ -8,7 +8,9 @@ public static class Analysis
 {
     #region Bernoulli numbers
 
-    /// <summary>Calculate a Bernoulli number.</summary>
+    /// <summary>
+    /// Calculate a Bernoulli number.
+    /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Bernoulli_number"/>
     /// <param name="n">The index of the Bernoulli number to calculate.</param>
     /// <returns>The Bernoulli number as a BigRational.</returns>

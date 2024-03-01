@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
 using Galaxon.Core.Strings;
 
-namespace Bases;
+namespace Galaxon.Numerics.Bases;
 
 /// <summary>
 /// This class supports conversion between unsigned long integers and strings of digits in a
