@@ -104,16 +104,32 @@ public class PolynomialsTests
     #region SolveQuadratic
 
     [TestMethod]
-    public void SolveQuadratic_ZeroCoefficients_ThrowsException()
+    public void SolveQuadratic_ZeroAZeroB_ThrowsException()
     {
         // Arrange
         double a = 0;
         double b = 0;
-        double c = 0;
+        double c = 5;
 
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             Polynomials.SolveQuadratic(a, b, c));
+    }
+
+    [TestMethod]
+    public void SolveQuadratic_ZeroA_OneSolution()
+    {
+        // Arrange
+        double a = 0;
+        double b = 3;
+        double c = 6;
+
+        // Act
+        List<double> solutions = Polynomials.SolveQuadratic(a, b, c);
+
+        // Assert
+        Assert.AreEqual(1, solutions.Count);
+        Assert.AreEqual(-2, solutions[0]);
     }
 
     [TestMethod]
@@ -148,7 +164,7 @@ public class PolynomialsTests
     }
 
     [TestMethod]
-    public void SolveQuadratic_TwoRealSolutions()
+    public void SolveQuadratic_TwoSolutions()
     {
         // Arrange
         double a = 5;
@@ -169,12 +185,12 @@ public class PolynomialsTests
     #region SolveQuadraticComplex
 
     [TestMethod]
-    public void SolveQuadraticComplex_ZeroCoefficients_ThrowsException()
+    public void SolveQuadraticComplex_ZeroAZeroB_ThrowsException()
     {
         // Arrange
         double a = 0;
         double b = 0;
-        double c = 0;
+        double c = 5;
 
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
@@ -182,7 +198,58 @@ public class PolynomialsTests
     }
 
     [TestMethod]
-    public void SolveQuadraticComplex_OneSolution()
+    public void SolveQuadraticComplex_ZeroA_OneSolution()
+    {
+        // Arrange
+        double a = 0;
+        double b = -10;
+        double c = 4;
+
+        // Act
+        List<Complex> solutions = Polynomials.SolveQuadraticComplex(a, b, c);
+
+        // Assert
+        Assert.AreEqual(1, solutions.Count);
+        Assert.AreEqual(0.4, solutions[0].Real);
+        Assert.AreEqual(0, solutions[0].Imaginary);
+    }
+
+    [TestMethod]
+    public void SolveQuadraticComplex_ZeroB_OneRealSolution()
+    {
+        // Arrange
+        double a = -4;
+        double b = 0;
+        double c = 16;
+
+        // Act
+        List<Complex> solutions = Polynomials.SolveQuadraticComplex(a, b, c);
+
+        // Assert
+        Assert.AreEqual(1, solutions.Count);
+        Assert.AreEqual(2, solutions[0].Real);
+        Assert.AreEqual(0, solutions[0].Imaginary);
+    }
+
+    [TestMethod]
+    public void SolveQuadraticComplex_ZeroB_OneComplexSolution()
+    {
+        // Arrange
+        double a = 4;
+        double b = 0;
+        double c = 16;
+
+        // Act
+        List<Complex> solutions = Polynomials.SolveQuadraticComplex(a, b, c);
+
+        // Assert
+        Assert.AreEqual(1, solutions.Count);
+        Assert.AreEqual(0, solutions[0].Real);
+        Assert.AreEqual(2, solutions[0].Imaginary);
+    }
+
+    [TestMethod]
+    public void SolveQuadraticComplex_OneRealSolution()
     {
         // Arrange
         double a = 1;
