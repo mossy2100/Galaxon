@@ -65,6 +65,16 @@ public static class DoubleExtensions
         return FloatingPointExtensions.Assemble<double>(signBit, expBits, fracBits);
     }
 
+    /// <summary>
+    /// Removes the negative zero value from a double if present.
+    /// </summary>
+    /// <param name="x">The input double value.</param>
+    /// <returns>The double value with negative zero removed, replaced with zero.</returns>
+    public static double RemoveNegativeZero(this double x)
+    {
+        return x == double.NegativeZero ? 0 : x;
+    }
+
     #endregion Miscellaneous methods
 
     #region Methods for checking doubles as integers

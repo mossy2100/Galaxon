@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.Algebra;
 
@@ -91,7 +92,7 @@ public class Polynomials
         // Calculate the discriminant.
         double d = b * b - 4 * a * c;
 
-        // Check for no real solutions.
+        // Check for 0 solutions.
         if (d < 0)
         {
             return result;
@@ -100,7 +101,7 @@ public class Polynomials
         // Calculate intermediate value to reduce number of multiplications.
         double twoA = 2.0 * a;
 
-        // Check for one real solution.
+        // Check for 1 solution.
         if (d == 0)
         {
             result.Add(-b / twoA);
@@ -143,20 +144,13 @@ public class Polynomials
             return result;
         }
 
-        // If b == 0, the expression is ax^2 + c = 0, which gives x = sqrt(-c/a).
-        if (b == 0)
-        {
-            result.Add(Complex.Sqrt(-c / a));
-            return result;
-        }
-
         // Calculate the discriminant.
         double d = b * b - 4 * a * c;
 
         // Calculate intermediate value to reduce number of multiplications.
         double twoA = 2.0 * a;
 
-        // Check for one solution.
+        // Check for 1 solution.
         if (d == 0)
         {
             result.Add(-b / twoA);
@@ -166,10 +160,10 @@ public class Polynomials
         // There are 2 solutions.
         // If they are complex, one will be the complex conjugate of the other.
         Complex sqrtD = Complex.Sqrt(d);
-        result.Add((-b + sqrtD) / twoA);
-        result.Add((-b - sqrtD) / twoA);
+        result.Add(((-b + sqrtD) / twoA).RemoveNegativeZero());
+        result.Add(((-b - sqrtD) / twoA).RemoveNegativeZero());
         // Order them so the results are predictable and testable.
-        result.Sort(new ComplexComparer());
+        result = ComplexExtensions.Sort(result);
         return result;
     }
 }

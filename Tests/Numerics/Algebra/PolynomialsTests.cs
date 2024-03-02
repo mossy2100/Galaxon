@@ -1,11 +1,14 @@
 using System.Numerics;
 using Galaxon.Numerics.Algebra;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Tests.Numerics.Algebra;
 
 [TestClass]
 public class PolynomialsTests
 {
+    private const double _DELTA = 1e-15;
+
     #region ConstructPolynomial
 
     [TestMethod]
@@ -130,6 +133,10 @@ public class PolynomialsTests
         // Assert
         Assert.AreEqual(1, solutions.Count);
         Assert.AreEqual(-2, solutions[0]);
+
+        // Test solutions
+        Func<double, double> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
     }
 
     [TestMethod]
@@ -161,6 +168,10 @@ public class PolynomialsTests
         // Assert
         Assert.AreEqual(1, solutions.Count);
         Assert.AreEqual(1, solutions[0]);
+
+        // Test solutions
+        Func<double, double> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
     }
 
     [TestMethod]
@@ -178,6 +189,11 @@ public class PolynomialsTests
         Assert.AreEqual(2, solutions.Count);
         Assert.AreEqual(-1, solutions[0]);
         Assert.AreEqual(-0.2, solutions[1]);
+
+        // Test solutions
+        Func<double, double> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]), _DELTA);
+        Assert.AreEqual(0, f(solutions[1]), _DELTA);
     }
 
     #endregion SolveQuadratic
@@ -212,10 +228,14 @@ public class PolynomialsTests
         Assert.AreEqual(1, solutions.Count);
         Assert.AreEqual(0.4, solutions[0].Real);
         Assert.AreEqual(0, solutions[0].Imaginary);
+
+        // Test solutions
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
     }
 
     [TestMethod]
-    public void SolveQuadraticComplex_ZeroB_OneRealSolution()
+    public void SolveQuadraticComplex_ZeroB_TwoRealSolution()
     {
         // Arrange
         double a = -4;
@@ -226,13 +246,20 @@ public class PolynomialsTests
         List<Complex> solutions = Polynomials.SolveQuadraticComplex(a, b, c);
 
         // Assert
-        Assert.AreEqual(1, solutions.Count);
-        Assert.AreEqual(2, solutions[0].Real);
+        Assert.AreEqual(2, solutions.Count);
+        Assert.AreEqual(-2, solutions[0].Real);
         Assert.AreEqual(0, solutions[0].Imaginary);
+        Assert.AreEqual(2, solutions[1].Real);
+        Assert.AreEqual(0, solutions[1].Imaginary);
+
+        // Test solutions
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
+        Assert.AreEqual(0, f(solutions[1]));
     }
 
     [TestMethod]
-    public void SolveQuadraticComplex_ZeroB_OneComplexSolution()
+    public void SolveQuadraticComplex_ZeroB_TwoComplexSolutions()
     {
         // Arrange
         double a = 4;
@@ -243,9 +270,16 @@ public class PolynomialsTests
         List<Complex> solutions = Polynomials.SolveQuadraticComplex(a, b, c);
 
         // Assert
-        Assert.AreEqual(1, solutions.Count);
+        Assert.AreEqual(2, solutions.Count);
         Assert.AreEqual(0, solutions[0].Real);
-        Assert.AreEqual(2, solutions[0].Imaginary);
+        Assert.AreEqual(-2, solutions[0].Imaginary);
+        Assert.AreEqual(0, solutions[1].Real);
+        Assert.AreEqual(2, solutions[1].Imaginary);
+
+        // Test solutions
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
+        Assert.AreEqual(0, f(solutions[1]));
     }
 
     [TestMethod]
@@ -263,6 +297,10 @@ public class PolynomialsTests
         Assert.AreEqual(1, solutions.Count);
         Assert.AreEqual(1, solutions[0].Real);
         Assert.AreEqual(0, solutions[0].Imaginary);
+
+        // Test solution
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        Assert.AreEqual(0, f(solutions[0]));
     }
 
     [TestMethod]
@@ -282,6 +320,11 @@ public class PolynomialsTests
         Assert.AreEqual(0, solutions[0].Imaginary);
         Assert.AreEqual(-0.2, solutions[1].Real);
         Assert.AreEqual(0, solutions[1].Imaginary);
+
+        // Test solutions
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        ComplexExtensions.AreEqual(0, f(solutions[0]), _DELTA);
+        ComplexExtensions.AreEqual(0, f(solutions[1]), _DELTA);
     }
 
     [TestMethod]
@@ -303,6 +346,11 @@ public class PolynomialsTests
         Assert.AreEqual(-expectedImag, solutions[0].Imaginary);
         Assert.AreEqual(expectedReal, solutions[1].Real);
         Assert.AreEqual(expectedImag, solutions[1].Imaginary);
+
+        // Test solutions
+        Func<Complex, Complex> f = z => a * z * z + b * z + c;
+        ComplexExtensions.AreEqual(0, f(solutions[0]), _DELTA);
+        ComplexExtensions.AreEqual(0, f(solutions[1]), _DELTA);
     }
 
     #endregion SolveQuadraticComplex
