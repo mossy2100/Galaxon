@@ -225,20 +225,23 @@ public static class NumberExtensions
     #region String methods
 
     /// <summary>
-    /// Removed digit grouping characters (ASCII only) from a string.
+    /// Removed whitespace and digit group separator characters from a string.
+    /// This is useful for parsing numeric strings.
     ///
     /// This includes:
-    ///   * whitespace (spaces, tabs, newlines, carriage returns)
-    ///   * the number group separator for the provided culture (typically dot or comma)
+    ///   * whitespace (all ASCII and non-ASCII whitespace characters)
+    ///   * commas
     ///   * underscores
-    ///   * apostrophes
+    ///   * ASCII apostrophes
+    ///
+    /// Culture isn't considered. A period is expected to mean a decimal point rather than a digit
+    /// grouping character.
     /// </summary>
     /// <param name="str">The string.</param>
-    /// <param name="nfi">The NumberFormatInfo.</param>
-    /// <returns>The string with the ignored characters removed.</returns>
-    public static string RemoveNumberGroupSeparators(string str, NumberFormatInfo nfi)
+    /// <returns>The string with the ignorable characters removed.</returns>
+    public static string RemoveWhitespaceAndDigitGroupSeparators(string str)
     {
-        return Regex.Replace(str, $@"[\s{nfi.NumberGroupSeparator}_']", "");
+        return Regex.Replace(str, @"[\p{Z},_']", "");
     }
 
     #endregion String methods

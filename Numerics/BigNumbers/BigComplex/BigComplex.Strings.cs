@@ -38,15 +38,12 @@ public partial struct BigComplex
     /// </remarks>
     public static BigComplex Parse(string s, IFormatProvider? provider)
     {
-        // Get a NumberFormatInfo object so we know what decimal point character to accept.
-        var nfi = provider as NumberFormatInfo ?? NumberFormatInfo.InvariantInfo;
-
         // Remove ignored characters from the string.
-        s = NumberExtensions.RemoveNumberGroupSeparators(s, nfi);
+        s = NumberExtensions.RemoveWhitespaceAndDigitGroupSeparators(s);
 
         // Different components of the patterns.
-        var rxSign = $"[{nfi.NegativeSign}{nfi.PositiveSign}]";
-        var rxReal = $@"(\d+({nfi.NumberDecimalSeparator}\d+)?)";
+        var rxSign = @"[\-+]";
+        var rxReal = $@"(\d+(\.\d+)?)";
         var rxUnsignedReal = $@"{rxReal}(e{rxSign}?\d+)?";
         var rxSignedReal = $"{rxSign}?{rxUnsignedReal}";
         var rxUnsignedImag = $"({rxUnsignedReal}[ij]|[ij]{rxUnsignedReal})";

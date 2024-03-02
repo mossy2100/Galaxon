@@ -2,12 +2,13 @@
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
 using Galaxon.Core.Strings;
+using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.Bases;
 
 /// <summary>
 /// This class supports conversion between unsigned long integers and strings of digits in a
-/// specified base, which can be in the range 2..64.
+/// specified base, which can be in the range 2..36.
 ///
 /// As in hexadecimal literals, upper-case letters have the same value as lower-case letters.
 /// Lower-case is the default for strings returned from methods.
@@ -38,34 +39,11 @@ namespace Galaxon.Numerics.Bases;
 /// |        3         |  octal                 |    8   |  ToOct()    FromOct()    |
 /// |        4         |  hexadecimal           |   16   |  ToHex()    FromHex()    |
 /// |        5         |  duotrigesimal         |   32   |  ToDuo()    FromDuo()    |
-/// |        6         |  tetrasexagesimal      |   64   |  ToTetra()  FromTetra()  |
 /// |------------------|------------------------|--------|--------------------------|
 ///
 /// The system used for base-32 encoding is known as base32hex or triacontakaidecimal. It is a
 /// simple continuation of hexadecimal that uses the English letters from g-v (or G-V) to
 /// represent the values 16-31. It is the same method as used by JavaScript.
-///
-/// The system used for base-64 encoding is new. It could perhaps be called "base64hex". It's also
-/// a continuation of hexadecimal (and  base32hex) that uses the letters w-z (or W-Z) to represent
-/// the values 32-35, and 28 ASCII symbol characters to represent the values 36-63. These characters
-/// are ordered by ASCII value. As there are 32 symbol characters in the ASCII set, 4 are excluded.
-///
-/// The excluded characters are as follows:
-///   period (.)        Indicates a decimal separator (and in some languages, digit grouping).
-///   comma (,)         Commonly used for digit grouping (and in some languages, the decimal separator).
-///   underscore (_)    Used for digit grouping in several programming languages (C#, Java, etc.)
-///   dash (-)          Indicates a negative sign.
-///
-/// At this stage the class doesn't support negative values or values with a fractional part, but
-/// it might do in the future.
-///
-/// Apostrophes (') are also valid for digit grouping in certain languages, and in C++, but they
-/// aren't very common, and there aren't enough ASCII symbol characters to exclude more than 4.
-///
-/// Any whitespace characters in a string being parsed are ignored.
-///
-/// Digit characters that are invalid for the specified base of the value will trigger an exception,
-/// as will any control characters.
 /// </summary>
 /// <see href="https://en.wikipedia.org/wiki/List_of_numeral_systems"/>
 /// <see href="https://en.wikipedia.org/wiki/Binary_number"/>
@@ -73,8 +51,6 @@ namespace Galaxon.Numerics.Bases;
 /// <see href="https://en.wikipedia.org/wiki/Octal"/>
 /// <see href="https://en.wikipedia.org/wiki/Hexadecimal"/>
 /// <see href="https://en.wikipedia.org/wiki/Base32"/>
-/// <see href="https://en.wikipedia.org/wiki/Sexagesimal"/>
-/// <see href="https://en.wikipedia.org/wiki/Base64"/>
 public static class ConvertBase
 {
     #region Constants
@@ -87,13 +63,12 @@ public static class ConvertBase
     /// <summary>
     /// The maximum supported base.
     /// </summary>
-    public const int MAX_BASE = 64;
+    public const int MAX_BASE = 36;
 
     /// <summary>
     /// Digit characters. The index of a character in the string equals its value.
     /// </summary>
-    public const string DIGITS =
-        "0123456789abcdefghijklmnopqrstuvwxyz!\"#$%&'()*+/:;<=>?@[\\]^`{|}~";
+    public const string DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz";
 
     #endregion Constants
 
@@ -208,25 +183,28 @@ public static class ConvertBase
         return ToBase(n, 32, width, upper);
     }
 
-    /// <summary>Convert integer to tetrasexagesimal digits.</summary>
-    /// <param name="n">The integer to convert.</param>
-    /// <param name="width">The minimum number of digits in the result.</param>
-    /// <param name="upper">If letters should be upper-case (false = lower, true = upper).</param>
-    /// <returns>The value as a string of tetrasexagesimal digits.</returns>
-    public static string ToTetra(this ulong n, int width = 1, bool upper = false)
-
-    {
-        return ToBase(n, 64, width, upper);
-    }
-
     #endregion Extension methods
 
     #region Static conversion methods
 
     /// <summary>
     /// Convert a string of digits in a given base into a ulong.
-    /// Any whitespace characters in the input will be ignored.
-    /// Commas and underscores are taken to indicate digit grouping and are also ignored.
+    ///
+    /// Any whitespace characters (ASCII and non-ASCII) in a string being parsed are ignored.
+    /// Digit grouping characters are also ignored, which includes commas, underscores, and
+    /// ASCII apostrophes.
+    ///
+    /// Digit characters invalid for the specified base of the value will trigger an exception, as
+    /// will any other invalid characters.
+    ///
+    /// Periods are taken to mean a radix point (i.e. decimal point, binary point, etc.)
+    ///
+    /// The class currently doesn't support values with a fractional part, but this capability could
+    /// be added later. For now, if a period is found in a string being parsed, an exception will be
+    /// thrown.
+    ///
+    /// Negative values are also not currently supported, and dash characters will trigger an
+    /// exception.
     /// </summary>
     /// <param name="digits">A string of digits in the specified base.</param>
     /// <param name="fromBase">The base that the digits in the string are in.</param>
@@ -244,13 +222,6 @@ public static class ConvertBase
             throw new ArgumentNullException(nameof(digits), "Cannot be empty or whitespace.");
         }
 
-        // Check for a negative value.
-        if (digits[0] == '-')
-        {
-            throw new ArgumentOutOfRangeException(nameof(digits),
-                "Parsing of negative values is unsupported.");
-        }
-
         // Check the base is valid. This could throw an ArgumentOutOfRangeException.
         if (fromBase is < MIN_BASE or > MAX_BASE)
         {
@@ -258,8 +229,15 @@ public static class ConvertBase
                 $"The base must be in the range {MIN_BASE}..{MAX_BASE}.");
         }
 
-        // Ignore whitespace and digit grouping characters.
-        digits = Regex.Replace(digits, @$"[\s,_]", "");
+        // Check for a negative value.
+        if (digits[0] == '-')
+        {
+            throw new ArgumentInvalidException(nameof(digits),
+                "Parsing of negative values is unsupported.");
+        }
+
+        // Remove ignorable characters.
+        digits = NumberExtensions.RemoveWhitespaceAndDigitGroupSeparators(digits);
 
         // Get a map of valid digits to their value, for this base.
         Dictionary<char, byte> digitValues = GetDigitValuesForBase(fromBase);
@@ -271,16 +249,17 @@ public static class ConvertBase
             // Try to get the character value from the map.
             if (!digitValues.TryGetValue(c, out byte digitValue))
             {
+                // Check for decimal.
                 if (c == '.')
                 {
                     throw new ArgumentInvalidException(nameof(digits),
-                        "The period character, indicating a decimal point, is invalid, as parsing of values with a fractional part is unsupported.");
+                        $"Invalid character '{c}'. The period is taken to mean a radix point, however, values with a fractional part are currently unsupported.");
                 }
 
-                char[] digitChars = digitValues.Select(kvp => kvp.Key).ToArray();
-                string digitList = string.Join(", ", digitChars[..^1]) + " and " + digitChars[^1];
+                string[] quotedDigits = digitValues.Select(kvp => $"'{kvp.Key}'").ToArray();
+                string digitList = string.Join(", ", quotedDigits[..^1]) + " and " + quotedDigits[^1];
                 throw new ArgumentInvalidException(nameof(digits),
-                    $"A string representing a number in base {fromBase} may only include the digits {digitList}. Whitespace characters, commas, and underscores are allowed but ignored.");
+                    $"Invalid character '{c}'. A string representing a number in base {fromBase} may only include the characters {digitList}. Whitespace and digit grouping characters (commas, underscores, and apostrophes) are ignored.");
             }
 
             // Add it to the result. Check for overflow.
@@ -347,16 +326,6 @@ public static class ConvertBase
     public static ulong FromDuo(string digits)
     {
         return FromBase(digits, 32);
-    }
-
-    /// <summary>
-    /// Convert a string of tetrasexagesimal digits into an integer.
-    /// </summary>
-    /// <param name="digits">The string of digits to parse.</param>
-    /// <returns>The integer equivalent of the digits.</returns>
-    public static ulong FromTetra(string digits)
-    {
-        return FromBase(digits, 64);
     }
 
     #endregion Static conversion methods
