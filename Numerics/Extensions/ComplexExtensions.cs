@@ -19,16 +19,6 @@ public static class ComplexExtensions
         return values.OrderBy(value => value.Real).ThenBy(value => value.Imaginary).ToList();
     }
 
-    /// <summary>
-    /// if the real or imaginary part is -0, change to 0.
-    /// </summary>
-    /// <param name="z">A Complex value.</param>
-    /// <returns>The same value with -0 parts replaced with 0.</returns>
-    public static Complex RemoveNegativeZero(this Complex z)
-    {
-        return new Complex(z.Real.RemoveNegativeZero(), z.Imaginary.RemoveNegativeZero());
-    }
-
     #endregion Miscellaneous
 
     #region Testing

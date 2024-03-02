@@ -160,8 +160,8 @@ public class Polynomials
         // There are 2 solutions.
         // If they are complex, one will be the complex conjugate of the other.
         Complex sqrtD = Complex.Sqrt(d);
-        result.Add(((-b + sqrtD) / twoA).RemoveNegativeZero());
-        result.Add(((-b - sqrtD) / twoA).RemoveNegativeZero());
+        result.Add((-b + sqrtD) / twoA);
+        result.Add((-b - sqrtD) / twoA);
         // Order them so the results are predictable and testable.
         result = ComplexExtensions.Sort(result);
         return result;
