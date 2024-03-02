@@ -337,7 +337,7 @@ public static class ConvertBase
     /// </summary>
     /// <param name="radix">The base.</param>
     /// <returns>The map of digit characters to their values.</returns>
-    private static Dictionary<char, byte> GetDigitValuesForBase(byte radix)
+    internal static Dictionary<char, byte> GetDigitValuesForBase(byte radix)
     {
         Dictionary<char, byte> digitValues = new ();
 

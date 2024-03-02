@@ -138,22 +138,10 @@ public class ConvertBaseTests
         ulong x = 123456;
         string s;
 
-        // Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            s = x.ToBase(0);
-        });
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            s = x.ToBase(1);
-        });
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            s = x.ToBase(65);
-        });
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(0));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(65));
     }
 
     [TestMethod]
@@ -162,17 +150,9 @@ public class ConvertBaseTests
         // Arrange
         ulong x = 123456;
 
-        // Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            x.ToBase(2, -1);
-        });
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            x.ToBase(4, 0);
-        });
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(2, -1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(4, 0));
     }
 
     [TestMethod]
@@ -193,22 +173,14 @@ public class ConvertBaseTests
     [TestMethod]
     public void FromBase_InvalidDigits_ThrowsFormatException()
     {
-        // Assert
-        Assert.ThrowsException<ArgumentInvalidException>(() =>
-        {
-            // Act
-            ConvertBase.FromBase("123", 2);
-        });
+        // Act & Assert
+        Assert.ThrowsException<ArgumentInvalidException>(() => ConvertBase.FromBase("123", 2));
     }
 
     [TestMethod]
     public void FromBase_InvalidBase_ThrowsArgumentOutOfRangeException()
     {
-        // Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-        {
-            // Act
-            ConvertBase.FromBase("123", 65);
-        });
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => ConvertBase.FromBase("123", 65));
     }
 }
