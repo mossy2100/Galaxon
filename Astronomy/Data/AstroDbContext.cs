@@ -26,17 +26,6 @@ public class AstroDbContext : DbContext
     public DbSet<AstroObjectGroup> AstroObjectGroups => Set<AstroObjectGroup>();
 
     // ---------------------------------------------------------------------------------------------
-    // AstroObject classes. (Obsolete)
-
-    // public DbSet<Star> Stars => Set<Star>();
-    //
-    // public DbSet<Planet> Planets => Set<Planet>();
-    //
-    // public DbSet<Planetoid> Planetoids => Set<Planetoid>();
-    //
-    // public DbSet<Moon> Moons => Set<Moon>();
-
-    // ---------------------------------------------------------------------------------------------
     // AstroObject components.
 
     public DbSet<PhysicalRecord> PhysicalRecords => Set<PhysicalRecord>();
@@ -77,8 +66,6 @@ public class AstroDbContext : DbContext
     public DbSet<DeltaTRecord> DeltaTRecords => Set<DeltaTRecord>();
 
     public DbSet<VSOP87DRecord> VSOP87DRecords => Set<VSOP87DRecord>();
-
-    // public DbSet<MinorPlanetRecord> MinorPlanetRecords => Set<MinorPlanetRecord>();
 
     #endregion Database tables
 
@@ -164,6 +151,6 @@ public class AstroDbContext : DbContext
             throw new InvalidOperationException("Solution directory not found.");
         }
 
-        return Path.Combine(solnDir, "DataImport/data");
+        return Path.Combine(solnDir, "Astronomy/DataImport/data");
     }
 }
