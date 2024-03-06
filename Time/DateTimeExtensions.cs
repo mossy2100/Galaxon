@@ -46,7 +46,7 @@ public static class DateTimeExtensions
     /// <returns></returns>
     public static DateTime AddWeeks(this DateTime dt, double weeks)
     {
-        return dt.AddDays(weeks * GregorianCalendarExtensions.DAYS_PER_WEEK);
+        return dt.AddDays(weeks * TimeConstants.DAYS_PER_WEEK);
     }
 
     #endregion Methods for addition and subtraction
@@ -108,7 +108,7 @@ public static class DateTimeExtensions
     /// <returns>The number of years since the epoch start.</returns>
     public static double GetTotalYears(this DateTime dt)
     {
-        return (double)dt.Ticks / GregorianCalendarExtensions.TICKS_PER_YEAR;
+        return (double)dt.Ticks / TimeConstants.TICKS_PER_YEAR;
     }
 
     #endregion Methods for getting the instant as a count of time units
@@ -146,7 +146,7 @@ public static class DateTimeExtensions
     /// <returns>A new DateTime object.</returns>
     public static DateTime FromTotalYears(double years)
     {
-        var ticks = (long)Math.Round(years * GregorianCalendarExtensions.TICKS_PER_YEAR);
+        var ticks = (long)Math.Round(years * TimeConstants.TICKS_PER_YEAR);
         return new DateTime(ticks, DateTimeKind.Utc);
     }
 

@@ -5,63 +5,6 @@ namespace Galaxon.Astronomy.Algorithms.Utilities;
 
 public static class JulianDateUtility
 {
-    #region Constants
-
-    /// <summary>
-    /// Julian Date (UT) at the start of the Gregorian epoch, the epoch used by .NET, which began at
-    /// 0001-01-01 00:00:00 UTC.
-    /// </summary>
-    public const double START_GREGORIAN_EPOCH_JD_UT = 1721425.5;
-
-    /// <summary>
-    /// Julian Date (TT) of the start point of the J2000 epoch.
-    /// Or: the number of ephemeris days difference between the start of the Julian epoch and the
-    /// start of the J2000 epoch (in Terrestrial Time).
-    /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
-    /// </summary>
-    public const double START_J2000_EPOCH_JD_TT = 2451545.0;
-
-    /// <summary>
-    /// The start point of the J2000 epoch in UTC.
-    /// This is equal to the Julian Date 2451545.0 TT, i.e. noon on 2000-01-01 in Terrestrial Time.
-    /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
-    /// </summary>
-    /// <returns>A DateTime object representing the start point of the J2000 epoch in UTC.</returns>
-    public static DateTime START_J2000_EPOCH_UTC { get; } =
-        new (2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
-
-    /// <summary>
-    /// The number of days in a Julian Calendar year.
-    /// </summary>
-    public const double DAYS_PER_JULIAN_YEAR = 365.25;
-
-    /// <summary>
-    /// The number of ticks in a Julian Calendar year.
-    /// </summary>
-    public const long TICKS_PER_JULIAN_YEAR = (long)(DAYS_PER_JULIAN_YEAR * TimeSpan.TicksPerDay);
-
-    /// <summary>
-    /// The number of days in a Julian Calendar decade.
-    /// </summary>
-    public const double DAYS_PER_JULIAN_DECADE = 3652.5;
-
-    /// <summary>
-    /// The number of days in a Julian Calendar century.
-    /// </summary>
-    public const long DAYS_PER_JULIAN_CENTURY = 36_525L;
-
-    /// <summary>
-    /// The number of ticks in a Julian Calendar century.
-    /// </summary>
-    public const long TICKS_PER_JULIAN_CENTURY = DAYS_PER_JULIAN_CENTURY * TimeSpan.TicksPerDay;
-
-    /// <summary>
-    /// The number of days in a Julian Calendar millennium.
-    /// </summary>
-    public const long DAYS_PER_JULIAN_MILLENNIUM = 365_250L;
-
-    #endregion Constants
-
     #region Conversion between Julian dates and other time scales
 
     /// <summary>
@@ -73,7 +16,7 @@ public static class JulianDateUtility
     /// <returns>The Julian Date</returns>
     public static double DateTime_to_JulianDate(DateTime dt)
     {
-        return START_GREGORIAN_EPOCH_JD_UT + dt.GetTotalDays();
+        return TimeConstants.START_GREGORIAN_EPOCH_JD_UT + dt.GetTotalDays();
     }
 
     /// <summary>
@@ -85,7 +28,7 @@ public static class JulianDateUtility
     /// <returns>A new DateTime object.</returns>
     public static DateTime JulianDate_to_DateTime(double JD)
     {
-        return DateTimeExtensions.FromTotalDays(JD - START_GREGORIAN_EPOCH_JD_UT);
+        return DateTimeExtensions.FromTotalDays(JD - TimeConstants.START_GREGORIAN_EPOCH_JD_UT);
     }
 
     /// <summary>
@@ -150,7 +93,7 @@ public static class JulianDateUtility
     /// <returns>Julian Date in International Atomic Time</returns>
     public static double JulianDate_TT_to_TAI(double JD_TT)
     {
-        return JD_TT - ((double)TimeScaleService.TT_MINUS_TAI_MS / TimeSpanExtensions.SECONDS_PER_DAY / 1000);
+        return JD_TT - ((double)TimeScaleService.TT_MINUS_TAI_MS / TimeConstants.SECONDS_PER_DAY / 1000);
     }
 
     #endregion Conversion between Julian dates and other time scales
@@ -164,7 +107,7 @@ public static class JulianDateUtility
     /// <returns></returns>
     public static double JulianDaysSinceJ2000(double JD_TT)
     {
-        return JD_TT - START_J2000_EPOCH_JD_TT;
+        return JD_TT - TimeConstants.START_J2000_EPOCH_JD_TT;
     }
 
     /// <summary>
@@ -174,7 +117,7 @@ public static class JulianDateUtility
     /// <returns></returns>
     public static double JulianYearsSinceJ2000(double JD_TT)
     {
-        return JulianDaysSinceJ2000(JD_TT) / DAYS_PER_JULIAN_YEAR;
+        return JulianDaysSinceJ2000(JD_TT) / TimeConstants.DAYS_PER_JULIAN_YEAR;
     }
 
     /// <summary>
@@ -184,7 +127,7 @@ public static class JulianDateUtility
     /// <returns></returns>
     public static double JulianCenturiesSinceJ2000(double JD_TT)
     {
-        return JulianDaysSinceJ2000(JD_TT) / DAYS_PER_JULIAN_CENTURY;
+        return JulianDaysSinceJ2000(JD_TT) / TimeConstants.DAYS_PER_JULIAN_CENTURY;
     }
 
     /// <summary>
@@ -194,7 +137,7 @@ public static class JulianDateUtility
     /// <returns></returns>
     public static double JulianMillenniaSinceJ2000(double JD_TT)
     {
-        return JulianDaysSinceJ2000(JD_TT) / DAYS_PER_JULIAN_MILLENNIUM;
+        return JulianDaysSinceJ2000(JD_TT) / TimeConstants.DAYS_PER_JULIAN_MILLENNIUM;
     }
 
     #endregion Julian periods since start J2000 epoch.

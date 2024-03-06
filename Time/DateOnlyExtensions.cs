@@ -108,7 +108,7 @@ public static class DateOnlyExtensions
     /// <returns>The number of years since the epoch start.</returns>
     public static double GetTotalYears(this DateOnly date)
     {
-        return (double)date.GetTicks() / GregorianCalendarExtensions.TICKS_PER_YEAR;
+        return (double)date.GetTicks() / TimeConstants.TICKS_PER_YEAR;
     }
 
     #endregion Methods for getting the instant as a count of time units
@@ -146,7 +146,7 @@ public static class DateOnlyExtensions
     /// <returns>The resulting date.</returns>
     public static DateOnly AddWeeks(this DateOnly date, int weeks)
     {
-        return date.AddDays(weeks * (int)GregorianCalendarExtensions.DAYS_PER_WEEK);
+        return date.AddDays(weeks * (int)TimeConstants.DAYS_PER_WEEK);
     }
 
     /// <summary>

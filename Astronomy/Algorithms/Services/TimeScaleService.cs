@@ -125,8 +125,8 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <returns></returns>
     public static double CalcDecimalYear(DateTime dt)
     {
-        double secondsInYear = GregorianCalendarExtensions.DaysInYear(dt.Year) * TimeSpanExtensions.SECONDS_PER_DAY;
-        double seconds = (dt.DayOfYear - 1) * TimeSpanExtensions.SECONDS_PER_DAY + dt.TimeOfDay.TotalSeconds;
+        double secondsInYear = GregorianCalendarExtensions.DaysInYear(dt.Year) * TimeConstants.SECONDS_PER_DAY;
+        double seconds = (dt.DayOfYear - 1) * TimeConstants.SECONDS_PER_DAY + dt.TimeOfDay.TotalSeconds;
         return dt.Year + seconds / secondsInYear;
     }
 
