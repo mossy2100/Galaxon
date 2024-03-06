@@ -46,7 +46,8 @@ public static class NumberExtensions
     /// <returns>If the type implements INumberBase{TSelf}.</returns>
     public static bool IsNumberType(Type type)
     {
-        return ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type, typeof(INumberBase<>));
+        return ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type,
+            typeof(INumberBase<>));
     }
 
     /// <summary>
@@ -56,7 +57,8 @@ public static class NumberExtensions
     /// <returns>If the type implements ISignedNumber{TSelf}.</returns>
     public static bool IsSignedNumberType(Type type)
     {
-        return ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type, typeof(ISignedNumber<>));
+        return ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type,
+            typeof(ISignedNumber<>));
     }
 
     /// <summary>
@@ -158,70 +160,6 @@ public static class NumberExtensions
 
     #endregion Division-related methods
 
-    #region Methods related to static properties
-
-    /// <summary>
-    /// Get the value of the static field or property for a specified number type.
-    /// </summary>
-    /// <typeparam name="T">The number type.</typeparam>
-    /// <param name="name">The name of the static field or property.</param>
-    /// <returns>The value of the specified field or property.</returns>
-    /// <exception cref="MissingMemberException">
-    /// If the class doesn't have a static field or property with the given name.
-    /// </exception>
-    public static T GetStaticValue<T>(string name) where T : INumberBase<T>
-    {
-        try
-        {
-            return ReflectionExtensions.GetStaticFieldOrPropertyValue<T, T>(name);
-        }
-        catch
-        {
-            throw new MissingMemberException(typeof(T).Name, name);
-        }
-    }
-
-    /// <summary>
-    /// Get the min value for a specified number type, if specified.
-    /// </summary>
-    /// <typeparam name="T">The number type.</typeparam>
-    /// <returns>The value of the MinValue property.</returns>
-    /// <exception cref="MissingMemberException">
-    /// If the class doesn't have a static field or property names "MinValue".
-    /// </exception>
-    public static T GetMinValue<T>() where T : INumberBase<T>
-    {
-        return GetStaticValue<T>("MinValue");
-    }
-
-    /// <summary>
-    /// Get the maximum value for a specified number type, if specified.
-    /// </summary>
-    /// <typeparam name="T">The number type.</typeparam>
-    /// <returns>The value of the MaxValue property.</returns>
-    /// <exception cref="MissingMemberException">
-    /// If the class doesn't have a static field or property names "MaxValue".
-    /// </exception>
-    public static T GetMaxValue<T>() where T : INumberBase<T>
-    {
-        return GetStaticValue<T>("MaxValue");
-    }
-
-    /// <summary>
-    /// Get the minimum and maximum values for a specified number type.
-    /// </summary>
-    /// <typeparam name="T">The number type.</typeparam>
-    /// <returns>The value of the MinValue and MaxValue fields ot properties.</returns>
-    /// <exception cref="MissingMemberException">
-    /// If the class doesn't have static fields or properties called "MinValue" and "MaxValue".
-    /// </exception>
-    public static (T min, T max) GetRange<T>() where T : INumberBase<T>
-    {
-        return (GetMinValue<T>(), GetMaxValue<T>());
-    }
-
-    #endregion Methods related to static properties
-
     #region String methods
 
     /// <summary>
@@ -245,4 +183,52 @@ public static class NumberExtensions
     }
 
     #endregion String methods
+
+    #region Min and Max
+
+    public static T Min<T>(params T[] values)
+        where T : INumberBase<T>, IComparisonOperators<T, T, bool>
+    {
+        // Guard.
+        if (values.Length == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(values),
+                "There must be at least one value.");
+        }
+
+        // Find the minimum value.
+        T min = values[0];
+        for (var i = 1; i < values.Length; i++)
+        {
+            if (values[i] < min)
+            {
+                min = values[i];
+            }
+        }
+        return min;
+    }
+
+    public static T Max<T>(params T[] values)
+        where T : INumberBase<T>, IComparisonOperators<T, T, bool>
+    {
+        // Guard.
+        if (values.Length == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(values),
+                "There must be at least one value.");
+        }
+
+        // Find the minimum value.
+        T max = values[0];
+        for (var i = 1; i < values.Length; i++)
+        {
+            if (values[i] > max)
+            {
+                max = values[i];
+            }
+        }
+        return max;
+    }
+
+    #endregion Min and Max
 }
