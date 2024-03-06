@@ -136,7 +136,6 @@ public class ConvertBaseTests
     {
         // Arrange
         ulong x = 123456;
-        string s;
 
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => x.ToBase(0));
