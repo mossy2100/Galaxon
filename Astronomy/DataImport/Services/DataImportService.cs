@@ -7,7 +7,6 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Extensions;
-using Galaxon.Core.Strings;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities;
 using Galaxon.Time;
@@ -265,11 +264,11 @@ public class DataImportService(
 
             // Sidereal orbit period is provided in days, convert to seconds.
             planet.Orbit.SiderealOrbitPeriod =
-                double.Parse(csv.GetField(7)) * TimeSpanExtensions.SECONDS_PER_DAY;
+                double.Parse(csv.GetField(7)) * TimeConstants.SECONDS_PER_DAY;
 
             // Synodic orbit period is provided in days, convert to seconds.
             var synodicPeriod = double.Parse(csv.GetField(8));
-            planet.Orbit.SynodicOrbitPeriod = synodicPeriod * TimeSpanExtensions.SECONDS_PER_DAY;
+            planet.Orbit.SynodicOrbitPeriod = synodicPeriod * TimeConstants.SECONDS_PER_DAY;
 
             // Avg orbital speed is provided in km/s, convert to m/s.
             planet.Orbit.AvgOrbitSpeed = double.Parse(csv.GetField(9)) * kilo;
@@ -319,9 +318,9 @@ public class DataImportService(
             // Rotational parameters.
             planet.Rotation ??= new RotationalRecord();
             planet.Rotation.SynodicRotationPeriod =
-                double.Parse(csv.GetField(30)) * TimeSpanExtensions.SECONDS_PER_DAY;
+                double.Parse(csv.GetField(30)) * TimeConstants.SECONDS_PER_DAY;
             planet.Rotation.SiderealRotationPeriod =
-                double.Parse(csv.GetField(31)) * TimeSpanExtensions.SECONDS_PER_DAY;
+                double.Parse(csv.GetField(31)) * TimeConstants.SECONDS_PER_DAY;
             planet.Rotation.EquatRotationVelocity = double.Parse(csv.GetField(32));
             planet.Rotation.Obliquity = double.Parse(csv.GetField(33)) * Angles.RADIANS_PER_DEGREE;
             planet.Rotation.NorthPoleRightAscension =
