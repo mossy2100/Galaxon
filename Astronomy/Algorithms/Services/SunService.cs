@@ -102,7 +102,7 @@ public class SunService(
             DoubleExtensions.RoundSigFigs(29e3 * Length.MetresPerLightYear, 2);
         // 230 million years in seconds (rounded to 2 significant figures).
         sun.Orbit.SiderealOrbitPeriod =
-            DoubleExtensions.RoundSigFigs(230e6 * GregorianCalendarExtensions.SECONDS_PER_YEAR, 2);
+            DoubleExtensions.RoundSigFigs(230e6 * TimeConstants.SECONDS_PER_YEAR, 2);
         // Orbital speed in m/s.
         sun.Orbit.AvgOrbitSpeed = 251e3;
         astroDbContext.SaveChanges();
@@ -115,7 +115,7 @@ public class SunService(
         sun.Rotation.NorthPoleRightAscension = Angles.DegreesToRadians(286.13);
         sun.Rotation.NorthPoleDeclination = Angles.DegreesToRadians(63.87);
         // Sidereal rotation period in seconds.
-        sun.Rotation.SiderealRotationPeriod = 25.05 * TimeSpanExtensions.SECONDS_PER_DAY;
+        sun.Rotation.SiderealRotationPeriod = 25.05 * TimeConstants.SECONDS_PER_DAY;
         // Equatorial rotation velocity in m/s.
         sun.Rotation.EquatRotationVelocity = 1997;
         astroDbContext.SaveChanges();
@@ -150,11 +150,10 @@ public class SunService(
     }
 
     /// <summary>
-    /// Calculate apparent solar latitude and longitude for a given instant
-    /// specified as a Julian Date in Terrestrial Time (this is also known as a
-    /// Julian Ephemeris Day or JED (or JDE), and differs from the Julian Date by ∆T).
-    /// This method uses the higher accuracy algorithm from AA2 Ch25 p166
-    /// (p174 in PDF)
+    /// Calculate apparent solar latitude and longitude for a given instant specified as a Julian
+    /// Date in Terrestrial Time (this is also known as a Julian Ephemeris Day or JED (or JDE), and
+    /// differs from the Julian Date by ∆T).
+    /// This method uses the higher accuracy algorithm from AA2 Ch25 p166 (p174 in PDF)
     /// </summary>
     /// <param name="JD_TT">The Julian Ephemeris Day.</param>
     /// <returns>The longitude of the Sun (Ls) in radians at the given
