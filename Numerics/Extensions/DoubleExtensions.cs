@@ -65,6 +65,17 @@ public static class DoubleExtensions
         return FloatingPointExtensions.Assemble<double>(signBit, expBits, fracBits);
     }
 
+    /// <summary>
+    /// Return the fractional part of a double.
+    /// The result will have the same sign as the argument.
+    /// </summary>
+    /// <param name="x">A double value.</param>
+    /// <returns>The fractional part of the value.</returns>
+    public static double Frac(double x)
+    {
+        return x - double.Truncate(x);
+    }
+
     #endregion Miscellaneous methods
 
     #region Methods for checking doubles as integers
