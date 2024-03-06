@@ -784,7 +784,7 @@ public partial struct BigDecimal
     /// <param name="bd">The BigDecimal value.</param>
     /// <returns>The converted value.</returns>
     public static T ConvertToFloatingPoint<T>(BigDecimal bd)
-        where T : IBinaryFloatingPointIeee754<T>
+        where T : IBinaryFloatingPointIeee754<T>, IMinMaxValue<T>
     {
         // Check for 0.
         if (bd == 0)
@@ -793,14 +793,14 @@ public partial struct BigDecimal
         }
 
         // Check for -∞.
-        var minValue = ReflectionExtensions.Convert<T, BigDecimal>(NumberExtensions.GetMinValue<T>());
+        var minValue = ReflectionExtensions.Convert<T, BigDecimal>(T.MinValue);
         if (bd < minValue)
         {
             return FloatingPointExtensions.GetNegativeInfinity<T>();
         }
 
         // Check for +∞.
-        var maxValue = ReflectionExtensions.Convert<T, BigDecimal>(NumberExtensions.GetMaxValue<T>());
+        var maxValue = ReflectionExtensions.Convert<T, BigDecimal>(T.MaxValue);
         if (bd > maxValue)
         {
             return FloatingPointExtensions.GetPositiveInfinity<T>();
