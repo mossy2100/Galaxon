@@ -11,6 +11,6 @@ public static class Speed
     /// <returns>Speed in m/s.</returns>
     public static double KmPerHourToMetresPerSecond(double kmPerHour)
     {
-        return kmPerHour * UnitPrefix.GetMultiplier("k") / TimeSpanExtensions.SECONDS_PER_HOUR;
+        return kmPerHour * UnitPrefix.GetMultiplier("k") / TimeConstants.SECONDS_PER_HOUR;
     }
 }
