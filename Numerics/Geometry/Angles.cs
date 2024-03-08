@@ -33,7 +33,7 @@ public static class Angles
 
     #endregion Constants
 
-    #region Normalize methods
+    #region Wrapping methods
 
     /// <summary>
     /// Add or subtract multiples of τ so the angle fits within a standard range.
@@ -69,7 +69,72 @@ public static class Angles
         return degrees;
     }
 
-    #endregion Normalize methods
+    #endregion Wrapping methods
+
+    #region Conversion methods
+
+    /// <summary>
+    /// Converts degrees to radians.
+    /// </summary>
+    public static double DegreesToRadians(double degrees)
+    {
+        return degrees * RADIANS_PER_DEGREE;
+    }
+
+    /// <summary>
+    /// Converts degrees to radians, then wraps to range.
+    /// </summary>
+    public static double DegreesToRadiansWithWrap(double degrees, bool signed = true)
+    {
+        return WrapRadians(degrees * RADIANS_PER_DEGREE, signed);
+    }
+
+    /// <summary>
+    /// Converts radians to degrees.
+    /// </summary>
+    public static double RadiansToDegrees(double radians)
+    {
+        return radians * DEGREES_PER_RADIAN;
+    }
+
+    /// <summary>
+    /// Converts radians to degrees, then wraps to range.
+    /// </summary>
+    public static double RadiansToDegreesWithWrap(double radians, bool signed = true)
+    {
+        return WrapRadians(radians * DEGREES_PER_RADIAN, signed);
+    }
+
+    /// <summary>
+    /// Converts degrees, arcminutes, and (optionally) arcseconds to decimal degrees.
+    /// </summary>
+    public static double DMSToDegrees(double degrees, double arcminutes,
+        double arcseconds = 0)
+    {
+        return Sexagesimal.FromUnitsMinutesSeconds(degrees, arcminutes, arcseconds);
+    }
+
+    /// <summary>
+    /// Converts decimal degrees to degrees, arcminutes, and arcseconds.
+    /// </summary>
+    public static (int degrees, int arcminutes, double arcseconds) DegreesToDMS(double degrees)
+    {
+        return Sexagesimal.ToUnitsMinutesSeconds(degrees);
+    }
+
+    public static double DMSToRadians(double degrees, double arcminutes,
+        double arcseconds = 0)
+    {
+        return DegreesToRadians(DMSToDegrees(degrees, arcminutes, arcseconds));
+    }
+
+    public static (double degrees, double arcminutes, double arcseconds) RadiansToDMS(
+        double radians)
+    {
+        return DegreesToDMS(RadiansToDegrees(radians));
+    }
+
+    #endregion Conversion methods
 
     #region Trigonometric methods
 
@@ -122,55 +187,6 @@ public static class Angles
     }
 
     #endregion Trigonometric methods
-
-    #region Conversion methods
-
-    /// <summary>
-    /// Converts degrees to radians.
-    /// </summary>
-    public static double DegreesToRadians(double degrees)
-    {
-        return degrees * RADIANS_PER_DEGREE;
-    }
-
-    /// <summary>
-    /// Converts radians to degrees.
-    /// </summary>
-    public static double RadiansToDegrees(double radians)
-    {
-        return radians * DEGREES_PER_RADIAN;
-    }
-
-    /// <summary>
-    /// Converts degrees, arcminutes, and (optionally) arcseconds to decimal degrees.
-    /// </summary>
-    public static double DMSToDegrees(double degrees, double arcminutes,
-        double arcseconds = 0)
-    {
-        return Sexagesimal.FromUnitsMinutesSeconds(degrees, arcminutes, arcseconds);
-    }
-
-    /// <summary>
-    /// Converts decimal degrees to degrees, arcminutes, and arcseconds.
-    /// </summary>
-    public static (int degrees, int arcminutes, double arcseconds) DegreesToDMS(double degrees)
-    {
-        return Sexagesimal.ToUnitsMinutesSeconds(degrees);
-    }
-
-    public static double DMSToRadians(double degrees, double arcminutes,
-        double arcseconds = 0)
-    {
-        return DegreesToRadians(DMSToDegrees(degrees, arcminutes, arcseconds));
-    }
-
-    public static (double degrees, double arcminutes, double arcseconds) RadiansToDMS(
-        double radians)
-    {
-        return DegreesToDMS(RadiansToDegrees(radians));
-    }
-
-    #endregion Conversion methods
 
     #region ToString methods
 
