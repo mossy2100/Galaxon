@@ -1,13 +1,15 @@
-﻿using System.Numerics;
-
-namespace Galaxon.ConsoleApp;
+﻿namespace Galaxon.ConsoleApp;
 
 class Program
 {
     static void Main()
     {
-        Complex z1 = new (0.0, 2);
-        Complex z2 = new (-0.0, 2);
-        Console.WriteLine($"{z1 == z2}");
+        // LunisolarCalendar.FindFullMonthFraction();
+        // Console.WriteLine();
+        // LunisolarCalendar.FindFullMonthRule1(321, 605);
+        // LunisolarCalendar.FindIntercalationFraction();
+        // LunisolarCalendar.FindSynchronousCycles();
+        // TropicalYear.GetTropicalYearLength();
+        LunisolarCalendar.FindEpoch();
     }
 }

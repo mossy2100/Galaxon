@@ -29,8 +29,8 @@ public class TestSun
             new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
         _planetService = new PlanetService(_astroDbContext);
         _earthService = new EarthService(_astroObjectRepository, _planetService);
-        _sunService = new SunService(_astroDbContext, _astroObjectRepository,
-            _astroObjectGroupRepository, _earthService, _planetService);
+        _sunService = new SunService(_astroDbContext, _astroObjectGroupRepository,
+            _astroObjectRepository, _planetService, _earthService);
     }
 
     [TestMethod]

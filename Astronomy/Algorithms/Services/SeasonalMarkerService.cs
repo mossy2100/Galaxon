@@ -194,7 +194,7 @@ public class SeasonalMarkerService(SunService sunService)
         const double delta = 1E-9;
         do
         {
-            (double _, double Ls) = sunService.CalcPosition(JD);
+            (double Ls, double Bs) = sunService.CalcPosition(JD);
             double diffLs = targetLs - Ls;
 
             // Check if we're done.

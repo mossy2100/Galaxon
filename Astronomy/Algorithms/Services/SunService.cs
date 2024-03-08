@@ -11,10 +11,10 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class SunService(
     AstroDbContext astroDbContext,
-    AstroObjectRepository astroObjectRepository,
     AstroObjectGroupRepository astroObjectGroupRepository,
-    EarthService earthService,
-    PlanetService planetService)
+    AstroObjectRepository astroObjectRepository,
+    PlanetService planetService,
+    EarthService earthService)
 {
     /// <summary>
     /// Initialize the Stars data, which for now just means adding the Sun to the database.
@@ -99,7 +99,7 @@ public class SunService(
         sun.Orbit ??= new OrbitalRecord();
         // 29,000 light years in metres (rounded to 2 significant figures).
         sun.Orbit.SemiMajorAxis =
-            DoubleExtensions.RoundSigFigs(29e3 * Length.MetresPerLightYear, 2);
+            DoubleExtensions.RoundSigFigs(29e3 * LengthConstants.METRES_PER_LIGHT_YEAR, 2);
         // 230 million years in seconds (rounded to 2 significant figures).
         sun.Orbit.SiderealOrbitPeriod =
             DoubleExtensions.RoundSigFigs(230e6 * TimeConstants.SECONDS_PER_YEAR, 2);
@@ -158,31 +158,29 @@ public class SunService(
     /// <param name="JD_TT">The Julian Ephemeris Day.</param>
     /// <returns>The longitude of the Sun (Ls) in radians at the given
     /// instant.</returns>
-    public (double Lng, double Lat) CalcPosition(double JD_TT)
+    public (double Longitude, double Latitude) CalcPosition(double JD_TT)
     {
         // Get the Earth's heliocentric position.
         var earth = earthService.GetPlanet();
-        (double lngEarth, double latEarth, double R_m) =
-            planetService.CalcPlanetPosition(earth, JD_TT);
+        (double Le, double Be, double Re) = planetService.CalcPlanetPosition(earth, JD_TT);
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
-        double lngSun = Angles.WrapRadians(lngEarth + PI);
-        double latSun = -latEarth;
+        double Ls = Angles.WrapRadians(Le + PI);
+        double Bs = -Be;
 
         // Convert to FK5.
-        // This gives the true ("geometric") longitude of the Sun referred to the
-        // mean equinox of the date.
+        // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
+        // the date.
         double julCen = JulianDateUtility.JulianCenturiesSinceJ2000(JD_TT);
-        double lambdaPrime = lngSun
+        double lambdaPrime = Ls
             - Angles.DegreesToRadians(1.397) * julCen
             - Angles.DegreesToRadians(0.000_31) * julCen * julCen;
-        lngSun -= Angles.DMSToRadians(0, 0, 0.090_33);
-        latSun += Angles.DMSToRadians(0, 0, 0.039_16)
+        Ls -= Angles.DMSToRadians(0, 0, 0.090_33);
+        Bs += Angles.DMSToRadians(0, 0, 0.039_16)
             * (Cos(lambdaPrime) - Sin(lambdaPrime));
 
         // TODO
-        // To obtain the apparent longitude, nutation and aberration have to be
-        // taken into account.
+        // To obtain the apparent longitude, nutation and aberration have to be taken into account.
         // SofaLibrary.iauNut06a(JD_TT, 0, out double dpsi, out double deps);
         // lngSun += dpsi;
 
@@ -212,19 +210,20 @@ public class SunService(
             + 0.004 * julMil2 * Angles.SinDegrees(297.8610 + 4452_671.1152 * julMil)
             + 0.010 * julMil2 * Angles.SinDegrees(154.7066 + 359_993.7286 * julMil);
         double dLambda_rad = dLambda_as / Angles.ARCSECONDS_PER_RADIAN;
-        double R_AU = R_m / Length.MetresPerAu;
+        double R_AU = Re / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
         double aberration = -0.005_775_518 * R_AU * dLambda_rad;
-        lngSun += aberration;
+        Ls += aberration;
 
-        return (lngSun, latSun);
+        return (Ls, Bs);
     }
 
     /// <summary>
-    /// Calculate apparent solar longitude for a given instant specified as a DateTime (UT).
+    /// Calculate apparent solar latitude and longitude for a given instant specified as a DateTime
+    /// (UT).
     /// </summary>
     /// <param name="dt">The instant specified as a DateTime (UT).</param>
-    /// <returns>The longitude and latitude of the Sun, in radians, at the given instant.</returns>
-    public (double Lng, double Lat) CalcPosition(DateTime dt)
+    /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
+    public (double Longitude, double Latitude) CalcPosition(DateTime dt)
     {
         double JD = JulianDateUtility.DateTime_to_JulianDate(dt);
         double JD_TT = JulianDateUtility.JulianDate_UT_to_TT(JD);

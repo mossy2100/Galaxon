@@ -65,7 +65,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="JD_TT">The Julian Date in Terrestrial Time.</param>
     /// <returns>Heliocentric coordinates of Earth.</returns>
-    public (double L, double B, double R) CalcPosition(double JD_TT)
+    public (double Longitude, double Latitude, double Radius) CalcPosition(double JD_TT)
     {
         AstroObject earth = GetPlanet();
         return planetService.CalcPlanetPosition(earth, JD_TT);

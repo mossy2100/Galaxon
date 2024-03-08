@@ -57,7 +57,7 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// </summary>
     /// <param name="JD_TT">The Julian Date (TT).</param>
     /// <returns></returns>
-    public (double L, double B, double R) CalcPosition(double JD_TT)
+    public (double Longitude, double Latitude, double Radius) CalcPosition(double JD_TT)
     {
         AstroObject mars = GetPlanet();
         return planetService.CalcPlanetPosition(mars, JD_TT);

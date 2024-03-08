@@ -1,7 +1,5 @@
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
@@ -25,7 +23,7 @@ public static class MoonPhaseUtility
     /// A LunarPhase object, which contains information about which phase it is, and the approximate
     /// datetime of the event.
     /// </returns>
-    public static LunarPhase PhaseFromDateTime(DateTime dt)
+    public static LunarPhase GetPhaseFromDateTime(DateTime dt)
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
@@ -56,49 +54,47 @@ public static class MoonPhaseUtility
         double E = 1 - 0.002_516 * T - 0.000_0074 * T2;
         double E2 = E * E;
 
-        // Local function to convert angles to radians in the range [0..tau).
-
         // Calculate Sun's mean anomaly at time JDE (radians).
-        double M = Deg2Rad(2.5534
+        double M = Angles.DegreesToRadiansWithWrap(2.5534
             + 29.105_356_70 * k
             - 0.000_001_4 * T2
             - 0.000_000_11 * T3);
 
         // Calculate Luna's mean anomaly at time JDE (radians).
-        double L = Deg2Rad(201.5643
+        double L = Angles.DegreesToRadiansWithWrap(201.5643
             + 385.816_935_28 * k
             + 0.010_758_2 * T2
             + 0.000_012_38 * T3
             - 0.000_000_058 * T4);
 
         // Calculate Luna's argument of latitude (radians).
-        double F = Deg2Rad(160.710_8
+        double F = Angles.DegreesToRadiansWithWrap(160.710_8
             + 390.670_502_84 * k
             - 0.001_6118 * T2
             - 0.000_002_27 * T2
             + 0.000_000_011 * T4);
 
         // Calculate the longitude of the ascending node of the lunar orbit (radians).
-        double Omega = Deg2Rad(124.7746
+        double Omega = Angles.DegreesToRadiansWithWrap(124.7746
             - 1.563_755_88 * k
             + 0.002_0672 * T2
             + 0.000_002_15 * T3);
 
         // Calculate planetary arguments (radians).
-        double A1 = Deg2Rad(299.77 + 0.107_408 * k - 0.009_173 * T2);
-        double A2 = Deg2Rad(251.88 + 0.016_321 * k);
-        double A3 = Deg2Rad(251.83 + 26.651_886 * k);
-        double A4 = Deg2Rad(349.42 + 36.412_478 * k);
-        double A5 = Deg2Rad(84.66 + 18.206_239 * k);
-        double A6 = Deg2Rad(141.74 + 53.303_771 * k);
-        double A7 = Deg2Rad(207.14 + 2.453_732 * k);
-        double A8 = Deg2Rad(154.84 + 7.306_860 * k);
-        double A9 = Deg2Rad(34.52 + 27.261_239 * k);
-        double A10 = Deg2Rad(207.19 + 0.121_824 * k);
-        double A11 = Deg2Rad(291.34 + 1.844_379 * k);
-        double A12 = Deg2Rad(161.72 + 24.198_154 * k);
-        double A13 = Deg2Rad(239.56 + 25.513_099 * k);
-        double A14 = Deg2Rad(331.55 + 3.592_518 * k);
+        double A1 = Angles.DegreesToRadiansWithWrap(299.77 + 0.107_408 * k - 0.009_173 * T2);
+        double A2 = Angles.DegreesToRadiansWithWrap(251.88 + 0.016_321 * k);
+        double A3 = Angles.DegreesToRadiansWithWrap(251.83 + 26.651_886 * k);
+        double A4 = Angles.DegreesToRadiansWithWrap(349.42 + 36.412_478 * k);
+        double A5 = Angles.DegreesToRadiansWithWrap(84.66 + 18.206_239 * k);
+        double A6 = Angles.DegreesToRadiansWithWrap(141.74 + 53.303_771 * k);
+        double A7 = Angles.DegreesToRadiansWithWrap(207.14 + 2.453_732 * k);
+        double A8 = Angles.DegreesToRadiansWithWrap(154.84 + 7.306_860 * k);
+        double A9 = Angles.DegreesToRadiansWithWrap(34.52 + 27.261_239 * k);
+        double A10 = Angles.DegreesToRadiansWithWrap(207.19 + 0.121_824 * k);
+        double A11 = Angles.DegreesToRadiansWithWrap(291.34 + 1.844_379 * k);
+        double A12 = Angles.DegreesToRadiansWithWrap(161.72 + 24.198_154 * k);
+        double A13 = Angles.DegreesToRadiansWithWrap(239.56 + 25.513_099 * k);
+        double A14 = Angles.DegreesToRadiansWithWrap(331.55 + 3.592_518 * k);
 
         ELunarPhase phaseType = (ELunarPhase)(phaseNumber % 4);
         double C1;
@@ -213,23 +209,20 @@ public static class MoonPhaseUtility
         return new LunarPhase { PhaseType = phaseType, DateTimeUTC = dtPhase };
     }
 
-    private static double Deg2Rad(double deg)
-    {
-        return Angles.DegreesToRadians(Angles.WrapDegrees(deg, false));
-    }
-
     /// <summary>
     /// Get the DateTimes of all lunar phases in a given period.
     /// </summary>
     /// <param name="start">The start of the period.</param>
     /// <param name="end">The end of the period.</param>
+    /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns></returns>
-    public static List<LunarPhase> PhasesInPeriod(DateTime start, DateTime end)
+    public static List<LunarPhase> GetPhasesInPeriod(DateTime start, DateTime end,
+        ELunarPhase? phaseType = null)
     {
         List<LunarPhase> result = [];
 
         // Find the phase nearest to start.
-        LunarPhase phase = PhaseFromDateTime(start);
+        LunarPhase phase = GetPhaseFromDateTime(start);
 
         // If it's in range, add it.
         if (phase.DateTimeUTC >= start)
@@ -246,7 +239,7 @@ public static class MoonPhaseUtility
         {
             // Get the next new moon in the series.
             DateTime nextGuess = phase.DateTimeUTC.AddDays(daysPerPhase);
-            phase = PhaseFromDateTime(nextGuess);
+            phase = GetPhaseFromDateTime(nextGuess);
 
             // We done?
             if (phase.DateTimeUTC > end)
@@ -255,7 +248,10 @@ public static class MoonPhaseUtility
             }
 
             // Add it to the result.
-            result.Add(phase);
+            if (phaseType == null || phase.PhaseType == phaseType)
+            {
+                result.Add(phase);
+            }
         }
 
         return result;
@@ -267,8 +263,10 @@ public static class MoonPhaseUtility
     /// </summary>
     /// <param name="year">The year number.</param>
     /// <param name="month">The month number.</param>
+    /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhase> PhasesInMonth(int year, int month)
+    public static List<LunarPhase> GetPhasesInMonth(int year, int month,
+        ELunarPhase? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -284,17 +282,19 @@ public static class MoonPhaseUtility
                 "Month must be in the range 1..12");
         }
 
-        return PhasesInPeriod(GregorianCalendarExtensions.MonthStart(year, month, DateTimeKind.Utc),
-            GregorianCalendarExtensions.MonthEnd(year, month, DateTimeKind.Utc));
+        return GetPhasesInPeriod(
+            GregorianCalendarExtensions.MonthStart(year, month, DateTimeKind.Utc),
+            GregorianCalendarExtensions.MonthEnd(year, month, DateTimeKind.Utc), phaseType);
     }
 
     /// <summary>
-    /// Get the DateTimes of all occurrences of the specified phase in a given Gregorian calendar
-    /// year (UTC).
+    /// Get the DateTimes of all occurrences of lunar phases (optionally restricted to the specified
+    /// phase) in a given Gregorian calendar year (UTC).
     /// </summary>
     /// <param name="year">The year number.</param>
+    /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhase> PhasesInYear(int year)
+    public static List<LunarPhase> GetPhasesInYear(int year, ELunarPhase? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -303,19 +303,8 @@ public static class MoonPhaseUtility
                 "Year must be in the range 1..9999");
         }
 
-        return PhasesInPeriod(GregorianCalendarExtensions.YearStart(year, DateTimeKind.Utc),
-            GregorianCalendarExtensions.YearEnd(year, DateTimeKind.Utc));
-    }
-
-    /// <summary>
-    /// Get the DateTime for the New Moons in the given year.
-    /// </summary>
-    /// <param name="year">A Gregorian year.</param>
-    /// <returns>A list of New Moon dates.</returns>
-    public static List<DateTime> GetNewMoons(int year)
-    {
-        return (from phase in PhasesInYear(year)
-            where phase.PhaseType == ELunarPhase.NewMoon
-            select phase.DateTimeUTC).ToList();
+        return GetPhasesInPeriod(
+            GregorianCalendarExtensions.YearStart(year, DateTimeKind.Utc),
+            GregorianCalendarExtensions.YearEnd(year, DateTimeKind.Utc), phaseType);
     }
 }

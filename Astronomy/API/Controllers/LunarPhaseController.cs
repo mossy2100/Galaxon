@@ -15,7 +15,7 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger)
     {
         try
         {
-            LunarPhase lunarPhase = MoonPhaseUtility.PhaseFromDateTime(dateTime);
+            LunarPhase lunarPhase = MoonPhaseUtility.GetPhaseFromDateTime(dateTime);
 
             // Construct the result.
             var result = new

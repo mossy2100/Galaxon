@@ -71,7 +71,7 @@ public class TestPlanets
         // thereby producing a more accurate result.
         Assert.AreEqual(expectedL, actualL, 1e-5);
         Assert.AreEqual(expectedB, actualB, 1e-5);
-        Assert.AreEqual(expectedR, actualR / Length.MetresPerAu, 1e-5);
+        Assert.AreEqual(expectedR, actualR / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT, 1e-5);
     }
 
     /// <summary>
