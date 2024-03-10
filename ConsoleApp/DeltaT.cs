@@ -2,7 +2,7 @@ using Galaxon.Astronomy.Algorithms.Utilities;
 
 namespace Galaxon.ConsoleApp;
 
-public static class Astro
+public static class DeltaT
 {
     /// <summary>
     /// The goal here is to generate a chart to show the difference between the 2 methods.
