@@ -2,55 +2,56 @@ namespace Galaxon.Time;
 
 public static class TimeSpanConversion
 {
-    /// <summary>
-    /// Convert a time value from one unit to another.
-    /// TODO Replace with Quantity methods.
-    /// </summary>
-    /// <param name="amount">The amount.</param>
-    /// <param name="fromUnit">The amount argument units.</param>
-    /// <param name="toUnit">The result units.</param>
-    /// <returns>The amount of the new unit.</returns>
-    public static double Convert(double amount, ETimeUnit fromUnit,
-        ETimeUnit toUnit = ETimeUnit.Tick)
-    {
-        var ticks = fromUnit switch
-        {
-            ETimeUnit.Nanosecond => amount / TimeSpan.NanosecondsPerTick,
-            ETimeUnit.Tick => amount,
-            ETimeUnit.Microsecond => amount * TimeSpan.TicksPerMicrosecond,
-            ETimeUnit.Millisecond => amount * TimeSpan.TicksPerMillisecond,
-            ETimeUnit.Second => amount * TimeSpan.TicksPerSecond,
-            ETimeUnit.Minute => amount * TimeSpan.TicksPerMinute,
-            ETimeUnit.Hour => amount * TimeSpan.TicksPerHour,
-            ETimeUnit.Day => amount * TimeSpan.TicksPerDay,
-            ETimeUnit.Week => amount * TimeConstants.TICKS_PER_WEEK,
-            ETimeUnit.Month => amount * TimeConstants.TICKS_PER_MONTH,
-            ETimeUnit.Year => amount * TimeConstants.TICKS_PER_YEAR,
-            ETimeUnit.Decade => amount * TimeConstants.TICKS_PER_YEAR * 10,
-            ETimeUnit.Century => amount * TimeConstants.TICKS_PER_YEAR * 100,
-            ETimeUnit.Millennium => amount * TimeConstants.TICKS_PER_YEAR * 1000,
-            _ => throw new ArgumentOutOfRangeException(nameof(fromUnit), "Invalid time unit.")
-        };
-
-        return toUnit switch
-        {
-            ETimeUnit.Nanosecond => ticks * TimeSpan.NanosecondsPerTick,
-            ETimeUnit.Tick => ticks,
-            ETimeUnit.Microsecond => ticks / TimeSpan.TicksPerMicrosecond,
-            ETimeUnit.Millisecond => ticks / TimeSpan.TicksPerMillisecond,
-            ETimeUnit.Second => ticks / TimeSpan.TicksPerSecond,
-            ETimeUnit.Minute => ticks / TimeSpan.TicksPerMinute,
-            ETimeUnit.Hour => ticks / TimeSpan.TicksPerHour,
-            ETimeUnit.Day => ticks / TimeSpan.TicksPerDay,
-            ETimeUnit.Week => ticks / TimeConstants.TICKS_PER_WEEK,
-            ETimeUnit.Month => ticks / TimeConstants.TICKS_PER_MONTH,
-            ETimeUnit.Year => ticks / TimeConstants.TICKS_PER_YEAR,
-            ETimeUnit.Decade => ticks / (TimeConstants.TICKS_PER_YEAR * 10),
-            ETimeUnit.Century => ticks / (TimeConstants.TICKS_PER_YEAR * 100),
-            ETimeUnit.Millennium => ticks / (TimeConstants.TICKS_PER_YEAR * 1000),
-            _ => throw new ArgumentOutOfRangeException(nameof(toUnit), "Invalid time unit.")
-        };
-    }
+    // /// <summary>
+    // /// Convert a time value from one unit to another.
+    // /// TODO Remove if not needed.
+    // /// TODO TimeSpan provides conversion functionality sufficient for most requirements.
+    // /// </summary>
+    // /// <param name="amount">The amount.</param>
+    // /// <param name="fromUnit">The amount argument units.</param>
+    // /// <param name="toUnit">The result units.</param>
+    // /// <returns>The amount of the new unit.</returns>
+    // public static double Convert(double amount, ETimeUnit fromUnit,
+    //     ETimeUnit toUnit = ETimeUnit.Tick)
+    // {
+    //     var ticks = fromUnit switch
+    //     {
+    //         ETimeUnit.Nanosecond => amount / TimeSpan.NanosecondsPerTick,
+    //         ETimeUnit.Tick => amount,
+    //         ETimeUnit.Microsecond => amount * TimeSpan.TicksPerMicrosecond,
+    //         ETimeUnit.Millisecond => amount * TimeSpan.TicksPerMillisecond,
+    //         ETimeUnit.Second => amount * TimeSpan.TicksPerSecond,
+    //         ETimeUnit.Minute => amount * TimeSpan.TicksPerMinute,
+    //         ETimeUnit.Hour => amount * TimeSpan.TicksPerHour,
+    //         ETimeUnit.Day => amount * TimeSpan.TicksPerDay,
+    //         ETimeUnit.Week => amount * TimeConstants.TICKS_PER_WEEK,
+    //         ETimeUnit.Month => amount * TimeConstants.TICKS_PER_MONTH,
+    //         ETimeUnit.Year => amount * TimeConstants.TICKS_PER_YEAR,
+    //         ETimeUnit.Decade => amount * TimeConstants.TICKS_PER_YEAR * 10,
+    //         ETimeUnit.Century => amount * TimeConstants.TICKS_PER_YEAR * 100,
+    //         ETimeUnit.Millennium => amount * TimeConstants.TICKS_PER_YEAR * 1000,
+    //         _ => throw new ArgumentOutOfRangeException(nameof(fromUnit), "Invalid time unit.")
+    //     };
+    //
+    //     return toUnit switch
+    //     {
+    //         ETimeUnit.Nanosecond => ticks * TimeSpan.NanosecondsPerTick,
+    //         ETimeUnit.Tick => ticks,
+    //         ETimeUnit.Microsecond => ticks / TimeSpan.TicksPerMicrosecond,
+    //         ETimeUnit.Millisecond => ticks / TimeSpan.TicksPerMillisecond,
+    //         ETimeUnit.Second => ticks / TimeSpan.TicksPerSecond,
+    //         ETimeUnit.Minute => ticks / TimeSpan.TicksPerMinute,
+    //         ETimeUnit.Hour => ticks / TimeSpan.TicksPerHour,
+    //         ETimeUnit.Day => ticks / TimeSpan.TicksPerDay,
+    //         ETimeUnit.Week => ticks / TimeConstants.TICKS_PER_WEEK,
+    //         ETimeUnit.Month => ticks / TimeConstants.TICKS_PER_MONTH,
+    //         ETimeUnit.Year => ticks / TimeConstants.TICKS_PER_YEAR,
+    //         ETimeUnit.Decade => ticks / (TimeConstants.TICKS_PER_YEAR * 10),
+    //         ETimeUnit.Century => ticks / (TimeConstants.TICKS_PER_YEAR * 100),
+    //         ETimeUnit.Millennium => ticks / (TimeConstants.TICKS_PER_YEAR * 1000),
+    //         _ => throw new ArgumentOutOfRangeException(nameof(toUnit), "Invalid time unit.")
+    //     };
+    // }
 
     /// <summary>
     /// Break a timespan into days, hours, minutes, and seconds.

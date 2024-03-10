@@ -1,39 +1,60 @@
 using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Enums;
+using Galaxon.Numerics.Geometry;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class SeasonalMarkerService(SunService sunService)
 {
     /// <summary>
-    /// Higher-accuracy method for calculating seasonal marker.
-    /// Algorithm is from AA2 p180.
+    /// High-accuracy method for calculating seasonal marker.
+    /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
+    /// "Equinoxes and Solstices" (p180).
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <param name="markerNumber">The marker number (use enum)</param>
     /// <returns>The result in dynamical time.</returns>
     public DateTime CalcSeasonalMarker(int year, ESeasonalMarker markerNumber)
     {
-        double JD = SeasonalMarkerUtility.CalcSeasonalMarkerMean(year, markerNumber);
-        double k = (int)markerNumber;
-        double targetLs = k * PI / 2;
-        const double delta = 1E-9;
+        // Get the mean value as a Julian Date (TT).
+        double JDTT = SeasonalMarkerUtility.CalcSeasonalMarkerMean(year, markerNumber);
+
+        // Find the target Ls in radians (0, π/2, -π, or -π/2).
+        double targetLs = Angles.WrapRadians((int)markerNumber * Angles.RADIANS_PER_QUADRANT);
+
+        // Calculate max difference to get within 0.5 second.
+        const double sunMovementRadiansPerHalfSecond =
+            Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
+
+        // Loop until sufficient accuracy is achieved.
         do
         {
-            (double Ls, double Bs, double Rs) = sunService.CalcPosition(JD);
-            double diffLs = targetLs - Ls;
+            // Get the longitude of the Sun in radians.
+            (double Ls, double _, double _) = sunService.CalcPosition(JDTT);
+
+            // Calculate the difference between the computed longitude of the Sun at this time, and
+            // the target value.
+            double diffLs = Angles.WrapRadians(targetLs - Ls);
 
             // Check if we're done.
-            if (Abs(diffLs) < delta)
+            if (Abs(diffLs) < sunMovementRadiansPerHalfSecond)
             {
                 break;
             }
 
-            double correction = 58 * Sin(diffLs);
-            JD += correction;
+            // Make a correction.
+            JDTT += 58 * Sin(diffLs);
         }
         while (true);
 
-        return JulianDateUtility.JulianDate_to_DateTime(JD);
+        // Get the Julian Date in Universal Time.
+        double JDUT = JulianDateUtility.JulianDate_TT_to_UT(JDTT);
+
+        // Convert to DateTime.
+        DateTime dt = JulianDateUtility.JulianDate_to_DateTime(JDUT);
+
+        // Round off to nearest second.
+        return DateTimeExtensions.RoundToNearestSecond(dt);
     }
 }

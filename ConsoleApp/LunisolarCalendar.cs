@@ -549,7 +549,7 @@ public static class LunisolarCalendar
         PlanetService planetService = new (astroDbContext);
         EarthService earthService = new (astroObjectRepository, planetService);
         var sunService = new SunService(astroDbContext, astroObjectGroupRepository,
-            astroObjectRepository, planetService, earthService);
+            astroObjectRepository, earthService);
 
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);

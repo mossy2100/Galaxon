@@ -1,4 +1,5 @@
-﻿using Galaxon.Astronomy.Data.Models;
+﻿using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 
@@ -35,11 +36,11 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <summary>
     /// Calculate the heliocentric position of Earth at a given point in time.
     /// </summary>
-    /// <param name="JD_TT">The Julian Date in Terrestrial Time.</param>
+    /// <param name="JDTT">The Julian Date in Terrestrial Time.</param>
     /// <returns>Heliocentric coordinates of Earth.</returns>
-    public Coordinates CalcPosition(double JD_TT)
+    public Coordinates CalcPosition(double JDTT)
     {
         AstroObject earth = GetPlanet();
-        return planetService.CalcPlanetPosition(earth, JD_TT);
+        return planetService.CalcPlanetPosition(earth, JDTT);
     }
 }

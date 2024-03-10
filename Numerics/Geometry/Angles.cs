@@ -9,21 +9,25 @@ public static class Angles
 {
     #region Constants
 
-    public const long DEGREES_PER_CIRCLE = 360;
+    public const long DEGREES_PER_CIRCLE = 360L;
 
-    public const long DEGREES_PER_SEMICIRCLE = DEGREES_PER_CIRCLE / 2;
+    public const long DEGREES_PER_SEMICIRCLE = 180L;
 
-    public const long ARCMINUTES_PER_DEGREE = 60;
+    public const long DEGREES_PER_QUADRANT = 90L;
 
-    public const long ARCSECONDS_PER_ARCMINUTE = 60;
+    public const long ARCMINUTES_PER_DEGREE = 60L;
 
-    public const long ARCSECONDS_PER_DEGREE = ARCSECONDS_PER_ARCMINUTE * ARCMINUTES_PER_DEGREE;
+    public const long ARCSECONDS_PER_ARCMINUTE = 60L;
 
-    public const long ARCSECONDS_PER_CIRCLE = ARCSECONDS_PER_DEGREE * DEGREES_PER_CIRCLE;
+    public const long ARCSECONDS_PER_DEGREE = 3600L;
+
+    public const long ARCSECONDS_PER_CIRCLE = 1_296_000L;
 
     public const double RADIANS_PER_CIRCLE = Tau;
 
     public const double RADIANS_PER_SEMICIRCLE = PI;
+
+    public const double RADIANS_PER_QUADRANT = PI / 2;
 
     public const double RADIANS_PER_DEGREE = RADIANS_PER_CIRCLE / DEGREES_PER_CIRCLE;
 
@@ -38,7 +42,7 @@ public static class Angles
     /// <summary>
     /// Add or subtract multiples of τ so the angle fits within a standard range.
     /// <ul>
-    ///     <li>For signed (default), the range will be [-PI..PI)</li>
+    ///     <li>For signed (default), the range will be [-π..π)</li>
     ///     <li>For unsigned, the range will be [0..TAU)</li>
     /// </ul>
     /// </summary>

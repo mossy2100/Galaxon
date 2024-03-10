@@ -151,4 +151,40 @@ public static class DateTimeExtensions
     }
 
     #endregion Create new object
+
+    #region Rounding off
+
+    /// <summary>
+    /// Round off a DateTime to the nearest value equal to a multiple of the TimeSpan argument.
+    /// </summary>
+    /// <param name="dt">The original DateTime</param>
+    /// <param name="ts">The time unit duration.</param>
+    /// <returns>The rounded-off DateTime.</returns>
+    public static DateTime Round(DateTime dt, TimeSpan ts)
+    {
+        long ticks = (long)Math.Round((double)dt.Ticks / ts.Ticks) * ts.Ticks;
+        return new DateTime(ticks);
+    }
+
+    /// <summary>
+    /// Round off a datetime to the nearest second.
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns>A new DateTime equal to the parameter rounded off to the nearest second.</returns>
+    public static DateTime RoundToNearestSecond(DateTime dt)
+    {
+        return Round(dt, TimeSpan.FromSeconds(1));
+    }
+
+    /// <summary>
+    /// Round off a datetime to the nearest minute.
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns>A new DateTime equal to the parameter rounded off to the nearest minute.</returns>
+    public static DateTime RoundToNearestMinute(DateTime dt)
+    {
+        return Round(dt, TimeSpan.FromMinutes(1));
+    }
+
+    #endregion Rounding off
 }

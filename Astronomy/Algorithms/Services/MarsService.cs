@@ -1,4 +1,5 @@
-﻿using Galaxon.Astronomy.Data.Models;
+﻿using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 
@@ -35,11 +36,11 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// <summary>
     /// Calculation position of Mars in heliocentric coordinates (radians).
     /// </summary>
-    /// <param name="JD_TT">The Julian Date (TT).</param>
+    /// <param name="JDTT">The Julian Date (TT).</param>
     /// <returns></returns>
-    public Coordinates CalcPosition(double JD_TT)
+    public Coordinates CalcPosition(double JDTT)
     {
         AstroObject mars = GetPlanet();
-        return planetService.CalcPlanetPosition(mars, JD_TT);
+        return planetService.CalcPlanetPosition(mars, JDTT);
     }
 }

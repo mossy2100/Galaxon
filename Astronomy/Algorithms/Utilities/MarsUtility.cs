@@ -8,11 +8,11 @@ public static class MarsUtility
     /// Calculate the Mars Sol Date for a given point in time, expressed as a Julian Date.
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Timekeeping_on_Mars#Mars_Sol_Date"/>
-    /// <param name="JD_TT">The Julian Date (TT).</param>
+    /// <param name="JDTT">The Julian Date (TT).</param>
     /// <returns>The Mars Sol Date.</returns>
-    public static double CalcMarsSolDate(double JD_TT)
+    public static double CalcMarsSolDate(double JDTT)
     {
-        double JD_TAI = JulianDateUtility.JulianDate_TT_to_TAI(JD_TT);
+        double JD_TAI = JulianDateUtility.JulianDate_TT_to_TAI(JDTT);
         const double k = 1.0 / 4000;
         double MSD = (JD_TAI - 2451549.5 + k) / TimeConstants.DAYS_PER_SOL + 44796.0;
         return MSD;

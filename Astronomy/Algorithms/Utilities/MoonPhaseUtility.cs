@@ -33,19 +33,17 @@ public static class MoonPhaseUtility
         k = phaseNumber / 4.0;
 
         // Calculate T and powers of T.
-        // I might have overdone it here on attempting to maximise precision for this calculation.
-        // Testing will confirm.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
         double JD = JulianDateUtility.DateTime_to_JulianDate(dtPhaseApprox);
-        double JD_TT = JulianDateUtility.JulianDate_UT_to_TT(JD);
-        double T = JulianDateUtility.JulianCenturiesSinceJ2000(JD_TT);
+        double JDTT = JulianDateUtility.JulianDate_UT_to_TT(JD);
+        double T = JulianDateUtility.JulianCenturiesSinceJ2000(JDTT);
         double T2 = T * T;
         double T3 = T * T2;
         double T4 = T * T3;
 
-        // Calculate JDE.
-        double JDE = 2_451_550.097_66
+        // Calculate JDTT.
+        JDTT = 2_451_550.097_66
             + 29.530_588_861 * k
             + 0.000_154_37 * T2
             + 0.000_000_150 * T3
@@ -55,13 +53,13 @@ public static class MoonPhaseUtility
         double E = 1 - 0.002_516 * T - 0.000_0074 * T2;
         double E2 = E * E;
 
-        // Calculate Sun's mean anomaly at time JDE (radians).
+        // Calculate Sun's mean anomaly at time JDTT (radians).
         double M = Angles.DegreesToRadiansWithWrap(2.5534
             + 29.105_356_70 * k
             - 0.000_001_4 * T2
             - 0.000_000_11 * T3);
 
-        // Calculate Luna's mean anomaly at time JDE (radians).
+        // Calculate Luna's mean anomaly at time JDTT (radians).
         double L = Angles.DegreesToRadiansWithWrap(201.5643
             + 385.816_935_28 * k
             + 0.010_758_2 * T2
@@ -180,7 +178,7 @@ public static class MoonPhaseUtility
                 - 0.00002 * Cos(L - M)
                 + 0.00002 * Cos(L + M)
                 + 0.00002 * Cos(2 * F);
-            JDE += phaseType == ELunarPhase.FirstQuarter ? W : -W;
+            JDTT += phaseType == ELunarPhase.FirstQuarter ? W : -W;
         }
 
         // Additional correction for all phases.
@@ -200,10 +198,10 @@ public static class MoonPhaseUtility
             + 0.000_023 * Sin(A14);
 
         // Apply corrections.
-        JDE += C1 + C2;
+        JDTT += C1 + C2;
 
-        // Convert the JDE to a UTC DateTime.
-        JD = JulianDateUtility.JulianDate_TT_to_UT(JDE);
+        // Convert the JDTT to a UTC DateTime.
+        JD = JulianDateUtility.JulianDate_TT_to_UT(JDTT);
         DateTime dtPhase = JulianDateUtility.JulianDate_to_DateTime(JD);
 
         // Construct and return the LunarPhase object.

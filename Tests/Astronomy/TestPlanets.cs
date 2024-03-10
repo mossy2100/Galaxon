@@ -88,10 +88,10 @@ public class TestPlanets
             return;
         }
         var dt_TT = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double JD_TT = JulianDateUtility.DateTime_to_JulianDate(dt_TT);
+        double JDTT = JulianDateUtility.DateTime_to_JulianDate(dt_TT);
 
         // Act.
-        (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, JD_TT);
+        (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, JDTT);
 
         // Assert.
         double expectedL = Angles.DegreesToRadians(39.972_3901);

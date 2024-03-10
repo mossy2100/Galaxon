@@ -55,6 +55,6 @@ public static class Sexagesimal
     /// <returns></returns>
     public static double FromUnitsMinutesSeconds(double units, double minutes, double seconds)
     {
-        return units + minutes * BASE + seconds * BASE * BASE;
+        return units + minutes / BASE + seconds / (BASE * BASE);
     }
 }

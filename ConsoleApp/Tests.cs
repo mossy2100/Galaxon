@@ -50,7 +50,7 @@ public static class Tests
         int nLeapYears = 0;
         for (int y = 0; y < a; y++)
         {
-            if (LeapYearFormulaFinder.IsLeapYear(y))
+            if (SolarCalendar.IsLeapYear1(y))
             {
                 Console.Write(" 1");
                 nLeapYears++;
