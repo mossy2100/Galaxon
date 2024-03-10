@@ -1,7 +1,7 @@
 using DecimalMath;
 using Galaxon.Numerics.Extensions;
 
-namespace Galaxon.Tests.Core.Numbers;
+namespace Galaxon.Tests.Numerics.Extensions;
 
 [TestClass]
 public class DecimalExtensionsTests

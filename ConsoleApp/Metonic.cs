@@ -1,4 +1,3 @@
-using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Time;
 

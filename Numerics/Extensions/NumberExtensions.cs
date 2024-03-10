@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Types;
