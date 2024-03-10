@@ -1,5 +1,4 @@
-﻿using Galaxon.Astronomy.Algorithms.Utilities;
-using Galaxon.Astronomy.Data.Models;
+﻿using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 
@@ -10,11 +9,6 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 /// </summary>
 public class MarsService(AstroObjectRepository astroObjectRepository, PlanetService planetService)
 {
-    /// <summary>
-    /// Number of days (Earth solar days) per sol (Mars solar day).
-    /// </summary>
-    public const decimal DAYS_PER_SOL = 1.02749125M;
-
     /// <summary>
     /// Cached reference to the AstroObject representing Mars.
     /// </summary>
@@ -39,25 +33,11 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     }
 
     /// <summary>
-    /// Calculate the Mars Sol Date for a given point in time, expressed as a Julian Date.
-    /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Timekeeping_on_Mars#Mars_Sol_Date"/>
-    /// <param name="JD_TT">The Julian Date (TT).</param>
-    /// <returns>The Mars Sol Date.</returns>
-    public static double CalcMarsSolDate(double JD_TT)
-    {
-        double JD_TAI = JulianDateUtility.JulianDate_TT_to_TAI(JD_TT);
-        const double k = 1.0 / 4000;
-        double MSD = (JD_TAI - 2451549.5 + k) / (double)DAYS_PER_SOL + 44796.0;
-        return MSD;
-    }
-
-    /// <summary>
     /// Calculation position of Mars in heliocentric coordinates (radians).
     /// </summary>
     /// <param name="JD_TT">The Julian Date (TT).</param>
     /// <returns></returns>
-    public (double Longitude, double Latitude, double Radius) CalcPosition(double JD_TT)
+    public Coordinates CalcPosition(double JD_TT)
     {
         AstroObject mars = GetPlanet();
         return planetService.CalcPlanetPosition(mars, JD_TT);

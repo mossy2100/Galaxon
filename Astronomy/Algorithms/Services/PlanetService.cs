@@ -29,8 +29,7 @@ public class PlanetService(AstroDbContext astroDbContext)
     /// <exception cref="DataNotFoundException">
     /// If no VSOP87D data could be found for the planet.
     /// </exception>
-    public (double Longitude, double Latitude, double Radius) CalcPlanetPosition(AstroObject planet,
-        double JD_TT)
+    public Coordinates CalcPlanetPosition(AstroObject planet, double JD_TT)
     {
         // Get the VSOP87D data for the planet from the database.
         // These aren't included in Load() so I may need to get them separately
@@ -66,6 +65,6 @@ public class PlanetService(AstroDbContext astroDbContext)
         double L = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['L'], T));
         double B = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['B'], T));
         double R = Polynomials.EvaluatePolynomial(coeffs['R'], T) * LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
-        return (L, B, R);
+        return new Coordinates(L, B, R);
     }
 }

@@ -158,7 +158,7 @@ public class SunService(
     /// <param name="JD_TT">The Julian Ephemeris Day.</param>
     /// <returns>The longitude of the Sun (Ls) in radians at the given
     /// instant.</returns>
-    public (double Longitude, double Latitude) CalcPosition(double JD_TT)
+    public Coordinates CalcPosition(double JD_TT)
     {
         // Get the Earth's heliocentric position.
         var earth = earthService.GetPlanet();
@@ -166,7 +166,8 @@ public class SunService(
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
         double Ls = Angles.WrapRadians(Le + PI);
-        double Bs = -Be;
+        double Bs = Angles.WrapRadians(-Be);
+        double Rs = Re;
 
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
@@ -214,7 +215,7 @@ public class SunService(
         double aberration = -0.005_775_518 * R_AU * dLambda_rad;
         Ls += aberration;
 
-        return (Ls, Bs);
+        return new Coordinates(Ls, Bs, Rs);
     }
 
     /// <summary>
@@ -223,7 +224,7 @@ public class SunService(
     /// </summary>
     /// <param name="dt">The instant specified as a DateTime (UT).</param>
     /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
-    public (double Longitude, double Latitude) CalcPosition(DateTime dt)
+    public Coordinates CalcPosition(DateTime dt)
     {
         double JD = JulianDateUtility.DateTime_to_JulianDate(dt);
         double JD_TT = JulianDateUtility.JulianDate_UT_to_TT(JD);

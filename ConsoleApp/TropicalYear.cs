@@ -1,4 +1,5 @@
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Time;
 
 namespace Galaxon.ConsoleApp;
@@ -18,8 +19,8 @@ public static class TropicalYear
         double yearLengthAtEnd = 0;
         for (int y = minYear; y <= maxYear; y++)
         {
-            double tropicalYearLengthInEphemerisDays = EarthService.CalcTropicalYearLength(T);
-            double solarDayLengthInSeconds = EarthService.CalcLengthOfDay(T);
+            double tropicalYearLengthInEphemerisDays = EarthUtility.CalcTropicalYearLength(T);
+            double solarDayLengthInSeconds = EarthUtility.CalcSolarDayLength(T);
             double tropicalYearLengthInSolarDays = tropicalYearLengthInEphemerisDays
                 * TimeConstants.SECONDS_PER_DAY / solarDayLengthInSeconds;
 
@@ -41,7 +42,8 @@ public static class TropicalYear
 
             if (y == minYear || y == maxYear)
             {
-                string sTime = TimeSpanConversion.GetTimeString(tropicalYearLengthInEphemerisDays);
+                TimeSpan tsLength = TimeSpan.FromDays(tropicalYearLengthInEphemerisDays);
+                string sTime = TimeSpanConversion.GetTimeString(tsLength);
                 Console.WriteLine($"Tropical year length at commencement of year {y} is {tropicalYearLengthInEphemerisDays} ephemeris days ({sTime}).");
                 Console.WriteLine($"Solar day length at commencement of year {y} is {solarDayLengthInSeconds} seconds.");
                 Console.WriteLine();
@@ -54,7 +56,8 @@ public static class TropicalYear
         Console.WriteLine();
 
         double avgTropicalYearLengthInEphemerisDays = totalEphemerisDays / nYears;
-        string sAvgTimeEphemeris = TimeSpanConversion.GetTimeString(avgTropicalYearLengthInEphemerisDays);
+        TimeSpan tsAvg = TimeSpan.FromDays(avgTropicalYearLengthInEphemerisDays);
+        string sAvgTimeEphemeris = TimeSpanConversion.GetTimeString(tsAvg);
         Console.WriteLine($"Average tropical year length over {nYears} years is {avgTropicalYearLengthInEphemerisDays} ephemeris days ({sAvgTimeEphemeris}).");
 
         double avgTropicalYearLengthInSolarDays = totalSolarDays / nYears;

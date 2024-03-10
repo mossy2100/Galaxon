@@ -64,7 +64,7 @@ public static class JulianDateUtility
     public static double JulianDate_UT_to_TT(double JD)
     {
         DateTime dt = JulianDate_to_DateTime(JD);
-        double deltaT = TimeScaleService.CalcDeltaTNASA(dt);
+        double deltaT = TimeScaleUtility.CalcDeltaTNASA(dt);
         return JD + TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 
@@ -82,7 +82,7 @@ public static class JulianDateUtility
         // This shouldn't matter though, as the result should be virtually identical to what we
         // would get for the Julian Date in UT, given the inaccuracy in delta-T calculations.
         DateTime dt = JulianDate_to_DateTime(JD_TT);
-        double deltaT = TimeScaleService.CalcDeltaTNASA(dt);
+        double deltaT = TimeScaleUtility.CalcDeltaTNASA(dt);
         return JD_TT - TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 
@@ -93,7 +93,8 @@ public static class JulianDateUtility
     /// <returns>Julian Date in International Atomic Time</returns>
     public static double JulianDate_TT_to_TAI(double JD_TT)
     {
-        return JD_TT - ((double)TimeScaleService.TT_MINUS_TAI_MS / TimeConstants.SECONDS_PER_DAY / 1000);
+        return JD_TT
+            - ((double)TimeConstants.TT_MINUS_TAI_MS / TimeConstants.SECONDS_PER_DAY / 1000);
     }
 
     #endregion Conversion between Julian dates and other time scales

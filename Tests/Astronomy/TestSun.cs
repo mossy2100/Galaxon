@@ -37,7 +37,7 @@ public class TestSun
     public void CalcPositionTest()
     {
         double JD_TT = 2448908.5;
-        (double actualL, double actualB) = _sunService!.CalcPosition(JD_TT);
+        (double actualL, double actualB, double actualR) = _sunService!.CalcPosition(JD_TT);
 
         double expectedL = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 21.82));
         double expectedB = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.62));

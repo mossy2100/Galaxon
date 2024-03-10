@@ -171,7 +171,7 @@ public class SeasonalMarkerService(SunService sunService)
         DateTime dt_TT = JulianDateUtility.JulianDate_to_DateTime(JD_TT);
 
         // Calculate ∆T.
-        var deltaT_ticks = (long)(TimeScaleService.CalcDeltaTNASA(dt_TT) * TimeSpan.TicksPerSecond);
+        var deltaT_ticks = (long)(TimeScaleUtility.CalcDeltaTNASA(dt_TT) * TimeSpan.TicksPerSecond);
 
         // Subtract ∆T to get Universal Time.
         DateTime dt_UT = dt_TT.Subtract(new TimeSpan(deltaT_ticks));
@@ -194,7 +194,7 @@ public class SeasonalMarkerService(SunService sunService)
         const double delta = 1E-9;
         do
         {
-            (double Ls, double Bs) = sunService.CalcPosition(JD);
+            (double Ls, double Bs, double Rs) = sunService.CalcPosition(JD);
             double diffLs = targetLs - Ls;
 
             // Check if we're done.

@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
@@ -306,5 +307,17 @@ public static class MoonPhaseUtility
         return GetPhasesInPeriod(
             GregorianCalendarExtensions.YearStart(year, DateTimeKind.Utc),
             GregorianCalendarExtensions.YearEnd(year, DateTimeKind.Utc), phaseType);
+    }
+
+    /// <summary>
+    /// Calculate the approximate average length of a lunation in SI seconds at a point in time.
+    /// The formula is taken from Wikipedia:
+    /// <see href="https://en.wikipedia.org/wiki/Lunar_month#Synodic_month"/>
+    /// </summary>
+    /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
+    /// <returns>The average lunation length in seconds at that point in time.</returns>
+    public static double CalcLengthOfLunation(double T)
+    {
+        return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
     }
 }

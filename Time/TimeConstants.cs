@@ -239,29 +239,7 @@ public static class TimeConstants
 
     #endregion Years per unit of time
 
-    #region Astronomical
-
-    /// <summary>
-    /// Start point of Meeus' lunation number (LN) 0.
-    /// </summary>
-    public static DateTime LUNATION_0_START { get; } =
-        new (2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
-
-    /// <summary>
-    /// Number of days in a synodic lunar month (a.k.a. "lunation") at J2000.0 epoch.
-    /// <see href="https://en.wikipedia.org/wiki/Lunar_month#Cycle_lengths"/>
-    /// </summary>
-    public const double DAYS_PER_LUNATION = 29.530_588_861;
-
-    /// <summary>
-    /// Number of seconds in a lunation.
-    /// </summary>
-    public const double SECONDS_PER_LUNATION = DAYS_PER_LUNATION * SECONDS_PER_DAY;
-
-    /// <summary>
-    /// Number of ticks in a lunation.
-    /// </summary>
-    public const long TICKS_PER_LUNATION = (long)(DAYS_PER_LUNATION * TICKS_PER_DAY);
+    #region Tropical year
 
     /// <summary>
     /// The number of days in the mean tropical year B1900 (days).
@@ -280,7 +258,7 @@ public static class TimeConstants
     /// </summary>
     public const long TICKS_PER_TROPICAL_YEAR = (long)(DAYS_PER_TROPICAL_YEAR * TICKS_PER_DAY);
 
-    #endregion Astronomical
+    #endregion Tropical year
 
     #region Gregorian solar cycles
 
@@ -338,7 +316,7 @@ public static class TimeConstants
 
     #endregion Gregorian solar cycles
 
-    #region Julian years
+    #region Time scales
 
     /// <summary>
     /// Julian Date (UT) at the start of the Gregorian epoch, the epoch used by .NET, which began at
@@ -425,5 +403,46 @@ public static class TimeConstants
     /// </summary>
     public const long TICKS_PER_JULIAN_MILLENNIUM = DAYS_PER_JULIAN_MILLENNIUM * TICKS_PER_DAY;
 
-    #endregion Julian years
+    /// <summary>
+    /// Number of milliseconds difference between TAI and TT.
+    /// TT = TAI + 32,184 ms
+    /// </summary>
+    public const int TT_MINUS_TAI_MS = 32_184 /* milliseconds */;
+
+    #endregion Time scales
+
+    #region Moon
+
+    /// <summary>
+    /// Start point of Meeus' lunation number (LN) 0.
+    /// </summary>
+    public static DateTime LUNATION_0_START { get; } =
+        new (2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
+
+    /// <summary>
+    /// Number of days in a synodic lunar month (a.k.a. "lunation") at J2000.0 epoch.
+    /// <see href="https://en.wikipedia.org/wiki/Lunar_month#Cycle_lengths"/>
+    /// </summary>
+    public const double DAYS_PER_LUNATION = 29.530_588_861;
+
+    /// <summary>
+    /// Number of seconds in a lunation.
+    /// </summary>
+    public const double SECONDS_PER_LUNATION = DAYS_PER_LUNATION * SECONDS_PER_DAY;
+
+    /// <summary>
+    /// Number of ticks in a lunation.
+    /// </summary>
+    public const long TICKS_PER_LUNATION = (long)(DAYS_PER_LUNATION * TICKS_PER_DAY);
+
+    #endregion Moon
+
+    #region Mars
+
+    /// <summary>
+    /// Number of days (Earth solar days) per sol (Mars solar day).
+    /// </summary>
+    public const double DAYS_PER_SOL = 1.02749125;
+
+    #endregion Mars
 }

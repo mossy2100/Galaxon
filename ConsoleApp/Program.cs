@@ -10,6 +10,7 @@ class Program
         // LunisolarCalendar.FindIntercalationFraction();
         // LunisolarCalendar.FindSynchronousCycles();
         // TropicalYear.GetTropicalYearLength();
-        LunisolarCalendar.FindEpoch();
+        // LunisolarCalendar.FindEpoch();
+        Metonic.CycleLengthChanges();
     }
 }

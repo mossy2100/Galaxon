@@ -15,7 +15,7 @@ public static class TimeSpanConversion
     {
         var ticks = fromUnit switch
         {
-            ETimeUnit.Nanosecond => amount / TimeConstants.NANOSECONDS_PER_TICK,
+            ETimeUnit.Nanosecond => amount / TimeSpan.NanosecondsPerTick,
             ETimeUnit.Tick => amount,
             ETimeUnit.Microsecond => amount * TimeSpan.TicksPerMicrosecond,
             ETimeUnit.Millisecond => amount * TimeSpan.TicksPerMillisecond,
@@ -34,7 +34,7 @@ public static class TimeSpanConversion
 
         return toUnit switch
         {
-            ETimeUnit.Nanosecond => ticks * TimeConstants.NANOSECONDS_PER_TICK,
+            ETimeUnit.Nanosecond => ticks * TimeSpan.NanosecondsPerTick,
             ETimeUnit.Tick => ticks,
             ETimeUnit.Microsecond => ticks / TimeSpan.TicksPerMicrosecond,
             ETimeUnit.Millisecond => ticks / TimeSpan.TicksPerMillisecond,
@@ -97,8 +97,11 @@ public static class TimeSpanConversion
         List<string> sParts = new ();
         foreach (KeyValuePair<ETimeUnit, double> part in parts)
         {
-            string unit = $"{part.Key}".ToLower() + 's';
-            sParts.Add($"{part.Value} {unit}");
+            if (part.Value != 0)
+            {
+                string unit = $"{part.Key}".ToLower() + 's';
+                sParts.Add($"{part.Value} {unit}");
+            }
         }
         return string.Join(", ", sParts);
     }
@@ -110,17 +113,6 @@ public static class TimeSpanConversion
     /// <returns>A string describing the time period.</returns>
     public static string GetTimeString(TimeSpan t)
     {
-        return GetTimeString(GetTimeParts(t));
-    }
-
-    /// <summary>
-    /// Convert a period of time in days into a descriptive string.
-    /// </summary>
-    /// <param name="days">The number of days.</param>
-    /// <returns>A string describing the time period.</returns>
-    public static string GetTimeString(double days)
-    {
-        TimeSpan t = TimeSpan.FromDays(days);
         return GetTimeString(GetTimeParts(t));
     }
 }

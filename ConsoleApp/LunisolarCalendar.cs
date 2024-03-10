@@ -559,9 +559,8 @@ public static class LunisolarCalendar
         foreach (LunarPhase newMoon in newMoons)
         {
             // Get Ls.
-            (var Ls, var Bs) = sunService.CalcPosition(newMoons[0].DateTimeUTC);
-            Console.WriteLine(
-                $"The New Moon of {newMoons[0].DateTimeUTC} occurred at Ls={Ls}");
+            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoons[0].DateTimeUTC);
+            Console.WriteLine($"The New Moon of {newMoons[0].DateTimeUTC} occurred at Ls={Ls}");
         }
     }
 }
