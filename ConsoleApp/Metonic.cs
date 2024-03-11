@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Utilities;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 
 namespace Galaxon.ConsoleApp;
@@ -13,9 +13,9 @@ public class Metonic
         int yearThen = -433;
         int yearNow = 2024;
 
-        double dayLengthThen = EarthUtility.CalcSolarDayLength(yearThen / 100.0);
+        double dayLengthThen = EarthService.CalcSolarDayLength(yearThen / 100.0);
         Console.WriteLine($"The solar day length in {yearThen} was {dayLengthThen} days.");
-        double dayLengthNow = EarthUtility.CalcSolarDayLength(yearNow / 100.0);
+        double dayLengthNow = EarthService.CalcSolarDayLength(yearNow / 100.0);
         Console.WriteLine($"The solar day length in {yearNow} is {dayLengthNow} seconds.");
         double dayDiff = dayLengthNow - dayLengthThen;
         string dayIncreaseVerb = dayLengthNow > dayLengthThen ? "increased" : "decreased";
@@ -24,9 +24,9 @@ public class Metonic
 
         Console.WriteLine();
 
-        double lunationLengthThen = MoonPhaseUtility.CalcLengthOfLunation(yearThen / 100.0);
+        double lunationLengthThen = LunaService.CalcLengthOfLunation(yearThen / 100.0);
         Console.WriteLine($"The lunation length in {yearThen} was {lunationLengthThen} days.");
-        double lunationLengthNow = MoonPhaseUtility.CalcLengthOfLunation(yearNow / 100.0);
+        double lunationLengthNow = LunaService.CalcLengthOfLunation(yearNow / 100.0);
         Console.WriteLine($"The lunation length in {yearNow} is {lunationLengthNow} days.");
         double lunationDiff = lunationLengthNow - lunationLengthThen;
         string lunationIncreaseVerb = lunationLengthNow > lunationLengthThen ? "increased" : "decreased";
@@ -35,9 +35,9 @@ public class Metonic
 
         Console.WriteLine();
 
-        double yearLengthThen = EarthUtility.CalcTropicalYearLength(yearThen / 100.0);
+        double yearLengthThen = EarthService.CalcTropicalYearLength(yearThen / 100.0);
         Console.WriteLine($"The tropical year length in {yearThen} was {yearLengthThen} days.");
-        double yearLengthNow = EarthUtility.CalcTropicalYearLength(yearNow / 100.0);
+        double yearLengthNow = EarthService.CalcTropicalYearLength(yearNow / 100.0);
         Console.WriteLine($"The tropical year length in {yearNow} is {yearLengthNow} days.");
         double yearDiff = yearLengthNow - yearLengthThen;
         string yearIncreaseVerb = yearLengthNow > yearLengthThen ? "increased" : "decreased";

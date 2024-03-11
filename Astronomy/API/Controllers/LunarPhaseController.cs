@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Utilities;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger)
     {
         try
         {
-            LunarPhase lunarPhase = MoonPhaseUtility.GetPhaseFromDateTime(dateTime);
+            LunarPhase lunarPhase = LunaService.GetPhaseFromDateTime(dateTime);
 
             // Construct the result.
             var result = new

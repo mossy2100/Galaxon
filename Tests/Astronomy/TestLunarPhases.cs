@@ -1,6 +1,5 @@
 using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -36,7 +35,7 @@ public class TestLunarPhases
     public void TestExample49a()
     {
         DateTime dtApprox = new (1977, 2, 15);
-        LunarPhase phase = MoonPhaseUtility.GetPhaseFromDateTime(dtApprox);
+        LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
 
         Assert.AreEqual(ELunarPhase.NewMoon, phase.PhaseType);
         Assert.AreEqual(1977, phase.DateTimeUTC.Year);
@@ -53,7 +52,7 @@ public class TestLunarPhases
     public void TestExample49b()
     {
         DateTime dtApprox = new (2044, 1, 20);
-        LunarPhase phase = MoonPhaseUtility.GetPhaseFromDateTime(dtApprox);
+        LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
         Assert.AreEqual(ELunarPhase.ThirdQuarter, phase.PhaseType);
         Assert.AreEqual(2044, phase.DateTimeUTC.Year);
         Assert.AreEqual(1, phase.DateTimeUTC.Month);
@@ -83,7 +82,7 @@ public class TestLunarPhases
 
         // Find the phases for the year.
         int y = 2023;
-        List<LunarPhase> phases = MoonPhaseUtility.GetPhasesInYear(y);
+        List<LunarPhase> phases = LunaService.GetPhasesInYear(y);
 
         // Count phases.
         Assert.AreEqual(data.Length, phases.Count);

@@ -1,5 +1,4 @@
 ﻿using Galaxon.Astronomy.Algorithms.Records;
-using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -157,7 +156,7 @@ public class SunService(
     /// <returns></returns>
     public static double CalcVariationInSunLongitude(double JDTT)
     {
-        double TM = JulianDateUtility.JulianMillenniaSinceJ2000(JDTT);
+        double TM = JulianDateService.JulianMillenniaSinceJ2000(JDTT);
         double TM2 = TM * TM;
 
         double deltaLambdaInArcseconds = 3548.193
@@ -207,7 +206,7 @@ public class SunService(
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
         // the date.
-        double TC = JulianDateUtility.JulianCenturiesSinceJ2000(JDTT);
+        double TC = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
         double lambdaPrime = Polynomials.EvaluatePolynomial(
             [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], TC);
         Ls -= DMSToRadians(0, 0, 0.090_33);
@@ -217,7 +216,7 @@ public class SunService(
         // referred to the mean equinox of the date.
 
         // Calculate and add the nutation in longitude.
-        Nutation nutation = NutationUtility.CalcNutation(JDTT);
+        Nutation nutation = NutationService.CalcNutation(JDTT);
         Ls += nutation.Longitude;
 
         // Calculate and add the aberration.
@@ -241,8 +240,8 @@ public class SunService(
     /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
     public Coordinates CalcPosition(DateTime dt)
     {
-        double JD = JulianDateUtility.DateTime_to_JulianDate(dt);
-        double JDTT = JulianDateUtility.JulianDate_UT_to_TT(JD);
+        double JD = JulianDateService.DateTime_to_JulianDate(dt);
+        double JDTT = JulianDateService.JulianDate_UT_to_TT(JD);
         return CalcPosition(JDTT);
     }
 }

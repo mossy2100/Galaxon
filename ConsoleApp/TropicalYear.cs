@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Utilities;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 
 namespace Galaxon.ConsoleApp;
@@ -18,10 +18,11 @@ public static class TropicalYear
         double yearLengthAtEnd = 0;
         for (int y = minYear; y <= maxYear; y++)
         {
-            double tropicalYearLengthInEphemerisDays = EarthUtility.CalcTropicalYearLength(T);
-            double solarDayLengthInSeconds = EarthUtility.CalcSolarDayLength(T);
+            double tropicalYearLengthInEphemerisDays = EarthService.CalcTropicalYearLength(T);
+            double solarDayLengthInSeconds = EarthService.CalcSolarDayLength(T);
             double tropicalYearLengthInSolarDays = tropicalYearLengthInEphemerisDays
-                * TimeConstants.SECONDS_PER_DAY / solarDayLengthInSeconds;
+                * TimeConstants.SECONDS_PER_DAY
+                / solarDayLengthInSeconds;
 
             if (y < maxYear)
             {
@@ -43,8 +44,10 @@ public static class TropicalYear
             {
                 TimeSpan tsLength = TimeSpan.FromDays(tropicalYearLengthInEphemerisDays);
                 string sTime = TimeSpanConversion.GetTimeString(tsLength);
-                Console.WriteLine($"Tropical year length at commencement of year {y} is {tropicalYearLengthInEphemerisDays} ephemeris days ({sTime}).");
-                Console.WriteLine($"Solar day length at commencement of year {y} is {solarDayLengthInSeconds} seconds.");
+                Console.WriteLine(
+                    $"Tropical year length at commencement of year {y} is {tropicalYearLengthInEphemerisDays} ephemeris days ({sTime}).");
+                Console.WriteLine(
+                    $"Solar day length at commencement of year {y} is {solarDayLengthInSeconds} seconds.");
                 Console.WriteLine();
             }
 
@@ -57,18 +60,22 @@ public static class TropicalYear
         double avgTropicalYearLengthInEphemerisDays = totalEphemerisDays / nYears;
         TimeSpan tsAvg = TimeSpan.FromDays(avgTropicalYearLengthInEphemerisDays);
         string sAvgTimeEphemeris = TimeSpanConversion.GetTimeString(tsAvg);
-        Console.WriteLine($"Average tropical year length over {nYears} years is {avgTropicalYearLengthInEphemerisDays} ephemeris days ({sAvgTimeEphemeris}).");
+        Console.WriteLine(
+            $"Average tropical year length over {nYears} years is {avgTropicalYearLengthInEphemerisDays} ephemeris days ({sAvgTimeEphemeris}).");
 
         double avgTropicalYearLengthInSolarDays = totalSolarDays / nYears;
-        Console.WriteLine($"Average tropical year length over {nYears} years is {avgTropicalYearLengthInSolarDays} solar days.");
+        Console.WriteLine(
+            $"Average tropical year length over {nYears} years is {avgTropicalYearLengthInSolarDays} solar days.");
 
         Console.WriteLine();
 
         double totalChangeInDays = yearLengthAtEnd - yearLengthAtStart;
         double totalChangeInSeconds = totalChangeInDays * TimeConstants.SECONDS_PER_DAY;
-        Console.WriteLine($"The tropical year changes in length by {totalChangeInSeconds} seconds in {nYears} years.");
+        Console.WriteLine(
+            $"The tropical year changes in length by {totalChangeInSeconds} seconds in {nYears} years.");
         double changePerYearInSeconds = totalChangeInSeconds / nYears;
-        Console.WriteLine($"Thus, it changes by about {changePerYearInSeconds} seconds ({changePerYearInSeconds * 1000} ms) per year.");
+        Console.WriteLine(
+            $"Thus, it changes by about {changePerYearInSeconds} seconds ({changePerYearInSeconds * 1000} ms) per year.");
         double changePerCenturyInSeconds = changePerYearInSeconds * 100;
         Console.WriteLine($"Or about {changePerCenturyInSeconds} seconds per century.");
     }

@@ -1,15 +1,14 @@
-using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Geometry;
 using GeoCoordinatePortable;
 
-namespace Galaxon.Astronomy.Algorithms.Utilities;
+namespace Galaxon.Astronomy.Algorithms.Services;
 
 /// <summary>
 /// Provides methods for calculating distances between geographical coordinates
 /// on the surface of an oblate spheroid world using Andoyer's method.
 /// </summary>
-public static class DistanceUtility
+public class DistanceService
 {
     /// <summary>
     /// Calculates the shortest distance between two points along the surface of an
@@ -67,27 +66,5 @@ public static class DistanceUtility
         double H1 = (3 * R - 1) / 2 / C;
         double H2 = (3 * R + 1) / 2 / S;
         return D * (1 + f * H1 * sin2F * cos2G - f * H2 * cos2F * sin2G);
-    }
-
-    /// <summary>
-    /// Calculates the shortest distance between two points along the surface of an
-    /// oblate spheroid world using Andoyer's method.
-    /// </summary>
-    /// <param name="astroObj">The astronomical object representing the world's physical characteristics.</param>
-    /// <param name="location1">The geographical coordinates of location 1.</param>
-    /// <param name="location2">The geographical coordinates of location 2.</param>
-    /// <returns>The distance between the two locations in kilometres.</returns>
-    public static double CalculateShortestDistanceBetween(this AstroObject astroObj,
-        GeoCoordinate location1, GeoCoordinate location2)
-    {
-        if (astroObj.Physical == null)
-        {
-            throw new InvalidOperationException(
-                "Cannot calculate the shortest distance between two points on a world without known both the equatorial and the polar radii.");
-        }
-
-        return CalculateShortestDistanceBetween(location1, location2,
-            astroObj.Physical.EquatorialRadius,
-            astroObj.Physical.PolarRadius);
     }
 }

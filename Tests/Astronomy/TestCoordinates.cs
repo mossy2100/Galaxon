@@ -1,4 +1,4 @@
-﻿using Galaxon.Astronomy.Algorithms.Utilities;
+﻿using Galaxon.Astronomy.Algorithms.Extensions;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;

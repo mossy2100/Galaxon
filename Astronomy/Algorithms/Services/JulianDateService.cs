@@ -1,8 +1,8 @@
 using Galaxon.Time;
 
-namespace Galaxon.Astronomy.Algorithms.Utilities;
+namespace Galaxon.Astronomy.Algorithms.Services;
 
-public static class JulianDateUtility
+public class JulianDateService
 {
     #region Conversion between Julian dates and other time scales
 
@@ -65,7 +65,7 @@ public static class JulianDateUtility
     public static double JulianDate_UT_to_TT(double JD)
     {
         DateTime dt = JulianDate_to_DateTime(JD);
-        double deltaT = TimeScaleUtility.CalcDeltaTNASA(dt);
+        double deltaT = TimeScaleService.CalcDeltaTNASA(dt);
         return JD + TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 
@@ -83,7 +83,7 @@ public static class JulianDateUtility
         // UT. This shouldn't matter though, as the result should be virtually identical to what we
         // would get for the Julian Date in UT, given the inaccuracy in delta-T calculations.
         DateTime dt_TT = JulianDate_to_DateTime(JDTT);
-        double deltaT = TimeScaleUtility.CalcDeltaTNASA(dt_TT);
+        double deltaT = TimeScaleService.CalcDeltaTNASA(dt_TT);
         return JDTT - TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 

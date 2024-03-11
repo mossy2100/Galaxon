@@ -1,5 +1,4 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -38,7 +37,7 @@ public class TestPlanets
     {
         DateTime dt = new (2017, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         double expected = Angles.DMSToRadians(100, 37, 12.4365);
-        double actual = EarthUtility.CalcEarthRotationAngle(dt);
+        double actual = EarthService.CalcEarthRotationAngle(dt);
         double delta = Angles.DMSToRadians(0, 0, 1e-3);
         Assert.AreEqual(expected, actual, delta);
     }
@@ -88,7 +87,7 @@ public class TestPlanets
             return;
         }
         var dt_TT = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double JDTT = JulianDateUtility.DateTime_to_JulianDate(dt_TT);
+        double JDTT = JulianDateService.DateTime_to_JulianDate(dt_TT);
 
         // Act.
         (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, JDTT);

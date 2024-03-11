@@ -2,6 +2,7 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -14,6 +15,8 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// Cached reference to the AstroObject representing Mars.
     /// </summary>
     private AstroObject? _mars;
+
+    #region Instance methods
 
     /// <summary>
     /// Get the AstroObject representing Mars.
@@ -43,4 +46,24 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
         AstroObject mars = GetPlanet();
         return planetService.CalcPlanetPosition(mars, JDTT);
     }
+
+    #endregion Instance methods
+
+    #region Static methods
+
+    /// <summary>
+    /// Calculate the Mars Sol Date for a given point in time, expressed as a Julian Date.
+    /// </summary>
+    /// <see href="https://en.wikipedia.org/wiki/Timekeeping_on_Mars#Mars_Sol_Date"/>
+    /// <param name="JDTT">The Julian Date (TT).</param>
+    /// <returns>The Mars Sol Date.</returns>
+    public static double CalcMarsSolDate(double JDTT)
+    {
+        double JD_TAI = JulianDateService.JulianDate_TT_to_TAI(JDTT);
+        const double k = 1.0 / 4000;
+        double MSD = (JD_TAI - 2451549.5 + k) / TimeConstants.DAYS_PER_SOL + 44796.0;
+        return MSD;
+    }
+
+    #endregion Static methods
 }

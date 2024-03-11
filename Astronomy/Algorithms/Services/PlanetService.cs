@@ -1,5 +1,4 @@
 using Galaxon.Astronomy.Algorithms.Records;
-using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Collections;
@@ -47,7 +46,7 @@ public class PlanetService(AstroDbContext astroDbContext)
         }
 
         // Get T in Julian millennia from the epoch J2000.0.
-        double T = JulianDateUtility.JulianMillenniaSinceJ2000(JDTT);
+        double T = JulianDateService.JulianMillenniaSinceJ2000(JDTT);
 
         // Calculate the coefficients for each coordinate variable.
         Dictionary<char, double[]> coeffs = new ();

@@ -1,5 +1,4 @@
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -555,7 +554,7 @@ public static class LunisolarCalendar
         DateTime start = new (2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         List<LunarPhase> newMoons =
-            MoonPhaseUtility.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
+            LunaService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
         foreach (LunarPhase newMoon in newMoons)
         {
             // Get Ls.
