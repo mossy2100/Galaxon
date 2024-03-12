@@ -4,7 +4,7 @@ using Galaxon.Time;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestJulianDates
+public class JulianDateServiceTests
 {
     [TestMethod]
     public void TestDateOnlyToJulianDay()

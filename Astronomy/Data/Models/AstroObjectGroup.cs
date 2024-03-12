@@ -8,7 +8,7 @@ public class AstroObjectGroup
     public int Id { get; set; }
 
     // Group name.
-    [MaxLength(20)]
+    [MaxLength(30)]
     public string Name { get; set; } = "";
 
     // Objects in the group (navigation property).

@@ -88,38 +88,34 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// than a leap second introduced that day, because the actual datetime of the leap second,
     /// which will have a time of day of 23:59:60, isn't representable as a DateTime.
     /// </summary>
-    /// <param name="dt">The datetime.</param>
+    /// <param name="dt">The datetime. Defaults to now.</param>
     /// <returns>The total value of leap seconds inserted.</returns>
-    public int TotalLeapSeconds(DateTime dt)
+    public int TotalLeapSeconds(DateTime? dt = null)
     {
+        // Default to now.
+        dt ??= DateTimeExtensions.NowUtc;
+
+        // Count leap seconds.
         var total = 0;
         foreach (LeapSecond ls in leapSecondRepository.List)
         {
             // Get the datetime of the leap second.
             // When creating the new DateTime we use the same DateTimeKind as the argument so the
             // comparison works correctly. The time of day will be set to 00:00:00.
-            var dtLeapSecond = ls.LeapSecondDate.ToDateTime(dt.Kind);
+            var dtLeapSecond = ls.LeapSecondDate.ToDateTime(dt.Value.Kind);
             // The actual time of day for the leap second is 23:59:60, which can't be represented
             // using DateTime. So we'll use the time 00:00:00 of the next day.
             dtLeapSecond = dtLeapSecond.AddDays(1);
 
             // If the datetime of the leap second is before or equal to the datetime argument, add
             // the value of the leap second (-1, 0, or 1) to the total.
-            if (dtLeapSecond <= dt)
+            if (dtLeapSecond <= dt.Value)
             {
                 total += ls.Value;
             }
         }
-        return total;
-    }
 
-    /// <summary>
-    /// Total the value of all leap seconds (positive and negative) up to the current datetime.
-    /// </summary>
-    /// <returns>The total value of leap seconds inserted thus far.</returns>
-    public int TotalLeapSeconds()
-    {
-        return TotalLeapSeconds(DateTimeExtensions.NowUtc);
+        return total;
     }
 
     /// <summary>
@@ -127,8 +123,11 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// </summary>
     /// <param name="dt">A point in time. Defaults to current DateTime.</param>
     /// <returns>The integer number of seconds difference.</returns>
-    public byte CalcTAIMinusUTC(DateTime dt = new ())
+    public byte CalcTAIMinusUTC(DateTime? dt = null)
     {
+        // Default to now.
+        dt ??= DateTimeExtensions.NowUtc;
+
         return (byte)(10 + TotalLeapSeconds(dt));
     }
 
@@ -149,9 +148,14 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <param name="dt">A point in time. Defaults to current DateTime.</param>
     /// <returns>The difference between UT1 and UTC.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If year less than 1972.</exception>
-    public double CalcDUT1(DateTime dt = new ())
+    public double CalcDUT1(DateTime? dt = null)
     {
-        return TimeConstants.TT_MINUS_TAI_MS / 1000.0 - CalcDeltaTNASA(dt) + CalcTAIMinusUTC(dt);
+        // Default to now.
+        dt ??= DateTimeExtensions.NowUtc;
+
+        return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.MILLISECONDS_PER_SECOND
+            - CalcDeltaTNASA(dt.Value)
+            + CalcTAIMinusUTC(dt.Value);
     }
 
     public void TestCalcDUT1()
@@ -240,8 +244,10 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <returns></returns>
     public static double CalcDecimalYear(DateTime dt)
     {
-        double secondsInYear = GregorianCalendarExtensions.DaysInYear(dt.Year) * TimeConstants.SECONDS_PER_DAY;
-        double seconds = (dt.DayOfYear - 1) * TimeConstants.SECONDS_PER_DAY + dt.TimeOfDay.TotalSeconds;
+        double secondsInYear = GregorianCalendarExtensions.DaysInYear(dt.Year)
+            * TimeConstants.SECONDS_PER_DAY;
+        double seconds = (dt.DayOfYear - 1) * TimeConstants.SECONDS_PER_DAY
+            + dt.TimeOfDay.TotalSeconds;
         return dt.Year + seconds / secondsInYear;
     }
 
@@ -495,7 +501,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <returns></returns>
     public static ulong TT_to_TAI(ulong TT_ticks)
     {
-        ulong TAI_ticks = TT_ticks - TimeConstants.TT_MINUS_TAI_MS * TimeSpan.TicksPerMillisecond;
+        ulong TAI_ticks = TT_ticks - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
         return TAI_ticks;
     }
 
@@ -506,7 +512,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <returns></returns>
     public static ulong TAI_to_TT(ulong TAI_ticks)
     {
-        ulong TT_ticks = TAI_ticks + TimeConstants.TT_MINUS_TAI_MS * TimeSpan.TicksPerMillisecond;
+        ulong TT_ticks = TAI_ticks + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
         return TT_ticks;
     }
 

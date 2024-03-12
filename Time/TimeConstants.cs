@@ -14,15 +14,6 @@ namespace Galaxon.Time;
 /// </summary>
 public static class TimeConstants
 {
-    #region Nanoseconds per unit of time
-
-    /// <summary>
-    /// The number of nanoseconds in a tick.
-    /// </summary>
-    public const long NANOSECONDS_PER_TICK = 100L;
-
-    #endregion Nanoseconds per unit of time
-
     #region Ticks per unit of time
 
     /// <summary>
@@ -242,7 +233,7 @@ public static class TimeConstants
     #region Tropical year
 
     /// <summary>
-    /// The number of days in the mean tropical year B1900 (days).
+    /// The number of days in the mean tropical year (epoch B1900).
     /// This value is taken from the SOFA (Standards of Fundamental Astronomy) library, which is
     /// assumed to be authoritative.
     /// </summary>
@@ -251,12 +242,12 @@ public static class TimeConstants
     /// <summary>
     /// Number of seconds in a tropical year.
     /// </summary>
-    public const double SECONDS_PER_TROPICAL_YEAR = DAYS_PER_TROPICAL_YEAR * SECONDS_PER_DAY;
+    public const double SECONDS_PER_TROPICAL_YEAR = 31_556_925.974_6784;
 
     /// <summary>
     /// Number of ticks in a tropical year.
     /// </summary>
-    public const long TICKS_PER_TROPICAL_YEAR = (long)(DAYS_PER_TROPICAL_YEAR * TICKS_PER_DAY);
+    public const long TICKS_PER_TROPICAL_YEAR = 315_569_259_746_784L;
 
     #endregion Tropical year
 
@@ -339,7 +330,7 @@ public static class TimeConstants
     /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
     /// </summary>
     /// <returns>A DateTime object representing the start point of the J2000 epoch in UTC.</returns>
-    public static DateTime START_J2000_EPOCH_UTC { get; } =
+    public static readonly DateTime START_J2000_EPOCH_UTC =
         new (2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
 
     /// <summary>
@@ -350,12 +341,12 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar year.
     /// </summary>
-    public const double SECONDS_PER_JULIAN_YEAR = DAYS_PER_JULIAN_YEAR * SECONDS_PER_DAY;
+    public const long SECONDS_PER_JULIAN_YEAR = 31_557_600L;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar year.
     /// </summary>
-    public const long TICKS_PER_JULIAN_YEAR = (long)(DAYS_PER_JULIAN_YEAR * TICKS_PER_DAY);
+    public const long TICKS_PER_JULIAN_YEAR = 315_576_000_000_000L;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar decade.
@@ -365,12 +356,12 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar decade.
     /// </summary>
-    public const double SECONDS_PER_JULIAN_DECADE = DAYS_PER_JULIAN_DECADE * SECONDS_PER_DAY;
+    public const long SECONDS_PER_JULIAN_DECADE = 315_576_000L;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar year.
     /// </summary>
-    public const long TICKS_PER_JULIAN_DECADE = (long)(DAYS_PER_JULIAN_DECADE * TICKS_PER_DAY);
+    public const long TICKS_PER_JULIAN_DECADE = 3_155_760_000_000_000L;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar century.
@@ -380,12 +371,12 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar century.
     /// </summary>
-    public const long SECONDS_PER_JULIAN_CENTURY = DAYS_PER_JULIAN_CENTURY * SECONDS_PER_DAY;
+    public const long SECONDS_PER_JULIAN_CENTURY = 3_155_760_000L;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar century.
     /// </summary>
-    public const long TICKS_PER_JULIAN_CENTURY = DAYS_PER_JULIAN_CENTURY * TICKS_PER_DAY;
+    public const long TICKS_PER_JULIAN_CENTURY = 31_557_600_000_000_000L;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar millennium.
@@ -395,19 +386,18 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar millennium.
     /// </summary>
-    public const double SECONDS_PER_JULIAN_MILLENNIUM =
-        DAYS_PER_JULIAN_MILLENNIUM * SECONDS_PER_DAY;
+    public const long SECONDS_PER_JULIAN_MILLENNIUM = 31_557_600_000L;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar millennium.
     /// </summary>
-    public const long TICKS_PER_JULIAN_MILLENNIUM = DAYS_PER_JULIAN_MILLENNIUM * TICKS_PER_DAY;
+    public const long TICKS_PER_JULIAN_MILLENNIUM = 315_576_000_000_000_000L;
 
     /// <summary>
     /// Number of milliseconds difference between TAI and TT.
     /// TT = TAI + 32,184 ms
     /// </summary>
-    public const int TT_MINUS_TAI_MS = 32_184 /* milliseconds */;
+    public const long TT_MINUS_TAI_MILLISECONDS = 32_184L;
 
     #endregion Time scales
 
@@ -416,8 +406,8 @@ public static class TimeConstants
     /// <summary>
     /// Start point of Meeus' lunation number (LN) 0.
     /// </summary>
-    public static DateTime LUNATION_0_START { get; } =
-        new (2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
+    public static readonly DateTime
+        LUNATION_0_START = new (2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
 
     /// <summary>
     /// Number of days in a synodic lunar month (a.k.a. "lunation") at J2000.0 epoch.
@@ -433,7 +423,7 @@ public static class TimeConstants
     /// <summary>
     /// Number of ticks in a lunation.
     /// </summary>
-    public const long TICKS_PER_LUNATION = (long)(DAYS_PER_LUNATION * TICKS_PER_DAY);
+    public const long TICKS_PER_LUNATION = 25_514_428_775_904L;
 
     #endregion Moon
 

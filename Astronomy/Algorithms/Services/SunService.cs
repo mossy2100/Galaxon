@@ -206,9 +206,9 @@ public class SunService(
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
         // the date.
-        double TC = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
         double lambdaPrime = Polynomials.EvaluatePolynomial(
-            [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], TC);
+            [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
         Ls -= DMSToRadians(0, 0, 0.090_33);
         Bs += DMSToRadians(0, 0, 0.039_16) * (Cos(lambdaPrime) - Sin(lambdaPrime));
 

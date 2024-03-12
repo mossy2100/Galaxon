@@ -29,11 +29,17 @@ public class AstroObjectRepository(
                 "Object name cannot be null or blank.");
         }
 
-        // Get matching objects.
-        IQueryable<AstroObject> results = from ao in astroDbContext.AstroObjects
-            where (groupName == null || astroObjectGroupRepository.IsInGroup(ao, groupName))
-                && ao.IsMatch(astroObjectName)
-            select ao;
+        // Get objects with matching name.
+        var results = astroDbContext.AstroObjects.ToList().Where(ao => ao.IsMatch(astroObjectName));
+
+        // Filter by group if specified.
+        if (groupName != null)
+        {
+            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName));
+        }
+
+        // Enumerate.
+        results = results.ToList();
 
         // Check if we got multiple results.
         if (results.Count() > 1)

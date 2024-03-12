@@ -1,7 +1,7 @@
 ﻿namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestTimeScaleService
+public class TimeScaleServiceTests
 {
     //[TestMethod]
     //public void TestDeltaTMeeus()

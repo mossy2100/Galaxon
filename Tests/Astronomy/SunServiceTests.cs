@@ -1,3 +1,4 @@
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
@@ -6,7 +7,7 @@ using Galaxon.Numerics.Geometry;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestSun
+public class SunServiceTests
 {
     private AstroDbContext? _astroDbContext;
 
@@ -48,5 +49,24 @@ public class TestSun
         // library.
         Assert.AreEqual(expectedL, actualL, 1e-3);
         Assert.AreEqual(expectedB, actualB, 1e-3);
+    }
+
+    /// <summary>
+    /// Test Example 25.a from Astronomical Algorithms, 2nd Ed.
+    /// </summary>
+    [TestMethod]
+    public void TestExample25a()
+    {
+        // Arrange
+        DateTime dt_TT = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
+        double JDTT = JulianDateService.DateTime_to_JulianDate(dt_TT);
+
+        // Act
+        Coordinates sunPosition = _sunService!.CalcPosition(JDTT);
+
+        // Assert
+        Assert.AreEqual(2448908.5, JDTT);
+        Assert.AreEqual(Angles.DMSToRadians(199, 54, 26.18), sunPosition.Longitude);
+        Assert.AreEqual(Angles.DMSToRadians(0, 0, 0.72), sunPosition.Latitude);
     }
 }

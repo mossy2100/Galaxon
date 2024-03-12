@@ -12,6 +12,21 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 public class PlanetService(AstroDbContext astroDbContext)
 {
     /// <summary>
+    /// Dictionary mapping planet numbers to English names.
+    /// </summary>
+    public static readonly Dictionary<int, string> PLANET_NAMES = new ()
+    {
+        { 1, "Mercury" },
+        { 2, "Venus" },
+        { 3, "Earth" },
+        { 4, "Mars" },
+        { 5, "Jupiter" },
+        { 6, "Saturn" },
+        { 7, "Uranus" },
+        { 8, "Neptune" },
+    };
+
+    /// <summary>
     /// Calculate the position of a planet in heliocentric ecliptic coordinates.
     /// Algorithm is from AA2 p218.
     /// The result is a Coordinates object tuple with the 3 coordinate values as radians.

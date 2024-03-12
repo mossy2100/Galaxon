@@ -8,7 +8,7 @@ using Galaxon.Quantities;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestPlanets
+public class PlanetServiceTests
 {
     private AstroDbContext? _astroDbContext;
 

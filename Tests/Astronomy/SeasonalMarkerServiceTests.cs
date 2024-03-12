@@ -5,7 +5,7 @@ using Galaxon.UnitTesting;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestSeasonalMarker
+public class SeasonalMarkerServiceTests
 {
     [TestMethod]
     public void TestCalcApproxSeasonalMarker()

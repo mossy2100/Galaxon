@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestLunarPhases
+public class LunaServiceTests
 {
     private AstroDbContext? _astroDbContext;
 

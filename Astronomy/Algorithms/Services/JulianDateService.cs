@@ -95,7 +95,7 @@ public class JulianDateService
     public static double JulianDate_TT_to_TAI(double JDTT)
     {
         return JDTT
-            - ((double)TimeConstants.TT_MINUS_TAI_MS / TimeConstants.SECONDS_PER_DAY / 1000);
+            - ((double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.SECONDS_PER_DAY / 1000);
     }
 
     #endregion Conversion between Julian dates and other time scales

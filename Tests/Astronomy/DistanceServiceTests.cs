@@ -8,7 +8,7 @@ using GeoCoordinatePortable;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class TestCoordinates
+public class DistanceServiceTests
 {
     private AstroDbContext? _astroDbContext;
 

@@ -7,7 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, AstroDbContext astroDbContext)
+public class LeapSecondImportService(
+    ILogger<LeapSecondImportService> logger,
+    AstroDbContext astroDbContext)
 {
     /// <summary>
     /// NIST web page showing a table of leap seconds.
@@ -18,6 +20,12 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
     /// </summary>
     private const string _NIST_LEAP_SECONDS_URL =
         "https://www.nist.gov/pml/time-and-frequency-division/time-realization/leap-seconds";
+
+    /// <summary>
+    /// URL of the IERS Bulletin C index.
+    /// </summary>
+    private const string _BULLETIN_INDEX_URL =
+        "https://datacenter.iers.org/products/eop/bulletinc/";
 
     /// <summary>
     /// Download the leap seconds from the NIST website.
@@ -89,12 +97,6 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
     }
 
     /// <summary>
-    /// URL of the IERS Bulletin C index.
-    /// </summary>
-    private const string _BULLETIN_INDEX_URL =
-        "https://datacenter.iers.org/products/eop/bulletinc/";
-
-    /// <summary>
     /// Every 6 months, scrape the IERS bulletins at
     /// <see href="https://datacenter.iers.org/products/eop/bulletinc/"/>
     /// and parse them to get the latest leap second dates.
@@ -146,7 +148,7 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
 
                 // Get the bulletin number.
                 int bulletinNumber;
-                string pattern = @"bulletinc-(\d+)\.txt$";
+                var pattern = @"bulletinc-(\d+)\.txt$";
                 Match match = Regex.Match(bulletinUrl, pattern);
                 if (match.Success)
                 {
@@ -156,7 +158,7 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
                 }
                 else
                 {
-                    string error = "PARSE ERROR: Could not get bulletin number.";
+                    var error = "PARSE ERROR: Could not get bulletin number.";
                     logger.LogError("{Error}", error);
                     throw new InvalidOperationException(error);
                 }
@@ -205,16 +207,18 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
                     MatchCollection matches = rxLeapSecond.Matches(bulletinText);
                     if (matches.Count == 0)
                     {
-                        string error = "PARSE ERROR: Could not detect leap second value.";
+                        var error = "PARSE ERROR: Could not detect leap second value.";
                         logger.LogInformation("{Error}", error);
                         throw new InvalidOperationException(error);
                     }
 
                     GroupCollection groups = matches[0].Groups;
                     iersBulletinC.Value = (sbyte)(groups["sign"].Value == "positive" ? 1 : -1);
-                    int month = GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
-                    int year = int.Parse(groups["year"].Value);
-                    iersBulletinC.LeapSecondDate = GregorianCalendarExtensions.MonthLastDay(year, month);
+                    int month =
+                        GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
+                    var year = int.Parse(groups["year"].Value);
+                    iersBulletinC.LeapSecondDate =
+                        GregorianCalendarExtensions.MonthLastDay(year, month);
 
                     // Update or insert the leap second record.
                     LeapSecond? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>
@@ -231,7 +235,8 @@ public class LeapSecondImportService(ILogger<LeapSecondImportService> logger, As
                 // Console.WriteLine($"Value = {iersBulletinC.Value}");
                 logger.LogInformation("Value = {Value}", iersBulletinC.Value);
                 // Console.WriteLine($"Leap second date = {iersBulletinC.LeapSecondDate}");
-                logger.LogInformation("Leap second date = {Date}", iersBulletinC.LeapSecondDate.ToString());
+                logger.LogInformation("Leap second date = {Date}",
+                    iersBulletinC.LeapSecondDate.ToString());
 
                 // Update or insert the record.
                 await astroDbContext.SaveChangesAsync();
