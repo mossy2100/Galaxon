@@ -30,8 +30,7 @@ public class SunServiceTests
             new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
         _planetService = new PlanetService(_astroDbContext);
         _earthService = new EarthService(_astroObjectRepository, _planetService);
-        _sunService = new SunService(_astroDbContext, _astroObjectGroupRepository,
-            _astroObjectRepository, _earthService);
+        _sunService = new SunService(_earthService);
     }
 
     [TestMethod]

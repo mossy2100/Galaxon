@@ -1,20 +1,11 @@
 ﻿using Galaxon.Astronomy.Algorithms.Records;
-using Galaxon.Astronomy.Data;
-using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Numerics.Extensions;
 using Galaxon.Quantities;
-using Galaxon.Time;
 using static Galaxon.Numerics.Geometry.Angles;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class SunService(
-    AstroDbContext astroDbContext,
-    AstroObjectGroupRepository astroObjectGroupRepository,
-    AstroObjectRepository astroObjectRepository,
-    EarthService earthService)
+public class SunService(EarthService earthService)
 {
     /// <summary>
     /// Calculation the variation in the Sun's longitude in radians.
