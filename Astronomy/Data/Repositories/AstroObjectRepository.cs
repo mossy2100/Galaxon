@@ -30,19 +30,18 @@ public class AstroObjectRepository(
         }
 
         // Get objects with matching name.
-        var results = astroDbContext.AstroObjects.ToList().Where(ao => ao.IsMatch(astroObjectName));
+        var results = astroDbContext.AstroObjects.ToList().Where(ao => ao.IsMatch(astroObjectName))
+            .ToList();
 
-        // Filter by group if specified.
-        if (groupName != null)
+        // Filter by group if specified and necessary.
+        if (results.Count > 0 && groupName != null)
         {
-            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName));
+            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName))
+                .ToList();
         }
 
-        // Enumerate.
-        results = results.ToList();
-
         // Check if we got multiple results.
-        if (results.Count() > 1)
+        if (results.Count > 1)
         {
             throw new InvalidOperationException("More than one result found.");
         }

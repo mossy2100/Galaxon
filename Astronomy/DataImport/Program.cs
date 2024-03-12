@@ -9,6 +9,9 @@ namespace Galaxon.Astronomy.DataImport;
 
 public class Program
 {
+    /// <summary>
+    /// Reference to the ServiceProvider.
+    /// </summary>
     private static ServiceProvider? _serviceProvider;
 
     public static async Task Main()
@@ -27,23 +30,36 @@ public class Program
             .CreateLogger();
 
         // Setup DI container.
-        _serviceProvider = new ServiceCollection()
-            .AddDbContext<AstroDbContext>()
-            .AddSingleton<SeasonalMarkerImportService>()
+        IServiceCollection serviceCollection =
+            new ServiceCollection().AddDbContext<AstroDbContext>();
+
+        // Add repositories.
+        serviceCollection
             .AddSingleton<AstroObjectRepository>()
             .AddSingleton<AstroObjectGroupRepository>()
-            .AddSingleton<LeapSecondImportService>()
-            .AddSingleton<LeapSecondRepository>()
-            .AddSingleton<EasterDateImportService>()
-            .AddSingleton<VSOP87ImportService>()
+            .AddSingleton<LeapSecondRepository>();
+
+        // Add import services.
+        serviceCollection
             .AddSingleton<AstroObjectGroupImportService>()
+            .AddSingleton<DeltaTImportService>()
+            .AddSingleton<EasterDateImportService>()
+            .AddSingleton<LeapSecondImportService>()
+            .AddSingleton<LunarPhaseDataImportService>()
             .AddSingleton<PlanetImportService>()
-            .AddLogging(loggingBuilder =>
-            {
-                // Dispose Serilog logger when disposing of ILoggerFactory.
-                loggingBuilder.AddSerilog(dispose: true);
-            })
-            .BuildServiceProvider();
+            .AddSingleton<SeasonalMarkerImportService>()
+            .AddSingleton<SunImportService>()
+            .AddSingleton<VSOP87ImportService>();
+
+        // Add logging.
+        serviceCollection.AddLogging(loggingBuilder =>
+        {
+            // Dispose Serilog logger when disposing of ILoggerFactory.
+            loggingBuilder.AddSerilog(dispose: true);
+        });
+
+        // Build.
+        _serviceProvider = serviceCollection.BuildServiceProvider();
 
         try
         {
@@ -67,15 +83,19 @@ public class Program
         // ImportEasterDates();
 
         // Import groups.
-        AstroObjectGroupImportService astroObjectGroupImportService =
-            _serviceProvider!.GetRequiredService<AstroObjectGroupImportService>();
-        astroObjectGroupImportService.InitAstroObjectGroups();
-        //
-        // // Import planets.
+        // AstroObjectGroupImportService astroObjectGroupImportService =
+        //     _serviceProvider!.GetRequiredService<AstroObjectGroupImportService>();
+        // astroObjectGroupImportService.InitAstroObjectGroups();
+
+        // Import Sun.
+        SunImportService sunImportService = _serviceProvider!.GetRequiredService<SunImportService>();
+        sunImportService.ImportSun();
+
+        // Import planets.
         // PlanetImportService planetImportService =
         //     _serviceProvider!.GetRequiredService<PlanetImportService>();
         // planetImportService.ImportPlanets();
-        //
+
         // // Import VSOP87 data.
         // VSOP87ImportService vsop87ImportService =
         //     _serviceProvider!.GetRequiredService<VSOP87ImportService>();

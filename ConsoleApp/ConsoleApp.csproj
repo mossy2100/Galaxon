@@ -13,12 +13,5 @@
       <ProjectReference Include="..\Astronomy\Algorithms\Algorithms.csproj" />
       <ProjectReference Include="..\Time\Time.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
-
+    
 </Project>
