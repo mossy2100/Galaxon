@@ -33,7 +33,7 @@ public class VSOP87ImportService(
                 Console.WriteLine("Could not read planet number, skipping line.");
                 continue;
             }
-            AstroObject? planet = astroObjectRepository.Load(planetNum, "planet");
+            AstroObject? planet = astroObjectRepository.Load(planetNum, "Planet");
             if (planet == null)
             {
                 Console.WriteLine($"Could not find planet number {planetNum}.");
@@ -151,7 +151,7 @@ public class VSOP87ImportService(
     public void SetAstroObjectIds()
     {
         // Get the planet ids.
-        List<AstroObject> planets = astroObjectRepository.LoadAllInGroup("planet");
+        List<AstroObject> planets = astroObjectRepository.LoadAllInGroup("Planet");
         Dictionary<string, int> planetIds = new ();
         foreach (AstroObject planet in planets)
         {

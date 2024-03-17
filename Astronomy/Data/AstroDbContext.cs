@@ -75,6 +75,7 @@ public class AstroDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
+            .UseLazyLoadingProxies()
             .UseSqlServer(ConnectionString, options => options.EnableRetryOnFailure())
             .LogTo(Console.WriteLine, new[]
             {

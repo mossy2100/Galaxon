@@ -6,9 +6,9 @@ public class RotationalRecord
     public int Id { get; set; }
 
     // Link to owner.
-    public int AstroObjectId { get; set; }
+    public virtual int AstroObjectId { get; set; }
 
-    public AstroObject? AstroObject { get; set; }
+    public virtual AstroObject? AstroObject { get; set; }
 
     // Sidereal rotation period in days.
     public double? SiderealRotationPeriod { get; set; }

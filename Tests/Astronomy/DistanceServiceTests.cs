@@ -29,7 +29,7 @@ public class DistanceServiceTests
     public void TestShortestDistance()
     {
         // Calculate distance in metres.
-        AstroObject? earth = _astroObjectRepository?.Load("Earth", "planet");
+        AstroObject? earth = _astroObjectRepository?.Load("Earth", "Planet");
 
         if (earth == null)
         {

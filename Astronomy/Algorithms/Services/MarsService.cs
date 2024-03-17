@@ -28,7 +28,7 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     {
         if (_mars == null)
         {
-            AstroObject? mars = astroObjectRepository.Load("Mars", "planet");
+            AstroObject? mars = astroObjectRepository.Load("Mars", "Planet");
             _mars = mars
                 ?? throw new DataNotFoundException("Could not find planet Mars in the database.");
         }

@@ -19,9 +19,9 @@ public class AtmosphereRecord
     public int Id { get; set; }
 
     // Link to owner.
-    public int AstroObjectId { get; set; }
+    public virtual int AstroObjectId { get; set; }
 
-    public AstroObject? AstroObject { get; set; }
+    public virtual AstroObject? AstroObject { get; set; }
 
     // Surface pressure (Pa).
     public double? SurfacePressure { get; set; }
@@ -30,7 +30,7 @@ public class AtmosphereRecord
     public double? ScaleHeight { get; set; }
 
     // Atmosphere constituents.
-    public List<AtmosphereConstituent> Constituents { get; set; } = [];
+    public virtual List<AtmosphereConstituent> Constituents { get; set; } = [];
 
     // Is it a surface-bounded exosphere?
     public bool? IsSurfaceBoundedExosphere { get; set; }

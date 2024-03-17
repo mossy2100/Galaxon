@@ -34,7 +34,7 @@ public class PlanetImportService(
     public void ImportPlanets()
     {
         // Get the Sun.
-        AstroObject? sun = astroObjectRepository.Load("Sun", "star");
+        AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
 
         // Open the CSV file for parsing.
         var csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
@@ -57,7 +57,7 @@ public class PlanetImportService(
                 continue;
             }
 
-            AstroObject? planet = astroObjectRepository.Load(name, "planet");
+            AstroObject? planet = astroObjectRepository.Load(name, "Planet");
 
             if (planet == null)
             {
@@ -80,7 +80,7 @@ public class PlanetImportService(
             planet.Number = num == null ? null : uint.Parse(num);
 
             // Set its groups.
-            astroObjectGroupRepository.AddToGroup(planet, "planet");
+            astroObjectGroupRepository.AddToGroup(planet, "Planet");
             astroObjectGroupRepository.AddToGroup(planet, $"{type} planet");
 
             // Set its parent.

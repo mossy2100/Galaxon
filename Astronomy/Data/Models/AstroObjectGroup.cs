@@ -12,10 +12,10 @@ public class AstroObjectGroup
     public string Name { get; set; } = "";
 
     // Objects in the group (navigation property).
-    public List<AstroObject> Objects { get; set; } = [];
+    public virtual List<AstroObject> Objects { get; set; } = [];
 
     // Parent group.
-    public int? ParentId { get; set; }
+    public virtual int? ParentId { get; set; }
 
-    public AstroObjectGroup? Parent { get; set; }
+    public virtual AstroObjectGroup? Parent { get; set; }
 }

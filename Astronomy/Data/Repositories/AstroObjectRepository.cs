@@ -10,12 +10,12 @@ public class AstroObjectRepository(
     /// Load an AstroObject from the database by specifying an object name and optional group name.
     /// Examples:
     ///     Load("Earth");
-    ///     Load("Ceres", "dwarf planet");
+    ///     Load("Ceres", "Dwarf planet");
     /// If there is more than one matching result, throw an exception.
     /// </summary>
     /// <param name="astroObjectName">The object's name (or number, as a string).</param>
-    /// <param name="groupName">The name of the group to search, e.g. "planet", "asteroid",
-    /// "plutoid", etc.</param>
+    /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
+    /// "Plutoid", etc.</param>
     /// <returns>The matching AstroObject.</returns>
     /// <exception cref="ArgumentNullException">
     /// If the object name is null or whitespace.
@@ -53,12 +53,12 @@ public class AstroObjectRepository(
     /// Load an AstroObject from the database by specifying an object number and optional group
     /// name.
     /// Examples:
-    ///     Load(2, "planet");
+    ///     Load(2, "Planet");
     ///     Load(134340);
     /// If there is more than one matching result, throw an exception.
     /// </summary>
     /// <param name="astroObjectNumber">The object's number.</param>
-    /// <param name="groupName">The name of the group to search, e.g. "planet", "asteroid",
+    /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
     /// etc.</param>
     /// <returns>The matching AstroObject.</returns>
     /// <exception cref="ArgumentNullException">
@@ -72,18 +72,15 @@ public class AstroObjectRepository(
     /// <summary>
     /// Load all AstroObjects in a group.
     /// Examples:
-    ///     LoadAllInGroup("planet");
+    ///     LoadAllInGroup("Planet");
     /// </summary>
-    /// <param name="groupName">The name of the group, e.g. "planet", "asteroid", "plutoid",
+    /// <param name="groupName">The name of the group, e.g. "Planet", "Asteroid", "Plutoid",
     /// etc.</param>
     /// <returns>The matching AstroObjects.</returns>
     public List<AstroObject> LoadAllInGroup(string groupName)
     {
-        // Get matching objects.
-        IQueryable<AstroObject> results = from ao in astroDbContext.AstroObjects
-            where astroObjectGroupRepository.IsInGroup(ao, groupName)
-            select ao;
-
-        return results.ToList();
+        // Get objects with matching name.
+        return astroDbContext.AstroObjects.ToList()
+            .Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName)).ToList();
     }
 }

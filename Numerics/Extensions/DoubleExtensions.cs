@@ -33,15 +33,10 @@ public static class DoubleExtensions
             throw new ArgumentOutOfRangeException(nameof(nSigFigs), "Must be positive.");
         }
 
-        // The maximum number of significant digits supported by double is 17, so if it's this or
-        // greater there's nothing to do.
-        if (d >= 17)
-        {
-            return d;
-        }
+        double scale = Math.Pow(10, Math.Floor(Math.Log10(d)) + 1);
+        double result = scale * Math.Round(d / scale, nSigFigs);
 
-        var scale = Math.Pow(10, Math.Floor(Math.Log10(d)) + 1);
-        return scale * Math.Round(d / scale, nSigFigs);
+        return result;
     }
 
     /// <summary>

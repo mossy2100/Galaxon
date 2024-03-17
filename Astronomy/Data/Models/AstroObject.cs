@@ -34,42 +34,42 @@ public class AstroObject
     // Relationships
 
     // Link to parent object (i.e. the object being orbited).
-    public int? ParentId { get; set; }
+    public virtual int? ParentId { get; set; }
 
-    public AstroObject? Parent { get; set; }
+    public virtual AstroObject? Parent { get; set; }
 
     // Link to child objects (i.e. the objects orbiting this object).
-    public List<AstroObject>? Children { get; set; }
+    public virtual List<AstroObject>? Children { get; set; }
 
     // The groups (populations/categories) this object belongs to.
-    public List<AstroObjectGroup>? Groups { get; set; }
+    public virtual List<AstroObjectGroup>? Groups { get; set; }
 
     // ---------------------------------------------------------------------------------------------
     // Additional properties records
 
     // Link to physical properties record.
-    public PhysicalRecord? Physical { get; set; }
+    public virtual PhysicalRecord? Physical { get; set; }
 
     // Link to rotational properties record.
-    public RotationalRecord? Rotation { get; set; }
+    public virtual RotationalRecord? Rotation { get; set; }
 
     // Link to orbital properties record.
-    public OrbitalRecord? Orbit { get; set; }
+    public virtual OrbitalRecord? Orbit { get; set; }
 
     // Link to observational properties record.
-    public ObservationalRecord? Observation { get; set; }
+    public virtual ObservationalRecord? Observation { get; set; }
 
     // Link to atmosphere properties object.
-    public AtmosphereRecord? Atmosphere { get; set; }
+    public virtual AtmosphereRecord? Atmosphere { get; set; }
 
     // Link to stellar properties record.
-    public StellarRecord? Stellar { get; set; }
+    public virtual StellarRecord? Stellar { get; set; }
 
     // Link to Minor Planet Center record.
     // public MinorPlanetRecord? MinorPlanet { get; set; }
 
     // Link to matching VSOP87D records.
-    public List<VSOP87DRecord>? VSOP87DRecords { get; set; }
+    public virtual List<VSOP87DRecord>? VSOP87DRecords { get; set; }
 
     /// <summary>
     /// Check for case-sensitive match on name, number, packed designation, or readable

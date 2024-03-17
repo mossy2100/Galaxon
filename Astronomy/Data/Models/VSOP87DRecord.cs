@@ -21,12 +21,12 @@ public class VSOP87DRecord
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>
-    public int AstroObjectId { get; set; }
+    public virtual int AstroObjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public AstroObject? AstroObject { get; set; }
+    public virtual AstroObject? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the variable used in the record.

@@ -8,9 +8,9 @@ public class MinorPlanetRecord
     public int Id { get; set; }
 
     // Link to owner.
-    public int AstroObjectId { get; set; }
+    public virtual int AstroObjectId { get; set; }
 
-    public AstroObject? AstroObject { get; set; }
+    public virtual AstroObject? AstroObject { get; set; }
 
     // The designation in packed form.
     [MaxLength(30)]
@@ -33,9 +33,9 @@ public class MinorPlanetRecord
     public bool? IsCriticalListNumberedObject { get; set; }
 
     // The object a trojan or quasi-satellite is co-orbital with.
-    public int? CoOrbitalObjectId { get; set; }
+    public virtual int? CoOrbitalObjectId { get; set; }
 
-    public AstroObject? CoOrbitalObject { get; set; }
+    public virtual AstroObject? CoOrbitalObject { get; set; }
 
     // Tholen spectral type.
     [MaxLength(10)]

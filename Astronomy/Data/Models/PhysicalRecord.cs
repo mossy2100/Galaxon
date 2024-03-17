@@ -12,12 +12,12 @@ public class PhysicalRecord
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>
-    public int AstroObjectId { get; set; }
+    public virtual int AstroObjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public AstroObject? AstroObject { get; set; }
+    public virtual AstroObject? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the first radius in kilometers.
@@ -35,8 +35,8 @@ public class PhysicalRecord
     public double? RadiusC { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the object is gravitationally rounded (in hydrostatic
-    /// equilibrium).
+    /// Gets or sets a value indicating whether the object is gravitationally rounded (in
+    /// hydrostatic equilibrium).
     /// </summary>
     public bool? IsRound { get; set; }
 

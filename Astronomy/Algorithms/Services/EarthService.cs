@@ -30,7 +30,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     {
         if (_earth == null)
         {
-            AstroObject? earth = astroObjectRepository.Load("Earth", "planet");
+            AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
             _earth = earth
                 ?? throw new DataNotFoundException("Could not find planet Earth in the database.");
         }
@@ -92,14 +92,17 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
 
     /// <summary>
     /// Calculate the approximate length of the solar day in SI seconds at a point in time.
-    /// The formula comes from "The Length of the Day : A Cosmological Perspective" (Arbab I. Arbab, 2009)
+    /// The formula comes from:
+    /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation",
+    /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
+    /// Cambridge University Press.
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The day length in seconds at that point in time.</returns>
     public static double CalcSolarDayLength(double T)
     {
-        // The length of the day increases by about 2ms/century.
-        return TimeConstants.SECONDS_PER_DAY + 2e-3 * T;
+        // The length of the day increases by about 1.62±0.21 ms/cy.
+        return TimeConstants.SECONDS_PER_DAY + 1.62e-3 * T;
     }
 
     #endregion Static methods

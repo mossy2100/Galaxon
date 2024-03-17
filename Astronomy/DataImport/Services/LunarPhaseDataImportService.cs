@@ -7,6 +7,20 @@ namespace Galaxon.Astronomy.DataImport.Services;
 
 public class LunarPhaseDataImportService
 {
+    public static List<string> GetLinksToMoonPhaseCatalogPages()
+    {
+        // Load the Moon Phase Catalog Index page at
+        // http://astropixels.com/ephemeris/phasescat/phasescat.html
+        // and convert into a DOM document.
+
+
+        // Extract all the links in the BCE table and the CE table.
+        List<string> links = new ();
+
+        // Return a list of links.
+        return links;
+    }
+
     /// <summary>
     /// Extract the lunar phase data from the web pages captured from
     /// AstroPixels and copy the data into the database.

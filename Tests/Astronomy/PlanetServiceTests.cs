@@ -49,7 +49,7 @@ public class PlanetServiceTests
     public void TestCalcPositionVenus()
     {
         // Arrange.
-        AstroObject? venus = _astroObjectRepository!.Load("Venus", "planet");
+        AstroObject? venus = _astroObjectRepository!.Load("Venus", "Planet");
         if (venus == null)
         {
             Assert.Fail("Could not find Venus in the database.");
@@ -80,7 +80,7 @@ public class PlanetServiceTests
     public void TestCalcPositionSaturn()
     {
         // Arrange.
-        AstroObject? saturn = _astroObjectRepository?.Load("Saturn", "planet");
+        AstroObject? saturn = _astroObjectRepository?.Load("Saturn", "Planet");
         if (saturn == null)
         {
             Assert.Fail("Could not find Saturn in the database.");

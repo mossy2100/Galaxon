@@ -18,12 +18,13 @@ public class SunImportService(
     /// </summary>
     public void ImportSun()
     {
-        AstroObject? sun = astroObjectRepository.Load("Sun", "star");
+        AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
         if (sun == null)
         {
             Console.WriteLine("Adding the Sun to the database.");
             // Create tne new object.
             sun = new AstroObject("Sun");
+            astroDbContext.AstroObjects.Add(sun);
             astroDbContext.SaveChanges();
         }
         else
@@ -95,14 +96,12 @@ public class SunImportService(
 
         // Orbital parameters.
         sun.Orbit ??= new OrbitalRecord();
-        // 29,000 light years in metres (rounded to 2 significant figures).
-        sun.Orbit.SemiMajorAxis =
-            DoubleExtensions.RoundSigFigs(29e3 * LengthConstants.METRES_PER_LIGHT_YEAR, 2);
-        // 230 million years in seconds (rounded to 2 significant figures).
-        sun.Orbit.SiderealOrbitPeriod =
-            DoubleExtensions.RoundSigFigs(230e6 * TimeConstants.SECONDS_PER_YEAR, 2);
+        // 29,000 light years in metres.
+        sun.Orbit.SemiMajorAxis = 29_000 * LengthConstants.METRES_PER_LIGHT_YEAR;
+        // 230 million years in seconds.
+        sun.Orbit.SiderealOrbitPeriod = 230_000_000 * TimeConstants.SECONDS_PER_YEAR;
         // Orbital speed in m/s.
-        sun.Orbit.AvgOrbitSpeed = 251e3;
+        sun.Orbit.AvgOrbitSpeed = 251_000;
         astroDbContext.SaveChanges();
 
         // Rotational parameters.
@@ -124,16 +123,16 @@ public class SunImportService(
         sun.Atmosphere.ScaleHeight = 140e3;
 
         // Make sure all the molecules are in the database.
-        Molecule.CreateOrUpdate(astroDbContext, "hydrogen", "H");
-        Molecule.CreateOrUpdate(astroDbContext, "helium", "He");
-        Molecule.CreateOrUpdate(astroDbContext, "oxygen", "O");
-        Molecule.CreateOrUpdate(astroDbContext, "carbon", "C");
-        Molecule.CreateOrUpdate(astroDbContext, "iron", "Fe");
-        Molecule.CreateOrUpdate(astroDbContext, "neon", "Ne");
-        Molecule.CreateOrUpdate(astroDbContext, "nitrogen", "N");
-        Molecule.CreateOrUpdate(astroDbContext, "silicon", "Si");
-        Molecule.CreateOrUpdate(astroDbContext, "magnesium", "Mg");
-        Molecule.CreateOrUpdate(astroDbContext, "sulphur", "S");
+        Molecule.CreateOrUpdate(astroDbContext, "Hydrogen", "H");
+        Molecule.CreateOrUpdate(astroDbContext, "Helium", "He");
+        Molecule.CreateOrUpdate(astroDbContext, "Oxygen", "O");
+        Molecule.CreateOrUpdate(astroDbContext, "Carbon", "C");
+        Molecule.CreateOrUpdate(astroDbContext, "Iron", "Fe");
+        Molecule.CreateOrUpdate(astroDbContext, "Neon", "Ne");
+        Molecule.CreateOrUpdate(astroDbContext, "Nitrogen", "N");
+        Molecule.CreateOrUpdate(astroDbContext, "Silicon", "Si");
+        Molecule.CreateOrUpdate(astroDbContext, "Magnesium", "Mg");
+        Molecule.CreateOrUpdate(astroDbContext, "Sulphur", "S");
 
         // Add the constituents.
         sun.Atmosphere.AddConstituent(astroDbContext, "H", 73.46);

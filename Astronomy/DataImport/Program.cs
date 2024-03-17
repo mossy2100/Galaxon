@@ -88,8 +88,9 @@ public class Program
         // astroObjectGroupImportService.InitAstroObjectGroups();
 
         // Import Sun.
-        SunImportService sunImportService = _serviceProvider!.GetRequiredService<SunImportService>();
-        sunImportService.ImportSun();
+        // SunImportService sunImportService =
+        //     _serviceProvider!.GetRequiredService<SunImportService>();
+        // sunImportService.ImportSun();
 
         // Import planets.
         // PlanetImportService planetImportService =
@@ -97,9 +98,9 @@ public class Program
         // planetImportService.ImportPlanets();
 
         // // Import VSOP87 data.
-        // VSOP87ImportService vsop87ImportService =
-        //     _serviceProvider!.GetRequiredService<VSOP87ImportService>();
-        // vsop87ImportService.ParseAllVSOP87DataFiles();
+        VSOP87ImportService vsop87ImportService =
+            _serviceProvider!.GetRequiredService<VSOP87ImportService>();
+        vsop87ImportService.ParseAllVSOP87DataFiles();
     }
 
     /// <summary>
