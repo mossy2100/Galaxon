@@ -147,26 +147,4 @@ public class VSOP87ImportService(
             ParseVSOP87DataFile($"VSOP87D.{abbrev}");
         }
     }
-
-    public void SetAstroObjectIds()
-    {
-        // Get the planet ids.
-        List<AstroObject> planets = astroObjectRepository.LoadAllInGroup("Planet");
-        Dictionary<string, int> planetIds = new ();
-        foreach (AstroObject planet in planets)
-        {
-            if (planet.Name != null)
-            {
-                planetIds[planet.Name] = planet.Id;
-            }
-        }
-
-        // Update the VSOP87D records.
-        foreach (VSOP87DRecord vsop87Rec in astroDbContext.VSOP87DRecords)
-        {
-            vsop87Rec.AstroObjectId = planetIds[vsop87Rec.PlanetName];
-        }
-
-        astroDbContext.SaveChanges();
-    }
 }

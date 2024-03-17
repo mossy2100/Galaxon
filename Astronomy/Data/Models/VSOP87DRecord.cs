@@ -13,12 +13,6 @@ public class VSOP87DRecord
     public int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the name of the planet associated with this record.
-    /// </summary>
-    [MaxLength(10)]
-    public string PlanetName { get; set; } = "";
-
-    /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>
     public virtual int AstroObjectId { get; set; }
