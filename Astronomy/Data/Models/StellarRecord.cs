@@ -5,13 +5,8 @@ namespace Galaxon.Astronomy.Data.Models;
 /// <summary>
 /// Represents information about a stellar object.
 /// </summary>
-public class StellarRecord
+public class StellarRecord : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the stellar record.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>

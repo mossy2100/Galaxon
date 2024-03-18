@@ -3,13 +3,8 @@
 /// <summary>
 /// Represents an orbital record associated with an astronomical object.
 /// </summary>
-public class OrbitalRecord
+public class OrbitalRecord : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the orbital record.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>

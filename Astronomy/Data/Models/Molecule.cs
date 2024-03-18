@@ -2,11 +2,8 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class Molecule
+public class Molecule : Entity
 {
-    // Primary key.
-    public int Id { get; set; }
-
     // Name.
     [MaxLength(50)]
     public string Name { get; set; } = "";

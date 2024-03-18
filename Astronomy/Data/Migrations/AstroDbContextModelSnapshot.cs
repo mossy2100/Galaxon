@@ -58,18 +58,11 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
 
                     b.ToTable("AstroObjects");
-
-                    b.HasDiscriminator<string>("Type").HasValue("AstroObject");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectGroup", b =>

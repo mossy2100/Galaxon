@@ -2,11 +2,8 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class MinorPlanetRecord
+public class MinorPlanetRecord : Entity
 {
-    // Primary key.
-    public int Id { get; set; }
-
     // Link to owner.
     public virtual int AstroObjectId { get; set; }
 

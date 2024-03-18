@@ -3,13 +3,8 @@
 /// <summary>
 /// Represents a constituent of the atmosphere.
 /// </summary>
-public class AtmosphereConstituent
+public class AtmosphereConstituent : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the atmosphere constituent.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the foreign key referencing the parent AtmosphereRecord object.
     /// </summary>

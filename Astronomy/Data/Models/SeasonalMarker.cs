@@ -1,9 +1,7 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class SeasonalMarker
+public class SeasonalMarker : Entity
 {
-    public int Id { get; set; }
-
     /// <summary>
     /// This value is:
     ///   0 = March equinox

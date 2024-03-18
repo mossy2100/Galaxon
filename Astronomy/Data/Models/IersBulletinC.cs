@@ -4,11 +4,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Galaxon.Astronomy.Data.Models;
 
 [Index(nameof(BulletinNumber), IsUnique = true)]
-public class IersBulletinC
+public class IersBulletinC : Entity
 {
-    [Key]
-    public int Id { get; set; }
-
     /// <summary>
     /// The IERS bulletin number.
     /// </summary>

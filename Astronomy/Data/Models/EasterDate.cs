@@ -1,9 +1,7 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class EasterDate
+public class EasterDate : Entity
 {
-    public int Id { get; set; }
-
     [Column(TypeName = "date")]
     public DateOnly Date { get; set; }
 }

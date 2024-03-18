@@ -2,11 +2,8 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AstroObjectGroup
+public class AstroObjectGroup : Entity
 {
-    // Primary key.
-    public int Id { get; set; }
-
     // Group name.
     [MaxLength(30)]
     public string Name { get; set; } = "";

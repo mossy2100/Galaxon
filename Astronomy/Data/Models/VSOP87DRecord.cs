@@ -1,17 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Galaxon.Astronomy.Data.Models;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
 /// <summary>
 /// Represents a record containing VSOP87D planetary data.
 /// </summary>
-public class VSOP87DRecord
+public class VSOP87DRecord : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the VSOP87D record.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>

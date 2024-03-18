@@ -87,8 +87,6 @@ public class AstroDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<AstroObject>()
-            .HasDiscriminator<string>("Type");
-        builder.Entity<AstroObject>()
             .HasMany(ao => ao.Groups)
             .WithMany(g => g.Objects);
         builder.Entity<AstroObject>()

@@ -1,10 +1,7 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class RotationalRecord
+public class RotationalRecord : Entity
 {
-    // Primary key.
-    public int Id { get; set; }
-
     // Link to owner.
     public virtual int AstroObjectId { get; set; }
 

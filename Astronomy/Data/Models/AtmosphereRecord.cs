@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AtmosphereRecord
+public class AtmosphereRecord : Entity
 {
     #region Constructor
 
@@ -14,9 +14,6 @@ public class AtmosphereRecord
     #endregion Constructor
 
     #region Properties
-
-    // Primary key.
-    public int Id { get; set; }
 
     // Link to owner.
     public virtual int AstroObjectId { get; set; }

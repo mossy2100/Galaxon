@@ -1,17 +1,16 @@
-﻿using Galaxon.Astronomy.Data.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Galaxon.Astronomy.Data.Enums;
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class LunarPhase
+public class LunarPhase : Entity
 {
-    public int Id { get; set; }
-
     /// <summary>
     /// This value is:
-    ///   0 = new moon
-    ///   1 = first quarter
-    ///   2 = full moon
-    ///   3 = third quarter
+    ///     0 = New Moon
+    ///     1 = First Quarter
+    ///     2 = Full Moon
+    ///     3 = Third Quarter
     /// </summary>
     [Column(TypeName = "tinyint")]
     public ELunarPhase PhaseType { get; set; }

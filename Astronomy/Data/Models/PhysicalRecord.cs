@@ -2,13 +2,8 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class PhysicalRecord
+public class PhysicalRecord : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the physical record.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>

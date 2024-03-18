@@ -3,13 +3,8 @@
 /// <summary>
 /// Represents temperature range information.
 /// </summary>
-public class TempRange
+public class TempRange : Entity
 {
-    /// <summary>
-    /// Gets or sets the primary key of the temperature range.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the minimum temperature in the range.
     /// </summary>

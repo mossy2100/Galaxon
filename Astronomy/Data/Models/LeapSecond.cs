@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
-namespace Galaxon.Astronomy.Data.Models;
-
-public class LeapSecond
+public class LeapSecond : Entity
 {
-    [Key]
-    public int Id { get; set; }
-
     /// <summary>
     /// This will be:
     ///     1 for a positive leap second (37 so far at the time of coding)
