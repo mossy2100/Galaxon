@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class SeasonalMarker : Entity
+public class SeasonalMarker : DataObject
 {
     /// <summary>
     /// This value is:

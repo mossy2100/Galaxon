@@ -26,6 +26,7 @@ public class VSOP87ImportService(
         while (sr.ReadLine() is { } line)
         {
             Console.WriteLine($"Parsing {line}");
+
             // Get the planet number (called "code of body" in vsop87.doc).
             string strPlanetNum = line.Substring(2, 1);
             if (!byte.TryParse(strPlanetNum, out byte planetNum))
@@ -33,11 +34,12 @@ public class VSOP87ImportService(
                 Console.WriteLine("Could not read planet number, skipping line.");
                 continue;
             }
+
+            // Attach the record to the right planet AstroObject.
             AstroObject? planet = astroObjectRepository.Load(planetNum, "Planet");
             if (planet == null)
             {
-                Console.WriteLine($"Could not find planet number {planetNum}.");
-                continue;
+                throw new InvalidOperationException($"Could not find planet number {planetNum}.");
             }
             Console.WriteLine($"Planet number {planetNum} => {planet.Name}");
 
@@ -45,8 +47,7 @@ public class VSOP87ImportService(
             string strVariableIndex = line.Substring(3, 1);
             if (!byte.TryParse(strVariableIndex, out byte variableIndex))
             {
-                Console.WriteLine("Could not read variable index, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read variable index.");
             }
             char variable = variableIndex switch
             {
@@ -61,8 +62,7 @@ public class VSOP87ImportService(
             string strExponent = line.Substring(4, 1);
             if (!byte.TryParse(strExponent, out byte exponent))
             {
-                Console.WriteLine("Could not read exponent, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read exponent.");
             }
             Console.WriteLine($"Exponent = {exponent}");
 
@@ -70,8 +70,7 @@ public class VSOP87ImportService(
             string strIndex = line.Substring(6, 5).Trim();
             if (!ushort.TryParse(strIndex, out ushort index))
             {
-                Console.WriteLine("Could not read index, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read index.");
             }
             Console.WriteLine($"Index = {index}");
 
@@ -79,8 +78,7 @@ public class VSOP87ImportService(
             string strAmplitude = line.Substring(80, 18).Trim();
             if (!double.TryParse(strAmplitude, out double amplitude))
             {
-                Console.WriteLine("Could not read amplitude, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read amplitude.");
             }
             Console.WriteLine($"Amplitude = {amplitude}");
 
@@ -88,8 +86,7 @@ public class VSOP87ImportService(
             string strPhase = line.Substring(98, 14).Trim();
             if (!double.TryParse(strPhase, out double phase))
             {
-                Console.WriteLine("Could not read phase, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read phase.");
             }
             Console.WriteLine($"Phase = {phase}");
 
@@ -97,8 +94,7 @@ public class VSOP87ImportService(
             string strFrequency = line.Substring(112, 20).Trim();
             if (!double.TryParse(strFrequency, out double frequency))
             {
-                Console.WriteLine("Could not read frequency, skipping line.");
-                continue;
+                throw new InvalidOperationException("Could not read frequency.");
             }
             Console.WriteLine($"Frequency = {frequency}");
 

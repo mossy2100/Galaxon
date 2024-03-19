@@ -3,6 +3,7 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
+using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
@@ -67,8 +68,8 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double JD = JulianDateService.DateTime_to_JulianDate(dtPhaseApprox);
-        double JDTT = JulianDateService.JulianDate_UT_to_TT(JD);
+        double JD = JulianDateService.DateTimeToJulianDate(dtPhaseApprox);
+        double JDTT = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(JD);
         double T = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
         double T2 = T * T;
         double T3 = T * T2;
@@ -127,7 +128,9 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         double A13 = Angles.DegreesToRadiansWithWrap(239.56 + 25.513_099 * k);
         double A14 = Angles.DegreesToRadiansWithWrap(331.55 + 3.592_518 * k);
 
-        ELunarPhase phaseType = (ELunarPhase)(phaseNumber % 4);
+        // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can be
+        // negative and we want a non-negative result.
+        ELunarPhase phaseType = (ELunarPhase)NumberExtensions.Mod(phaseNumber, 4);
         double C1;
         if (phaseType is ELunarPhase.NewMoon or ELunarPhase.FullMoon)
         {
@@ -233,8 +236,8 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         JDTT += C1 + C2;
 
         // Convert the JDTT to a UTC DateTime.
-        JD = JulianDateService.JulianDate_TT_to_UT(JDTT);
-        DateTime dtPhase = JulianDateService.JulianDate_to_DateTime(JD);
+        JD = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(JDTT);
+        DateTime dtPhase = JulianDateService.JulianDateToDateTime(JD);
 
         // Construct and return the LunarPhase object.
         return new LunarPhase { PhaseType = phaseType, DateTimeUTC = dtPhase };

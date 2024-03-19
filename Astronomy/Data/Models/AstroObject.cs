@@ -4,7 +4,7 @@ namespace Galaxon.Astronomy.Data.Models;
 
 // Main class for astronomical objects.
 // All physical quantities are in SI units.
-public class AstroObject : Entity
+public class AstroObject : DataObject
 {
     public AstroObject(string? name = null, uint? number = null)
     {

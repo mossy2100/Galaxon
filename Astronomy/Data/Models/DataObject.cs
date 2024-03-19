@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public abstract class Entity
+public abstract class DataObject
 {
     // Primary key.
     [Key]

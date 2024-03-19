@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a record containing VSOP87D planetary data.
 /// </summary>
-public class VSOP87DRecord : Entity
+public class VSOP87DRecord : DataObject
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.

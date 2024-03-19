@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a constituent of the atmosphere.
 /// </summary>
-public class AtmosphereConstituent : Entity
+public class AtmosphereConstituent : DataObject
 {
     /// <summary>
     /// Gets or sets the foreign key referencing the parent AtmosphereRecord object.

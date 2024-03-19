@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class LeapSecond : Entity
+public class LeapSecond : DataObject
 {
     /// <summary>
     /// This will be:

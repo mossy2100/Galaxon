@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an observational record related to an astronomical object.
 /// </summary>
-public class ObservationalRecord : Entity
+public class ObservationalRecord : DataObject
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.

@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AstroObjectGroup : Entity
+public class AstroObjectGroup : DataObject
 {
     // Group name.
     [MaxLength(30)]

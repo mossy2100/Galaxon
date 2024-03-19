@@ -1,10 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Galaxon.Astronomy.Data.Enums;
+﻿using Galaxon.Astronomy.Data.Enums;
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class LunarPhase : Entity
+public class LunarPhase : DataObject
 {
+    public LunarPhase() { }
+
+    public LunarPhase(ELunarPhase phaseType, DateTime dateTimeUtc)
+    {
+        PhaseType = phaseType;
+        DateTimeUTC = dateTimeUtc;
+    }
+
     /// <summary>
     /// This value is:
     ///     0 = New Moon

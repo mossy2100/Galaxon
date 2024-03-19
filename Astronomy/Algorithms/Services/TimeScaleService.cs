@@ -153,7 +153,8 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
         // Default to now.
         dt ??= DateTimeExtensions.NowUtc;
 
-        return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.MILLISECONDS_PER_SECOND
+        return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS
+            / TimeConstants.MILLISECONDS_PER_SECOND
             - CalcDeltaTNASA(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
     }
@@ -238,31 +239,42 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     }
 
     /// <summary>
-    /// Get a datetime as a decimal year.
+    /// Get a datetime as a decimal year. High-precision (tick-level) version.
     /// </summary>
     /// <param name="dt"></param>
-    /// <returns></returns>
+    /// <returns>The year as a decimal.</returns>
     public static double CalcDecimalYear(DateTime dt)
     {
-        double secondsInYear = GregorianCalendarExtensions.DaysInYear(dt.Year)
-            * TimeConstants.SECONDS_PER_DAY;
-        double seconds = (dt.DayOfYear - 1) * TimeConstants.SECONDS_PER_DAY
-            + dt.TimeOfDay.TotalSeconds;
-        return dt.Year + seconds / secondsInYear;
+        double ticksInYear = GregorianCalendarExtensions.DaysInYear(dt.Year)
+            * TimeConstants.TICKS_PER_DAY;
+        double ticks = (dt.DayOfYear - 1) * TimeConstants.TICKS_PER_DAY + dt.TimeOfDay.Ticks;
+        return dt.Year + ticks / ticksInYear;
     }
 
     /// <summary>
-    /// Calculate ∆T in seconds for a given year, month, or date using NASA's equations.
-    /// If only the year is provided, ∆T at the start of the year is calculated.
-    /// If the year and month are provided but no day, then ∆T for the start of the month is
-    /// calculated.
-    /// If the year, month, and day are provided, then ∆T for the start of that date is calculated.
+    /// Get a datetime as a decimal year. Low-precision (month-level) version.
+    /// </summary>
+    /// <param name="dt">The datetime.</param>
+    /// <returns>The year as a decimal.</returns>
+    public static double CalcDecimalYearApprox(DateTime dt)
+    {
+        return dt.Year + (dt.Month - 0.5) / 12;
+    }
+
+    /// <summary>
+    /// Calculate ∆T in seconds using NASA's equations.
+    /// Accepts a decimal year.
+    ///
     /// ∆T is the difference between Terrestrial Time (TT; formerly known as Terrestrial Dynamical
     /// Time, TDT, or Dynamical Time, TD) and Universal Time (UT1; also commonly referred to simply
     /// as UT).
     /// Thus: ∆T = TT - UT1
+    ///
     /// Equations in this method were copied from:
     /// <see href="https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html"/>
+    /// These appear to mostly agree with:
+    /// <see href="https://eclipsewise.com/help/deltatpoly2014.html"/>
+    ///
     /// These are intended to be a simpler method for calculating ∆T than using tables as in Meeus
     /// AA2 and other sources. Estimates of ∆T are assumed to be reasonably accurate in the range
     /// 1620..2100, but since ∆T varies unpredictably, uncertainty in ∆T increases outside of this
@@ -284,6 +296,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
         // Calculate deltaT.
         switch (year)
         {
+            // Polynomial representing long-term parabolic trend.
             case < -500:
             case > 2150:
                 deltaT = Polynomials.EvaluatePolynomial([
@@ -298,7 +311,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
                     10583.6,
                     -1014.41,
                     33.78311,
-                    5.952053,
+                    -5.952053,
                     -0.1798452,
                     0.022174192,
                     0.0090316521
@@ -491,29 +504,27 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// <returns></returns>
     public static double CalcDeltaTNASA(DateTime dt = new ())
     {
-        return CalcDeltaTNASA(CalcDecimalYear(dt));
+        return CalcDeltaTNASA(CalcDecimalYearApprox(dt));
     }
 
     /// <summary>
     /// Convert a value in Terrestrial Time (TT) to International Atomic Time (TAI).
     /// </summary>
-    /// <param name="TT_ticks">Terrestrial Time (TT) in ticks.</param>
-    /// <returns></returns>
-    public static ulong TT_to_TAI(ulong TT_ticks)
+    /// <param name="TT">Terrestrial Time (TT) in ticks.</param>
+    /// <returns>International Atomic Time in ticks.</returns>
+    public static ulong TerrestrialTimeToInternationalAtomicTime(ulong TT)
     {
-        ulong TAI_ticks = TT_ticks - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-        return TAI_ticks;
+        return TT - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
     }
 
     /// <summary>
     /// Convert a value in International Atomic Time (TAI) to Terrestrial Time (TT).
     /// </summary>
-    /// <param name="TAI_ticks">International Atomic Time (TAI) in ticks.</param>
-    /// <returns></returns>
-    public static ulong TAI_to_TT(ulong TAI_ticks)
+    /// <param name="TAI">International Atomic Time (TAI) in ticks.</param>
+    /// <returns>Terrestrial Time in ticks.</returns>
+    public static ulong InternationalAtomicTimeToTerrestrialTime(ulong TAI)
     {
-        ulong TT_ticks = TAI_ticks + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-        return TT_ticks;
+        return TAI + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
     }
 
     #endregion Static methods

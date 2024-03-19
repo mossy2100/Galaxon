@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class DeltaTRecord : Entity
+public class DeltaTRecord : DataObject
 {
     [Column(TypeName = "smallint")]
     public int Year { get; set; }

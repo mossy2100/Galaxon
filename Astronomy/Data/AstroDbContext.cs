@@ -80,7 +80,7 @@ public class AstroDbContext : DbContext
             .LogTo(Console.WriteLine, new[]
             {
                 DbLoggerCategory.Database.Command.Name
-            }, LogLevel.Information)
+            }, LogLevel.Warning)
             .EnableSensitiveDataLogging();
     }
 

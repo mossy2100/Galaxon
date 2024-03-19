@@ -59,7 +59,7 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// <returns>The Mars Sol Date.</returns>
     public static double CalcMarsSolDate(double JDTT)
     {
-        double JD_TAI = JulianDateService.JulianDate_TT_to_TAI(JDTT);
+        double JD_TAI = JulianDateService.JulianDateTerrestrialTimeToInternationalAtomicTime(JDTT);
         const double k = 1.0 / 4000;
         double MSD = (JD_TAI - 2451549.5 + k) / TimeConstants.DAYS_PER_SOL + 44796.0;
         return MSD;

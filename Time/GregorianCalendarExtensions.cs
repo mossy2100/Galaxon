@@ -424,21 +424,33 @@ public static class GregorianCalendarExtensions
     };
 
     /// <summary>
-    /// Converts a month name to its corresponding number (1-12).
+    /// Converts a month name or abbreviations to its corresponding number (1-12).
+    /// Fails if 0 or more than 1 match is found.
     /// </summary>
-    /// <param name="monthName">The month name (case-insensitive).</param>
+    /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
     /// <returns>The month number.</returns>
-    /// <exception cref="ArgumentException">Thrown when the provided month name is invalid.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the provided month name or abbreviation doesn't produce a unique result.
+    /// </exception>
     public static int MonthNameToNumber(string monthName)
     {
-        monthName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(monthName.ToLowerInvariant());
+        // Look for matches in the dictionary.
+        List<KeyValuePair<int, string>> matches = MonthNames
+            .Where(pair => pair.Value.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
+            .ToList();
 
-        if (MonthNames.ContainsValue(monthName))
+        // Handle failure modes.
+        if (matches.Count == 0)
         {
-            return MonthNames.FirstOrDefault(x => x.Value == monthName).Key;
+            throw new ArgumentException("Invalid month name or abbreviation.", nameof(monthName));
+        }
+        else if (matches.Count > 1)
+        {
+            throw new ArgumentException("More than one match found.", nameof(monthName));
         }
 
-        throw new ArgumentException("Invalid month name.", nameof(monthName));
+        // Return the result.
+        return matches[0].Key;
     }
 
     /// <summary>

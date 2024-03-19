@@ -87,7 +87,7 @@ public class PlanetServiceTests
             return;
         }
         var dt_TT = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double JDTT = JulianDateService.DateTime_to_JulianDate(dt_TT);
+        double JDTT = JulianDateService.DateTimeToJulianDate(dt_TT);
 
         // Act.
         (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, JDTT);

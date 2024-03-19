@@ -58,7 +58,7 @@ public class SunServiceTests
     {
         // Arrange
         DateTime dt_TT = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
-        double JDTT = JulianDateService.DateTime_to_JulianDate(dt_TT);
+        double JDTT = JulianDateService.DateTimeToJulianDate(dt_TT);
 
         // Act
         Coordinates sunPosition = _sunService!.CalcPosition(JDTT);

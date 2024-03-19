@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class PhysicalRecord : Entity
+public class PhysicalRecord : DataObject
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.

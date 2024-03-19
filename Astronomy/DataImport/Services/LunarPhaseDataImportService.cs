@@ -1,98 +1,211 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Core.Strings;
+using Galaxon.Time;
+using HtmlAgilityPack;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LunarPhaseDataImportService
+public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
 {
-    public static List<string> GetLinksToMoonPhaseCatalogPages()
+    /// <summary>
+    /// Get the links to the AstroPixels lunar phase data tables.
+    /// <see href="http://astropixels.com/ephemeris/phasescat/phasescat.html"/>
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<List<string>> GetUrlsOfMoonPhaseCatalogPages()
     {
-        // Load the Moon Phase Catalog Index page at
-        // http://astropixels.com/ephemeris/phasescat/phasescat.html
-        // and convert into a DOM document.
+        var result = new List<string>();
+        string indexUrl = "http://astropixels.com/ephemeris/phasescat/phasescat.html";
+        string tableTitle = "Moon Phases in Common Era (CE)";
 
+        // Use HttpClient to fetch the content.
+        using var httpClient = new HttpClient();
+        string html = await httpClient.GetStringAsync(indexUrl);
 
-        // Extract all the links in the BCE table and the CE table.
-        List<string> links = new ();
+        // Load HTML into the HtmlDocument.
+        HtmlDocument htmlDoc = new ();
+        htmlDoc.LoadHtml(html);
 
-        // Return a list of links.
-        return links;
+        // Process tables by looking for specific <thead> texts.
+        HtmlNode? thead = htmlDoc.DocumentNode.SelectSingleNode(
+            $"//thead[tr/td[contains(text(), '{tableTitle}')]]");
+        HtmlNode? table = thead?.Ancestors("table").FirstOrDefault();
+
+        // Get all the links in the table.
+        HtmlNodeCollection? links = table?.SelectNodes(".//a");
+        if (links == null)
+        {
+            throw new InvalidOperationException("Could not find any links.");
+        }
+
+        // Parse the links and add to results.
+        foreach (HtmlNode link in links)
+        {
+            string linkHref = link.GetAttributeValue("href", string.Empty).Trim();
+            if (!string.IsNullOrEmpty(linkHref))
+            {
+                // Ensure the URL is absolute
+                Uri linkUri = new (new Uri(indexUrl), linkHref);
+                result.Add(linkUri.AbsoluteUri);
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
-    /// Extract the lunar phase data from the web pages captured from
-    /// AstroPixels and copy the data into the database.
+    /// Parse one AstroPixels lunar phase data page.
     /// </summary>
-    public static void ParseLunarPhaseData()
+    /// <param name="url"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<List<LunarPhase>> ParseMoonPhaseCatalogPage(string url)
     {
-        Regex rxDataLine =
-            new (@"(\d{4})?\s+(([a-z]{3})\s+(\d{1,2})\s+(\d{2}):(\d{2})\s+([a-z])?){1,4}",
-                RegexOptions.IgnoreCase);
-        int? year = null;
-        string? curYearStr = null;
+        List<LunarPhase> lunarPhases = new ();
+        JulianCalendar jc = new ();
 
-        using AstroDbContext astroDbContext = new ();
+        // Use HttpClient to fetch the content.
+        using var httpClient = new HttpClient();
+        string html = await httpClient.GetStringAsync(url);
 
-        for (var century = 0; century < 20; century++)
+        // Load HTML into the HtmlDocument.
+        HtmlDocument htmlDoc = new ();
+        htmlDoc.LoadHtml(html);
+
+        // Get all the divs with the data. There should be 10 with data, but there can be additional
+        // ones without data. They won't cause anything to break though.
+        HtmlNodeCollection divs = htmlDoc.DocumentNode.SelectNodes("//div[@class='pbox1']");
+
+        // Prepare regular expressions.
+        Regex rxDataLine = new (
+            @"(?<year>\d{4})?\s+(([a-z]{3})\s{1,2}(\d{1,2})\s{2}(\d{2}):(\d{2})\s+([a-z])?){1,4}",
+            RegexOptions.IgnoreCase);
+        Regex rxDateTime = new (
+            @"(?<month>[a-z]{3})\s{1,2}(?<day>\d{1,2})\s{2}(?<hour>\d{2}):(?<minute>\d{2})",
+            RegexOptions.IgnoreCase);
+
+        // Loop through the data divs and parse each one.
+        foreach (HtmlNode div in divs)
         {
-            int startYear = century * 100 + 1;
-            int endYear = (century + 1) * 100;
-            string[] lines = File.ReadAllLines(
-                $"{AstroDbContext.DataDirectory()}/Lunar phases/AstroPixels - Moon Phases_ {startYear:D4} to {endYear:D4}.html");
+            // Reset the year.
+            int year = 0;
+
+            // Get the lines of test from the <pre> tag.
+            HtmlNode? pre = div.SelectSingleNode(".//pre");
+            if (pre == null)
+            {
+                continue;
+            }
+
+            string text = pre.InnerHtml.StripTags();
+            string[] lines = text.Split("\n");
+
             foreach (string line in lines)
             {
+                Console.WriteLine(line);
                 MatchCollection matches = rxDataLine.Matches(line);
-                if (matches.Count <= 0)
+                if (matches.Count == 0)
                 {
                     continue;
                 }
 
                 // Get the year, if present.
-                string yearStr = line.Substring(1, 4);
-                if (yearStr.Trim() != "")
+                string yearStr = matches[0].Groups["year"].Value;
+                if (!string.IsNullOrWhiteSpace(yearStr))
                 {
-                    curYearStr = yearStr;
                     year = int.Parse(yearStr);
                 }
-
-                // The dates are meaningless without the year. This
-                // shouldn't happen, but if we don't know the year, skip
-                // parsing the dates.
-                if (year == null)
+                // If the year isn't set, that's a problem. This shouldn't happen.
+                if (year == 0)
                 {
-                    continue;
+                    throw new InvalidOperationException("Unknown year.");
                 }
 
                 // Get the dates and times of the phases, if present.
-                for (var phase = 0; phase < 4; phase++)
+                for (int phaseType = 0; phaseType < 4; phaseType++)
                 {
-                    string dateStr = line.Substring(8 + phase * 18, 13);
-                    if (dateStr.Trim() == "")
+                    string dateStr = line.Substring(8 + phaseType * 18, 13);
+                    MatchCollection dateTimeMatches = rxDateTime.Matches(dateStr);
+                    if (dateTimeMatches.Count == 0)
                     {
                         continue;
                     }
-                    bool parseOk = DateTime.TryParse($"{curYearStr} {dateStr}",
-                        out DateTime phaseDateTime);
-                    if (parseOk)
-                    {
-                        // Set the datetime to UTC.
-                        phaseDateTime = DateTime.SpecifyKind(phaseDateTime, DateTimeKind.Utc);
 
-                        // Store phase information in the database.
-                        if (astroDbContext.LunarPhases != null)
-                        {
-                            astroDbContext.LunarPhases.Add(new LunarPhase
-                            {
-                                PhaseType = (ELunarPhase)phase,
-                                DateTimeUTC = phaseDateTime
-                            });
-                            astroDbContext.SaveChanges();
-                        }
+                    // Extract the date parts.
+                    int month = GregorianCalendarExtensions.MonthNameToNumber(
+                        dateTimeMatches[0].Groups["month"].Value);
+                    int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
+                    int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);
+                    int minute = int.Parse(dateTimeMatches[0].Groups["minute"].Value);
+
+                    // Construct the datetime.
+                    DateTime phaseDateTime;
+                    // Check for Julian date.
+                    int dateNumber = year * 10000 + month * 100 + day;
+                    if (dateNumber < 1582_10_15)
+                    {
+                        // Construct a DateTime (Gregorian) from the Julian date parts.
+                        phaseDateTime = jc.ToDateTime(year, month, day, hour, minute, 0, 0);
+                        DateTime.SpecifyKind(phaseDateTime, DateTimeKind.Utc);
                     }
+                    else
+                    {
+                        // Handle error in the AstroPixels data.
+                        if (year == 3869 && month == 1 && day == 1 && hour == 0 && minute == 0)
+                        {
+                            year = 3870;
+                        }
+
+                        // Construct the DateTime.
+                        phaseDateTime = new DateTime(year, month, day, hour, minute, 0,
+                            DateTimeKind.Utc);
+                    }
+
+                    // Construct the new LunarPhase and add it to the results.
+                    LunarPhase lunarPhase = new ((ELunarPhase)phaseType, phaseDateTime);
+                    lunarPhases.Add(lunarPhase);
                 }
             }
+        }
+
+        return lunarPhases;
+    }
+
+    /// <summary>
+    /// Extract lunar phase data from the AstroPixels web pages and copy them to the database.
+    /// </summary>
+    public async Task ParseLunarPhaseData()
+    {
+        // Get the links to the catalog pages (CE only).
+        List<string> urls = await GetUrlsOfMoonPhaseCatalogPages();
+
+        // One page at a time.
+        foreach (string url in urls)
+        {
+            // Get all the lunar phases on this page.
+            List<LunarPhase> lunarPhases = await ParseMoonPhaseCatalogPage(url);
+
+            // Loop through and add the new ones to the database.
+            foreach (LunarPhase lunarPhase in lunarPhases)
+            {
+                // See if this lunar phase is already in the database. If not, add it.
+                if (!astroDbContext.LunarPhases.Any(lp =>
+                    lp.PhaseType == lunarPhase.PhaseType
+                    && lp.DateTimeUTC == lunarPhase.DateTimeUTC))
+                {
+                    // Store phase information in the database.
+                    astroDbContext.LunarPhases.Add(lunarPhase);
+                }
+            }
+
+            // Update the database. Doing this once per page is easier to debug, because it only
+            // generates a single insert statement with all the new lunar phase data in it.
+            await astroDbContext.SaveChangesAsync();
         }
     }
 }

@@ -30,8 +30,8 @@ public class Program
             .CreateLogger();
 
         // Setup DI container.
-        IServiceCollection serviceCollection =
-            new ServiceCollection().AddDbContext<AstroDbContext>();
+        IServiceCollection serviceCollection = new ServiceCollection()
+            .AddDbContext<AstroDbContext>();
 
         // Add repositories.
         serviceCollection
@@ -98,9 +98,14 @@ public class Program
         // planetImportService.ImportPlanets();
 
         // // Import VSOP87 data.
-        VSOP87ImportService vsop87ImportService =
-            _serviceProvider!.GetRequiredService<VSOP87ImportService>();
-        vsop87ImportService.ParseAllVSOP87DataFiles();
+        // VSOP87ImportService vsop87ImportService =
+        //     _serviceProvider!.GetRequiredService<VSOP87ImportService>();
+        // vsop87ImportService.ParseAllVSOP87DataFiles();
+
+        // Import lunar phase data from AstroPixels.
+        LunarPhaseDataImportService lunarPhaseDataImportService =
+            _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
+        await lunarPhaseDataImportService.ParseLunarPhaseData();
     }
 
     /// <summary>

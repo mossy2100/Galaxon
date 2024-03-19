@@ -73,7 +73,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double JD = JulianDateService.DateTime_to_JulianDate(dt);
+        double JD = JulianDateService.DateTimeToJulianDate(dt);
         return CalcEarthRotationAngle(JD);
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class RotationalRecord : Entity
+public class RotationalRecord : DataObject
 {
     // Link to owner.
     public virtual int AstroObjectId { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class Molecule : Entity
+public class Molecule : DataObject
 {
     // Name.
     [MaxLength(50)]

@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AtmosphereRecord : Entity
+public class AtmosphereRecord : DataObject
 {
     #region Constructor
 

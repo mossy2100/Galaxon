@@ -1,3 +1,4 @@
+using System.Globalization;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -14,7 +15,7 @@ public class JulianDateService
     /// </summary>
     /// <param name="dt">The DateTime instance.</param>
     /// <returns>The Julian Date</returns>
-    public static double DateTime_to_JulianDate(DateTime dt)
+    public static double DateTimeToJulianDate(DateTime dt)
     {
         return TimeConstants.START_GREGORIAN_EPOCH_JD_UT + dt.GetTotalDays();
     }
@@ -27,7 +28,7 @@ public class JulianDateService
     /// The Julian Date. May include a fractional part indicating the time of day.
     /// </param>
     /// <returns>A new DateTime object.</returns>
-    public static DateTime JulianDate_to_DateTime(double JD)
+    public static DateTime JulianDateToDateTime(double JD)
     {
         return DateTimeExtensions.FromTotalDays(JD - TimeConstants.START_GREGORIAN_EPOCH_JD_UT);
     }
@@ -37,22 +38,22 @@ public class JulianDateService
     /// </summary>
     /// <param name="date">The DateOnly instance.</param>
     /// <returns>The Julian Date.</returns>
-    public static double DateOnly_to_JulianDate_UT(DateOnly date)
+    public static double DateOnlyToJulianDate(DateOnly date)
     {
-        return DateTime_to_JulianDate(date.ToDateTime());
+        return DateTimeToJulianDate(date.ToDateTime());
     }
 
     /// <summary>
-    /// Convert a Julian Day Number to a Gregorian Date.
+    /// Convert a Julian Date to a Gregorian Calendar date.
     /// </summary>
     /// <param name="JD">
     /// The Julian Date. If a fractional part indicating the time of day is included, this
     /// information will be discarded.
     /// </param>
     /// <returns>A new DateOnly object.</returns>
-    public static DateOnly JulianDate_UT_to_DateOnly(double JD)
+    public static DateOnly JulianDateToDateOnly(double JD)
     {
-        return DateOnly.FromDateTime(JulianDate_to_DateTime(JD));
+        return DateOnly.FromDateTime(JulianDateToDateTime(JD));
     }
 
     /// <summary>
@@ -62,9 +63,9 @@ public class JulianDateService
     /// </summary>
     /// <param name="JD">Julian Date in Universal Time</param>
     /// <returns>Julian Date in Terrestrial Time</returns>
-    public static double JulianDate_UT_to_TT(double JD)
+    public static double JulianDateUniversalTimeToTerrestrialTime(double JD)
     {
-        DateTime dt = JulianDate_to_DateTime(JD);
+        DateTime dt = JulianDateToDateTime(JD);
         double deltaT = TimeScaleService.CalcDeltaTNASA(dt);
         return JD + TimeSpan.FromSeconds(deltaT).TotalDays;
     }
@@ -76,14 +77,14 @@ public class JulianDateService
     /// </summary>
     /// <param name="JDTT">Julian Date in Terrestrial Time</param>
     /// <returns>Julian Date in Universal Time</returns>
-    public static double JulianDate_TT_to_UT(double JDTT)
+    public static double JulianDateTerrestrialTimeToUniversalTime(double JDTT)
     {
         // Calculate delta-T. For this calculation, we have to use the Julian Date as provided,
         // which is in TT, even though the JulianDate_to_DateTime() method expects a Julian Date in
         // UT. This shouldn't matter though, as the result should be virtually identical to what we
         // would get for the Julian Date in UT, given the inaccuracy in delta-T calculations.
-        DateTime dt_TT = JulianDate_to_DateTime(JDTT);
-        double deltaT = TimeScaleService.CalcDeltaTNASA(dt_TT);
+        DateTime dtTT = JulianDateToDateTime(JDTT);
+        double deltaT = TimeScaleService.CalcDeltaTNASA(dtTT);
         return JDTT - TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 
@@ -92,10 +93,24 @@ public class JulianDateService
     /// </summary>
     /// <param name="JDTT">Julian Date in Terrestrial Time</param>
     /// <returns>Julian Date in International Atomic Time</returns>
-    public static double JulianDate_TT_to_TAI(double JDTT)
+    public static double JulianDateTerrestrialTimeToInternationalAtomicTime(double JDTT)
     {
         return JDTT
             - ((double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.SECONDS_PER_DAY / 1000);
+    }
+
+    /// <summary>
+    /// Convert a Julian Calendar date to a Gregorian Calendar date.
+    /// </summary>
+    /// <param name="year">The year (-44+)</param>
+    /// <param name="month">The month (1-12)</param>
+    /// <param name="day">The day (1-31)</param>
+    /// <returns>The equivalent Gregorian date.</returns>
+    public static DateOnly JulianCalendarDateToGregorianDate(int year, int month, int day)
+    {
+        JulianCalendar jc = new ();
+        DateTime dt = jc.ToDateTime(year, month, day, 0, 0, 0, 0);
+        return DateOnly.FromDateTime(dt);
     }
 
     #endregion Conversion between Julian dates and other time scales

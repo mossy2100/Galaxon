@@ -5,7 +5,7 @@ namespace Galaxon.Astronomy.Data.Models;
 /// <summary>
 /// Represents information about a stellar object.
 /// </summary>
-public class StellarRecord : Entity
+public class StellarRecord : DataObject
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.

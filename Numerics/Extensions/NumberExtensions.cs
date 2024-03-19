@@ -139,14 +139,16 @@ public static class NumberExtensions
     #region Division-related methods
 
     /// <summary>
-    /// Corrected modulo operation, using floored division.
-    /// The modulus will always have the same sign as the divisor.
-    /// Unlike the truncated division and modulo provided by C#'s operators, floored division
-    /// produces a regular cycling pattern through both negative and positive values of the divisor.
+    /// Modulo operation using floored division.
+    /// With this version, the result will always have the same sign as the divisor.
+    ///
+    /// Unlike the truncated division version of the modulo operator in C# and other C-based
+    /// languages, the floored division version produces a regular cycling pattern through both
+    /// negative and positive divisors.
     /// It permits things like:
-    /// bool isOdd = Modulo(num, 2) == 1;
-    /// Trying to do this using the % operator will fail for negative divisors, however. e.g.
-    /// bool isOdd = num % 2 == 1;
+    ///     bool isOdd = Mod(num, 2) == 1;
+    /// Doing this with the % operator will fail for negative divisors. e.g.
+    ///     bool isOdd = num % 2 == 1;
     /// In this case, if num is negative 0, num % 2 == -1
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>

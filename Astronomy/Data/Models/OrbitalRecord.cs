@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an orbital record associated with an astronomical object.
 /// </summary>
-public class OrbitalRecord : Entity
+public class OrbitalRecord : DataObject
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
