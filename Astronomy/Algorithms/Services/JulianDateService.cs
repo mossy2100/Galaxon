@@ -66,7 +66,7 @@ public class JulianDateService
     public static double JulianDateUniversalTimeToTerrestrialTime(double JD)
     {
         DateTime dt = JulianDateToDateTime(JD);
-        double deltaT = TimeScaleService.CalcDeltaTNASA(dt);
+        double deltaT = TimeScaleService.CalcDeltaT(dt);
         return JD + TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 
@@ -84,7 +84,7 @@ public class JulianDateService
         // UT. This shouldn't matter though, as the result should be virtually identical to what we
         // would get for the Julian Date in UT, given the inaccuracy in delta-T calculations.
         DateTime dtTT = JulianDateToDateTime(JDTT);
-        double deltaT = TimeScaleService.CalcDeltaTNASA(dtTT);
+        double deltaT = TimeScaleService.CalcDeltaT(dtTT);
         return JDTT - TimeSpan.FromSeconds(deltaT).TotalDays;
     }
 

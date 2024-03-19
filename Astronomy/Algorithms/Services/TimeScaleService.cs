@@ -8,55 +8,6 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class TimeScaleService(LeapSecondRepository leapSecondRepository)
 {
-    #region Static fields and properties
-
-    /// <summary>
-    /// Copy of Table 10A in Astronomical Algorithms 2nd Ed. by Jean Meeus.
-    /// </summary>
-    private static readonly Dictionary<int, double> _DeltaTData = new ()
-    {
-        { 1620, 121.0 }, { 1622, 112.0 }, { 1624, 103.0 }, { 1626, 95.0 }, { 1628, 88.0 },
-        { 1630, 82.0 }, { 1632, 77.0 }, { 1634, 72.0 }, { 1636, 68.0 }, { 1638, 63.0 },
-        { 1640, 60.0 }, { 1642, 56.0 }, { 1644, 53.0 }, { 1646, 51.0 }, { 1648, 48.0 },
-        { 1650, 46.0 }, { 1652, 44.0 }, { 1654, 42.0 }, { 1656, 40.0 }, { 1658, 38.0 },
-        { 1660, 35.0 }, { 1662, 33.0 }, { 1664, 31.0 }, { 1666, 29.0 }, { 1668, 26.0 },
-        { 1670, 24.0 }, { 1672, 22.0 }, { 1674, 20.0 }, { 1676, 18.0 }, { 1678, 16.0 },
-        { 1680, 14.0 }, { 1682, 12.0 }, { 1684, 11.0 }, { 1686, 10.0 }, { 1688, 9.0 },
-        { 1690, 8.0 }, { 1692, 7.0 }, { 1694, 7.0 }, { 1696, 7.0 }, { 1698, 7.0 },
-        { 1700, 7.0 }, { 1702, 7.0 }, { 1704, 8.0 }, { 1706, 8.0 }, { 1708, 9.0 },
-        { 1710, 9.0 }, { 1712, 9.0 }, { 1714, 9.0 }, { 1716, 9.0 }, { 1718, 10.0 },
-        { 1720, 10.0 }, { 1722, 10.0 }, { 1724, 10.0 }, { 1726, 10.0 }, { 1728, 10.0 },
-        { 1730, 10.0 }, { 1732, 10.0 }, { 1734, 11.0 }, { 1736, 11.0 }, { 1738, 11.0 },
-        { 1740, 11.0 }, { 1742, 11.0 }, { 1744, 12.0 }, { 1746, 12.0 }, { 1748, 12.0 },
-        { 1750, 12.0 }, { 1752, 13.0 }, { 1754, 13.0 }, { 1756, 13.0 }, { 1758, 14.0 },
-        { 1760, 14.0 }, { 1762, 14.0 }, { 1764, 14.0 }, { 1766, 15.0 }, { 1768, 15.0 },
-        { 1770, 15.0 }, { 1772, 15.0 }, { 1774, 15.0 }, { 1776, 16.0 }, { 1778, 16.0 },
-        { 1780, 16.0 }, { 1782, 16.0 }, { 1784, 16.0 }, { 1786, 16.0 }, { 1788, 16.0 },
-        { 1790, 16.0 }, { 1792, 15.0 }, { 1794, 15.0 }, { 1796, 14.0 }, { 1798, 13.0 },
-        { 1800, 13.1 }, { 1802, 12.5 }, { 1804, 12.2 }, { 1806, 12.0 }, { 1808, 12.0 },
-        { 1810, 12.0 }, { 1812, 12.0 }, { 1814, 12.0 }, { 1816, 12.0 }, { 1818, 11.9 },
-        { 1820, 11.6 }, { 1822, 11.0 }, { 1824, 10.2 }, { 1826, 9.2 }, { 1828, 8.2 },
-        { 1830, 7.1 }, { 1832, 6.2 }, { 1834, 5.6 }, { 1836, 5.4 }, { 1838, 5.3 },
-        { 1840, 5.4 }, { 1842, 5.6 }, { 1844, 5.9 }, { 1846, 6.2 }, { 1848, 6.5 },
-        { 1850, 6.8 }, { 1852, 7.1 }, { 1854, 7.3 }, { 1856, 7.5 }, { 1858, 7.6 },
-        { 1860, 7.7 }, { 1862, 7.3 }, { 1864, 6.2 }, { 1866, 5.2 }, { 1868, 2.7 },
-        { 1870, 1.4 }, { 1872, -1.2 }, { 1874, -2.8 }, { 1876, -3.8 }, { 1878, -4.8 },
-        { 1880, -5.5 }, { 1882, -5.3 }, { 1884, -5.6 }, { 1886, -5.7 }, { 1888, -5.9 },
-        { 1890, -6.0 }, { 1892, -6.3 }, { 1894, -6.5 }, { 1896, -6.2 }, { 1898, -4.7 },
-        { 1900, -2.8 }, { 1902, -0.1 }, { 1904, 2.6 }, { 1906, 5.3 }, { 1908, 7.7 },
-        { 1910, 10.4 }, { 1912, 13.3 }, { 1914, 16.0 }, { 1916, 18.2 }, { 1918, 20.2 },
-        { 1920, 21.1 }, { 1922, 22.4 }, { 1924, 23.5 }, { 1926, 23.8 }, { 1928, 24.3 },
-        { 1930, 24.0 }, { 1932, 23.9 }, { 1934, 23.9 }, { 1936, 23.7 }, { 1938, 24.0 },
-        { 1940, 24.3 }, { 1942, 25.3 }, { 1944, 26.2 }, { 1946, 27.3 }, { 1948, 28.2 },
-        { 1950, 29.1 }, { 1952, 30.0 }, { 1954, 30.7 }, { 1956, 31.4 }, { 1958, 32.2 },
-        { 1960, 33.1 }, { 1962, 34.0 }, { 1964, 35.0 }, { 1966, 36.5 }, { 1968, 38.3 },
-        { 1970, 40.2 }, { 1972, 42.2 }, { 1974, 44.5 }, { 1976, 46.5 }, { 1978, 48.5 },
-        { 1980, 50.5 }, { 1982, 52.2 }, { 1984, 53.8 }, { 1986, 54.9 }, { 1988, 55.8 },
-        { 1990, 56.9 }, { 1992, 58.3 }, { 1994, 60.0 }, { 1996, 61.6 }, { 1998, 63.0 }
-    };
-
-    #endregion Static fields and properties
-
     #region Instance methods
 
     /// <summary>
@@ -136,8 +87,10 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// DUT1 = UT1 - UTC
     /// In theory, this should always be between -0.9 and 0.9. However, because the CalcDeltaT()
     /// algorithm is only approximate, it isn't.
-    /// DUT1 is normally measured in retrospect, not calculated. This calculation has been included
-    /// to check the accuracy of the CalcDeltaT() method.
+    ///
+    /// DUT1 is normally measured in retrospect, not calculated. I have included this method to
+    /// check the accuracy of the CalcDeltaT() method.
+    ///
     /// This calculation of DUT1 is only valid within the nominal range from 1972..2010.
     /// Yet the *actual* DUT1 is within range up until 2022 (the time of writing) because leap
     /// seconds have been added to produce exactly this effect. The error must be in CalcDeltaT(),
@@ -155,7 +108,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
 
         return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS
             / TimeConstants.MILLISECONDS_PER_SECOND
-            - CalcDeltaTNASA(dt.Value)
+            - CalcDeltaT(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
     }
 
@@ -165,7 +118,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
         {
             var dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             int LSC = TotalLeapSeconds(dt);
-            double deltaT = CalcDeltaTNASA(dt);
+            double deltaT = CalcDeltaT(dt);
             double DUT1 = CalcDUT1(dt);
             Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
             if (Abs(DUT1) > 0.9)
@@ -177,88 +130,25 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
 
     #endregion Instance methods
 
-    #region Static methods
+    #region Delta-T methods
 
     /// <summary>
-    /// Converts a Gregorian date into a single value representing the year with a fractional
-    /// part indicating position in the year.
+    /// Convert a year and month into a decimal year.
     /// </summary>
-    /// <param name="year">The year.</param>
-    /// <param name="month">The month (optional).</param>
-    /// <param name="day">The day of the month (optional).</param>
-    /// <returns>The year as a double.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">If the year, month, or day
-    /// is invalid.</exception>
-    public static double CalcDecimalYear(int year, int month = 0, int day = 0)
-    {
-        // Check month is in range.
-        if (month is < 0 or > 12)
-        {
-            throw new ArgumentOutOfRangeException(nameof(month), "Must be in the range 0-12.");
-        }
-
-        // Get the fractional part of the year.
-        double frac;
-
-        if (month == 0)
-        {
-            // Check the day is also 0.
-            if (day != 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(day),
-                    "If the month is 0, then the day of the month should also be 0.");
-            }
-
-            // Assume the intention is to find delta-T for the start of the year.
-            frac = 0;
-        }
-        else if (day == 0)
-        {
-            // If the day is not set, assume middle of month.
-            // <see href="https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html"/>
-            frac = (month - 0.5) / 12;
-        }
-        else
-        {
-            // Check day is in range. I'm using my own GregorianCalendarExtensions class instead of the .NET
-            // GregorianCalendar class because it supports negative years.
-            int daysInMonth = GregorianCalendarExtensions.DaysInMonth(year, month);
-            if (day < 1 || day > daysInMonth)
-            {
-                throw new ArgumentOutOfRangeException(nameof(day),
-                    $"Must be in the range 0-{daysInMonth}.");
-            }
-
-            // Assume the midpoint of the specified date (i.e. noon).
-            var d = new DateOnly(year, month, day);
-            frac = (d.DayOfYear - 0.5) / GregorianCalendarExtensions.DaysInYear(d.Year);
-        }
-
-        // Calculate result.
-        return year + frac;
-    }
-
-    /// <summary>
-    /// Get a datetime as a decimal year. High-precision (tick-level) version.
-    /// </summary>
-    /// <param name="dt"></param>
     /// <returns>The year as a decimal.</returns>
-    public static double CalcDecimalYear(DateTime dt)
+    public static double CalcDecimalYear(int year, int month)
     {
-        double ticksInYear = GregorianCalendarExtensions.DaysInYear(dt.Year)
-            * TimeConstants.TICKS_PER_DAY;
-        double ticks = (dt.DayOfYear - 1) * TimeConstants.TICKS_PER_DAY + dt.TimeOfDay.Ticks;
-        return dt.Year + ticks / ticksInYear;
+        return year + (month - 0.5) / 12;
     }
 
     /// <summary>
-    /// Get a datetime as a decimal year. Low-precision (month-level) version.
+    /// Get a datetime as a decimal year.
     /// </summary>
     /// <param name="dt">The datetime.</param>
     /// <returns>The year as a decimal.</returns>
-    public static double CalcDecimalYearApprox(DateTime dt)
+    public static double CalcDecimalYear(DateTime dt)
     {
-        return dt.Year + (dt.Month - 0.5) / 12;
+        return CalcDecimalYear(dt.Year, dt.Month);
     }
 
     /// <summary>
@@ -286,7 +176,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     /// </summary>
     /// <param name="y">The year as a decimal value.</param>
     /// <returns>The calculated value for ∆T.</returns>
-    public static double CalcDeltaTNASA(double y)
+    public static double CalcDeltaT(double y)
     {
         double deltaT;
 
@@ -446,6 +336,105 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     }
 
     /// <summary>
+    /// Calculate the value for ∆T in seconds at a given Gregorian datetime.
+    /// Defaults to the current date.
+    /// ∆T = TT - UT1
+    /// </summary>
+    /// <param name="dt">A date.</param>
+    /// <returns></returns>
+    public static double CalcDeltaT(DateTime dt = new ())
+    {
+        return CalcDeltaT(CalcDecimalYear(dt));
+    }
+
+    /// <summary>
+    /// Calculate the value for ∆T in seconds for a given Gregorian year and month.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <param name="month">The month.</param>
+    /// <returns></returns>
+    public static double CalcDeltaT(int year, int month)
+    {
+        return CalcDeltaT(CalcDecimalYear(year, month));
+    }
+
+    #endregion Delta-T methods
+
+    #region Time scale conversion methods
+
+    /// <summary>
+    /// Convert a value in Terrestrial Time (TT) to International Atomic Time (TAI).
+    /// </summary>
+    /// <param name="TT">Terrestrial Time (TT) in ticks.</param>
+    /// <returns>International Atomic Time in ticks.</returns>
+    public static ulong TerrestrialTimeToInternationalAtomicTime(ulong TT)
+    {
+        return TT - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
+    }
+
+    /// <summary>
+    /// Convert a value in International Atomic Time (TAI) to Terrestrial Time (TT).
+    /// </summary>
+    /// <param name="TAI">International Atomic Time (TAI) in ticks.</param>
+    /// <returns>Terrestrial Time in ticks.</returns>
+    public static ulong InternationalAtomicTimeToTerrestrialTime(ulong TAI)
+    {
+        return TAI + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
+    }
+
+    #endregion Time scale conversion methods
+
+    //----------------------------------------------------------------------------------------------
+    // This stuff can be removed later if I don't need it. Although, it should be kept somewhere.
+
+    #region Meeus Delta-T
+
+    /// <summary>
+    /// Copy of Table 10A in Astronomical Algorithms 2nd Ed. by Jean Meeus.
+    /// </summary>
+    private static readonly Dictionary<int, double> _DeltaTData = new ()
+    {
+        { 1620, 121.0 }, { 1622, 112.0 }, { 1624, 103.0 }, { 1626, 95.0 }, { 1628, 88.0 },
+        { 1630, 82.0 }, { 1632, 77.0 }, { 1634, 72.0 }, { 1636, 68.0 }, { 1638, 63.0 },
+        { 1640, 60.0 }, { 1642, 56.0 }, { 1644, 53.0 }, { 1646, 51.0 }, { 1648, 48.0 },
+        { 1650, 46.0 }, { 1652, 44.0 }, { 1654, 42.0 }, { 1656, 40.0 }, { 1658, 38.0 },
+        { 1660, 35.0 }, { 1662, 33.0 }, { 1664, 31.0 }, { 1666, 29.0 }, { 1668, 26.0 },
+        { 1670, 24.0 }, { 1672, 22.0 }, { 1674, 20.0 }, { 1676, 18.0 }, { 1678, 16.0 },
+        { 1680, 14.0 }, { 1682, 12.0 }, { 1684, 11.0 }, { 1686, 10.0 }, { 1688, 9.0 },
+        { 1690, 8.0 }, { 1692, 7.0 }, { 1694, 7.0 }, { 1696, 7.0 }, { 1698, 7.0 },
+        { 1700, 7.0 }, { 1702, 7.0 }, { 1704, 8.0 }, { 1706, 8.0 }, { 1708, 9.0 },
+        { 1710, 9.0 }, { 1712, 9.0 }, { 1714, 9.0 }, { 1716, 9.0 }, { 1718, 10.0 },
+        { 1720, 10.0 }, { 1722, 10.0 }, { 1724, 10.0 }, { 1726, 10.0 }, { 1728, 10.0 },
+        { 1730, 10.0 }, { 1732, 10.0 }, { 1734, 11.0 }, { 1736, 11.0 }, { 1738, 11.0 },
+        { 1740, 11.0 }, { 1742, 11.0 }, { 1744, 12.0 }, { 1746, 12.0 }, { 1748, 12.0 },
+        { 1750, 12.0 }, { 1752, 13.0 }, { 1754, 13.0 }, { 1756, 13.0 }, { 1758, 14.0 },
+        { 1760, 14.0 }, { 1762, 14.0 }, { 1764, 14.0 }, { 1766, 15.0 }, { 1768, 15.0 },
+        { 1770, 15.0 }, { 1772, 15.0 }, { 1774, 15.0 }, { 1776, 16.0 }, { 1778, 16.0 },
+        { 1780, 16.0 }, { 1782, 16.0 }, { 1784, 16.0 }, { 1786, 16.0 }, { 1788, 16.0 },
+        { 1790, 16.0 }, { 1792, 15.0 }, { 1794, 15.0 }, { 1796, 14.0 }, { 1798, 13.0 },
+        { 1800, 13.1 }, { 1802, 12.5 }, { 1804, 12.2 }, { 1806, 12.0 }, { 1808, 12.0 },
+        { 1810, 12.0 }, { 1812, 12.0 }, { 1814, 12.0 }, { 1816, 12.0 }, { 1818, 11.9 },
+        { 1820, 11.6 }, { 1822, 11.0 }, { 1824, 10.2 }, { 1826, 9.2 }, { 1828, 8.2 },
+        { 1830, 7.1 }, { 1832, 6.2 }, { 1834, 5.6 }, { 1836, 5.4 }, { 1838, 5.3 },
+        { 1840, 5.4 }, { 1842, 5.6 }, { 1844, 5.9 }, { 1846, 6.2 }, { 1848, 6.5 },
+        { 1850, 6.8 }, { 1852, 7.1 }, { 1854, 7.3 }, { 1856, 7.5 }, { 1858, 7.6 },
+        { 1860, 7.7 }, { 1862, 7.3 }, { 1864, 6.2 }, { 1866, 5.2 }, { 1868, 2.7 },
+        { 1870, 1.4 }, { 1872, -1.2 }, { 1874, -2.8 }, { 1876, -3.8 }, { 1878, -4.8 },
+        { 1880, -5.5 }, { 1882, -5.3 }, { 1884, -5.6 }, { 1886, -5.7 }, { 1888, -5.9 },
+        { 1890, -6.0 }, { 1892, -6.3 }, { 1894, -6.5 }, { 1896, -6.2 }, { 1898, -4.7 },
+        { 1900, -2.8 }, { 1902, -0.1 }, { 1904, 2.6 }, { 1906, 5.3 }, { 1908, 7.7 },
+        { 1910, 10.4 }, { 1912, 13.3 }, { 1914, 16.0 }, { 1916, 18.2 }, { 1918, 20.2 },
+        { 1920, 21.1 }, { 1922, 22.4 }, { 1924, 23.5 }, { 1926, 23.8 }, { 1928, 24.3 },
+        { 1930, 24.0 }, { 1932, 23.9 }, { 1934, 23.9 }, { 1936, 23.7 }, { 1938, 24.0 },
+        { 1940, 24.3 }, { 1942, 25.3 }, { 1944, 26.2 }, { 1946, 27.3 }, { 1948, 28.2 },
+        { 1950, 29.1 }, { 1952, 30.0 }, { 1954, 30.7 }, { 1956, 31.4 }, { 1958, 32.2 },
+        { 1960, 33.1 }, { 1962, 34.0 }, { 1964, 35.0 }, { 1966, 36.5 }, { 1968, 38.3 },
+        { 1970, 40.2 }, { 1972, 42.2 }, { 1974, 44.5 }, { 1976, 46.5 }, { 1978, 48.5 },
+        { 1980, 50.5 }, { 1982, 52.2 }, { 1984, 53.8 }, { 1986, 54.9 }, { 1988, 55.8 },
+        { 1990, 56.9 }, { 1992, 58.3 }, { 1994, 60.0 }, { 1996, 61.6 }, { 1998, 63.0 }
+    };
+
+    /// <summary>
     /// Calculate ∆T for a given year, month, or date using the method from Astronomical Algorithms
     /// 2nd ed. (AA2) by Jean Meeus, pp77-80.
     /// This pretty closely tracks the NASA values for the range given in the table (1620-1998) but
@@ -495,37 +484,5 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
         return deltaT;
     }
 
-    /// <summary>
-    /// Calculate the value for ∆T in seconds at a given Gregorian datetime.
-    /// Defaults to the current date.
-    /// ∆T = TT - UT1
-    /// </summary>
-    /// <param name="dt">A date.</param>
-    /// <returns></returns>
-    public static double CalcDeltaTNASA(DateTime dt = new ())
-    {
-        return CalcDeltaTNASA(CalcDecimalYearApprox(dt));
-    }
-
-    /// <summary>
-    /// Convert a value in Terrestrial Time (TT) to International Atomic Time (TAI).
-    /// </summary>
-    /// <param name="TT">Terrestrial Time (TT) in ticks.</param>
-    /// <returns>International Atomic Time in ticks.</returns>
-    public static ulong TerrestrialTimeToInternationalAtomicTime(ulong TT)
-    {
-        return TT - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-    }
-
-    /// <summary>
-    /// Convert a value in International Atomic Time (TAI) to Terrestrial Time (TT).
-    /// </summary>
-    /// <param name="TAI">International Atomic Time (TAI) in ticks.</param>
-    /// <returns>Terrestrial Time in ticks.</returns>
-    public static ulong InternationalAtomicTimeToTerrestrialTime(ulong TAI)
-    {
-        return TAI + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-    }
-
-    #endregion Static methods
+    #endregion Meeus Delta-T
 }

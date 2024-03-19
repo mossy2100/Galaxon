@@ -17,7 +17,7 @@ public static class DeltaT
         // Range of years is from https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
         for (int y = -1999; y <= 3000; y++)
         {
-            double deltaTNasa = TimeScaleService.CalcDeltaTNASA(y);
+            double deltaTNasa = TimeScaleService.CalcDeltaT(y);
             double deltaTMeeus = TimeScaleService.CalcDeltaTMeeus(y);
             double diff = Math.Abs(deltaTMeeus - deltaTNasa);
 
@@ -44,7 +44,7 @@ public static class DeltaT
         // Range of years is from https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
         for (int y = -1999; y <= 3000; y++)
         {
-            double deltaTNasa = TimeScaleService.CalcDeltaTNASA(y);
+            double deltaTNasa = TimeScaleService.CalcDeltaT(y);
             double deltaTMeeus = TimeScaleService.CalcDeltaTMeeus(y);
             double diff = Math.Abs(deltaTMeeus - deltaTNasa);
             writer.WriteLine($"{y},{deltaTNasa},{deltaTMeeus},{diff}");

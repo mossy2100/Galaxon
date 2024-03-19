@@ -1,5 +1,4 @@
 using System.Globalization;
-using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Time;
 
@@ -9,99 +8,6 @@ namespace Galaxon.Time;
 /// </summary>
 public static class GregorianCalendarExtensions
 {
-    #region Replacment methods that support negative years
-
-    /// <summary>
-    /// Check if a year is a leap year.
-    /// As we're using the floored division version of the modulo operator, years can be negative.
-    /// The .NET GregorianCalendar and DateTime classes only supports positive years.
-    /// To convert from BCE (BC) to a negative (proleptic) Gregorian Calendar year number, subtract
-    /// the year from 1.
-    ///   e.g. 45 BCE = 1 - 45 = -44
-    /// </summary>
-    /// <param name="y">The year number in the proleptic Gregorian Calendar.</param>
-    /// <returns>If the year is a leap year.</returns>
-    public static bool IsLeapYear(int y)
-    {
-        return NumberExtensions.Mod(y, 400) == 0
-            || (NumberExtensions.Mod(y, 4) == 0 && NumberExtensions.Mod(y, 100) != 0);
-    }
-
-    /// <summary>
-    /// Get the number of days in a year.
-    /// Supports negative years, unlike the .NET GregorianCalendar or DateTime classes.
-    /// </summary>
-    /// <param name="y">The year number in the proleptic Gregorian Calendar.</param>
-    /// <returns>The number of days in the year.</returns>
-    public static int DaysInYear(int y)
-    {
-        return IsLeapYear(y) ? 366 : 365;
-    }
-
-    /// <summary>
-    /// Get the number of days in a month.
-    /// Supports negative years, unlike the .NET GregorianCalendar or DateTime classes.
-    /// </summary>
-    /// <param name="y">The year number in the proleptic Gregorian Calendar.</param>
-    /// <param name="m">The month number.</param>
-    /// <returns>The number of days in the month.</returns>
-    public static int DaysInMonth(int y, int m)
-    {
-        return m switch
-        {
-            1 or 3 or 5 or 7 or 8 or 10 or 12 => 31,
-            4 or 6 or 9 or 11 => 30,
-            2 => IsLeapYear(y) ? 29 : 28,
-            _ => throw new ArgumentOutOfRangeException(nameof(m), "Must be in range 1-12.")
-        };
-    }
-
-    /// <summary>
-    /// Get the number of seconds in a year.
-    /// Supports negative years, unlike the .NET GregorianCalendar or DateTime classes.
-    /// Currently does not support leap seconds. May add this capability later.
-    /// </summary>
-    /// <param name="y">The year number in the proleptic Gregorian Calendar.</param>
-    /// <returns>The number of seconds in the year.</returns>
-    public static long SecondsInYear(int y)
-    {
-        return DaysInYear(y) * TimeConstants.SECONDS_PER_DAY;
-    }
-
-    /// <summary>
-    /// Which day of the year is a given date.
-    /// Supports negative years, unlike the .NET GregorianCalendar or DateTime classes.
-    /// </summary>
-    /// <param name="y">The year number in the proleptic Gregorian Calendar.</param>
-    /// <param name="m">The month number.</param>
-    /// <param name="d">The day of the month.</param>
-    /// <returns>The day of the year.</returns>
-    public static int DayOfYear(int y, int m, int d)
-    {
-        // Check month.
-        if (m is < 1 or > 12)
-        {
-            throw new ArgumentOutOfRangeException(nameof(m), "Must be in range 1-12.");
-        }
-
-        // Check day.
-        int dim = DaysInMonth(y, m);
-        if (d < 1 || d > dim)
-        {
-            throw new ArgumentOutOfRangeException(nameof(d), $"Must be in range 1-{dim}.");
-        }
-
-        // Calculate day of year.
-        int doy = d;
-        for (var n = 1; n < m; n++)
-        {
-            doy += DaysInMonth(y, n);
-        }
-        return doy;
-    }
-
-    #endregion Replacment methods that support negative years
-
     #region Find special dates
 
     /// <summary>
@@ -397,7 +303,8 @@ public static class GregorianCalendarExtensions
                 "Month must be in the range 1..12");
         }
 
-        return new DateOnly(year, month, DaysInMonth(year, month));
+        GregorianCalendar gc = new ();
+        return new DateOnly(year, month, gc.GetDaysInMonth(year, month));
     }
 
     #endregion Year and month start and end
