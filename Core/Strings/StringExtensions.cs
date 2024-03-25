@@ -86,6 +86,41 @@ public static class StringExtensions
         return string.Concat(Enumerable.Repeat(s, n));
     }
 
+    /// <summary>
+    /// Pad a string at both ends to create a new string with a given total width.
+    /// If the total number of padding characters is odd, there will be one extra padding character
+    /// on the left.
+    /// If the total width is less than or equal to the original string length, the method will
+    /// return the original string without complaining.
+    /// This method is designed to have the same API and behaviour as PadLeft() and PadRight().
+    /// </summary>
+    /// <param name="s">The input string.</param>
+    /// <param name="totalWidth">The total width.</param>
+    /// <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
+    /// <param name="extraOnRight">
+    /// Flag to specify where to place the extra char if the number of padding chars is odd. Default
+    /// behaviour is to add it on the right. Set to false to add it on the left.
+    /// </param>
+    /// <returns>A new string with padding characters appended and prepended as needed.</returns>
+    public static string PadBoth(this string s, int totalWidth, char paddingChar = ' ', bool extraOnRight = true)
+    {
+        // Check the string is shorted than the width.
+        if (totalWidth <= s.Length)
+        {
+            return s;
+        }
+
+        int half = (totalWidth - s.Length) / 2;
+        if (extraOnRight)
+        {
+            return s.PadLeft(s.Length + half, paddingChar).PadRight(totalWidth, paddingChar);
+        }
+        else
+        {
+            return s.PadRight(s.Length + half, paddingChar).PadLeft(totalWidth, paddingChar);
+        }
+    }
+
     #endregion Extension methods
 
     #region Strip brackets

@@ -368,9 +368,9 @@ public static class GregorianCalendarExtensions
     /// <exception cref="ArgumentException">Thrown when the provided month number is invalid.</exception>
     public static string MonthNumberToName(int monthNumber)
     {
-        if (MonthNames.ContainsKey(monthNumber))
+        if (MonthNames.TryGetValue(monthNumber, out string? name))
         {
-            return MonthNames[monthNumber];
+            return name;
         }
 
         throw new ArgumentException("Invalid month number.", nameof(monthNumber));

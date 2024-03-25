@@ -64,6 +64,18 @@ public partial struct BigRational
         return (num, den);
     }
 
+    /// <summary>
+    /// Check if a rational number, specified by two integers, is reducible.
+    /// </summary>
+    /// <param name="num">The numerator.</param>
+    /// <param name="den">The denominator.</param>
+    /// <returns>If the rational number is reducible.</returns>
+    public static bool IsReducible(BigInteger num, BigInteger den)
+    {
+        (BigInteger num2, BigInteger den2) = Reduce(num, den);
+        return num2 != num || den2 != den;
+    }
+
     /// <inheritdoc/>
     public static BigRational Abs(BigRational br)
     {

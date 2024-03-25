@@ -148,6 +148,11 @@ public static class TimeConstants
     /// </summary>
     public const long MINUTES_PER_DAY = 1440L;
 
+    /// <summary>
+    /// The number of minutes in a week.
+    /// </summary>
+    public const long MINUTES_PER_WEEK = 10080L;
+
     #endregion Minutes per unit of time
 
     #region Hours per unit of time
@@ -233,21 +238,19 @@ public static class TimeConstants
     #region Tropical year
 
     /// <summary>
-    /// The number of days in the mean tropical year (epoch B1900).
-    /// This value is taken from the SOFA (Standards of Fundamental Astronomy) library, which is
-    /// assumed to be authoritative.
+    /// The number of days in the mean tropical year (epoch J2000).
     /// </summary>
-    public const double DAYS_PER_TROPICAL_YEAR = 365.242_198_781;
+    public const double DAYS_PER_TROPICAL_YEAR = 365.242_189;
 
     /// <summary>
     /// Number of seconds in a tropical year.
     /// </summary>
-    public const double SECONDS_PER_TROPICAL_YEAR = 31_556_925.974_6784;
+    public const double SECONDS_PER_TROPICAL_YEAR = DAYS_PER_TROPICAL_YEAR * SECONDS_PER_DAY;
 
     /// <summary>
     /// Number of ticks in a tropical year.
     /// </summary>
-    public const long TICKS_PER_TROPICAL_YEAR = 315_569_259_746_784L;
+    public const long TICKS_PER_TROPICAL_YEAR = (long)(DAYS_PER_TROPICAL_YEAR * TICKS_PER_YEAR);
 
     #endregion Tropical year
 

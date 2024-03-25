@@ -2517,6 +2517,14 @@
             <param name="den">The denominator.</param>
             <returns>The numerator and denominator of the reduced fraction, as s tuple.</returns>
         </member>
+        <member name="M:Galaxon.Numerics.BigNumbers.BigRational.IsReducible(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>
+            Check if a rational number, specified by two integers, is reducible.
+            </summary>
+            <param name="num">The numerator.</param>
+            <param name="den">The denominator.</param>
+            <returns>If the rational number is reducible.</returns>
+        </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigRational.Abs(Galaxon.Numerics.BigNumbers.BigRational)">
             <inheritdoc/>
         </member>

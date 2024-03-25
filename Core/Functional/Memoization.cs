@@ -74,7 +74,10 @@ public static class Memoization
 
             // Compute the result.
             result = f(x, y);
-            Console.WriteLine("Result not obtained from cache.");
+            if (DebugMode)
+            {
+                Console.WriteLine("Result not obtained from cache.");
+            }
 
             // Add it to the cache.
             cache.Add((x, y), result);

@@ -223,7 +223,7 @@ public static class BigIntegerExtensions
     public static (BigInteger, BigInteger) DivMod(BigInteger dividend, BigInteger divisor)
     {
         BigInteger q = FlooredDivision(dividend, divisor);
-        BigInteger r = NumberExtensions.Mod(dividend, divisor);
+        BigInteger r = NumberExtensions.FlooredModulo(dividend, divisor);
         return (q, r);
     }
 

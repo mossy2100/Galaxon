@@ -15,7 +15,7 @@ public static class LunisolarCalendar
 {
     public static bool IsFullMonth(int m)
     {
-        return Mod(m, 2) == 0 || Mod(Mod(m, 850), 32) == 25;
+        return mod(m, 2) == 0 || mod(mod(m, 850), 32) == 25;
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public static class LunisolarCalendar
     /// <returns></returns>
     public static bool IsFullMonth2(int m)
     {
-        return Mod(m, 2) == 1 || Mod(Mod(Mod(m, 5000), 49), 13) == 10;
+        return mod(m, 2) == 1 || mod(mod(mod(m, 5000), 49), 13) == 10;
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public static class LunisolarCalendar
     /// <returns></returns>
     public static bool IsLeapYear(int y)
     {
-        return Mod(Mod(Mod(y, 1021), 19), 3) == 0;
+        return mod(mod(mod(y, 1021), 19), 3) == 0;
     }
 
     private static int _MonthsInYear(int y)

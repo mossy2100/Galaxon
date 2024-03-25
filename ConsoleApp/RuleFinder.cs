@@ -5,20 +5,20 @@ public class RuleFinder
     /// <summary>
     /// Find the best formula using the module chain formula with 2 operations.
     /// </summary>
-    public static void FindRuleWith2Mods(int numerator, int denominator)
+    public static void FindRuleWith2Mods(int num, int den)
     {
         bool isLeapYear(int n, int a, int r)
         {
-            return n % denominator % a == r;
+            return n % den % a == r;
         }
 
-        for (int a2 = 2; a2 < denominator; a2++)
+        for (int a2 = 2; a2 < den; a2++)
         {
             for (int r2 = 0; r2 < a2; r2++)
             {
                 // Test the formula.
                 int count = 0;
-                for (int n2 = 0; n2 < denominator; n2++)
+                for (int n2 = 0; n2 < den; n2++)
                 {
                     if (isLeapYear(n2, a2, r2))
                     {
@@ -26,9 +26,10 @@ public class RuleFinder
                     }
                 }
 
-                if (count == numerator)
+                if (count == num)
                 {
-                    Console.WriteLine($"Found solution: y % {denominator} % {a2} == {r2};");
+                    Console.WriteLine($"Found solution: y % {den} % {a2} == {r2};");
+                    break;
                 }
             }
         }
@@ -41,7 +42,7 @@ public class RuleFinder
     {
         bool isLeapYear(int n, int a, int b, int r)
         {
-            return n % a % b == r;
+            return n % den % a % b == r;
         }
 
         for (int a2 = 2; a2 < den; a2++)
@@ -63,6 +64,7 @@ public class RuleFinder
                     if (count == num)
                     {
                         Console.WriteLine($"Found solution: n % {den} % {a2} % {b2} == {r2};");
+                        return;
                     }
                 }
             }

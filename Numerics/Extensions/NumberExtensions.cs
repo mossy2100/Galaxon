@@ -152,12 +152,17 @@ public static class NumberExtensions
     /// In this case, if num is negative 0, num % 2 == -1
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>
-    public static T Mod<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
+    public static T FlooredModulo<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
         IComparisonOperators<T, T, bool>
     {
         T r = a % b;
         return r < T.Zero ? r + b : r;
     }
+
+    /// <summary>
+    /// Handy alias for the int version of the FlooredModulo method.
+    /// </summary>
+    public static Func<int, int, int> mod = FlooredModulo;
 
     #endregion Division-related methods
 

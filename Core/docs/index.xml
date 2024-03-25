@@ -345,6 +345,24 @@
             <returns>A new string that consists of 'n' repetitions of the input string.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when 'n' is negative.</exception>
         </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.PadBoth(System.String,System.Int32,System.Char,System.Boolean)">
+            <summary>
+            Pad a string at both ends to create a new string with a given total width.
+            If the total number of padding characters is odd, there will be one extra padding character
+            on the left.
+            If the total width is less than or equal to the original string length, the method will
+            return the original string without complaining.
+            This method is designed to have the same API and behaviour as PadLeft() and PadRight().
+            </summary>
+            <param name="s">The input string.</param>
+            <param name="totalWidth">The total width.</param>
+            <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
+            <param name="extraOnRight">
+            Flag to specify where to place the extra char if the number of padding chars is odd. Default
+            behaviour is to add it on the right. Set to false to add it on the left.
+            </param>
+            <returns>A new string with padding characters appended and prepended as needed.</returns>
+        </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.StripBrackets(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Remove brackets (and whatever is between them) from a string.
