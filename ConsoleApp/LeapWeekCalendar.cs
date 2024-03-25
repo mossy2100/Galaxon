@@ -101,8 +101,6 @@ public class LeapWeekCalendar
             printedMonths.Add(printedMonth);
         }
 
-        string blankLine = "                            ";
-
         for (int row = 0; row < 4; row++)
         {
             // How many lines?

@@ -162,7 +162,7 @@ public static class NumberExtensions
     /// <summary>
     /// Handy alias for the int version of the FlooredModulo method.
     /// </summary>
-    public static Func<int, int, int> mod = FlooredModulo;
+    public static readonly Func<int, int, int> Mod = FlooredModulo;
 
     #endregion Division-related methods
 

@@ -13,7 +13,7 @@ public class SolarCalendar
     /// <returns></returns>
     public static bool IsLeapYear1(int year)
     {
-        return FlooredModulo(year, 4) == 0 && FlooredModulo(year, 128) != 0;
+        return Mod(year, 4) == 0 && Mod(year, 128) != 0;
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ public class SolarCalendar
     /// </summary>
     public static bool IsLeapYear2(int y)
     {
-        return FlooredModulo(FlooredModulo(FlooredModulo(y, 5000), 95), 4) == 3;
+        return Mod(Mod(Mod(y, 5000), 95), 4) == 3;
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class SolarCalendar
     /// </summary>
     public static bool IsLeapYear3(int y)
     {
-        return FlooredModulo(FlooredModulo(FlooredModulo(FlooredModulo(y, 5000), 128), 29), 4) == 3;
+        return Mod(Mod(Mod(Mod(y, 5000), 128), 29), 4) == 3;
     }
 
     /// <summary>
