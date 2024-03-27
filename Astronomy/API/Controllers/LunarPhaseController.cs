@@ -20,7 +20,7 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger)
             // Construct the result.
             var result = new
             {
-                PhaseType = lunarPhase.PhaseType.ToString(),
+                PhaseType = lunarPhase.Type.ToString(),
                 DateTimeUTC = lunarPhase.DateTimeUTC.ToIsoString()
             };
 

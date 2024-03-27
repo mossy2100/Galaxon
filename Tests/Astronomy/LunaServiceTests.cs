@@ -42,7 +42,7 @@ public class LunaServiceTests
         LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.NewMoon, phase.PhaseType);
+        Assert.AreEqual(ELunarPhaseType.NewMoon, phase.Type);
         Assert.AreEqual(1977, phase.DateTimeUTC.Year);
         Assert.AreEqual(2, phase.DateTimeUTC.Month);
         Assert.AreEqual(18, phase.DateTimeUTC.Day);
@@ -63,7 +63,7 @@ public class LunaServiceTests
         LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.ThirdQuarter, phase.PhaseType);
+        Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.Type);
         Assert.AreEqual(2044, phase.DateTimeUTC.Year);
         Assert.AreEqual(1, phase.DateTimeUTC.Month);
         Assert.AreEqual(21, phase.DateTimeUTC.Day);
@@ -92,17 +92,17 @@ public class LunaServiceTests
             LunarPhase myPhase = LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUTC);
 
             // Assert
-            if (astroPixelsPhase.PhaseType != myPhase.PhaseType)
+            if (astroPixelsPhase.Type != myPhase.Type)
             {
-                Console.WriteLine($"{astroPixelsPhase.PhaseType,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.PhaseType,15}: {myPhase.DateTimeUTC.ToIsoString()}");
+                Console.WriteLine($"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUTC.ToIsoString()}");
             }
 
-            Assert.AreEqual(astroPixelsPhase.PhaseType, myPhase.PhaseType);
+            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
 
             TimeSpan diff = astroPixelsPhase.DateTimeUTC - myPhase.DateTimeUTC;
             if (diff.TotalSeconds > maxDiff)
             {
-                Console.WriteLine($"{astroPixelsPhase.PhaseType,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.DateTimeUTC.ToIsoString()} = {diff.TotalSeconds:F2} s");
+                Console.WriteLine($"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.DateTimeUTC.ToIsoString()} = {diff.TotalSeconds:F2} s");
             }
             else
             {

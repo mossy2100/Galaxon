@@ -1,83 +1,161 @@
-using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Data;
+using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.DataImport.Models;
+using Galaxon.Core.Collections;
+using Galaxon.Core.Types;
+using Galaxon.Time;
+using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
 public class SeasonalMarkerImportService
 {
-    /// <summary>
-    /// Extract the seasonal marker data from the text file and copy the data
-    /// into the database.
-    /// </summary>
-    public static void ParseSeasonalMarkerData()
+    public async Task ImportSeasonalMarkerData()
     {
         using AstroDbContext astroDbContext = new ();
 
-        // Lookup table to help with the parsing.
-        Dictionary<string, int> MonthAbbrevs = new ()
+        for (int year = 1700; year <= 2100; year++)
         {
-            { "Mar", 3 },
-            { "Jun", 6 },
-            { "Sep", 9 },
-            { "Dec", 12 }
-        };
+            Console.WriteLine();
 
-        // Get the data from the data file as an array of strings.
-        var dataFilePath =
-            $"{AstroDbContext.DataDirectory()}/Seasonal markers/SeasonalMarkers2001-2100.txt";
-        string[] lines = File.ReadAllLines(dataFilePath);
-
-        // Convert the lines into our internal data structure.
-        Regex rx = new ("\\s+");
-        foreach (string line in lines)
-        {
-            string[] words = rx.Split(line);
-
-            if (words.Length <= 1 || words[0] == "Year")
+            try
             {
-                continue;
-            }
+                string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
 
-            // Extract the dates from the row.
-            var year = int.Parse(words[1]);
-            for (var i = 0; i < 4; i++)
-            {
-                int j = i * 3;
-                string monthAbbrev = words[j + 2];
-                int month = MonthAbbrevs[monthAbbrev];
-                var dayOfMonth = int.Parse(words[j + 3]);
-                string[] time = words[j + 4].Split(":");
-                var hour = int.Parse(time[0]);
-                var minute = int.Parse(time[1]);
+                using HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-                // Construct the new DateTime object.
-                DateTime seasonalMarkerDateTime = new (year, month, dayOfMonth, hour, minute, 0,
-                    DateTimeKind.Utc);
-
-                // Check if there is already an entry in the database table
-                // for this seasonal marker.
-                SeasonalMarker? sm = astroDbContext.SeasonalMarkers?
-                    .FirstOrDefault(sm => sm.DateTimeUTC.Year == year && sm.MarkerNumber == i);
-
-                // Add a new row or update the existing row as required.
-                if (sm == null)
+                if (response.IsSuccessStatusCode)
                 {
-                    // Add a new row.
-                    astroDbContext.SeasonalMarkers!.Add(new SeasonalMarker
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    // Parse the JSON data to extract the seasonal marker data
+                    UsnoSeasonalMarkersForYear? usmc =
+                        JsonConvert.DeserializeObject<UsnoSeasonalMarkersForYear>(jsonContent);
+                    if (usmc?.data == null || usmc.data.IsEmpty())
                     {
-                        MarkerNumber = i,
-                        DateTimeUTC = seasonalMarkerDateTime
-                    });
+                        Console.WriteLine(
+                            $"Failed to retrieve data. Status code: {response.StatusCode}");
+                    }
+                    else
+                    {
+                        foreach (UsnoSeasonalMarker usm in usmc.data)
+                        {
+                            bool isSeasonalMarker;
+                            ESeasonalMarkerType seasonalMarkerType = default;
+                            EApsideType apsideType = default;
+
+                            // Get the seasonal marker or apside type.
+                            if (usm.month == 3 && usm.phenom == "Equinox")
+                            {
+                                isSeasonalMarker = true;
+                                seasonalMarkerType = ESeasonalMarkerType.NorthwardEquinox;
+                            }
+                            else if (usm.month == 6 && usm.phenom == "Solstice")
+                            {
+                                isSeasonalMarker = true;
+                                seasonalMarkerType = ESeasonalMarkerType.NorthernSolstice;
+                            }
+                            else if (usm.month == 9 && usm.phenom == "Equinox")
+                            {
+                                isSeasonalMarker = true;
+                                seasonalMarkerType = ESeasonalMarkerType.SouthwardEquinox;
+                            }
+                            else if (usm.month == 12 && usm.phenom == "Solstice")
+                            {
+                                isSeasonalMarker = true;
+                                seasonalMarkerType = ESeasonalMarkerType.SouthernSolstice;
+                            }
+                            else if (usm.phenom == "Perihelion")
+                            {
+                                isSeasonalMarker = false;
+                                apsideType = EApsideType.Periapsis;
+                            }
+                            else if (usm.phenom == "Aphelion")
+                            {
+                                isSeasonalMarker = false;
+                                apsideType = EApsideType.Apoapsis;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: Invalid data.");
+                                continue;
+                            }
+
+                            // Construct the datetime.
+                            DateOnly date = new (year, usm.month, usm.day);
+                            TimeOnly time = TimeOnly.Parse(usm.time);
+                            DateTime dt = new (date, time, DateTimeKind.Utc);
+
+                            if (isSeasonalMarker)
+                            {
+                                // Construct the SeasonalMarker record.
+                                SeasonalMarker newSeasonalMarker = new SeasonalMarker
+                                {
+                                    Type = seasonalMarkerType,
+                                    DateTimeUTC = dt
+                                };
+                                string seasonalMarkerTypeName =
+                                    seasonalMarkerType.GetDescriptionOrName();
+                                Console.WriteLine(
+                                    $"{seasonalMarkerTypeName,60}: {dt.ToIsoString()}");
+
+                                // Update or insert the record.
+                                SeasonalMarker? existingSeasonalMarker =
+                                    astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
+                                        sm.Type == seasonalMarkerType
+                                        && sm.DateTimeUTC.Year == year);
+                                if (existingSeasonalMarker == null)
+                                {
+                                    astroDbContext.SeasonalMarkers.Add(newSeasonalMarker);
+                                    await astroDbContext.SaveChangesAsync();
+                                }
+                                else if (existingSeasonalMarker.DateTimeUTC != dt)
+                                {
+                                    existingSeasonalMarker.DateTimeUTC = dt;
+                                    await astroDbContext.SaveChangesAsync();
+                                }
+                            }
+                            else
+                            {
+                                // Construct the Apside record.
+                                Apside newApside = new Apside
+                                {
+                                    Type = apsideType,
+                                    DateTimeUTC = dt
+                                };
+                                string apsideTypeName = apsideType.GetDescriptionOrName();
+                                Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
+
+                                // Update or insert the record.
+                                Apside? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
+                                    a.Type == apsideType
+                                    && a.DateTimeUTC.Year == year
+                                    && a.DateTimeUTC.Month == usm.month);
+                                if (existingApside == null)
+                                {
+                                    astroDbContext.Apsides.Add(newApside);
+                                    await astroDbContext.SaveChangesAsync();
+                                }
+                                else if (existingApside.DateTimeUTC != dt)
+                                {
+                                    existingApside.DateTimeUTC = dt;
+                                    await astroDbContext.SaveChangesAsync();
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    // Update the row.
-                    sm.DateTimeUTC = seasonalMarkerDateTime;
+                    Console.WriteLine(
+                        $"Failed to retrieve data. Status code: {response.StatusCode}");
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        astroDbContext.SaveChanges();
     }
 }

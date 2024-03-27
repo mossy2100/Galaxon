@@ -42,7 +42,6 @@ public class Program
         // Add import services.
         serviceCollection
             .AddSingleton<AstroObjectGroupImportService>()
-            .AddSingleton<DeltaTImportService>()
             .AddSingleton<EasterDateImportService>()
             .AddSingleton<LeapSecondImportService>()
             .AddSingleton<LunarPhaseDataImportService>()
@@ -63,7 +62,9 @@ public class Program
 
         try
         {
-            await ImportData();
+            //======================================================================================
+            // await ImportSeasonalMarkers();
+            //======================================================================================
         }
         catch (Exception ex)
         {
@@ -77,40 +78,57 @@ public class Program
         }
     }
 
-    public static async Task ImportData()
+    //==============================================================================================
+
+    public static void ImportGroups()
     {
-        // await ImportLeapSeconds();
-        // ImportEasterDates();
+        AstroObjectGroupImportService astroObjectGroupImportService =
+            _serviceProvider!.GetRequiredService<AstroObjectGroupImportService>();
+        astroObjectGroupImportService.InitAstroObjectGroups();
+    }
 
-        // Import groups.
-        // AstroObjectGroupImportService astroObjectGroupImportService =
-        //     _serviceProvider!.GetRequiredService<AstroObjectGroupImportService>();
-        // astroObjectGroupImportService.InitAstroObjectGroups();
+    public static void ImportSun()
+    {
+        SunImportService sunImportService = _serviceProvider!.GetRequiredService<SunImportService>();
+        sunImportService.ImportSun();
+    }
 
-        // Import Sun.
-        // SunImportService sunImportService =
-        //     _serviceProvider!.GetRequiredService<SunImportService>();
-        // sunImportService.ImportSun();
+    public static void ImportPlanets()
+    {
+        PlanetImportService planetImportService =
+            _serviceProvider!.GetRequiredService<PlanetImportService>();
+        planetImportService.ImportPlanets();
+    }
 
-        // Import planets.
-        // PlanetImportService planetImportService =
-        //     _serviceProvider!.GetRequiredService<PlanetImportService>();
-        // planetImportService.ImportPlanets();
+    public static void ImportDwarfPlanets()
+    {
+    }
 
-        // // Import VSOP87 data.
-        // VSOP87ImportService vsop87ImportService =
-        //     _serviceProvider!.GetRequiredService<VSOP87ImportService>();
-        // vsop87ImportService.ParseAllVSOP87DataFiles();
+    public static void ImportMoons()
+    {
+    }
 
-        // Import lunar phase data from AstroPixels.
+    public static void ImportVsop87Data()
+    {
+        VSOP87ImportService vsop87ImportService =
+            _serviceProvider!.GetRequiredService<VSOP87ImportService>();
+        vsop87ImportService.ParseAllVSOP87DataFiles();
+    }
+
+    public static async Task ImportLunarPhases()
+    {
         LunarPhaseDataImportService lunarPhaseDataImportService =
             _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
         await lunarPhaseDataImportService.ParseLunarPhaseData();
     }
 
-    /// <summary>
-    /// Parse leap seconds and copy into database.
-    /// </summary>
+    public static async Task ImportSeasonalMarkers()
+    {
+        SeasonalMarkerImportService seasonalMarkerImportService =
+            _serviceProvider!.GetRequiredService<SeasonalMarkerImportService>();
+        await seasonalMarkerImportService.ImportSeasonalMarkerData();
+    }
+
     public static async Task ImportLeapSeconds()
     {
         LeapSecondImportService leapSecondImportService =
@@ -119,9 +137,6 @@ public class Program
         await leapSecondImportService.ImportIersBulletins();
     }
 
-    /// <summary>
-    /// Parse leap seconds and copy into database.
-    /// </summary>
     public static void ImportEasterDates()
     {
         EasterDateImportService easterDateImportService =

@@ -4,14 +4,6 @@ namespace Galaxon.Astronomy.Data.Models;
 
 public class LunarPhase : DataObject
 {
-    public LunarPhase() { }
-
-    public LunarPhase(ELunarPhase phaseType, DateTime dateTimeUtc)
-    {
-        PhaseType = phaseType;
-        DateTimeUTC = dateTimeUtc;
-    }
-
     /// <summary>
     /// This value is:
     ///     0 = New Moon
@@ -20,7 +12,7 @@ public class LunarPhase : DataObject
     ///     3 = Third Quarter
     /// </summary>
     [Column(TypeName = "tinyint")]
-    public ELunarPhase PhaseType { get; set; }
+    public ELunarPhaseType Type { get; set; }
 
     /// <summary>
     /// The UTC datetime of the lunar phase.

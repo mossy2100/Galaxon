@@ -12,7 +12,7 @@ public static class TropicalYear
         double totalEphemerisDays = 0;
         double totalSolarDays = 0;
         int minYear = 2000;
-        int maxYear = 12000;
+        int maxYear = 5000;
         int nYears = maxYear - minYear;
         double yearLengthAtStart = 0;
         double yearLengthAtEnd = 0;

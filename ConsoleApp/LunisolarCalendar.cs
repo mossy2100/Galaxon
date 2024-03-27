@@ -553,7 +553,7 @@ public static class LunisolarCalendar
         DateTime start = new (2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         List<LunarPhase> newMoons =
-            LunaService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
+            LunaService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (LunarPhase newMoon in newMoons)
         {
             // Get Ls.

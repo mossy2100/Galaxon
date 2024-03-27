@@ -40,6 +40,25 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.ToTable("AstroObjectAstroObjectGroup");
                 });
 
+            modelBuilder.Entity("Galaxon.Astronomy.Data.Models.Apside", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateTimeUTC")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Apsides");
+                });
+
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObject", b =>
                 {
                     b.Property<int>("Id")
@@ -142,25 +161,6 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.ToTable("AtmosphereRecords");
                 });
 
-            modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DeltaTRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("DeltaT")
-                        .HasColumnType("float");
-
-                    b.Property<short>("Year")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeltaTRecords");
-                });
-
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.EasterDate", b =>
                 {
                     b.Property<int>("Id")
@@ -240,7 +240,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime>("DateTimeUTC")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("PhaseType")
+                    b.Property<byte>("Type")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
@@ -499,7 +499,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime>("DateTimeUTC")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("MarkerNumber")
+                    b.Property<byte>("Type")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");

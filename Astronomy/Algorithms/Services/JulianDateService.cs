@@ -67,7 +67,7 @@ public class JulianDateService
     {
         DateTime dt = JulianDateToDateTime(JD);
         double deltaT = TimeScaleService.CalcDeltaT(dt);
-        return JD + TimeSpan.FromSeconds(deltaT).TotalDays;
+        return JD + (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
 
     /// <summary>
@@ -79,13 +79,14 @@ public class JulianDateService
     /// <returns>Julian Date in Universal Time</returns>
     public static double JulianDateTerrestrialTimeToUniversalTime(double JDTT)
     {
-        // Calculate delta-T. For this calculation, we have to use the Julian Date as provided,
-        // which is in TT, even though the JulianDate_to_DateTime() method expects a Julian Date in
-        // UT. This shouldn't matter though, as the result should be virtually identical to what we
-        // would get for the Julian Date in UT, given the inaccuracy in delta-T calculations.
+        // Calculate delta-T. For this calculation, we have to use TT, even though the
+        // CalcDeltaT() method expects a DateTime in UT. This shouldn't matter, though,
+        // as the result should be virtually identical to what we would get for the value for
+        // delta-T calculated from a DateTime in UT, given the lack of precision in delta-T
+        // calculations.
         DateTime dtTT = JulianDateToDateTime(JDTT);
         double deltaT = TimeScaleService.CalcDeltaT(dtTT);
-        return JDTT - TimeSpan.FromSeconds(deltaT).TotalDays;
+        return JDTT - (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
 
     /// <summary>
@@ -96,7 +97,7 @@ public class JulianDateService
     public static double JulianDateTerrestrialTimeToInternationalAtomicTime(double JDTT)
     {
         return JDTT
-            - ((double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.SECONDS_PER_DAY / 1000);
+            - ((double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.MILLISECONDS_PER_DAY);
     }
 
     /// <summary>

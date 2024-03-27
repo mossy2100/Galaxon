@@ -130,11 +130,11 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
 
         // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can be
         // negative and we want a non-negative result.
-        ELunarPhase phaseType = (ELunarPhase)NumberExtensions.Mod(phaseNumber, 4);
+        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
         double C1;
-        if (phaseType is ELunarPhase.NewMoon or ELunarPhase.FullMoon)
+        if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {
-            if (phaseType == ELunarPhase.NewMoon)
+            if (phaseType == ELunarPhaseType.NewMoon)
             {
                 // Phase type is New Moon.
                 C1 = -0.40720 * Sin(L)
@@ -213,7 +213,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
                 - 0.00002 * Cos(L - M)
                 + 0.00002 * Cos(L + M)
                 + 0.00002 * Cos(2 * F);
-            JDTT += phaseType == ELunarPhase.FirstQuarter ? W : -W;
+            JDTT += phaseType == ELunarPhaseType.FirstQuarter ? W : -W;
         }
 
         // Additional correction for all phases.
@@ -240,7 +240,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         DateTime dtPhase = JulianDateService.JulianDateToDateTime(JD);
 
         // Construct and return the LunarPhase object.
-        return new LunarPhase { PhaseType = phaseType, DateTimeUTC = dtPhase };
+        return new LunarPhase { Type = phaseType, DateTimeUTC = dtPhase };
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns></returns>
     public static List<LunarPhase> GetPhasesInPeriod(DateTime start, DateTime end,
-        ELunarPhase? phaseType = null)
+        ELunarPhaseType? phaseType = null)
     {
         List<LunarPhase> result = [];
 
@@ -282,7 +282,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
             }
 
             // Add it to the result.
-            if (phaseType == null || phase.PhaseType == phaseType)
+            if (phaseType == null || phase.Type == phaseType)
             {
                 result.Add(phase);
             }
@@ -300,7 +300,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
     public static List<LunarPhase> GetPhasesInMonth(int year, int month,
-        ELunarPhase? phaseType = null)
+        ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -328,7 +328,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="year">The year number.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhase> GetPhasesInYear(int year, ELunarPhase? phaseType = null)
+    public static List<LunarPhase> GetPhasesInYear(int year, ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)

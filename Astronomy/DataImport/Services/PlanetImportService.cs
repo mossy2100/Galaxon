@@ -14,9 +14,6 @@ public class PlanetImportService(
     AstroObjectRepository astroObjectRepository,
     AstroObjectGroupRepository astroObjectGroupRepository)
 {
-    // Reference to the CsvReader.
-    private CsvReader? _csv;
-
     /// <summary>
     /// Attempt to get a double value from the CSV file; and, if successful, set the value of the
     /// provided property.
@@ -40,7 +37,6 @@ public class PlanetImportService(
         var csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
         using StreamReader stream = new (csvPath);
         using CsvReader csv = new (stream, CultureInfo.InvariantCulture);
-        _csv = csv;
 
         // Skip the header row.
         csv.Read();

@@ -4,10 +4,11 @@ class Program
 {
     static void Main()
     {
-        LeapWeekCalendar.FindIntercalationFraction();
+        // LeapWeekCalendar.FindIntercalationFraction();
         // LeapWeekCalendar.FindIntercalationRule();
         // LeapWeekCalendar.VerifyIntercalationRule();
         // LeapWeekCalendar.PrintLeapWeekPattern();
         // LeapWeekCalendar.PrintCalendarPages13();
+        TropicalYear.GetTropicalYearLength();
     }
 }

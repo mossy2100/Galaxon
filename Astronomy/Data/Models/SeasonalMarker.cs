@@ -1,16 +1,18 @@
-﻿namespace Galaxon.Astronomy.Data.Models;
+﻿using Galaxon.Astronomy.Data.Enums;
+
+namespace Galaxon.Astronomy.Data.Models;
 
 public class SeasonalMarker : DataObject
 {
     /// <summary>
     /// This value is:
-    ///   0 = March equinox
-    ///   1 = June solstice
-    ///   2 = September equinox
-    ///   3 = December solstice
+    ///     0 = March equinox
+    ///     1 = June solstice
+    ///     2 = September equinox
+    ///     3 = December solstice
     /// </summary>
     [Column(TypeName = "tinyint")]
-    public int MarkerNumber { get; set; }
+    public ESeasonalMarkerType Type { get; set; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker.
