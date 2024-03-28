@@ -13,8 +13,8 @@ public class Apside : DataObject
     public EApsideType Type { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the apside.
+    /// The UTC datetime of the apside according to USNO.
     /// </summary>
     [Column(TypeName = "datetime2")]
-    public DateTime DateTimeUtc { get; set; }
+    public DateTime DateTimeUtcUsno { get; set; }
 }
