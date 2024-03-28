@@ -64,7 +64,7 @@ public class LunaServiceTests
     }
 
     /// <summary>
-    /// Compare my lunar phase algorithm with AstroPixels data.
+    /// Compare my lunar phase algorithm with data from the AstroPixels ephmeris.
     /// </summary>
     [TestMethod]
     public void GetPhasesInYear_CompareWithAstroPixels()
@@ -73,7 +73,7 @@ public class LunaServiceTests
 
         // Arrange
         List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
-            // .Where(lp => lp.DateTimeUtc.Year >= 1000 && lp.DateTimeUtc.Year <= 3000)
+            .Where(lp => lp.DateTimeUtcAstroPixels != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels).ToList();
 
         // Check each.
@@ -101,6 +101,53 @@ public class LunaServiceTests
             {
                 Console.WriteLine(
                     $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
+            }
+            else
+            {
+                Assert.IsTrue(diff.TotalSeconds <= maxDiff);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Compare my lunar phase algorithm with data from the USNO API.
+    /// </summary>
+    [TestMethod]
+    public void GetPhasesInYear_CompareWithUsno()
+    {
+        int maxDiff = 60;
+
+        // Arrange
+        List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
+            .Where(lp => lp.DateTimeUtcUsno != null)
+            .OrderBy(lp => lp.DateTimeUtcAstroPixels)
+            .ToList();
+
+        // Check each.
+        foreach (LunarPhase astroPixelsPhase in astroPixelsPhases)
+        {
+            if (astroPixelsPhase.DateTimeUtcUsno == null)
+            {
+                continue;
+            }
+
+            MoonPhase myPhase =
+                LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
+
+            // Assert
+            if (astroPixelsPhase.Type != myPhase.Type)
+            {
+                Console.WriteLine(
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
+            }
+
+            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
+
+            TimeSpan diff = astroPixelsPhase.DateTimeUtcUsno.Value - myPhase.DateTimeUtc;
+            if (diff.TotalSeconds > maxDiff)
+            {
+                Console.WriteLine(
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
             }
             else
             {

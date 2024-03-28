@@ -186,5 +186,15 @@ public static class DateTimeExtensions
         return Round(dt, TimeSpan.FromMinutes(1));
     }
 
+    /// <summary>
+    /// Round off a datetime to the nearest midnight.
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns>A new DateTime equal to the parameter rounded off to the nearest midnight.</returns>
+    public static DateTime RoundToNearestMidnight(DateTime dt)
+    {
+        return Round(dt, TimeSpan.FromDays(1));
+    }
+
     #endregion Rounding off
 }

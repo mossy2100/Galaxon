@@ -3,9 +3,13 @@ using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.DataImport.Models;
+using Galaxon.Core.Collections;
 using Galaxon.Core.Strings;
+using Galaxon.Core.Types;
 using Galaxon.Time;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
@@ -17,7 +21,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<string>> GetEphemerisPageUrls()
+    public async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
     {
         var result = new List<string>();
         string indexUrl = "http://astropixels.com/ephemeris/phasescat/phasescat.html";
@@ -64,7 +68,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <param name="url"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<LunarPhase>> ImportPage(string url)
+    public async Task<List<LunarPhase>> ImportAstroPixelsPage(string url)
     {
         List<LunarPhase> lunarPhases = new ();
         JulianCalendar jc = new ();
@@ -183,16 +187,16 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <summary>
     /// Extract lunar phase data from the AstroPixels web pages and copy them to the database.
     /// </summary>
-    public async Task Import()
+    public async Task ImportAstroPixels()
     {
         // Get the links to the catalog pages (CE only).
-        List<string> urls = await GetEphemerisPageUrls();
+        List<string> urls = await GetAstroPixelsEphemerisPageUrls();
 
         // One page at a time.
         foreach (string url in urls)
         {
             // Get all the lunar phases on this page.
-            List<LunarPhase> lunarPhases = await ImportPage(url);
+            List<LunarPhase> lunarPhases = await ImportAstroPixelsPage(url);
 
             // Loop through and add the new ones to the database.
             foreach (LunarPhase lunarPhase in lunarPhases)
@@ -210,6 +214,87 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
             // Update the database. Doing this once per page is easier to debug, because it only
             // generates a single insert statement with all the new lunar phase data in it.
             await astroDbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task ImportUsno()
+    {
+        for (int year = 1700; year <= 2100; year++)
+        {
+            Console.WriteLine();
+
+            try
+            {
+                string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
+
+                using HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    // Parse the JSON data to extract the seasonal marker data
+                    UsnoLunarPhasesForYear? ulps =
+                        JsonConvert.DeserializeObject<UsnoLunarPhasesForYear>(jsonContent);
+                    if (ulps?.phasedata == null || ulps.phasedata.IsEmpty())
+                    {
+                        Console.WriteLine(
+                            $"Failed to retrieve data. Status code: {response.StatusCode}");
+                    }
+                    else
+                    {
+                        foreach (UsnoLunarPhase ulp in ulps.phasedata)
+                        {
+                            bool ok = EnumExtensions.TryParse(ulp.phase,
+                                out ELunarPhaseType lunarPhaseType);
+                            if (!ok)
+                            {
+                                throw new InvalidOperationException(
+                                    "Error parsing lunar phase type.");
+                            }
+
+                            // Construct the datetime.
+                            DateOnly date = new (year, ulp.month, ulp.day);
+                            TimeOnly time = TimeOnly.Parse(ulp.time);
+                            DateTime dt = new (date, time, DateTimeKind.Utc);
+
+                            // Construct the LunarPhase record.
+                            LunarPhase newLunarPhase = new LunarPhase
+                            {
+                                Type = lunarPhaseType,
+                                DateTimeUtcUsno = dt
+                            };
+                            Console.WriteLine($"{ulp.phase,20}: {dt.ToIsoString()}");
+
+                            // Update or insert the record.
+                            LunarPhase? existingLunarPhase =
+                                astroDbContext.LunarPhases.FirstOrDefault(sm =>
+                                    sm.Type == lunarPhaseType
+                                    && sm.DateTimeUtcUsno != null
+                                    && sm.DateTimeUtcUsno.Value.Year == year);
+                            if (existingLunarPhase == null)
+                            {
+                                astroDbContext.LunarPhases.Add(newLunarPhase);
+                                await astroDbContext.SaveChangesAsync();
+                            }
+                            else if (existingLunarPhase.DateTimeUtcUsno != dt)
+                            {
+                                existingLunarPhase.DateTimeUtcUsno = dt;
+                                await astroDbContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"Failed to retrieve data. Status code: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

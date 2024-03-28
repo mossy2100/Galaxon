@@ -6,6 +6,7 @@ using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
 using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
@@ -548,16 +549,78 @@ public static class LunisolarCalendar
         PlanetService planetService = new (astroDbContext);
         EarthService earthService = new (astroObjectRepository, planetService);
         var sunService = new SunService(earthService);
+        var seasonalMarkerService = new SeasonalMarkerService(sunService);
 
         // Find all the New Moons in a 25-year period.
-        DateTime start = new (2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime end = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         List<MoonPhase> newMoons = LunaService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (MoonPhase newMoon in newMoons)
         {
             // Get Ls.
-            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoons[0].DateTimeUtc);
-            Console.WriteLine($"The New Moon of {newMoons[0].DateTimeUtc} occurred at Ls={Ls}");
+            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.DateTimeUtc);
+            double LsDeg = Angles.RadiansToDegrees(Ls);
+
+            // Check for New Moon within 1° of the northward equinox.
+            double diff = Math.Abs(LsDeg);
+            if (diff < 1)
+            {
+                DateTime dtEquinox = seasonalMarkerService.CalcSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
+                double diffDays =
+                    Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
+                Console.WriteLine();
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine($"The northward equinox occurred at {dtEquinox}");
+                Console.WriteLine("Close match to northward equinox (northern spring equinox).");
+                Console.WriteLine($"Difference = {diff}° or {diffDays} days.");
+            }
+
+            // Check for New Moon within 1° of the southern solstice.
+            diff = Math.Abs(LsDeg + 90);
+            if (diff < 1)
+            {
+                DateTime dtSolstice = seasonalMarkerService.CalcSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
+                double diffDays =
+                    Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
+                Console.WriteLine();
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine($"The southern solstice occurred at {dtSolstice}");
+                Console.WriteLine("Close match to southern solstice (northern winter solstice).");
+                Console.WriteLine($"Difference = {diff}° or {diffDays} days.");
+            }
+
+            // Check for New Moon within 1° of the Besselian new year.
+            diff = Math.Abs(LsDeg + 80);
+            if (diff < 1)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine("Close match to Besselian New Year.");
+                Console.WriteLine($"Difference = {diff}°");
+            }
+
+            // Check for New Moon within 1 day of the Gregorian New Year.
+            DateTime nextNewYear = new DateTime(newMoon.DateTimeUtc.Year, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+            DateTime prevNewYear = new DateTime(newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+            double diff1 = Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
+            double diff2 = Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - prevNewYear.GetTotalDays());
+            if (diff1 < 1)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
+                Console.WriteLine($"Difference = {diff1} days");
+            }
+            else if (diff2 < 1)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
+                Console.WriteLine($"Difference = {diff2} days");
+            }
         }
+    }
+
+    public static void TestSynchronousCycle()
+    {
+
     }
 }

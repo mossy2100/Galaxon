@@ -30,16 +30,16 @@ public class SeasonalMarkerImportService
                 {
                     string jsonContent = await response.Content.ReadAsStringAsync();
                     // Parse the JSON data to extract the seasonal marker data
-                    UsnoSeasonalMarkersForYear? usmc =
+                    UsnoSeasonalMarkersForYear? usms =
                         JsonConvert.DeserializeObject<UsnoSeasonalMarkersForYear>(jsonContent);
-                    if (usmc?.data == null || usmc.data.IsEmpty())
+                    if (usms?.data == null || usms.data.IsEmpty())
                     {
                         Console.WriteLine(
                             $"Failed to retrieve data. Status code: {response.StatusCode}");
                     }
                     else
                     {
-                        foreach (UsnoSeasonalMarker usm in usmc.data)
+                        foreach (UsnoSeasonalMarker usm in usms.data)
                         {
                             bool isSeasonalMarker;
                             ESeasonalMarkerType seasonalMarkerType = default;

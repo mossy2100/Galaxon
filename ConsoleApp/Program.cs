@@ -9,6 +9,7 @@ class Program
         // LeapWeekCalendar.VerifyIntercalationRule();
         // LeapWeekCalendar.PrintLeapWeekPattern();
         // LeapWeekCalendar.PrintCalendarPages13();
-        TropicalYear.GetTropicalYearLength();
+        // TropicalYear.GetTropicalYearLength();
+        LunisolarCalendar.FindEpoch();
     }
 }
