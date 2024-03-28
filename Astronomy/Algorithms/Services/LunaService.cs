@@ -1,3 +1,4 @@
+using Galaxon.Astronomy.Algorithms.Models;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -57,7 +58,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// A LunarPhase object, which contains information about which phase it is, and the approximate
     /// datetime of the event.
     /// </returns>
-    public static LunarPhase GetPhaseFromDateTime(DateTime dt)
+    public static MoonPhase GetPhaseFromDateTime(DateTime dt)
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
@@ -240,7 +241,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         DateTime dtPhase = JulianDateService.JulianDateToDateTime(JD);
 
         // Construct and return the LunarPhase object.
-        return new LunarPhase { Type = phaseType, DateTimeUTC = dtPhase };
+        return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };
     }
 
     /// <summary>
@@ -250,16 +251,16 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="end">The end of the period.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns></returns>
-    public static List<LunarPhase> GetPhasesInPeriod(DateTime start, DateTime end,
+    public static List<MoonPhase> GetPhasesInPeriod(DateTime start, DateTime end,
         ELunarPhaseType? phaseType = null)
     {
-        List<LunarPhase> result = [];
+        List<MoonPhase> result = [];
 
         // Find the phase nearest to start.
-        LunarPhase phase = GetPhaseFromDateTime(start);
+        MoonPhase phase = GetPhaseFromDateTime(start);
 
         // If it's in range, add it.
-        if (phase.DateTimeUTC >= start)
+        if (phase.DateTimeUtc >= start)
         {
             result.Add(phase);
         }
@@ -272,11 +273,11 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         while (true)
         {
             // Get the next new moon in the series.
-            DateTime nextGuess = phase.DateTimeUTC.AddDays(daysPerPhase);
+            DateTime nextGuess = phase.DateTimeUtc.AddDays(daysPerPhase);
             phase = GetPhaseFromDateTime(nextGuess);
 
             // We done?
-            if (phase.DateTimeUTC > end)
+            if (phase.DateTimeUtc > end)
             {
                 break;
             }
@@ -299,7 +300,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="month">The month number.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhase> GetPhasesInMonth(int year, int month,
+    public static List<MoonPhase> GetPhasesInMonth(int year, int month,
         ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
@@ -328,7 +329,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// <param name="year">The year number.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhase> GetPhasesInYear(int year, ELunarPhaseType? phaseType = null)
+    public static List<MoonPhase> GetPhasesInYear(int year, ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)

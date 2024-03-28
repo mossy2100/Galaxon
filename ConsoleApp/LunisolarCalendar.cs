@@ -1,7 +1,7 @@
+using Galaxon.Astronomy.Algorithms.Models;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
-using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
@@ -552,13 +552,12 @@ public static class LunisolarCalendar
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<LunarPhase> newMoons =
-            LunaService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
-        foreach (LunarPhase newMoon in newMoons)
+        List<MoonPhase> newMoons = LunaService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
+        foreach (MoonPhase newMoon in newMoons)
         {
             // Get Ls.
-            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoons[0].DateTimeUTC);
-            Console.WriteLine($"The New Moon of {newMoons[0].DateTimeUTC} occurred at Ls={Ls}");
+            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoons[0].DateTimeUtc);
+            Console.WriteLine($"The New Moon of {newMoons[0].DateTimeUtc} occurred at Ls={Ls}");
         }
     }
 }

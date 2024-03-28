@@ -93,7 +93,7 @@ public class SeasonalMarkerImportService
                                 SeasonalMarker newSeasonalMarker = new SeasonalMarker
                                 {
                                     Type = seasonalMarkerType,
-                                    DateTimeUTC = dt
+                                    DateTimeUtcUsno = dt
                                 };
                                 string seasonalMarkerTypeName =
                                     seasonalMarkerType.GetDescriptionOrName();
@@ -104,15 +104,15 @@ public class SeasonalMarkerImportService
                                 SeasonalMarker? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
                                         sm.Type == seasonalMarkerType
-                                        && sm.DateTimeUTC.Year == year);
+                                        && sm.DateTimeUtcUsno.Year == year);
                                 if (existingSeasonalMarker == null)
                                 {
                                     astroDbContext.SeasonalMarkers.Add(newSeasonalMarker);
                                     await astroDbContext.SaveChangesAsync();
                                 }
-                                else if (existingSeasonalMarker.DateTimeUTC != dt)
+                                else if (existingSeasonalMarker.DateTimeUtcUsno != dt)
                                 {
-                                    existingSeasonalMarker.DateTimeUTC = dt;
+                                    existingSeasonalMarker.DateTimeUtcUsno = dt;
                                     await astroDbContext.SaveChangesAsync();
                                 }
                             }
@@ -122,7 +122,7 @@ public class SeasonalMarkerImportService
                                 Apside newApside = new Apside
                                 {
                                     Type = apsideType,
-                                    DateTimeUTC = dt
+                                    DateTimeUtc = dt
                                 };
                                 string apsideTypeName = apsideType.GetDescriptionOrName();
                                 Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
@@ -130,16 +130,16 @@ public class SeasonalMarkerImportService
                                 // Update or insert the record.
                                 Apside? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
                                     a.Type == apsideType
-                                    && a.DateTimeUTC.Year == year
-                                    && a.DateTimeUTC.Month == usm.month);
+                                    && a.DateTimeUtc.Year == year
+                                    && a.DateTimeUtc.Month == usm.month);
                                 if (existingApside == null)
                                 {
                                     astroDbContext.Apsides.Add(newApside);
                                     await astroDbContext.SaveChangesAsync();
                                 }
-                                else if (existingApside.DateTimeUTC != dt)
+                                else if (existingApside.DateTimeUtc != dt)
                                 {
-                                    existingApside.DateTimeUTC = dt;
+                                    existingApside.DateTimeUtc = dt;
                                     await astroDbContext.SaveChangesAsync();
                                 }
                             }

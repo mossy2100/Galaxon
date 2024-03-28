@@ -63,22 +63,24 @@ public class SeasonalMarkerServiceTests
 
         // Arrange
         List<SeasonalMarker> seasonalMarkers =
-            _astroDbContext!.SeasonalMarkers.OrderBy(sm => sm.DateTimeUTC).ToList();
+            _astroDbContext!.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
 
         // Check each.
         foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
         {
             DateTime dt =
-                _seasonalMarkerService!.CalcSeasonalMarker(seasonalMarker.DateTimeUTC.Year,
+                _seasonalMarkerService!.CalcSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Year,
                     seasonalMarker.Type);
             dt = DateTimeExtensions.RoundToNearestMinute(dt);
 
             int diff =
-                (int)Round(Abs(seasonalMarker.DateTimeUTC.GetTotalSeconds() - dt.GetTotalSeconds()) / TimeConstants.SECONDS_PER_MINUTE);
+                (int)Round(
+                    Abs(seasonalMarker.DateTimeUtcUsno.GetTotalSeconds() - dt.GetTotalSeconds())
+                    / TimeConstants.SECONDS_PER_MINUTE);
             if (diff > goalMaxDiff)
             {
                 Console.WriteLine(
-                    $"{seasonalMarker.Type.GetDescription(),60}: {seasonalMarker.DateTimeUTC.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
+                    $"{seasonalMarker.Type.GetDescription(),60}: {seasonalMarker.DateTimeUtcUsno.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
                 if (diff > maxDiff)
                 {
                     maxDiff = diff;

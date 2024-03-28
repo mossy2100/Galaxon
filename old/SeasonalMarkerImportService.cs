@@ -55,7 +55,7 @@ public class SeasonalMarkerImportService
                 // Check if there is already an entry in the database table
                 // for this seasonal marker.
                 SeasonalMarker? sm = astroDbContext.SeasonalMarkers?
-                    .FirstOrDefault(sm => sm.DateTimeUTC.Year == year && (int)sm.Type == i);
+                    .FirstOrDefault(sm => sm.DateTimeUtc.Year == year && (int)sm.Type == i);
 
                 // Add a new row or update the existing row as required.
                 if (sm == null)
@@ -64,13 +64,13 @@ public class SeasonalMarkerImportService
                     astroDbContext.SeasonalMarkers!.Add(new SeasonalMarker
                     {
                         Type = (ESeasonalMarkerType)i,
-                        DateTimeUTC = seasonalMarkerDateTime
+                        DateTimeUtc = seasonalMarkerDateTime
                     });
                 }
                 else
                 {
                     // Update the row.
-                    sm.DateTimeUTC = seasonalMarkerDateTime;
+                    sm.DateTimeUtc = seasonalMarkerDateTime;
                 }
             }
         }

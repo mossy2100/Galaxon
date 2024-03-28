@@ -168,7 +168,10 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
 
                     // Construct the new LunarPhase and add it to the results.
                     LunarPhase lunarPhase = new LunarPhase
-                        { Type = (ELunarPhaseType)phaseType, DateTimeUTC = phaseDateTime };
+                    {
+                        Type = (ELunarPhaseType)phaseType,
+                        DateTimeUtcAstroPixels = phaseDateTime
+                    };
                     lunarPhases.Add(lunarPhase);
                 }
             }
@@ -197,7 +200,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                 // See if this lunar phase is already in the database. If not, add it.
                 if (!astroDbContext.LunarPhases.Any(lp =>
                     lp.Type == lunarPhase.Type
-                    && lp.DateTimeUTC == lunarPhase.DateTimeUTC))
+                    && lp.DateTimeUtcAstroPixels == lunarPhase.DateTimeUtcAstroPixels))
                 {
                     // Store phase information in the database.
                     astroDbContext.LunarPhases.Add(lunarPhase);

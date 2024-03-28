@@ -1,9 +1,9 @@
 using System.Globalization;
+using Galaxon.Astronomy.Algorithms.Models;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Astronomy;
@@ -13,20 +13,10 @@ public class LunaServiceTests
 {
     private AstroDbContext? _astroDbContext;
 
-    private AstroObjectRepository? _astroObjectRepository;
-
-    private AstroObjectGroupRepository? _astroObjectGroupRepository;
-
-    private LunaService? _moonService;
-
     [TestInitialize]
     public void Init()
     {
         _astroDbContext = new AstroDbContext();
-        _astroObjectGroupRepository = new AstroObjectGroupRepository(_astroDbContext);
-        _astroObjectRepository =
-            new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
-        _moonService = new LunaService(_astroObjectRepository);
     }
 
     /// <summary>
@@ -39,15 +29,15 @@ public class LunaServiceTests
         DateTime dtApprox = new (1977, 2, 15);
 
         // Act
-        LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
+        MoonPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.NewMoon, phase.Type);
-        Assert.AreEqual(1977, phase.DateTimeUTC.Year);
-        Assert.AreEqual(2, phase.DateTimeUTC.Month);
-        Assert.AreEqual(18, phase.DateTimeUTC.Day);
-        Assert.AreEqual(3, phase.DateTimeUTC.Hour);
-        Assert.AreEqual(36, phase.DateTimeUTC.Minute);
+        Assert.AreEqual(1977, phase.DateTimeUtc.Year);
+        Assert.AreEqual(2, phase.DateTimeUtc.Month);
+        Assert.AreEqual(18, phase.DateTimeUtc.Day);
+        Assert.AreEqual(3, phase.DateTimeUtc.Hour);
+        Assert.AreEqual(36, phase.DateTimeUtc.Minute);
     }
 
     /// <summary>
@@ -60,17 +50,17 @@ public class LunaServiceTests
         DateTime dtApprox = new (2044, 1, 20);
 
         // Act
-        LunarPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
+        MoonPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.Type);
-        Assert.AreEqual(2044, phase.DateTimeUTC.Year);
-        Assert.AreEqual(1, phase.DateTimeUTC.Month);
-        Assert.AreEqual(21, phase.DateTimeUTC.Day);
-        Assert.AreEqual(23, phase.DateTimeUTC.Hour);
+        Assert.AreEqual(2044, phase.DateTimeUtc.Year);
+        Assert.AreEqual(1, phase.DateTimeUtc.Month);
+        Assert.AreEqual(21, phase.DateTimeUtc.Day);
+        Assert.AreEqual(23, phase.DateTimeUtc.Hour);
         // This differs from the example by 2 minutes, because I'm using NASA's formulae for
         // calculating deltaT instead of Meeus's.
-        Assert.AreEqual(46, phase.DateTimeUTC.Minute);
+        Assert.AreEqual(46, phase.DateTimeUtc.Minute);
     }
 
     /// <summary>
@@ -83,26 +73,34 @@ public class LunaServiceTests
 
         // Arrange
         List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
-            // .Where(lp => lp.DateTimeUTC.Year >= 1000 && lp.DateTimeUTC.Year <= 3000)
-            .OrderBy(lp => lp.DateTimeUTC).ToList();
+            // .Where(lp => lp.DateTimeUtc.Year >= 1000 && lp.DateTimeUtc.Year <= 3000)
+            .OrderBy(lp => lp.DateTimeUtcAstroPixels).ToList();
 
         // Check each.
-        foreach (var astroPixelsPhase in astroPixelsPhases)
+        foreach (LunarPhase astroPixelsPhase in astroPixelsPhases)
         {
-            LunarPhase myPhase = LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUTC);
+            if (astroPixelsPhase.DateTimeUtcAstroPixels == null)
+            {
+                continue;
+            }
+
+            MoonPhase myPhase =
+                LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUtcAstroPixels.Value);
 
             // Assert
             if (astroPixelsPhase.Type != myPhase.Type)
             {
-                Console.WriteLine($"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUTC.ToIsoString()}");
+                Console.WriteLine(
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
             }
 
             Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
 
-            TimeSpan diff = astroPixelsPhase.DateTimeUTC - myPhase.DateTimeUTC;
+            TimeSpan diff = astroPixelsPhase.DateTimeUtcAstroPixels.Value - myPhase.DateTimeUtc;
             if (diff.TotalSeconds > maxDiff)
             {
-                Console.WriteLine($"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUTC.ToIsoString()} c.f. {myPhase.DateTimeUTC.ToIsoString()} = {diff.TotalSeconds:F2} s");
+                Console.WriteLine(
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
             }
             else
             {

@@ -15,8 +15,8 @@ public class PlanetImportService(
     AstroObjectGroupRepository astroObjectGroupRepository)
 {
     /// <summary>
-    /// Attempt to get a double value from the CSV file; and, if successful, set the value of the
-    /// provided property.
+    /// Attempt to get a double value from the CSV file.
+    /// If successful, multiply the value by the multiplier before returning.
     /// </summary>
     private static double? GetDoubleValue(CsvReader csv, int csvFieldNumber, double multiplier = 1)
     {

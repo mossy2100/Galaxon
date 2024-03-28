@@ -6,8 +6,8 @@ public class Apside : DataObject
 {
     /// <summary>
     /// This value is:
-    ///     0 = Periapsis (perihelion, perigee, etc.)
-    ///     1 = Apoapsis (aphelion, apogee, etc.)
+    ///   0 = Periapsis (perihelion, perigee, etc.)
+    ///   1 = Apoapsis (aphelion, apogee, etc.)
     /// </summary>
     [Column(TypeName = "tinyint")]
     public EApsideType Type { get; set; }
@@ -16,5 +16,5 @@ public class Apside : DataObject
     /// The UTC datetime of the apside.
     /// </summary>
     [Column(TypeName = "datetime2")]
-    public DateTime DateTimeUTC { get; set; }
+    public DateTime DateTimeUtc { get; set; }
 }
