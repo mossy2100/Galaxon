@@ -11,7 +11,7 @@ namespace Galaxon.Astronomy.DataImport.Services;
 
 public class SeasonalMarkerImportService
 {
-    public async Task ImportSeasonalMarkerData()
+    public async Task Import()
     {
         using AstroDbContext astroDbContext = new ();
 

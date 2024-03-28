@@ -30,7 +30,7 @@ public class LeapSecondImportService(
     /// <summary>
     /// Download the leap seconds from the NIST website.
     /// </summary>
-    public async Task ParseNistWebPage()
+    public async Task ImportNistWebPage()
     {
         logger.LogInformation("Parsing NIST web page.");
 

@@ -17,7 +17,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<string>> GetUrlsOfMoonPhaseCatalogPages()
+    public async Task<List<string>> GetEphemerisPageUrls()
     {
         var result = new List<string>();
         string indexUrl = "http://astropixels.com/ephemeris/phasescat/phasescat.html";
@@ -64,7 +64,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <param name="url"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<LunarPhase>> ParseMoonPhaseCatalogPage(string url)
+    public async Task<List<LunarPhase>> ImportPage(string url)
     {
         List<LunarPhase> lunarPhases = new ();
         JulianCalendar jc = new ();
@@ -180,16 +180,16 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <summary>
     /// Extract lunar phase data from the AstroPixels web pages and copy them to the database.
     /// </summary>
-    public async Task ParseLunarPhaseData()
+    public async Task Import()
     {
         // Get the links to the catalog pages (CE only).
-        List<string> urls = await GetUrlsOfMoonPhaseCatalogPages();
+        List<string> urls = await GetEphemerisPageUrls();
 
         // One page at a time.
         foreach (string url in urls)
         {
             // Get all the lunar phases on this page.
-            List<LunarPhase> lunarPhases = await ParseMoonPhaseCatalogPage(url);
+            List<LunarPhase> lunarPhases = await ImportPage(url);
 
             // Loop through and add the new ones to the database.
             foreach (LunarPhase lunarPhase in lunarPhases)

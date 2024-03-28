@@ -15,7 +15,7 @@ public class SunImportService(
     /// <summary>
     /// Initialize the Stars data, which for now just means adding the Sun to the database.
     /// </summary>
-    public void ImportSun()
+    public void Import()
     {
         AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
         if (sun == null)

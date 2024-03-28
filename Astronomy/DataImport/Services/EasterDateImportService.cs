@@ -14,7 +14,7 @@ public class EasterDateImportService(
     /// Parse the data file from the US Census Bureau.
     /// </summary>
     /// <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
-    internal void ParseEasterDates1600_2099()
+    internal void ImportEasterDates1600_2099()
     {
         logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.census.gov/data/software/x13as/genhol/easter-dates.html");
@@ -86,7 +86,7 @@ public class EasterDateImportService(
     /// Parse the data file from the Astronomical Society of South Australia.
     /// </summary>
     /// <see href="https://www.assa.org.au/edm"/>
-    internal void ParseEasterDates1700_2299()
+    internal void ImportEasterDates1700_2299()
     {
         logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.assa.org.au/edm");

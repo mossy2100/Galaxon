@@ -18,7 +18,7 @@ public class VSOP87ImportService(
     /// <see href="https://www.caglow.com/info/compute/vsop87"/>
     /// </summary>
     /// <param name="fileName">The name of the data file.</param>
-    public void ParseVSOP87DataFile(string fileName)
+    public void ImportVsop87DataFile(string fileName)
     {
         // Get the data from the data file as an array of strings.
         var dataFilePath = $"{AstroDbContext.DataDirectory()}/VSOP87/{fileName}";
@@ -134,13 +134,13 @@ public class VSOP87ImportService(
         }
     }
 
-    public void ParseAllVSOP87DataFiles()
+    public void Import()
     {
         for (byte planetNum = 1; planetNum <= 8; planetNum++)
         {
             string name = PlanetService.PLANET_NAMES[planetNum];
             string abbrev = name[..3].ToLower();
-            ParseVSOP87DataFile($"VSOP87D.{abbrev}");
+            ImportVsop87DataFile($"VSOP87D.{abbrev}");
         }
     }
 }

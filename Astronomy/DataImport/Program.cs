@@ -42,9 +42,11 @@ public class Program
         // Add import services.
         serviceCollection
             .AddSingleton<AstroObjectGroupImportService>()
+            .AddSingleton<DwarfPlanetImportService>()
             .AddSingleton<EasterDateImportService>()
             .AddSingleton<LeapSecondImportService>()
             .AddSingleton<LunarPhaseDataImportService>()
+            .AddSingleton<NaturalSatelliteImportService>()
             .AddSingleton<PlanetImportService>()
             .AddSingleton<SeasonalMarkerImportService>()
             .AddSingleton<SunImportService>()
@@ -63,7 +65,8 @@ public class Program
         try
         {
             //======================================================================================
-            // await ImportSeasonalMarkers();
+            // await ImportDwarfPlanets();
+            await ImportNaturalSatellites();
             //======================================================================================
         }
         catch (Exception ex)
@@ -89,51 +92,58 @@ public class Program
 
     public static void ImportSun()
     {
-        SunImportService sunImportService = _serviceProvider!.GetRequiredService<SunImportService>();
-        sunImportService.ImportSun();
+        SunImportService sunImportService =
+            _serviceProvider!.GetRequiredService<SunImportService>();
+        sunImportService.Import();
     }
 
     public static void ImportPlanets()
     {
         PlanetImportService planetImportService =
             _serviceProvider!.GetRequiredService<PlanetImportService>();
-        planetImportService.ImportPlanets();
+        planetImportService.Import();
     }
 
-    public static void ImportDwarfPlanets()
+    public static async Task ImportDwarfPlanets()
     {
+        DwarfPlanetImportService dwarfPlanetImportService =
+            _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
+        await dwarfPlanetImportService.Import();
     }
 
-    public static void ImportMoons()
+    public static async Task ImportNaturalSatellites()
     {
+        NaturalSatelliteImportService naturalSatelliteImportService =
+            _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
+        await naturalSatelliteImportService.Import();
     }
 
     public static void ImportVsop87Data()
     {
         VSOP87ImportService vsop87ImportService =
             _serviceProvider!.GetRequiredService<VSOP87ImportService>();
-        vsop87ImportService.ParseAllVSOP87DataFiles();
+        vsop87ImportService.Import();
     }
 
     public static async Task ImportLunarPhases()
     {
         LunarPhaseDataImportService lunarPhaseDataImportService =
             _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
-        await lunarPhaseDataImportService.ParseLunarPhaseData();
+        await lunarPhaseDataImportService.Import();
     }
 
     public static async Task ImportSeasonalMarkers()
     {
         SeasonalMarkerImportService seasonalMarkerImportService =
             _serviceProvider!.GetRequiredService<SeasonalMarkerImportService>();
-        await seasonalMarkerImportService.ImportSeasonalMarkerData();
+        await seasonalMarkerImportService.Import();
     }
 
     public static async Task ImportLeapSeconds()
     {
         LeapSecondImportService leapSecondImportService =
             _serviceProvider!.GetRequiredService<LeapSecondImportService>();
-        await leapSecondImportService.ParseNistWebPage();
+        await leapSecondImportService.ImportNistWebPage();
         await leapSecondImportService.ImportIersBulletins();
     }
 
@@ -141,7 +151,7 @@ public class Program
     {
         EasterDateImportService easterDateImportService =
             _serviceProvider!.GetRequiredService<EasterDateImportService>();
-        easterDateImportService.ParseEasterDates1600_2099();
-        easterDateImportService.ParseEasterDates1700_2299();
+        easterDateImportService.ImportEasterDates1600_2099();
+        easterDateImportService.ImportEasterDates1700_2299();
     }
 }

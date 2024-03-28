@@ -28,7 +28,7 @@ public class PlanetImportService(
     /// <summary>
     /// Initialize the planet data from the CSV file.
     /// </summary>
-    public void ImportPlanets()
+    public void Import()
     {
         // Get the Sun.
         AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
@@ -87,9 +87,6 @@ public class PlanetImportService(
             astroDbContext.SaveChanges();
 
             // Orbital parameters.
-            // TODO: Fix this. The Orbit and other objects aren't loaded by default now when the
-            // TODO: planet is loaded, so we have to look in the database for the Orbit object
-            // TODO: first, before creating a new one.
             planet.Orbit ??= new OrbitalRecord();
 
             // Apoapsis is provided in km, convert to m.
