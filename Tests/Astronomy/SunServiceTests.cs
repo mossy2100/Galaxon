@@ -36,8 +36,8 @@ public class SunServiceTests
     [TestMethod]
     public void CalcPositionTest()
     {
-        double JDTT = 2448908.5;
-        (double actualL, double actualB, double actualR) = _sunService!.CalcPosition(JDTT);
+        double jdtt = 2448908.5;
+        (double actualL, double actualB, double actualR) = _sunService!.CalcPosition(jdtt);
 
         double expectedL = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 21.82));
         double expectedB = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.62));
@@ -57,14 +57,15 @@ public class SunServiceTests
     public void TestExample25a()
     {
         // Arrange
-        DateTime dt_TT = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
-        double JDTT = JulianDateService.DateTimeToJulianDate(dt_TT);
+        DateTime dttt = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
+        // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
+        double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
 
         // Act
-        Coordinates sunPosition = _sunService!.CalcPosition(JDTT);
+        Coordinates sunPosition = _sunService!.CalcPosition(jdtt);
 
         // Assert
-        Assert.AreEqual(2448908.5, JDTT);
+        Assert.AreEqual(2448908.5, jdtt);
         Assert.AreEqual(Angles.DMSToRadians(199, 54, 26.18), sunPosition.Longitude);
         Assert.AreEqual(Angles.DMSToRadians(0, 0, 0.72), sunPosition.Latitude);
     }

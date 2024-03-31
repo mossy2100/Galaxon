@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Core.Types;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Astronomy;
@@ -115,8 +116,6 @@ public class LunaServiceTests
     [TestMethod]
     public void GetPhasesInYear_CompareWithUsno()
     {
-        int maxDiff = 60;
-
         // Arrange
         List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
             .Where(lp => lp.DateTimeUtcUsno != null)
@@ -133,26 +132,29 @@ public class LunaServiceTests
 
             MoonPhase myPhase =
                 LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
+            myPhase.DateTimeUtc = DateTimeExtensions.RoundToNearestMinute(myPhase.DateTimeUtc);
 
             // Assert
             if (astroPixelsPhase.Type != myPhase.Type)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
+                    $"{astroPixelsPhase.Type.GetDescriptionOrName(),15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
             }
 
             Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
 
-            TimeSpan diff = astroPixelsPhase.DateTimeUtcUsno.Value - myPhase.DateTimeUtc;
-            if (diff.TotalSeconds > maxDiff)
+            long diffMinutes =
+                (astroPixelsPhase.DateTimeUtcUsno.Value.Ticks - myPhase.DateTimeUtc.Ticks)
+                / TimeConstants.TICKS_PER_MINUTE;
+            if (diffMinutes > 1)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diffMinutes} minutes");
             }
-            else
-            {
-                Assert.IsTrue(diff.TotalSeconds <= maxDiff);
-            }
+            // else
+            // {
+            //     Assert.IsTrue(diffMinutes <= 1);
+            // }
         }
     }
 

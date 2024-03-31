@@ -2,7 +2,7 @@ using Galaxon.Numerics.Extensions;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public class SolarCalendar
 {

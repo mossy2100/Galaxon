@@ -41,12 +41,12 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <summary>
     /// Calculate the heliocentric position of Earth at a given point in time.
     /// </summary>
-    /// <param name="JDTT">The Julian Date in Terrestrial Time.</param>
+    /// <param name="jdtt">The Julian Date in Terrestrial Time.</param>
     /// <returns>Heliocentric coordinates of Earth.</returns>
-    public Coordinates CalcPosition(double JDTT)
+    public Coordinates CalcPosition(double jdtt)
     {
         AstroObject earth = GetPlanet();
-        return planetService.CalcPlanetPosition(earth, JDTT);
+        return planetService.CalcPlanetPosition(earth, jdtt);
     }
 
     #endregion Instance methods
@@ -57,11 +57,11 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// Calculate the Earth Rotation Angle from the Julian Date in UT1.
     /// <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
     /// </summary>
-    /// <param name="JD">The Julian Date in UT1.</param>
+    /// <param name="jdut">The Julian Date in UT1.</param>
     /// <returns>The Earth Rotation Angles.</returns>
-    public static double CalcEarthRotationAngle(double JD)
+    public static double CalcEarthRotationAngle(double jdut)
     {
-        double t = JulianDateService.JulianDaysSinceJ2000(JD);
+        double t = JulianDateService.JulianDaysSinceJ2000(jdut);
         double radians = Tau * (0.779_057_273_264 + 1.002_737_811_911_354_48 * t);
         return Angles.WrapRadians(radians);
     }
@@ -73,8 +73,8 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double JD = JulianDateService.DateTimeToJulianDate(dt);
-        return CalcEarthRotationAngle(JD);
+        double jdut = JulianDateService.DateTimeToJulianDateUT(dt);
+        return CalcEarthRotationAngle(jdut);
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// The formula comes from:
     /// <see href="https://en.wikipedia.org/wiki/Tropical_year#Mean_tropical_year_current_value"/>
     /// </summary>
-    /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
+    /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
     public static double CalcTropicalYearLength(double T)
     {

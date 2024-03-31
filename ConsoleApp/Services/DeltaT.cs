@@ -1,6 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Services;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public static class DeltaT
 {

@@ -39,12 +39,12 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// <summary>
     /// Calculation position of Mars in heliocentric coordinates (radians).
     /// </summary>
-    /// <param name="JDTT">The Julian Date (TT).</param>
+    /// <param name="jdtt">The Julian Date (TT).</param>
     /// <returns></returns>
-    public Coordinates CalcPosition(double JDTT)
+    public Coordinates CalcPosition(double jdtt)
     {
         AstroObject mars = GetPlanet();
-        return planetService.CalcPlanetPosition(mars, JDTT);
+        return planetService.CalcPlanetPosition(mars, jdtt);
     }
 
     #endregion Instance methods
@@ -55,11 +55,11 @@ public class MarsService(AstroObjectRepository astroObjectRepository, PlanetServ
     /// Calculate the Mars Sol Date for a given point in time, expressed as a Julian Date.
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Timekeeping_on_Mars#Mars_Sol_Date"/>
-    /// <param name="JDTT">The Julian Date (TT).</param>
+    /// <param name="jdtt">The Julian Date (TT).</param>
     /// <returns>The Mars Sol Date.</returns>
-    public static double CalcMarsSolDate(double JDTT)
+    public static double CalcMarsSolDate(double jdtt)
     {
-        double JD_TAI = JulianDateService.JulianDateTerrestrialTimeToInternationalAtomicTime(JDTT);
+        double JD_TAI = JulianDateService.JulianDateTerrestrialTimeToInternationalAtomicTime(jdtt);
         const double k = 1.0 / 4000;
         double MSD = (JD_TAI - 2451549.5 + k) / TimeConstants.DAYS_PER_SOL + 44796.0;
         return MSD;

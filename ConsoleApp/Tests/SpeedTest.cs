@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Tests;
 
 public delegate double ToJulianDate(DateTime dt);
 

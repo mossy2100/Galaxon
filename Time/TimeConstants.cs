@@ -14,6 +14,20 @@ namespace Galaxon.Time;
 /// </summary>
 public static class TimeConstants
 {
+    #region Units of time per tick
+
+    /// <summary>
+    /// The number of nanoseconds in a tick.
+    /// </summary>
+    public const long NANOSECONDS_PER_TICK = 100L;
+
+    /// <summary>
+    /// The number of shakes in a tick.
+    /// </summary>
+    public const long SHAKES_PER_TICK = 10L;
+
+    #endregion Units of time per tick
+
     #region Ticks per unit of time
 
     /// <summary>
@@ -60,6 +74,11 @@ public static class TimeConstants
     /// The average number of ticks in a Gregorian year.
     /// </summary>
     public const long TICKS_PER_YEAR = 315_569_520_000_000L;
+
+    /// <summary>
+    /// The average number of ticks in an olympiad
+    /// </summary>
+    public const long TICKS_PER_OLYMPIAD = 1_262_278_080_000_000L;
 
     #endregion Seconds per unit of time
 
@@ -316,7 +335,7 @@ public static class TimeConstants
     /// Julian Date (UT) at the start of the Gregorian epoch, the epoch used by .NET, which began at
     /// 0001-01-01 00:00:00 UTC.
     /// </summary>
-    public const double START_GREGORIAN_EPOCH_JD_UT = 1721425.5;
+    public const double START_GREGORIAN_EPOCH_JD_UT = 1_721_425.5;
 
     /// <summary>
     /// Julian Date (TT) of the start point of the J2000 epoch.
@@ -325,7 +344,7 @@ public static class TimeConstants
     /// This is equivalent to noon on 2000-01-01 in Terrestrial Time (not UTC).
     /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
     /// </summary>
-    public const double START_J2000_EPOCH_JD_TT = 2451545.0;
+    public const double START_J2000_EPOCH_JD_TT = 2_451_545.0;
 
     /// <summary>
     /// The start point of the J2000 epoch in UTC.
@@ -354,7 +373,7 @@ public static class TimeConstants
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar decade.
     /// </summary>
-    public const double DAYS_PER_JULIAN_DECADE = 3652.5;
+    public const double DAYS_PER_JULIAN_DECADE = 3_652.5;
 
     /// <summary>
     /// The number of SI seconds in a Julian Calendar decade.
@@ -435,7 +454,7 @@ public static class TimeConstants
     /// <summary>
     /// Number of days (Earth solar days) per sol (Mars solar day).
     /// </summary>
-    public const double DAYS_PER_SOL = 1.02749125;
+    public const double DAYS_PER_SOL = 1.027_491_25;
 
     #endregion Mars
 }

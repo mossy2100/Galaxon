@@ -69,15 +69,15 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double JD = JulianDateService.DateTimeToJulianDate(dtPhaseApprox);
-        double JDTT = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(JD);
-        double T = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
+        double jdut = JulianDateService.DateTimeToJulianDateUT(dtPhaseApprox);
+        double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
         double T2 = T * T;
         double T3 = T * T2;
         double T4 = T * T3;
 
-        // Calculate JDTT.
-        JDTT = 2_451_550.097_66
+        // Calculate jdtt.
+        jdtt = 2_451_550.097_66
             + 29.530_588_861 * k
             + 0.000_154_37 * T2
             + 0.000_000_150 * T3
@@ -87,13 +87,13 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         double E = 1 - 0.002_516 * T - 0.000_0074 * T2;
         double E2 = E * E;
 
-        // Calculate Sun's mean anomaly at time JDTT (radians).
+        // Calculate Sun's mean anomaly at time jdtt (radians).
         double M = Angles.DegreesToRadiansWithWrap(2.5534
             + 29.105_356_70 * k
             - 0.000_001_4 * T2
             - 0.000_000_11 * T3);
 
-        // Calculate Luna's mean anomaly at time JDTT (radians).
+        // Calculate Luna's mean anomaly at time jdtt (radians).
         double L = Angles.DegreesToRadiansWithWrap(201.5643
             + 385.816_935_28 * k
             + 0.010_758_2 * T2
@@ -214,7 +214,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
                 - 0.00002 * Cos(L - M)
                 + 0.00002 * Cos(L + M)
                 + 0.00002 * Cos(2 * F);
-            JDTT += phaseType == ELunarPhaseType.FirstQuarter ? W : -W;
+            jdtt += phaseType == ELunarPhaseType.FirstQuarter ? W : -W;
         }
 
         // Additional correction for all phases.
@@ -234,11 +234,11 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
             + 0.000_023 * Sin(A14);
 
         // Apply corrections.
-        JDTT += C1 + C2;
+        jdtt += C1 + C2;
 
-        // Convert the JDTT to a UTC DateTime.
-        JD = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(JDTT);
-        DateTime dtPhase = JulianDateService.JulianDateToDateTime(JD);
+        // Convert the jdtt to a UTC DateTime.
+        jdut = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(jdtt);
+        DateTime dtPhase = JulianDateService.JulianDateToDateTimeUT(jdut);
 
         // Construct and return the LunarPhase object.
         return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };

@@ -1,4 +1,4 @@
-﻿namespace Galaxon.ConsoleApp;
+﻿namespace Galaxon.ConsoleApp.Services;
 
 public class RuleFinder
 {
@@ -12,24 +12,34 @@ public class RuleFinder
             return n % den % a == r;
         }
 
+        // Invert fraction to find the min and max gaps.
+        double avgGap = (double)den / num;
+        int minGap = (int)double.Truncate(avgGap);
+        int maxGap = minGap + 1;
+        Console.WriteLine($"Gaps between leap years should be {minGap} or {maxGap}");
+
         for (int a2 = 2; a2 < den; a2++)
         {
             for (int r2 = 0; r2 < a2; r2++)
             {
                 // Test the formula.
                 int count = 0;
+                int gap = 0;
+                List<int> gaps = new ();
                 for (int n2 = 0; n2 < den; n2++)
                 {
                     if (isLeapYear(n2, a2, r2))
                     {
                         count++;
+                        gaps.Add(gap);
+                        gap = 0;
                     }
+                    gap++;
                 }
 
-                if (count == num)
+                if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
                 {
                     Console.WriteLine($"Found solution: y % {den} % {a2} == {r2};");
-                    break;
                 }
             }
         }
@@ -45,6 +55,12 @@ public class RuleFinder
             return n % den % a % b == r;
         }
 
+        // Invert fraction to find the min and max gaps.
+        double avgGap = (double)den / num;
+        int minGap = (int)double.Truncate(avgGap);
+        int maxGap = minGap + 1;
+        Console.WriteLine($"Gaps between leap years should be {minGap} or {maxGap}");
+
         for (int a2 = 2; a2 < den; a2++)
         {
             for (int b2 = 2; b2 < a2; b2++)
@@ -53,18 +69,24 @@ public class RuleFinder
                 {
                     // Test the formula.
                     int count = 0;
+                    int gap = 0;
+                    List<int> gaps = new ();
                     for (int n2 = 0; n2 < den; n2++)
                     {
                         if (isLeapYear(n2, a2, b2, r2))
                         {
                             count++;
+                            gaps.Add(gap);
+                            gap = 0;
                         }
+                        gap++;
                     }
+                    // Add any remaining gap to the first one.
+                    gaps[0] += gap;
 
-                    if (count == num)
+                    if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
                     {
                         Console.WriteLine($"Found solution: n % {den} % {a2} % {b2} == {r2};");
-                        return;
                     }
                 }
             }

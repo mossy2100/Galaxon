@@ -80,12 +80,12 @@ public class NutationService
     /// <summary>
     /// Calculate the nutation for a point in time, defined by Julian Date in Terrestrial Time.
     /// </summary>
-    /// <param name="JDTT">The Julian Date in Terrestrial Time.</param>
+    /// <param name="jdtt">The Julian Date in Terrestrial Time.</param>
     /// <returns>The components of the nutation as a tuple.</returns>
-    public static Nutation CalcNutation(double JDTT)
+    public static Nutation CalcNutation(double jdtt)
     {
         // Calculate the number of Julian centuries since J2000.0.
-        double T = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
 
         // Calculate mean elongation of the Moon from the Sun.
         double D = Polynomials.EvaluatePolynomial([297.850_36, 445_267.111_480, -0.001_9142,

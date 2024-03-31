@@ -1,4 +1,4 @@
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public class PrintedMonth()
 {

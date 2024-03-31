@@ -10,11 +10,11 @@ public class SunService(EarthService earthService)
     /// <summary>
     /// Calculation the variation in the Sun's longitude in radians.
     /// </summary>
-    /// <param name="JDTT">The Julian Date in Terrestrial Time.</param>
+    /// <param name="jdtt">The Julian Date in Terrestrial Time.</param>
     /// <returns></returns>
-    public static double CalcVariationInSunLongitude(double JDTT)
+    public static double CalcVariationInSunLongitude(double jdtt)
     {
-        double TM = JulianDateService.JulianMillenniaSinceJ2000(JDTT);
+        double TM = JulianDateService.JulianMillenniaSinceJ2000(jdtt);
         double TM2 = TM * TM;
 
         double deltaLambdaInArcseconds = 3548.193
@@ -45,16 +45,16 @@ public class SunService(EarthService earthService)
 
     /// <summary>
     /// Calculate apparent solar latitude and longitude for a given instant specified as a Julian
-    /// Date in Terrestrial Time (a.k.a. JDTT, a.k.a. Julian Ephemeris Day or JDE).
+    /// Date in Terrestrial Time (a.k.a. jdtt, a.k.a. Julian Ephemeris Day or JDE).
     /// This method uses the higher accuracy algorithm from AA2 Ch25 p166 (p174 in PDF)
     /// </summary>
-    /// <param name="JDTT">The Julian Ephemeris Day.</param>
+    /// <param name="jdtt">The Julian Ephemeris Day.</param>
     /// <returns>The longitude of the Sun (Ls) in radians at the given
     /// instant.</returns>
-    public Coordinates CalcPosition(double JDTT)
+    public Coordinates CalcPosition(double jdtt)
     {
         // Get the Earth's heliocentric position.
-        (double Le, double Be, double Re) = earthService.CalcPosition(JDTT);
+        (double Le, double Be, double Re) = earthService.CalcPosition(jdtt);
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
         double Ls = WrapRadians(Le + PI);
@@ -64,7 +64,7 @@ public class SunService(EarthService earthService)
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
         // the date.
-        double T = JulianDateService.JulianCenturiesSinceJ2000(JDTT);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
         double lambdaPrime = Polynomials.EvaluatePolynomial(
             [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
         Ls -= DMSToRadians(0, 0, 0.090_33);
@@ -74,11 +74,11 @@ public class SunService(EarthService earthService)
         // referred to the mean equinox of the date.
 
         // Calculate and add the nutation in longitude.
-        Nutation nutation = NutationService.CalcNutation(JDTT);
+        Nutation nutation = NutationService.CalcNutation(jdtt);
         Ls += nutation.Longitude;
 
         // Calculate and add the aberration.
-        double deltaLambdaInRadians = CalcVariationInSunLongitude(JDTT);
+        double deltaLambdaInRadians = CalcVariationInSunLongitude(jdtt);
         double RsInAU = Rs / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
         double aberration = -0.005_775_518 * RsInAU * deltaLambdaInRadians;
         Ls += aberration;
@@ -98,8 +98,8 @@ public class SunService(EarthService earthService)
     /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
     public Coordinates CalcPosition(DateTime dt)
     {
-        double JD = JulianDateService.DateTimeToJulianDate(dt);
-        double JDTT = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(JD);
-        return CalcPosition(JDTT);
+        double jdut = JulianDateService.DateTimeToJulianDateUT(dt);
+        double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+        return CalcPosition(jdtt);
     }
 }

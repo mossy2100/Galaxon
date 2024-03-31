@@ -221,79 +221,89 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     {
         for (int year = 1700; year <= 2100; year++)
         {
-            Console.WriteLine();
-
-            try
+            string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
+            using HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
             {
-                string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
-
-                using HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
+                string jsonContent = await response.Content.ReadAsStringAsync();
+                // Parse the JSON data to extract the seasonal marker data
+                UsnoLunarPhasesForYear? ulps =
+                    JsonConvert.DeserializeObject<UsnoLunarPhasesForYear>(jsonContent);
+                if (ulps?.phasedata == null || ulps.phasedata.IsEmpty())
                 {
-                    string jsonContent = await response.Content.ReadAsStringAsync();
-                    // Parse the JSON data to extract the seasonal marker data
-                    UsnoLunarPhasesForYear? ulps =
-                        JsonConvert.DeserializeObject<UsnoLunarPhasesForYear>(jsonContent);
-                    if (ulps?.phasedata == null || ulps.phasedata.IsEmpty())
+                    Console.WriteLine(
+                        $"Failed to retrieve data. Status code: {response.StatusCode}");
+                }
+                else
+                {
+                    foreach (UsnoLunarPhase ulp in ulps.phasedata)
                     {
-                        Console.WriteLine(
-                            $"Failed to retrieve data. Status code: {response.StatusCode}");
-                    }
-                    else
-                    {
-                        foreach (UsnoLunarPhase ulp in ulps.phasedata)
+                        Console.WriteLine();
+
+                        // Get the phase type.
+                        ELunarPhaseType lunarPhaseType;
+                        bool parsedPhase;
+                        if (ulp.phase == "Last Quarter")
                         {
-                            bool ok = EnumExtensions.TryParse(ulp.phase,
-                                out ELunarPhaseType lunarPhaseType);
-                            if (!ok)
-                            {
-                                throw new InvalidOperationException(
-                                    "Error parsing lunar phase type.");
-                            }
+                            lunarPhaseType = ELunarPhaseType.ThirdQuarter;
+                            parsedPhase = true;
+                        }
+                        else
+                        {
+                            parsedPhase =
+                                EnumExtensions.TryParse(ulp.phase, out lunarPhaseType);
+                        }
+                        if (!parsedPhase)
+                        {
+                            throw new InvalidOperationException(
+                                "Error parsing lunar phase type.");
+                        }
 
-                            // Construct the datetime.
-                            DateOnly date = new (year, ulp.month, ulp.day);
-                            TimeOnly time = TimeOnly.Parse(ulp.time);
-                            DateTime dt = new (date, time, DateTimeKind.Utc);
+                        // Construct the datetime.
+                        DateOnly date = new (year, ulp.month, ulp.day);
+                        TimeOnly time = TimeOnly.Parse(ulp.time);
+                        DateTime dt = new (date, time, DateTimeKind.Utc);
 
-                            // Construct the LunarPhase record.
+                        // Construct the LunarPhase record.
+                        Console.WriteLine($"{ulp.phase,20}: {dt.ToIsoString()}");
+
+                        // See if we need to update or insert a record.
+                        LunarPhase? existingLunarPhase = astroDbContext.LunarPhases
+                            .Where(lp => lp.Type == lunarPhaseType)
+                            .ToList()
+                            .FirstOrDefault(lp =>
+                                (lp.DateTimeUtcAstroPixels != null
+                                    && Math.Abs(lp.DateTimeUtcAstroPixels.Value.Ticks - dt.Ticks)
+                                    < TimeConstants.TICKS_PER_DAY)
+                                || (lp.DateTimeUtcUsno != null
+                                    && Math.Abs(lp.DateTimeUtcUsno.Value.Ticks - dt.Ticks)
+                                    < TimeConstants.TICKS_PER_DAY)
+                            );
+                        if (existingLunarPhase == null)
+                        {
+                            // Insert new record.
                             LunarPhase newLunarPhase = new LunarPhase
                             {
                                 Type = lunarPhaseType,
                                 DateTimeUtcUsno = dt
                             };
-                            Console.WriteLine($"{ulp.phase,20}: {dt.ToIsoString()}");
-
-                            // Update or insert the record.
-                            LunarPhase? existingLunarPhase =
-                                astroDbContext.LunarPhases.FirstOrDefault(sm =>
-                                    sm.Type == lunarPhaseType
-                                    && sm.DateTimeUtcUsno != null
-                                    && sm.DateTimeUtcUsno.Value.Year == year);
-                            if (existingLunarPhase == null)
-                            {
-                                astroDbContext.LunarPhases.Add(newLunarPhase);
-                                await astroDbContext.SaveChangesAsync();
-                            }
-                            else if (existingLunarPhase.DateTimeUtcUsno != dt)
-                            {
-                                existingLunarPhase.DateTimeUtcUsno = dt;
-                                await astroDbContext.SaveChangesAsync();
-                            }
+                            astroDbContext.LunarPhases.Add(newLunarPhase);
+                            await astroDbContext.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            // Update existing record.
+                            existingLunarPhase.DateTimeUtcUsno = dt;
+                            await astroDbContext.SaveChangesAsync();
                         }
                     }
                 }
-                else
-                {
-                    Console.WriteLine(
-                        $"Failed to retrieve data. Status code: {response.StatusCode}");
-                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine(
+                    $"Failed to retrieve data. Status code: {response.StatusCode}");
             }
         }
     }

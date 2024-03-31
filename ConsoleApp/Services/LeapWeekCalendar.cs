@@ -1,7 +1,7 @@
 using Galaxon.Core.Strings;
 using Galaxon.Time;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public class LeapWeekCalendar
 {
@@ -25,7 +25,7 @@ public class LeapWeekCalendar
     {
         double weeksPerYear = TimeConstants.DAYS_PER_TROPICAL_YEAR / TimeConstants.DAYS_PER_WEEK;
         double maxDiff = 30.0 / TimeConstants.SECONDS_PER_WEEK;
-        FractionFinder.FindFraction(weeksPerYear, maxDiff, TimeConstants.SECONDS_PER_WEEK);
+        FractionFinder.FindFraction(weeksPerYear, maxDiff, ETimeUnit.Week);
     }
 
     public static void FindIntercalationRule()
@@ -203,6 +203,55 @@ public class LeapWeekCalendar
                 }
                 ln++;
             }
+        }
+    }
+
+    public static void TestLeapYearPattern(int n, int d, int a, int b)
+    {
+        bool isLeapYear(int y) => y % d % a % b == 0;
+        int count = 0;
+        Console.WriteLine();
+        int gap = 0;
+        List<int> gaps = new ();
+        for (int yy = 0; yy < d; yy++)
+        {
+            if (isLeapYear(yy))
+            {
+                count++;
+                Console.Write("  1  ");
+
+                // Add the gap.
+                gaps.Add(gap);
+                gap = 0;
+            }
+            else
+            {
+                Console.Write("  0  ");
+            }
+
+            gap++;
+
+            if (yy % a == a - 1)
+            {
+                Console.WriteLine();
+            }
+        }
+
+        // Add any remaining gap to the first one.
+        gaps[0] += gap;
+
+        Console.WriteLine();
+        if (count == n)
+        {
+            Console.WriteLine($"Total number of leap years = {count}");
+            Console.WriteLine($"Gaps: {string.Join(", ", gaps)} = {gaps.Sum()},");
+            Console.WriteLine($"Minimum gap: {gaps.Min()}");
+            Console.WriteLine($"Maximum gap: {gaps.Max()}");
+        }
+        else
+        {
+            Console.WriteLine($"Total number of leap years = {count}");
+            Console.WriteLine($"Not equal to {n}");
         }
     }
 }

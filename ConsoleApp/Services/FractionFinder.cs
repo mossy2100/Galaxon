@@ -1,29 +1,37 @@
 using Galaxon.Numerics.BigNumbers;
+using Galaxon.Time;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public class FractionFinder
 {
-    public static void FindFraction(double avg, double maxDiff, double mult)
+    public static (int, int) FindFraction(double avg, double maxDiff, ETimeUnit timeUnit)
     {
         int whole = (int)Math.Floor(avg);
         double frac = avg - whole;
         Console.WriteLine($"Average = {avg}");
         Console.WriteLine($"Fraction = {frac}");
+        double smallestDiff = double.MaxValue;
+        int bestNum = 0;
+        int bestDen = 0;
 
-        for (int den = 2; den <= 1000; den++)
+        for (int den = 2; den <= 500; den++)
         {
             int num = (int)Math.Round(den * frac);
             double frac2 = (double)num / den;
             double diff = Math.Abs(frac - frac2);
 
             // See if this fraction is worth reporting.
-            if (diff <= maxDiff && !BigRational.IsReducible(num, den))
+            if (diff <= maxDiff && diff < smallestDiff && !BigRational.IsReducible(num, den))
             {
-                double diffInSeconds = diff * mult;
+                double diffInSeconds = TimeSpanExtensions.Convert(diff, timeUnit, ETimeUnit.Second);
                 Console.WriteLine($"Found fraction {num}/{den} = {frac2}. Difference = {diffInSeconds} seconds per year.");
-                RuleFinder.FindRuleWith2Mods(num, den);
+                smallestDiff = diff;
+                bestNum = num;
+                bestDen = den;
             }
         }
+
+        return (bestNum, bestDen);
     }
 }

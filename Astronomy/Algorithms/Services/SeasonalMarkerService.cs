@@ -57,7 +57,7 @@ public class SeasonalMarkerService(SunService sunService)
     public DateTime CalcSeasonalMarker(int year, ESeasonalMarkerType markerType)
     {
         // Get the mean value as a Julian Date (TT).
-        double JDTT = CalcSeasonalMarkerMean(year, markerType);
+        double jdtt = CalcSeasonalMarkerMean(year, markerType);
 
         // Find the target Ls in radians (0, π/2, -π, or -π/2).
         double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
@@ -70,7 +70,7 @@ public class SeasonalMarkerService(SunService sunService)
         do
         {
             // Get the longitude of the Sun in radians.
-            (double Ls, double _, double _) = sunService.CalcPosition(JDTT);
+            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
 
             // Calculate the difference between the computed longitude of the Sun at this time, and
             // the target value.
@@ -83,15 +83,15 @@ public class SeasonalMarkerService(SunService sunService)
             }
 
             // Make a correction.
-            JDTT += 58 * Sin(diffLs);
+            jdtt += 58 * Sin(diffLs);
         }
         while (true);
 
         // Get the Julian Date in Universal Time.
-        double JDUT = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(JDTT);
+        double JDUT = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(jdtt);
 
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateToDateTime(JDUT);
+        DateTime dt = JulianDateService.JulianDateToDateTimeUT(JDUT);
 
         // Round off to nearest second.
         return DateTimeExtensions.RoundToNearestSecond(dt);
@@ -192,13 +192,13 @@ public class SeasonalMarkerService(SunService sunService)
             term.A * Cos(Angles.DegreesToRadians(term.B + term.C * T)));
 
         // Equation from p178.
-        double JDTT = JDE0 + 0.000_01 * S / dLambda;
+        double jdtt = JDE0 + 0.000_01 * S / dLambda;
 
         // Get the Julian Date in Universal Time.
-        double JDUT = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(JDTT);
+        double JDUT = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(jdtt);
 
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateToDateTime(JDUT);
+        DateTime dt = JulianDateService.JulianDateToDateTimeUT(JDUT);
 
         // Round off to nearest minute.
         return DateTimeExtensions.RoundToNearestMinute(dt);

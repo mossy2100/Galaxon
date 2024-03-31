@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public class Metonic
 {
@@ -20,7 +20,7 @@ public class Metonic
         double dayDiff = dayLengthNow - dayLengthThen;
         string dayIncreaseVerb = dayLengthNow > dayLengthThen ? "increased" : "decreased";
         TimeSpan tsDayDiff = TimeSpan.FromSeconds(Math.Abs(dayDiff));
-        Console.WriteLine($"The solar day has {dayIncreaseVerb} by {TimeSpanConversion.GetTimeString(tsDayDiff)}.");
+        Console.WriteLine($"The solar day has {dayIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsDayDiff)}.");
 
         Console.WriteLine();
 
@@ -31,7 +31,7 @@ public class Metonic
         double lunationDiff = lunationLengthNow - lunationLengthThen;
         string lunationIncreaseVerb = lunationLengthNow > lunationLengthThen ? "increased" : "decreased";
         TimeSpan tsLunationDiff = TimeSpan.FromDays(Math.Abs(lunationDiff));
-        Console.WriteLine($"The lunation has {lunationIncreaseVerb} by {TimeSpanConversion.GetTimeString(tsLunationDiff)}.");
+        Console.WriteLine($"The lunation has {lunationIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsLunationDiff)}.");
 
         Console.WriteLine();
 
@@ -42,6 +42,6 @@ public class Metonic
         double yearDiff = yearLengthNow - yearLengthThen;
         string yearIncreaseVerb = yearLengthNow > yearLengthThen ? "increased" : "decreased";
         TimeSpan tsYearDiff = TimeSpan.FromDays(Math.Abs(yearDiff));
-        Console.WriteLine($"The tropical year has {yearIncreaseVerb} by {TimeSpanConversion.GetTimeString(tsYearDiff)}.");
+        Console.WriteLine($"The tropical year has {yearIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsYearDiff)}.");
     }
 }

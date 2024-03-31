@@ -86,11 +86,12 @@ public class PlanetServiceTests
             Assert.Fail("Could not find Saturn in the database.");
             return;
         }
-        var dt_TT = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double JDTT = JulianDateService.DateTimeToJulianDate(dt_TT);
+        // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
+        var dttt = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
+        double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
 
         // Act.
-        (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, JDTT);
+        (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, jdtt);
 
         // Assert.
         double expectedL = Angles.DegreesToRadians(39.972_3901);

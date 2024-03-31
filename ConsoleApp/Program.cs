@@ -1,4 +1,6 @@
-﻿namespace Galaxon.ConsoleApp;
+﻿using Galaxon.ConsoleApp.Services;
+
+namespace Galaxon.ConsoleApp;
 
 class Program
 {
@@ -9,7 +11,9 @@ class Program
         // LeapWeekCalendar.VerifyIntercalationRule();
         // LeapWeekCalendar.PrintLeapWeekPattern();
         // LeapWeekCalendar.PrintCalendarPages13();
-        // TropicalYear.GetTropicalYearLength();
-        LunisolarCalendar.FindEpoch();
+        LeapWeekCalendar.TestLeapYearPattern(11, 62, 17, 6);
+        // TropicalYear.GetAverageTropicalLengthPerMillennium();
+        // RuleFinder.FindRuleWith3Mods(121, 500);
+        // LunisolarCalendar.FindEpoch();
     }
 }

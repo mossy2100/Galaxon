@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Numerics;
 
-namespace Galaxon.ConsoleApp;
+namespace Galaxon.ConsoleApp.Services;
 
 public static class Print
 {

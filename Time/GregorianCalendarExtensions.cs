@@ -160,6 +160,43 @@ public static class GregorianCalendarExtensions
     }
 
     /// <summary>
+    /// Get the number of ticks in a given Gregorian Calendar year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <returns>The number of ticks in the year.</returns>
+    public static long GetTicksInYear(int year)
+    {
+        // Check year is valid.
+        if (year is < 1 or > 9999)
+        {
+            throw new ArgumentOutOfRangeException(nameof(year),
+                "Year must be in the range 1..9999");
+        }
+
+        GregorianCalendar gc = new ();
+        int days = gc.GetDaysInYear(year);
+        return days * TimeConstants.TICKS_PER_DAY;
+    }
+
+    /// <summary>
+    /// Get the DateTime for the midpoint of a given Gregorian year.
+    /// </summary>
+    /// <param name="year">The year (1 through 9999).</param>
+    /// <param name="kind">The DateTimeKind.</param>
+    /// <returns>A DateTime representing the end of the year (UT).</returns>
+    public static DateTime YearMidPoint(int year, DateTimeKind kind = DateTimeKind.Unspecified)
+    {
+        // Check year is valid.
+        if (year is < 1 or > 9999)
+        {
+            throw new ArgumentOutOfRangeException(nameof(year),
+                "Year must be in the range 1..9999");
+        }
+
+        return YearStart(year, kind).AddTicks(GetTicksInYear(year) / 2);
+    }
+
+    /// <summary>
     /// Get the DateTime for the start of a given Gregorian month.
     /// </summary>
     /// <param name="year">The year (1 through 9999).</param>
