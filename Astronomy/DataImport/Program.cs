@@ -16,6 +16,29 @@ public class Program
 
     public static async Task Main()
     {
+        SetupLogging();
+        SetupServices();
+
+        try
+        {
+            // await ImportDwarfPlanets();
+            // await ImportNaturalSatellites();
+            await ImportLunarPhases();
+        }
+        catch (Exception ex)
+        {
+            // Log any unhandled exceptions
+            Log.Error(ex, "An error occurred.");
+        }
+        finally
+        {
+            // Dispose the service provider to clean up resources
+            await _serviceProvider!.DisposeAsync();
+        }
+    }
+
+    public static void SetupLogging()
+    {
         string? solnDir = DirectoryUtility.GetSolutionDirectory();
         if (solnDir == null)
         {
@@ -28,7 +51,10 @@ public class Program
             .WriteTo.Console()
             .WriteTo.File(Path.Combine(solnDir, "logs/Astronomy.DataImport.log"))
             .CreateLogger();
+    }
 
+    public static void SetupServices()
+    {
         // Setup DI container.
         IServiceCollection serviceCollection = new ServiceCollection()
             .AddDbContext<AstroDbContext>();
@@ -61,28 +87,7 @@ public class Program
 
         // Build.
         _serviceProvider = serviceCollection.BuildServiceProvider();
-
-        try
-        {
-            //======================================================================================
-            // await ImportDwarfPlanets();
-            // await ImportNaturalSatellites();
-            await ImportLunarPhases();
-            //======================================================================================
-        }
-        catch (Exception ex)
-        {
-            // Log any unhandled exceptions
-            Log.Error(ex, "An error occurred while importing data.");
-        }
-        finally
-        {
-            // Dispose the service provider to clean up resources
-            await _serviceProvider.DisposeAsync();
-        }
     }
-
-    //==============================================================================================
 
     public static void ImportGroups()
     {

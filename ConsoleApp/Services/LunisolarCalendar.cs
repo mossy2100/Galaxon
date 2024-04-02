@@ -12,7 +12,7 @@ using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.ConsoleApp.Services;
 
-public static class LunisolarCalendar
+public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, MoonService moonService)
 {
     public static bool IsFullMonth(int m)
     {
@@ -554,7 +554,7 @@ public static class LunisolarCalendar
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<MoonPhase> newMoons = LunaService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
+        List<MoonPhase> newMoons = MoonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (MoonPhase newMoon in newMoons)
         {
             // Get Ls.
@@ -565,7 +565,7 @@ public static class LunisolarCalendar
             double diff = Math.Abs(LsDeg);
             if (diff < 1)
             {
-                DateTime dtEquinox = seasonalMarkerService.CalcSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
+                DateTime dtEquinox = seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
                 double diffDays =
                     Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -579,7 +579,7 @@ public static class LunisolarCalendar
             diff = Math.Abs(LsDeg + 90);
             if (diff < 1)
             {
-                DateTime dtSolstice = seasonalMarkerService.CalcSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
+                DateTime dtSolstice = seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
                 double diffDays =
                     Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -619,8 +619,41 @@ public static class LunisolarCalendar
         }
     }
 
-    public static void TestSynchronousCycle()
+    public void FindSynchronisationPoints()
     {
+        for (int y = 2000; y <= 2200; y++)
+        {
+            // Get the Besselian New Year.
+            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTime(y);
 
+            // Keep the ones within an hour of midnight UTC.
+            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);
+            // TimeSpan diff = besselianNye - closestMidnight;
+            // if (Math.Abs(diff.Ticks) >= TimeConstants.TICKS_PER_HOUR)
+            // {
+            //     continue;
+            // }
+
+            // Check if there's also a New Moon at this time.
+            MoonPhase closestPhase = moonService.GetPhaseNearDateTimeHumble(besselianNye);
+            if (closestPhase.Type != ELunarPhaseType.NewMoon)
+            {
+                continue;
+            }
+            TimeSpan diff = besselianNye - closestPhase.DateTimeUtc;
+            diff = TimeSpanExtensions.Abs(diff);
+            if (diff.Ticks >= TimeConstants.TICKS_PER_DAY)
+            {
+                continue;
+            }
+
+            // Print candidate.
+            Console.WriteLine();
+            Console.WriteLine($"Possible alignment in year {y}");
+            Console.WriteLine($"Besselian New Year: {besselianNye.ToIsoString()}");
+            Console.WriteLine($"Closest midnight:   {closestMidnight.ToIsoString()}");
+            Console.WriteLine($"New Moon:           {closestPhase.DateTimeUtc.ToIsoString()}");
+            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff)}");
+        }
     }
 }

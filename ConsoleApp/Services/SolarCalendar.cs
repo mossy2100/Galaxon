@@ -1,10 +1,12 @@
+using System.Globalization;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.ConsoleApp.Services;
 
-public class SolarCalendar
+public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
 {
     /// <summary>
     /// 31/128 leap year methods.
@@ -25,11 +27,11 @@ public class SolarCalendar
     }
 
     /// <summary>
-    /// Formula: 5000 % 128 % 29 % 4 == 3
+    /// 121/500 formula.
     /// </summary>
     public static bool IsLeapYear3(int y)
     {
-        return Mod(Mod(Mod(Mod(y, 5000), 128), 29), 4) == 3;
+        return y % 500 % 33 % 4 == 2;
     }
 
     /// <summary>
@@ -342,5 +344,127 @@ public class SolarCalendar
         double driftSecondsPerCycle = driftSecondsPerYear * a;
         Console.WriteLine(
             $"The drift is about {driftSecondsPerYear:N3} seconds per year, or {driftSecondsPerCycle:N3} seconds per cycle (not counting the changing length of the tropical year, which is decreasing by about 0.53 seconds per century).");
+    }
+
+    public static void FindOptimalYearRange()
+    {
+        double targetAvg = 365.242;
+        double avg;
+        // Report any results with an accuracy better than 0.1 seconds per year.
+        const double maxDiff = 0.1 / TimeConstants.SECONDS_PER_DAY;
+        int minYear = 2000;
+        int maxYear = 4000;
+        int bestMaxYear = 0;
+        double smallestDiff = double.MaxValue;
+        while (true)
+        {
+            avg = TropicalYear.GetAverageLengthInSolarDays(minYear, maxYear);
+            double diff = Math.Abs(avg - targetAvg) * TimeConstants.SECONDS_PER_DAY;
+
+            if (diff < 0.1)
+            {
+                Console.WriteLine(
+                    $"Average year length from {minYear}-{maxYear - 1}: {avg} solar days (diff = {diff} seconds)");
+
+                if (diff < smallestDiff)
+                {
+                    smallestDiff = diff;
+                    bestMaxYear = maxYear;
+                }
+            }
+
+            if (targetAvg - avg > maxDiff)
+            {
+                break;
+            }
+
+            maxYear++;
+        }
+
+        Console.WriteLine(bestMaxYear);
+    }
+
+    public void PrintMillennialYearInfo()
+    {
+        for (int y = 2000; y <= 9000; y += 1000)
+        {
+            DateTime dt = GregorianCalendarExtensions.YearStart(y);
+            double jdut = JulianDateService.DateTimeToJulianDateUT(dt);
+            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(T);
+            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
+            double dayLengthSeconds = EarthService.GetSolarDayLengthInSeconds(T);
+            Console.WriteLine($"Tropical year {y}");
+            string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
+            Console.WriteLine($"  Year length in ephemeris days: {yearLengthEphemeris:F6} ({timeString})");
+            Console.WriteLine($"  Solar day length: {dayLengthSeconds:F6} seconds");
+            Console.WriteLine($"  Year length in solar days: {yearLengthSolar:F6}");
+            Console.WriteLine();
+        }
+    }
+
+    public void FindYearWithIdealLength()
+    {
+        double targetAvg = 365.242;
+        double smallestDiff = double.MaxValue;
+        double closestYear = 0;
+        double closestYearLength = 0;
+        for (int y = 3000; y < 4000; y++)
+        {
+            DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
+            double jdut = JulianDateService.DateTimeToJulianDateUT(dtMidYear);
+            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
+            double diff = Math.Abs(yearLengthSolar - targetAvg);
+            if (diff < smallestDiff)
+            {
+                smallestDiff = diff;
+                closestYear = y;
+                closestYearLength = yearLengthSolar;
+            }
+        }
+        Console.WriteLine($"In year {closestYear} the tropical year is {closestYearLength:F6} solar days.");
+    }
+
+    public void CountLeapYears()
+    {
+        GregorianCalendar gc = new ();
+        List<int> gregorianLeapYears = new ();
+        List<int> worldPeaceLeapYear = new ();
+        for (int y = 2000; y < 2052; y++)
+        {
+            if (gc.IsLeapYear(y)) gregorianLeapYears.Add(y);
+            if (y % 500 % 33 % 4 == 2) worldPeaceLeapYear.Add(y);
+        }
+        Console.WriteLine($"Gregorian leap years: {string.Join(", ", gregorianLeapYears)}");
+        Console.WriteLine($"Number of Gregorian leap years: {gregorianLeapYears.Count}");
+        Console.WriteLine($"World Peace leap years: {string.Join(", ", worldPeaceLeapYear)}");
+        Console.WriteLine($"Number of World Peace leap years: {worldPeaceLeapYear.Count}");
+    }
+
+    public void FindSynchronisationPoints()
+    {
+        for (int y = 2024; y <= 2100; y++)
+        {
+            // Get the Besselian New Year.
+            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTime(y);
+
+            // Keep the ones within an hour of midnight UTC.
+            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);
+            TimeSpan diff = TimeSpanExtensions.Abs(besselianNye - closestMidnight);
+            if (diff.Ticks >= TimeConstants.TICKS_PER_HOUR)
+            {
+                continue;
+            }
+
+            // Print candidate.
+            Console.WriteLine();
+            Console.WriteLine($"Possible alignment in year {y}");
+            Console.WriteLine($"Besselian New Year: {besselianNye.ToIsoString()}");
+            Console.WriteLine($"Closest midnight:   {closestMidnight.ToIsoString()}");
+            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff)}");
+        }
     }
 }

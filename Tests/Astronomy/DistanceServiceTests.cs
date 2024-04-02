@@ -1,5 +1,4 @@
 ﻿using Galaxon.Astronomy.Algorithms.Extensions;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Geometry;
@@ -10,26 +9,25 @@ namespace Galaxon.Tests.Astronomy;
 [TestClass]
 public class DistanceServiceTests
 {
-    private AstroDbContext? _astroDbContext;
-
-    private AstroObjectRepository? _astroObjectRepository;
-
-    private AstroObjectGroupRepository? _astroObjectGroupRepository;
-
-    [TestInitialize]
-    public void Init()
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _astroDbContext = new AstroDbContext();
-        _astroObjectGroupRepository = new AstroObjectGroupRepository(_astroDbContext);
-        _astroObjectRepository =
-            new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
+        ServiceManager.Initialize();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        ServiceManager.Dispose();
     }
 
     [TestMethod]
     public void TestShortestDistance()
     {
         // Calculate distance in metres.
-        AstroObject? earth = _astroObjectRepository?.Load("Earth", "Planet");
+        AstroObjectRepository astroObjectRepository =
+            ServiceManager.GetService<AstroObjectRepository>();
+        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
 
         if (earth == null)
         {
@@ -51,8 +49,8 @@ public class DistanceServiceTests
         double dist = earth.CalculateShortestDistanceBetween(paris, washington);
 
         // Assert.
-        // Check it's correct within 5 metres (in the book he's rounded it
-        // off to the nearest 10 metres).
-        Assert.AreEqual(dist, 6181.63, 0.005);
+        // Check it's correct within 5 metres (in the book he's rounded it off to the nearest 10
+        // metres).
+        Assert.AreEqual(dist, 6_181_630, 5);
     }
 }

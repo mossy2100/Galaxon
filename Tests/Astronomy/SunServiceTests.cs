@@ -9,35 +9,24 @@ namespace Galaxon.Tests.Astronomy;
 [TestClass]
 public class SunServiceTests
 {
-    private AstroDbContext? _astroDbContext;
-
-    private AstroObjectRepository? _astroObjectRepository;
-
-    private AstroObjectGroupRepository? _astroObjectGroupRepository;
-
-    private EarthService? _earthService;
-
-    private PlanetService? _planetService;
-
-    private SunService? _sunService;
-
-    [TestInitialize]
-    public void Init()
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _astroDbContext = new AstroDbContext();
-        _astroObjectGroupRepository = new AstroObjectGroupRepository(_astroDbContext);
-        _astroObjectRepository =
-            new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
-        _planetService = new PlanetService(_astroDbContext);
-        _earthService = new EarthService(_astroObjectRepository, _planetService);
-        _sunService = new SunService(_earthService);
+        ServiceManager.Initialize();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        ServiceManager.Dispose();
     }
 
     [TestMethod]
     public void CalcPositionTest()
     {
+        SunService sunService = ServiceManager.GetService<SunService>();
         double jdtt = 2448908.5;
-        (double actualL, double actualB, double actualR) = _sunService!.CalcPosition(jdtt);
+        (double actualL, double actualB, double actualR) = sunService.CalcPosition(jdtt);
 
         double expectedL = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 21.82));
         double expectedB = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.62));
@@ -57,16 +46,19 @@ public class SunServiceTests
     public void TestExample25a()
     {
         // Arrange
+        SunService sunService = ServiceManager.GetService<SunService>();
         DateTime dttt = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
         // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
         double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
+        double expectedLongitude = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 26.18));
+        double expectedLatitude = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.72));
 
         // Act
-        Coordinates sunPosition = _sunService!.CalcPosition(jdtt);
+        Coordinates sunPosition = sunService.CalcPosition(jdtt);
 
         // Assert
         Assert.AreEqual(2448908.5, jdtt);
-        Assert.AreEqual(Angles.DMSToRadians(199, 54, 26.18), sunPosition.Longitude);
-        Assert.AreEqual(Angles.DMSToRadians(0, 0, 0.72), sunPosition.Latitude);
+        Assert.AreEqual(expectedLongitude, sunPosition.Longitude);
+        Assert.AreEqual(expectedLatitude, sunPosition.Latitude);
     }
 }

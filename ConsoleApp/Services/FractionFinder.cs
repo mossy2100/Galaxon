@@ -22,7 +22,7 @@ public class FractionFinder
             double diff = Math.Abs(frac - frac2);
 
             // See if this fraction is worth reporting.
-            if (diff <= maxDiff && diff < smallestDiff && !BigRational.IsReducible(num, den))
+            if (diff <= maxDiff && !BigRational.IsReducible(num, den))
             {
                 double diffInSeconds = TimeSpanExtensions.Convert(diff, timeUnit, ETimeUnit.Second);
                 Console.WriteLine($"Found fraction {num}/{den} = {frac2}. Difference = {diffInSeconds} seconds per year.");

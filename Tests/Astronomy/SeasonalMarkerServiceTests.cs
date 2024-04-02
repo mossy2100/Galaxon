@@ -2,7 +2,6 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Types;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
@@ -12,40 +11,27 @@ namespace Galaxon.Tests.Astronomy;
 [TestClass]
 public class SeasonalMarkerServiceTests
 {
-    private AstroDbContext? _astroDbContext;
-
-    private AstroObjectRepository? _astroObjectRepository;
-
-    private AstroObjectGroupRepository? _astroObjectGroupRepository;
-
-    private PlanetService? _planetService;
-
-    private EarthService? _earthService;
-
-    private SunService? _sunService;
-
-    private SeasonalMarkerService? _seasonalMarkerService;
-
-    [TestInitialize]
-    public void Init()
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _astroDbContext = new AstroDbContext();
-        _astroObjectGroupRepository = new AstroObjectGroupRepository(_astroDbContext);
-        _astroObjectRepository =
-            new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
-        _planetService = new PlanetService(_astroDbContext);
-        _earthService = new EarthService(_astroObjectRepository, _planetService);
-        _sunService = new SunService(_earthService);
-        _seasonalMarkerService = new SeasonalMarkerService(_sunService);
+        ServiceManager.Initialize();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        ServiceManager.Dispose();
     }
 
     [TestMethod]
     public void TestCalcApproxSeasonalMarker()
     {
+        SeasonalMarkerService seasonalMarkerService =
+            ServiceManager.GetService<SeasonalMarkerService>();
+
         // Test Example 27.a from AA2 p180.
-        DateTime dt =
-            SeasonalMarkerService.CalcSeasonalMarkerApprox(1962,
-                ESeasonalMarkerType.NorthernSolstice);
+        DateTime dt = seasonalMarkerService.GetSeasonalMarkerApprox(1962,
+            ESeasonalMarkerType.NorthernSolstice);
         var dt2 = new DateTime(1962, 6, 21, 21, 25, 8);
         // Check they match within 1 minute.
         var delta = TimeSpan.FromMinutes(1);
@@ -58,20 +44,20 @@ public class SeasonalMarkerServiceTests
     [TestMethod]
     public void CalcSeasonalMarker_CompareWithUsno()
     {
+        // Arrange
         int goalMaxDiff = 0;
         int maxDiff = 0;
-
-        // Arrange
+        AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
+        SeasonalMarkerService seasonalMarkerService =
+            ServiceManager.GetService<SeasonalMarkerService>();
         List<SeasonalMarker> seasonalMarkers =
-            _astroDbContext!.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
+            astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
 
         // Check each.
         foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
         {
-            DateTime dt =
-                _seasonalMarkerService!.CalcSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Year,
-                    seasonalMarker.Type);
-            dt = DateTimeExtensions.RoundToNearestMinute(dt);
+            DateTime dt = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
+                seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
 
             int diff =
                 (int)Round(

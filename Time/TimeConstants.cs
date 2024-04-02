@@ -344,7 +344,7 @@ public static class TimeConstants
     /// This is equivalent to noon on 2000-01-01 in Terrestrial Time (not UTC).
     /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
     /// </summary>
-    public const double START_J2000_EPOCH_JD_TT = 2_451_545.0;
+    public const double START_J2000_EPOCH_JDTT = 2_451_545.0;
 
     /// <summary>
     /// The start point of the J2000 epoch in UTC.

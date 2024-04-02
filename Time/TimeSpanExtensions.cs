@@ -102,8 +102,9 @@ public static class TimeSpanExtensions
         {
             if (part.Value != 0)
             {
+                string value = part.Key == ETimeUnit.Second ? $"{part.Value:F3}" : $"{part.Value}";
                 string unit = $"{part.Key}".ToLower() + (part.Value == 1 ? "" : "s");
-                sParts.Add($"{part.Value} {unit}");
+                sParts.Add($"{value} {unit}");
             }
         }
         return string.Join(", ", sParts);
@@ -117,5 +118,15 @@ public static class TimeSpanExtensions
     public static string GetTimeString(TimeSpan t)
     {
         return GetTimeString(t.GetTimeParts());
+    }
+
+    /// <summary>
+    /// Get the absolute value, or magnitude, of a TimeSpan.
+    /// </summary>
+    /// <param name="t">A TimeSpan.</param>
+    /// <returns>The absolute value.</returns>
+    public static TimeSpan Abs(TimeSpan t)
+    {
+        return TimeSpan.FromTicks(Math.Abs(t.Ticks));
     }
 }

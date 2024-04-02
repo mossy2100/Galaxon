@@ -40,6 +40,7 @@ public class RuleFinder
                 if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
                 {
                     Console.WriteLine($"Found solution: y % {den} % {a2} == {r2};");
+                    Console.WriteLine(string.Join(", ", gaps));
                 }
             }
         }
@@ -87,9 +88,59 @@ public class RuleFinder
                     if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
                     {
                         Console.WriteLine($"Found solution: n % {den} % {a2} % {b2} == {r2};");
+                        Console.WriteLine(string.Join(", ", gaps));
                     }
                 }
             }
+        }
+    }
+
+    public static void PrintLeapYearPattern(int n, int d, int a, int b, int c)
+    {
+        bool isLeapYear(int y) => y % d % a % b == c;
+        int count = 0;
+        Console.WriteLine();
+        int gap = 0;
+        List<int> gaps = new ();
+        for (int yy = 0; yy < d; yy++)
+        {
+            if (isLeapYear(yy))
+            {
+                count++;
+                Console.Write(" 1");
+
+                // Add the gap.
+                gaps.Add(gap);
+                gap = 0;
+            }
+            else
+            {
+                Console.Write(" 0");
+            }
+
+            gap++;
+
+            if (yy % a == a - 1)
+            {
+                Console.WriteLine();
+            }
+        }
+
+        // Add any remaining gap to the first one.
+        gaps[0] += gap;
+
+        Console.WriteLine();
+        if (count == n)
+        {
+            Console.WriteLine($"Total number of leap years = {count}");
+            Console.WriteLine($"Gaps: {string.Join(", ", gaps)} = {gaps.Sum()}");
+            Console.WriteLine($"Minimum gap: {gaps.Min()}");
+            Console.WriteLine($"Maximum gap: {gaps.Max()}");
+        }
+        else
+        {
+            Console.WriteLine($"Total number of leap years = {count}");
+            Console.WriteLine($"Not equal to {n}");
         }
     }
 }

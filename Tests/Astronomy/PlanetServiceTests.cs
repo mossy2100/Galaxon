@@ -1,5 +1,4 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Geometry;
@@ -10,22 +9,16 @@ namespace Galaxon.Tests.Astronomy;
 [TestClass]
 public class PlanetServiceTests
 {
-    private AstroDbContext? _astroDbContext;
-
-    private AstroObjectRepository? _astroObjectRepository;
-
-    private AstroObjectGroupRepository? _astroObjectGroupRepository;
-
-    private PlanetService? _planetService;
-
-    [TestInitialize]
-    public void Init()
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _astroDbContext = new AstroDbContext();
-        _astroObjectGroupRepository = new AstroObjectGroupRepository(_astroDbContext);
-        _astroObjectRepository =
-            new AstroObjectRepository(_astroDbContext, _astroObjectGroupRepository);
-        _planetService = new PlanetService(_astroDbContext);
+        ServiceManager.Initialize();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        ServiceManager.Dispose();
     }
 
     /// <summary>
@@ -33,7 +26,7 @@ public class PlanetServiceTests
     /// <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
     /// </summary>
     [TestMethod]
-    public void TestERA()
+    public void CalcEarthRotationAngle_ReturnsCorrectResult()
     {
         DateTime dt = new (2017, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         double expected = Angles.DMSToRadians(100, 37, 12.4365);
@@ -49,7 +42,10 @@ public class PlanetServiceTests
     public void TestCalcPositionVenus()
     {
         // Arrange.
-        AstroObject? venus = _astroObjectRepository!.Load("Venus", "Planet");
+        AstroObjectRepository astroObjectRepository =
+            ServiceManager.GetService<AstroObjectRepository>();
+        PlanetService planetService = ServiceManager.GetService<PlanetService>();
+        AstroObject? venus = astroObjectRepository.Load("Venus", "Planet");
         if (venus == null)
         {
             Assert.Fail("Could not find Venus in the database.");
@@ -62,7 +58,7 @@ public class PlanetServiceTests
 
         // Act.
         (double actualL, double actualB, double actualR) =
-            _planetService!.CalcPlanetPosition(venus, 2_448_976.5);
+            planetService.CalcPlanetPosition(venus, 2_448_976.5);
 
         // Assert.
         // I assume larger delta values are needed here because Meeus uses a
@@ -80,7 +76,10 @@ public class PlanetServiceTests
     public void TestCalcPositionSaturn()
     {
         // Arrange.
-        AstroObject? saturn = _astroObjectRepository?.Load("Saturn", "Planet");
+        AstroObjectRepository astroObjectRepository =
+            ServiceManager.GetService<AstroObjectRepository>();
+        PlanetService planetService = ServiceManager.GetService<PlanetService>();
+        AstroObject? saturn = astroObjectRepository.Load("Saturn", "Planet");
         if (saturn == null)
         {
             Assert.Fail("Could not find Saturn in the database.");
@@ -91,7 +90,7 @@ public class PlanetServiceTests
         double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
 
         // Act.
-        (double actualL, double _, double _) = _planetService!.CalcPlanetPosition(saturn, jdtt);
+        (double actualL, double _, double _) = planetService.CalcPlanetPosition(saturn, jdtt);
 
         // Assert.
         double expectedL = Angles.DegreesToRadians(39.972_3901);

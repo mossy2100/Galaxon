@@ -1,4 +1,6 @@
+using System.Data;
 using Galaxon.Astronomy.Algorithms.Models;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -7,17 +9,15 @@ using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
+using Microsoft.EntityFrameworkCore;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
 /// <summary>
-/// Calling this class LunaService as there was some earlier confusion with the word "moon"
-/// referring to "the Moon" as well as natural satellites.
-/// To avoid confusion the code now refers to the Moon as "Luna" and natural satellites as
-/// "satellites".
+/// Stuff relating to the Moon.
 /// </summary>
 /// <param name="astroObjectRepository"></param>
-public class LunaService(AstroObjectRepository astroObjectRepository)
+public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
     /// Cached reference to the AstroObject representing Luna.
@@ -44,6 +44,48 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         return _luna;
     }
 
+    /// <summary>
+    /// Get the lunar phase closest to the given DateTime, deferring first to other calculations
+    /// likely to be better than mine, i.e. USNO and AstroPixels.
+    /// </summary>
+    /// <param name="dt">The approximate DateTime of the phase.</param>
+    /// <returns>The closest lunar phase.</returns>
+    public MoonPhase GetPhaseNearDateTimeHumble(DateTime dt)
+    {
+        // Get any lunar phases from the database that match within 1 day.
+        LunarPhase? lunarPhase = astroDbContext.LunarPhases
+            .FirstOrDefault(lp =>
+                (lp.DateTimeUtcUsno != null
+                    && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1)
+                || (lp.DateTimeUtcAstroPixels != null
+                    && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1));
+
+        if (lunarPhase != null)
+        {
+            if (lunarPhase.DateTimeUtcUsno != null)
+            {
+                // We found a USNO calculation, so return that.
+                return new MoonPhase
+                {
+                    Type = lunarPhase.Type,
+                    DateTimeUtc = lunarPhase.DateTimeUtcUsno!.Value
+                };
+            }
+            if (lunarPhase.DateTimeUtcAstroPixels != null)
+            {
+                // We found an AstroPixels calculation, so return that.
+                return new MoonPhase
+                {
+                    Type = lunarPhase.Type,
+                    DateTimeUtc = lunarPhase.DateTimeUtcAstroPixels!.Value
+                };
+            }
+        }
+
+        // Use my calculation.
+        return GetPhaseNearDateTime(dt);
+    }
+
     #endregion Instance methods
 
     #region Static methods
@@ -58,7 +100,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
     /// A LunarPhase object, which contains information about which phase it is, and the approximate
     /// datetime of the event.
     /// </returns>
-    public static MoonPhase GetPhaseFromDateTime(DateTime dt)
+    public static MoonPhase GetPhaseNearDateTime(DateTime dt)
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
@@ -257,7 +299,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         List<MoonPhase> result = [];
 
         // Find the phase nearest to start.
-        MoonPhase phase = GetPhaseFromDateTime(start);
+        MoonPhase phase = GetPhaseNearDateTime(start);
 
         // If it's in range, add it.
         if (phase.DateTimeUtc >= start)
@@ -274,7 +316,7 @@ public class LunaService(AstroObjectRepository astroObjectRepository)
         {
             // Get the next new moon in the series.
             DateTime nextGuess = phase.DateTimeUtc.AddDays(daysPerPhase);
-            phase = GetPhaseFromDateTime(nextGuess);
+            phase = GetPhaseNearDateTime(nextGuess);
 
             // We done?
             if (phase.DateTimeUtc > end)

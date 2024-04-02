@@ -84,7 +84,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double CalcTropicalYearLength(double T)
+    public static double GetTropicalYearLengthInEphemerisDays(double T)
     {
         return Polynomials.EvaluatePolynomial([365.242_189_6698, -6.15359e-6, -7.29e-10, 2.64e-10],
             T);
@@ -99,10 +99,22 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The day length in seconds at that point in time.</returns>
-    public static double CalcSolarDayLength(double T)
+    public static double GetSolarDayLengthInSeconds(double T)
     {
         // The length of the day increases by about 1.62±0.21 ms/cy.
         return TimeConstants.SECONDS_PER_DAY + 1.62e-3 * T;
+    }
+
+    /// <summary>
+    /// Calculate the mean tropical year length in solar days at a point in time.
+    /// </summary>
+    /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
+    /// <returns>The tropical year length in solar days at that point in time.</returns>
+    public static double GetTropicalYearLengthInSolarDays(double T)
+    {
+        return GetTropicalYearLengthInEphemerisDays(T)
+            * TimeConstants.SECONDS_PER_DAY
+            / GetSolarDayLengthInSeconds(T);
     }
 
     #endregion Static methods

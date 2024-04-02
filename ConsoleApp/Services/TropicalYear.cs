@@ -1,3 +1,4 @@
+using Azure.Core;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 
@@ -18,8 +19,8 @@ public static class TropicalYear
         double yearLengthAtEnd = 0;
         for (int y = minYear; y <= maxYear; y++)
         {
-            double tropicalYearLengthInEphemerisDays = EarthService.CalcTropicalYearLength(T);
-            double solarDayLengthInSeconds = EarthService.CalcSolarDayLength(T);
+            double tropicalYearLengthInEphemerisDays = EarthService.GetTropicalYearLengthInEphemerisDays(T);
+            double solarDayLengthInSeconds = EarthService.GetSolarDayLengthInSeconds(T);
             double tropicalYearLengthInSolarDays = tropicalYearLengthInEphemerisDays
                 * TimeConstants.SECONDS_PER_DAY
                 / solarDayLengthInSeconds;
@@ -80,55 +81,48 @@ public static class TropicalYear
         Console.WriteLine($"Or about {changePerCenturyInSeconds} seconds per century.");
     }
 
-    public static void GetAverageTropicalLengthPerMillennium()
+    public static double GetAverageLengthInSolarDays(int minYear, int maxYear)
     {
-        for (int c = 2000; c < 10000; c += 1000)
+        double totalSolarDays = 0;
+        for (int y = minYear; y < maxYear; y++)
         {
-            double totalSolarDaysInMillennium = 0;
-            for (int e = 0; e < 1000; e++)
-            {
-                int y = c + e;
-                DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
-                double jdut = JulianDateService.DateTimeToJulianDateUT(dtMidYear);
-                double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
-                double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
-                double yearLengthInEphemerisDays = EarthService.CalcTropicalYearLength(T);
-                double solarDayLengthInSeconds = EarthService.CalcSolarDayLength(T);
-                double yearLengthInSolarDays = yearLengthInEphemerisDays
-                    * TimeConstants.SECONDS_PER_DAY
-                    / solarDayLengthInSeconds;
-
-                // if (y % 100 == 0)
-                // {
-                //     string strYearLengthEphemeris =
-                //         TimeSpanConversion.GetTimeString(
-                //             TimeSpan.FromDays(yearLengthInEphemerisDays));
-                //     Console.WriteLine($"Year {y} is {strYearLengthEphemeris} long (ephemeris days).");
-                //     Console.WriteLine($"Solar day length in {y} = {solarDayLengthInSeconds} seconds");
-                //     string strYearLengthSolar =
-                //         TimeSpanConversion.GetTimeString(
-                //             TimeSpan.FromDays(yearLengthInSolarDays));
-                //     Console.WriteLine($"Year {y} is {strYearLengthSolar} long (solar days).");
-                //     Console.WriteLine();
-                // }
-
-                totalSolarDaysInMillennium += yearLengthInSolarDays;
-            }
-            double avg = totalSolarDaysInMillennium / 1000;
-            string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(avg));
-            Console.WriteLine($"Average tropical year length in millennium {c}-{c + 999} = {avg:F9} ({timeString})");
-
-            // Look for a fraction.
-            double maxDiffInDays = 1.0 / TimeConstants.MINUTES_PER_DAY;
-            (int num, int den) = FractionFinder.FindFraction(avg, maxDiffInDays, ETimeUnit.Day);
-
-            // Look for possible rules.
-            RuleFinder.FindRuleWith2Mods(num, den);
-            RuleFinder.FindRuleWith3Mods(num, den);
-
-            // int nLeapDays = (int)Math.Round(DoubleExtensions.Frac(avg) * 1000);
-            // Console.WriteLine($"Number of leap days needed = {nLeapDays}");
-            Console.WriteLine();
+            DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
+            double jdut = JulianDateService.DateTimeToJulianDateUT(dtMidYear);
+            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+            double yearLengthInSolarDays = EarthService.GetTropicalYearLengthInSolarDays(T);
+            totalSolarDays += yearLengthInSolarDays;
         }
+        return totalSolarDays / (maxYear - minYear);
+    }
+
+    public static void GetAverageLengthInSolarDaysPerMillennium()
+    {
+        for (int c = 2; c < 10; c++)
+        {
+            int minYear = c * 1000;
+            int maxYear = minYear + 1000;
+            double avg = GetAverageLengthInSolarDays(minYear, maxYear);
+            string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(avg));
+            Console.WriteLine($"Average tropical year length in millennium {minYear}-{maxYear} = {avg:F9} ({timeString})");
+        }
+    }
+
+    public static void FindLeapYearRule(int minYear, int maxYear)
+    {
+        double avgYearLength = GetAverageLengthInSolarDays(minYear, maxYear);
+        Console.WriteLine($"Average year length: {avgYearLength} solar days");
+
+        // Look for a fraction.
+        double maxDiffInDays = 1.0 / TimeConstants.MINUTES_PER_DAY;
+        (int num, int den) = FractionFinder.FindFraction(avgYearLength, maxDiffInDays, ETimeUnit.Day);
+
+        // Look for possible rules.
+        RuleFinder.FindRuleWith2Mods(num, den);
+        RuleFinder.FindRuleWith3Mods(num, den);
+
+        // int nLeapDays = (int)Math.Round(DoubleExtensions.Frac(avg) * 1000);
+        // Console.WriteLine($"Number of leap days needed = {nLeapDays}");
+        Console.WriteLine();
     }
 }

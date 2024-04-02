@@ -10,14 +10,18 @@ using Galaxon.Time;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class LunaServiceTests
+public class MoonServiceTests
 {
-    private AstroDbContext? _astroDbContext;
-
-    [TestInitialize]
-    public void Init()
+    [ClassInitialize]
+    public static void ClassInitialize(TestContext context)
     {
-        _astroDbContext = new AstroDbContext();
+        ServiceManager.Initialize();
+    }
+
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        ServiceManager.Dispose();
     }
 
     /// <summary>
@@ -30,7 +34,7 @@ public class LunaServiceTests
         DateTime dtApprox = new (1977, 2, 15);
 
         // Act
-        MoonPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
+        MoonPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.NewMoon, phase.Type);
@@ -51,7 +55,7 @@ public class LunaServiceTests
         DateTime dtApprox = new (2044, 1, 20);
 
         // Act
-        MoonPhase phase = LunaService.GetPhaseFromDateTime(dtApprox);
+        MoonPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.Type);
@@ -73,7 +77,8 @@ public class LunaServiceTests
         int maxDiff = 60;
 
         // Arrange
-        List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
+        AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
+        List<LunarPhase> astroPixelsPhases = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcAstroPixels != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels).ToList();
 
@@ -86,7 +91,7 @@ public class LunaServiceTests
             }
 
             MoonPhase myPhase =
-                LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUtcAstroPixels.Value);
+                MoonService.GetPhaseNearDateTime(astroPixelsPhase.DateTimeUtcAstroPixels.Value);
 
             // Assert
             if (astroPixelsPhase.Type != myPhase.Type)
@@ -117,7 +122,8 @@ public class LunaServiceTests
     public void GetPhasesInYear_CompareWithUsno()
     {
         // Arrange
-        List<LunarPhase> astroPixelsPhases = _astroDbContext!.LunarPhases
+        AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
+        List<LunarPhase> astroPixelsPhases = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcUsno != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels)
             .ToList();
@@ -131,7 +137,7 @@ public class LunaServiceTests
             }
 
             MoonPhase myPhase =
-                LunaService.GetPhaseFromDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
+                MoonService.GetPhaseNearDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
             myPhase.DateTimeUtc = DateTimeExtensions.RoundToNearestMinute(myPhase.DateTimeUtc);
 
             // Assert

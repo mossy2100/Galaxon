@@ -88,6 +88,20 @@ public class JulianDateService
     }
 
     /// <summary>
+    /// Convert a Julian Date in Terrestrial Time to a DateTime (UT).
+    /// </summary>
+    /// <param name="jdtt"></param>
+    /// <returns></returns>
+    public static DateTime JulianDateTerrestrialTimeToDateTime(double jdtt)
+    {
+        // Get the Julian Date in Universal Time.
+        double jdut = JulianDateTerrestrialTimeToUniversalTime(jdtt);
+
+        // Convert to DateTime.
+        return JulianDateToDateTimeUT(jdut);
+    }
+
+    /// <summary>
     /// Convert a Julian Date in Terrestrial Time (TT)  to a Julian Date in International Atomic Time (TAI).
     /// </summary>
     /// <param name="jdtt">Julian Date in Terrestrial Time</param>
@@ -123,7 +137,7 @@ public class JulianDateService
     /// <returns></returns>
     public static double JulianDaysSinceJ2000(double jdtt)
     {
-        return jdtt - TimeConstants.START_J2000_EPOCH_JD_TT;
+        return jdtt - TimeConstants.START_J2000_EPOCH_JDTT;
     }
 
     /// <summary>
