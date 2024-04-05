@@ -22,8 +22,9 @@ class Program
 
         try
         {
-            Solar();
+            // Solar();
             // Lunisolar();
+            LeapWeek();
         }
         catch (Exception ex)
         {
@@ -124,11 +125,10 @@ class Program
         // LeapWeekCalendar.FindIntercalationFraction();
         // LeapWeekCalendar.FindIntercalationRule();
         // LeapWeekCalendar.VerifyIntercalationRule();
-        // LeapWeekCalendar.PrintLeapWeekPattern();
+        LeapWeekCalendar.PrintLeapWeekPattern();
         // LeapWeekCalendar.PrintCalendarPages13();
 
-
-        RuleFinder.PrintLeapYearPattern(11, 62, 17, 6, 0);
+        // RuleFinder.PrintLeapYearPattern(11, 62, 17, 6, 0);
     }
 
     static void Lunisolar()

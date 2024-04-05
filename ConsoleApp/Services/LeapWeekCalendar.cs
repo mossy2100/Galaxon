@@ -5,18 +5,24 @@ namespace Galaxon.ConsoleApp.Services;
 
 public class LeapWeekCalendar
 {
-    private static int num = 11;
-
-    private static int den = 62;
-
-    public static bool IsLeapYear(int y)
+    public static bool IsLeapYear2(int y, int den, int a, int r)
     {
-        return y % den % 6 == 0;
+        return y % den % a == r;
+    }
+
+    public static bool IsLeapYear3(int y, int den, int a, int b, int r)
+    {
+        return y % den % a % b == r;
+    }
+
+    public static bool IsLeapYear4(int y, int den, int a, int b, int c, int r)
+    {
+        return y % den % a % b % c == r;
     }
 
     public static int DaysInMonth(int y, int m)
     {
-        if (m == 12) return IsLeapYear(y) ? 37 : 30;
+        if (m == 12) return IsLeapYear3(y, 355, 17, 5, 2) ? 37 : 30;
         if (m % 3 == 1) return 31;
         return 30;
     }
@@ -30,14 +36,28 @@ public class LeapWeekCalendar
 
     public static void FindIntercalationRule()
     {
-        RuleFinder.FindRuleWith2Mods(num, den);
-        // RuleFinder.FindRuleWith3Mods(num, den);
+        int n = 74;
+        int d = 417;
+        Console.WriteLine();
+        Console.WriteLine($"Searching for intercalation formula for fraction {n}/{d}...");
+
+        // Console.WriteLine();
+        // Console.WriteLine("2-modulo solutions:");
+        // RuleFinder.FindRuleWith2Mods(n, d);
+        //
+        // Console.WriteLine();
+        // Console.WriteLine("3-modulo solutions:");
+        // RuleFinder.FindRuleWith3Mods(n, d);
+
+        Console.WriteLine();
+        Console.WriteLine("4-modulo solutions:");
+        RuleFinder.FindRuleWith4Mods(n, d);
     }
 
     public static void VerifyIntercalationRule()
     {
-        int numYears = den;
-        int numLeapYears = num;
+        int numYears = 355;
+        int numLeapYears = 63;
         int numCommonYears = numYears - numLeapYears;
         int numWeeks = numLeapYears * 53 + numCommonYears * 52;
         int numDays = numWeeks * 7;
@@ -50,15 +70,29 @@ public class LeapWeekCalendar
 
     public static void PrintLeapWeekPattern()
     {
+        int den = 417;
+        int a = 45;
+        int b = 17;
+        int c = 6;
+        int r = 0;
+
+        Console.Write("  ");
+
         for (var y = 0; y < den; y++)
         {
-            Console.Write(IsLeapYear(y) ? 1 : 0);
-            Console.Write("  ");
-            if (y % 6 == 5)
+            Console.Write(IsLeapYear4(y, den, a, b, c, r) ? 1 : 0);
+            Console.Write(" ");
+            if (y % den % a == a - 1)
             {
                 Console.WriteLine();
+                Console.Write("  ");
+            }
+            if (y % den % a % b == b - 1)
+            {
+                Console.Write("  ");
             }
         }
+        Console.WriteLine();
     }
 
     public static void PrintCalendarPages12()
