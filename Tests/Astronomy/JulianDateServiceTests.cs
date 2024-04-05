@@ -102,19 +102,19 @@ public class JulianDateServiceTests
         DateTime dt1, dt2;
 
         dt1 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(1721425.5);
+        dt2 = JulianDateService.JulianDateToDateTime(1721425.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(2022, 6, 7, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(2459737.5);
+        dt2 = JulianDateService.JulianDateToDateTime(2459737.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(5000, 7, 2, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(3547454.5);
+        dt2 = JulianDateService.JulianDateToDateTime(3547454.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(9999, 12, 31, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(5373483.5);
+        dt2 = JulianDateService.JulianDateToDateTime(5373483.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
     }
 

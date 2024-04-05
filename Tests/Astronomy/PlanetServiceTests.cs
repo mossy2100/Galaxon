@@ -73,7 +73,7 @@ public class PlanetServiceTests
     /// Test Example 32.b from AA2 p219.
     /// </summary>
     [TestMethod]
-    public void TestCalcPositionSaturn()
+    public void CalcPlanetPosition_Example32b()
     {
         // Arrange.
         AstroObjectRepository astroObjectRepository =
@@ -85,7 +85,6 @@ public class PlanetServiceTests
             Assert.Fail("Could not find Saturn in the database.");
             return;
         }
-        // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
         var dttt = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
         double jdtt = JulianDateService.DateTimeToJulianDate(dttt);
 
