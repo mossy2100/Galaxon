@@ -36,8 +36,8 @@ public class SeasonalMarkerServiceTests
         var delta = TimeSpan.FromMinutes(1);
 
         // Act
-        DateTime dt = seasonalMarkerService.GetSeasonalMarkerApprox(1962,
-            ESeasonalMarkerType.NorthernSolstice);
+        double jdtt = seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarkerType.NorthernSolstice);
+        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Assert
         DateTimeAssert.AreEqual(dt, expected, delta);
@@ -61,8 +61,8 @@ public class SeasonalMarkerServiceTests
         // Check each.
         foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
         {
-            DateTime dt = seasonalMarkerService.GetSeasonalMarkerAsDateTimeUniversal(
-                seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
+            double jdtt = seasonalMarkerService.GetSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
+            DateTime dt = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
             int diff =
                 (int)Round(

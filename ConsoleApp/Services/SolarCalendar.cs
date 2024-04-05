@@ -467,7 +467,9 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 2024; y <= 2100; y++)
         {
             // Get the Besselian New Year.
-            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTimeUniversal(y);
+            double jdtt = seasonalMarkerService.GetBesselianNewYear(y);
+            DateTime besselianNye =
+                JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
             // Keep the ones within an hour of midnight UTC.
             DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);

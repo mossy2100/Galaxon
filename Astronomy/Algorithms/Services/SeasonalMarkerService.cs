@@ -53,12 +53,12 @@ public class SeasonalMarkerService(SunService sunService)
     #region Instance methods
 
     /// <summary>
-    /// Calculate mean value for a seasonal marker as as a Julian Date in Terrestrial Time.
+    /// Calculate mean value for a seasonal marker as as a Julian Date (TT).
     /// Algorithm from AA2 p178.
     /// </summary>
     /// <param name="year">The year (Gregorian) in the range -1000..3000.</param>
     /// <param name="markerTypeNumber">The marker number (use the enum).</param>
-    /// <returns></returns>
+    /// <returns>The result as a Julian Date (TT).</returns>
     public double GetSeasonalMarkerMean(int year, ESeasonalMarkerType markerTypeNumber)
     {
         // Check year is in valid range.
@@ -122,18 +122,16 @@ public class SeasonalMarkerService(SunService sunService)
     }
 
     /// <summary>
-    /// Calculate approximate datetime of a seasonal marker.
+    /// Calculate approximate datetime of a seasonal marker as as a Julian Date (TT).
     /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
     /// "Equinoxes and Solstices" (pp177-180).
     /// This method is accurate to within 51 seconds for years 1951-2050 (see the book).
-    /// Therefore, results are given rounded off to nearest minute, as anything more precise would
-    /// be false precision.
-    /// For improved accuracy <see cref="GetSeasonalMarkerAsJulianDateTerrestrial"/>
+    /// For improved accuracy <see cref="GetSeasonalMarker"/>
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <param name="markerTypeNumber">The marker number (as enum)</param>
-    /// <returns>The result in universal time.</returns>
-    public DateTime GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerTypeNumber)
+    /// <returns>The result as a Julian Date (TT).</returns>
+    public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerTypeNumber)
     {
         double JDE0 = GetSeasonalMarkerMean(year, markerTypeNumber);
         double T = JulianDateService.JulianCenturiesSinceJ2000(JDE0);
@@ -145,21 +143,18 @@ public class SeasonalMarkerService(SunService sunService)
             term.A * Cos(Angles.DegreesToRadians(term.B + term.C * T)));
 
         // Equation from p178.
-        double jdtt = JDE0 + 0.000_01 * S / dLambda;
-
-        // Convert to DateTime.
-        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        return JDE0 + 0.000_01 * S / dLambda;
     }
 
     /// <summary>
-    /// High-accuracy method for calculating seasonal marker.
+    /// High-accuracy method for calculating seasonal marker as as a Julian Date (TT).
     /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
     /// "Equinoxes and Solstices" (p180).
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <param name="markerType">The marker number (use enum)</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarkerAsJulianDateTerrestrial(int year,
+    public double GetSeasonalMarker(int year,
         ESeasonalMarkerType markerType)
     {
         // Get the mean value as a Julian Date (TT).
@@ -197,25 +192,13 @@ public class SeasonalMarkerService(SunService sunService)
     }
 
     /// <summary>
-    /// High-accuracy method for calculating seasonal marker.
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
-    /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetSeasonalMarkerAsDateTimeUniversal(int year, ESeasonalMarkerType markerType)
-    {
-        double jdtt = GetSeasonalMarkerAsJulianDateTerrestrial(year, markerType);
-        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
-    }
-
-    /// <summary>
     /// Calculate the moment of the Besselian New Year (Ls=280°) at the end of a given Gregorian
     /// year.
     /// Note, the result could be early in the following year.
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetBesselianNewYearAsJulianDateTerrestrial(int year)
+    public double GetBesselianNewYear(int year)
     {
         // Get the approximate moment of the northern winter (southern summer) solstice (which
         // occurs at Ls=270°) as a Julian Date (TT).
@@ -248,18 +231,6 @@ public class SeasonalMarkerService(SunService sunService)
         }
 
         return jdtt;
-    }
-
-    /// <summary>
-    /// High-accuracy method for calculating Besselian New Year.
-    /// Note, the result could be early in the following year.
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetBesselianNewYearAsDateTimeUniversal(int year)
-    {
-        double jdtt = GetBesselianNewYearAsJulianDateTerrestrial(year);
-        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
     }
 
     #endregion Instance methods
