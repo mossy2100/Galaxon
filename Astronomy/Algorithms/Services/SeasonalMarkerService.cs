@@ -107,7 +107,7 @@ public class SeasonalMarkerService(SunService sunService)
         double jdtt = GetSeasonalMarkerAsJulianDateTerrestrialTime(year, markerType);
 
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateTerrestrialTimeToDateTime(jdtt);
+        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdtt);
 
         // Round it off to the nearest minute.
         return DateTimeExtensions.RoundToNearestMinute(dt);
@@ -166,7 +166,7 @@ public class SeasonalMarkerService(SunService sunService)
         double jdtt = GetBesselianNewYearAsJulianDateTerrestrialTime(year);
 
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateTerrestrialTimeToDateTime(jdtt);
+        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdtt);
 
         // Round it off to the nearest minute.
         return DateTimeExtensions.RoundToNearestMinute(dt);
@@ -270,10 +270,10 @@ public class SeasonalMarkerService(SunService sunService)
         double jdtt = JDE0 + 0.000_01 * S / dLambda;
 
         // Get the Julian Date in Universal Time.
-        double jdut = JulianDateService.JulianDateTerrestrialTimeToUniversalTime(jdtt);
+        double jdut = JulianDateService.JulianDateTerrestrialToUniversal(jdtt);
 
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateToDateTimeUT(jdut);
+        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdut);
 
         // Round off to nearest minute.
         return DateTimeExtensions.RoundToNearestMinute(dt);

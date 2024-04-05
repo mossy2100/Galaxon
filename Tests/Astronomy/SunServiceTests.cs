@@ -49,7 +49,7 @@ public class SunServiceTests
         SunService sunService = ServiceManager.GetService<SunService>();
         DateTime dttt = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
         // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
-        double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
+        double jdtt = JulianDateService.DateTimeToJulianDateUniversal(dttt);
         double expectedLongitude = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 26.18));
         double expectedLatitude = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.72));
 

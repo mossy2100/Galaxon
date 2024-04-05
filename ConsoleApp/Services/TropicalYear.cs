@@ -81,14 +81,20 @@ public static class TropicalYear
         Console.WriteLine($"Or about {changePerCenturyInSeconds} seconds per century.");
     }
 
+    /// <summary>
+    /// Get the average tropical year length in solar days from minYear (inclusive) to maxYear
+    /// (exclusive).
+    /// </summary>
+    /// <param name="minYear"></param>
+    /// <param name="maxYear"></param>
+    /// <returns></returns>
     public static double GetAverageLengthInSolarDays(int minYear, int maxYear)
     {
         double totalSolarDays = 0;
         for (int y = minYear; y < maxYear; y++)
         {
-            DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
-            double jdut = JulianDateService.DateTimeToJulianDateUT(dtMidYear);
-            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            DateTime dt = GregorianCalendarExtensions.YearStart(y);
+            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dt);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthInSolarDays = EarthService.GetTropicalYearLengthInSolarDays(T);
             totalSolarDays += yearLengthInSolarDays;

@@ -97,16 +97,26 @@ class Program
         SolarCalendar solarCalendar =
             _serviceProvider!.GetRequiredService<SolarCalendar>();
 
-        // double avg = TropicalYear.GetAverageLengthInSolarDays(2000, 5000);
-        // Console.WriteLine($"Average tropical year length 2000-5000: {avg:F6} solar days.");
+        double avg = TropicalYear.GetAverageLengthInSolarDays(2000, 5000);
+        Console.WriteLine($"Average tropical year length 2000-5000: {avg:F6} solar days.");
 
-        solarCalendar.FindYearWithIdealLength();
+        solarCalendar.PrintMillennialYearInfo();
+
+        // solarCalendar.FindYearWithIdealLength();
         Console.WriteLine();
         solarCalendar.CountLeapYears();
+
         Console.WriteLine();
-        solarCalendar.FindSynchronisationPoints();
+        // solarCalendar.FindSynchronisationPoints();
+        solarCalendar.FindOptimalPeriod();
 
         // RuleFinder.PrintLeapYearPattern(121, 500, 33, 4, 2);
+
+        // Console.WriteLine($"Checking solar day.");
+        // double T = -1;
+        // double len1 = EarthService.GetSolarDayLengthInSeconds(T) * EarthService.GetTropicalYearLengthInEphemerisDays(T);
+        // double len2 = 31_556_925.9747;
+        // Console.WriteLine($"Solar day length at J1900: {len1} c.f. {len2}");
     }
 
     static void LeapWeek()

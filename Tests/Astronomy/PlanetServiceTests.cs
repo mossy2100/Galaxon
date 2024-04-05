@@ -87,7 +87,7 @@ public class PlanetServiceTests
         }
         // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
         var dttt = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt = JulianDateService.DateTimeToJulianDateUT(dttt);
+        double jdtt = JulianDateService.DateTimeToJulianDateUniversal(dttt);
 
         // Act.
         (double actualL, double _, double _) = planetService.CalcPlanetPosition(saturn, jdtt);

@@ -13,22 +13,46 @@ public class JulianDateService
     /// the return value. Note, however, a Julian Date begins at 12:00 noon.
     /// </summary>
     /// <param name="dt">The DateTime instance.</param>
-    /// <returns>The Julian Date</returns>
-    public static double DateTimeToJulianDateUT(DateTime dt)
+    /// <returns>The Julian Date in Universal Time</returns>
+    public static double DateTimeToJulianDateUniversal(DateTime dt)
     {
         return TimeConstants.START_GREGORIAN_EPOCH_JD_UT + dt.GetTotalDays();
     }
 
     /// <summary>
-    /// Convert a Julian Date to a DateTime object.
+    /// Convert a Julian Date (Universal Time) to a DateTime.
     /// </summary>
     /// <param name="jdut">
-    /// The Julian Date. May include a fractional part indicating the time of day.
+    /// The Julian Date (UT). May include a fractional part indicating the time of day.
     /// </param>
     /// <returns>A new DateTime object.</returns>
-    public static DateTime JulianDateToDateTimeUT(double jdut)
+    public static DateTime JulianDateUniversalToDateTime(double jdut)
     {
         return DateTimeExtensions.FromTotalDays(jdut - TimeConstants.START_GREGORIAN_EPOCH_JD_UT);
+    }
+
+    /// <summary>
+    /// Convert a DateTime to a Julian Date (Terrestrial Time)
+    /// The time of day information in the DateTime will be expressed as the fractional part of
+    /// the return value. Note, however, a Julian Date begins at 12:00 noon.
+    /// </summary>
+    /// <param name="dt">The DateTime instance.</param>
+    /// <returns>The Julian Date in Terrestrial Time</returns>
+    public static double DateTimeToJulianDateTerrestrial(DateTime dt)
+    {
+        return JulianDateUniversalToTerrestrial(DateTimeToJulianDateUniversal(dt));
+    }
+
+    /// <summary>
+    /// Convert a Julian Date in Terrestrial Time to a DateTime (UT).
+    /// </summary>
+    /// <param name="jdtt">
+    /// The Julian Date (TT). May include a fractional part indicating the time of day.
+    /// </param>
+    /// <returns></returns>
+    public static DateTime JulianDateTerrestrialToDateTime(double jdtt)
+    {
+        return JulianDateUniversalToDateTime(JulianDateTerrestrialToUniversal(jdtt));
     }
 
     /// <summary>
@@ -36,9 +60,9 @@ public class JulianDateService
     /// </summary>
     /// <param name="date">The DateOnly instance.</param>
     /// <returns>The Julian Date.</returns>
-    public static double DateOnlyToJulianDate(DateOnly date)
+    public static double DateOnlyToJulianDateUniversal(DateOnly date)
     {
-        return DateTimeToJulianDateUT(date.ToDateTime());
+        return DateTimeToJulianDateUniversal(date.ToDateTime());
     }
 
     /// <summary>
@@ -49,9 +73,9 @@ public class JulianDateService
     /// information will be discarded.
     /// </param>
     /// <returns>A new DateOnly object.</returns>
-    public static DateOnly JulianDateToDateOnly(double jdut)
+    public static DateOnly JulianDateUniversalToDateOnly(double jdut)
     {
-        return DateOnly.FromDateTime(JulianDateToDateTimeUT(jdut));
+        return DateOnly.FromDateTime(JulianDateUniversalToDateTime(jdut));
     }
 
     /// <summary>
@@ -61,9 +85,9 @@ public class JulianDateService
     /// </summary>
     /// <param name="jdut">Julian Date in Universal Time</param>
     /// <returns>Julian Date in Terrestrial Time</returns>
-    public static double JulianDateUniversalTimeToTerrestrialTime(double jdut)
+    public static double JulianDateUniversalToTerrestrial(double jdut)
     {
-        DateTime dt = JulianDateToDateTimeUT(jdut);
+        DateTime dt = JulianDateUniversalToDateTime(jdut);
         double deltaT = TimeScaleService.CalcDeltaT(dt);
         return jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
@@ -75,42 +99,32 @@ public class JulianDateService
     /// </summary>
     /// <param name="jdtt">Julian Date in Terrestrial Time</param>
     /// <returns>Julian Date in Universal Time</returns>
-    public static double JulianDateTerrestrialTimeToUniversalTime(double jdtt)
+    public static double JulianDateTerrestrialToUniversal(double jdtt)
     {
-        // Calculate delta-T. For this calculation, we have to use TT, even though the
-        // CalcDeltaT() method expects a DateTime in UT. This shouldn't matter, though,
-        // as the result should be virtually identical to what we would get for the value for
-        // delta-T calculated from a DateTime in UT, given the lack of precision in delta-T
-        // calculations.
-        DateTime dtTT = JulianDateToDateTimeUT(jdtt);
-        double deltaT = TimeScaleService.CalcDeltaT(dtTT);
-        return jdtt - (deltaT / TimeConstants.SECONDS_PER_DAY);
+        // Calculate delta-T. For this calculation, we have to use TT, even though the CalcDeltaT()
+        // method expects a DateTime in UT. This shouldn't matter, though, as the result should be
+        // virtually identical to what we would get for the value for delta-T calculated from a
+        // DateTime in UT, given the lack of precision in delta-T calculations.
+        DateTime dt = JulianDateTerrestrialToDateTime(jdtt);
+        double deltaT = TimeScaleService.CalcDeltaT(dt);
+        return jdtt - deltaT / TimeConstants.SECONDS_PER_DAY;
     }
 
     /// <summary>
-    /// Convert a Julian Date in Terrestrial Time to a DateTime (UT).
-    /// </summary>
-    /// <param name="jdtt"></param>
-    /// <returns></returns>
-    public static DateTime JulianDateTerrestrialTimeToDateTime(double jdtt)
-    {
-        // Get the Julian Date in Universal Time.
-        double jdut = JulianDateTerrestrialTimeToUniversalTime(jdtt);
-
-        // Convert to DateTime.
-        return JulianDateToDateTimeUT(jdut);
-    }
-
-    /// <summary>
-    /// Convert a Julian Date in Terrestrial Time (TT)  to a Julian Date in International Atomic Time (TAI).
+    /// Convert a Julian Date in Terrestrial Time (TT) to a Julian Date in International Atomic Time
+    /// (TAI).
     /// </summary>
     /// <param name="jdtt">Julian Date in Terrestrial Time</param>
     /// <returns>Julian Date in International Atomic Time</returns>
-    public static double JulianDateTerrestrialTimeToInternationalAtomicTime(double jdtt)
+    public static double JulianDateTerrestrialToInternationalAtomic(double jdtt)
     {
         return jdtt
-            - ((double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.MILLISECONDS_PER_DAY);
+            - (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS / TimeConstants.MILLISECONDS_PER_DAY;
     }
+
+    #endregion Conversion between Julian dates and other time scales
+
+    #region Conversion between Julian Calendar and Gregorian Calendar
 
     /// <summary>
     /// Convert a Julian Calendar date to a Gregorian Calendar date.
@@ -126,7 +140,7 @@ public class JulianDateService
         return DateOnly.FromDateTime(dt);
     }
 
-    #endregion Conversion between Julian dates and other time scales
+    #endregion Conversion between Julian Calendar and Gregorian Calendar
 
     #region Julian periods since start J2000 epoch.
 

@@ -389,8 +389,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 2000; y <= 9000; y += 1000)
         {
             DateTime dt = GregorianCalendarExtensions.YearStart(y);
-            double jdut = JulianDateService.DateTimeToJulianDateUT(dt);
-            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dt);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(T);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
@@ -413,8 +412,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 3000; y < 4000; y++)
         {
             DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
-            double jdut = JulianDateService.DateTimeToJulianDateUT(dtMidYear);
-            double jdtt = JulianDateService.JulianDateUniversalTimeToTerrestrialTime(jdut);
+            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dtMidYear);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
             double diff = Math.Abs(yearLengthSolar - targetAvg);
@@ -432,16 +430,36 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         GregorianCalendar gc = new ();
         List<int> gregorianLeapYears = new ();
-        List<int> worldPeaceLeapYear = new ();
-        for (int y = 2000; y < 2052; y++)
+        List<int> worldPeaceLeapYears = new ();
+        for (int y = 2000; y < 2100; y++)
         {
             if (gc.IsLeapYear(y)) gregorianLeapYears.Add(y);
-            if (y % 500 % 33 % 4 == 2) worldPeaceLeapYear.Add(y);
+            if (y % 500 % 33 % 4 == 2) worldPeaceLeapYears.Add(y);
         }
-        Console.WriteLine($"Gregorian leap years: {string.Join(", ", gregorianLeapYears)}");
+        Console.WriteLine($"Gregorian leap years:   {string.Join(", ", gregorianLeapYears)}");
         Console.WriteLine($"Number of Gregorian leap years: {gregorianLeapYears.Count}");
-        Console.WriteLine($"World Peace leap years: {string.Join(", ", worldPeaceLeapYear)}");
-        Console.WriteLine($"Number of World Peace leap years: {worldPeaceLeapYear.Count}");
+        Console.WriteLine($"World Peace leap years: {string.Join(", ", worldPeaceLeapYears)}");
+        Console.WriteLine($"Number of World Peace leap years: {worldPeaceLeapYears.Count}");
+
+        // Print the valid start years for the new system.
+        int n = Math.Min(gregorianLeapYears.Count, worldPeaceLeapYears.Count);
+        SortedSet<int> validStartYears = new ();
+        // Add all in valid period.
+        for (int y = 2025; y <= 2100; y++)
+        {
+            validStartYears.Add(y);
+        }
+        // Remove those that won't work.
+        for (int i = 0; i < n; i++)
+        {
+            int min = Math.Min(gregorianLeapYears[i], worldPeaceLeapYears[i]) + 1;
+            int max = Math.Max(gregorianLeapYears[i], worldPeaceLeapYears[i]);
+            for (int y = min; y <= max; y++)
+            {
+                validStartYears.Remove(y);
+            }
+        }
+        Console.WriteLine($"Valid start years:      {string.Join(", ", validStartYears)}");
     }
 
     public void FindSynchronisationPoints()
@@ -466,5 +484,29 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             Console.WriteLine($"Closest midnight:   {closestMidnight.ToIsoString()}");
             Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff)}");
         }
+    }
+
+    public void FindOptimalPeriod()
+    {
+        double targetAvgYearLength = 365 + 31.0 / 128;
+        double avgYearLength = 0;
+        int minYear = 2000;
+        int maxYear;
+        int bestMaxYear = 0;
+        double minDiff = double.MaxValue;
+        for (maxYear = minYear; maxYear <= 9999; maxYear++)
+        {
+            avgYearLength = TropicalYear.GetAverageLengthInSolarDays(minYear, maxYear);
+            double diff = Math.Abs(targetAvgYearLength - avgYearLength);
+            if (diff < minDiff)
+            {
+                minDiff = diff;
+                bestMaxYear = maxYear;
+            }
+            maxYear++;
+        }
+        Console.WriteLine($"Target average year length: {targetAvgYearLength} solar days.");
+        Console.WriteLine($"Average year length from {minYear}-{bestMaxYear - 1}: {avgYearLength} solar days.");
+        Console.WriteLine($"Difference: {minDiff} solar days.");
     }
 }

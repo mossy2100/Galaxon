@@ -73,7 +73,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double jdut = JulianDateService.DateTimeToJulianDateUT(dt);
+        double jdut = JulianDateService.DateTimeToJulianDateUniversal(dt);
         return CalcEarthRotationAngle(jdut);
     }
 
@@ -92,17 +92,17 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
 
     /// <summary>
     /// Calculate the approximate length of the solar day in SI seconds at a point in time.
-    /// The formula comes from:
-    /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation",
+    /// The formula comes from https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time
+    /// This is similar to:
     /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
-    /// Cambridge University Press.
+    /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The day length in seconds at that point in time.</returns>
     public static double GetSolarDayLengthInSeconds(double T)
     {
-        // The length of the day increases by about 1.62±0.21 ms/cy.
-        return TimeConstants.SECONDS_PER_DAY + 1.62e-3 * T;
+        // The length of the day has been increasing by about 1.62±0.21 ms/day/cy since 1820.
+        return TimeConstants.SECONDS_PER_DAY + 1.7e-3 * (T + 1.80);
     }
 
     /// <summary>
