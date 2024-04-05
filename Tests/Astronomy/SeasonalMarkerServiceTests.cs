@@ -23,19 +23,24 @@ public class SeasonalMarkerServiceTests
         ServiceManager.Dispose();
     }
 
+    /// <summary>
+    /// Test Example 27.a from AA2 p180.
+    /// </summary>
     [TestMethod]
-    public void TestCalcApproxSeasonalMarker()
+    public void GetSeasonalMarkerApprox_Example27a()
     {
+        // Arrange
         SeasonalMarkerService seasonalMarkerService =
             ServiceManager.GetService<SeasonalMarkerService>();
+        var expected = new DateTime(1962, 6, 21, 21, 25, 8);
+        var delta = TimeSpan.FromMinutes(1);
 
-        // Test Example 27.a from AA2 p180.
+        // Act
         DateTime dt = seasonalMarkerService.GetSeasonalMarkerApprox(1962,
             ESeasonalMarkerType.NorthernSolstice);
-        var dt2 = new DateTime(1962, 6, 21, 21, 25, 8);
-        // Check they match within 1 minute.
-        var delta = TimeSpan.FromMinutes(1);
-        DateTimeAssert.AreEqual(dt, dt2, delta);
+
+        // Assert
+        DateTimeAssert.AreEqual(dt, expected, delta);
     }
 
     /// <summary>
@@ -56,7 +61,7 @@ public class SeasonalMarkerServiceTests
         // Check each.
         foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
         {
-            DateTime dt = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
+            DateTime dt = seasonalMarkerService.GetSeasonalMarkerAsDateTimeUniversal(
                 seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
 
             int diff =

@@ -98,6 +98,6 @@ public class SunService(EarthService earthService)
     /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
     public Coordinates CalcPosition(DateTime dt)
     {
-        return CalcPosition(JulianDateService.DateTimeToJulianDateTerrestrial(dt));
+        return CalcPosition(JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dt));
     }
 }

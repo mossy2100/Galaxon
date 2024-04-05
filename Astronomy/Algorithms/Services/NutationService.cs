@@ -10,7 +10,7 @@ public class NutationService
     /// Copy of the data in Table 22.A from "Astronomical Algorithms, 2nd Ed." by Jeean Meeus
     /// (pp145-146).
     /// </summary>
-    private static List<(int, int, int, int, int, int, double, int, double)> Table22A =
+    private static readonly List<(int, int, int, int, int, int, double, int, double)> Table22A =
     [
         (0, 0, 0, 0, 1, -171996, -174.2, 92025, 8.9),
         (-2, 0, 0, 2, 2, -13187, -1.6, 5736, -3.1),

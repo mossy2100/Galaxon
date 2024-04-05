@@ -94,7 +94,7 @@ public static class TropicalYear
         for (int y = minYear; y < maxYear; y++)
         {
             DateTime dt = GregorianCalendarExtensions.YearStart(y);
-            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dt);
+            double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dt);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthInSolarDays = EarthService.GetTropicalYearLengthInSolarDays(T);
             totalSolarDays += yearLengthInSolarDays;

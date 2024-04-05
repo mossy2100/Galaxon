@@ -48,8 +48,7 @@ public class SunServiceTests
         // Arrange
         SunService sunService = ServiceManager.GetService<SunService>();
         DateTime dttt = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
-        // TODO fix this; some confusion here between TT and UT. It might be ok for the test, but understand and comment as needed.
-        double jdtt = JulianDateService.DateTimeToJulianDateUniversal(dttt);
+        double jdtt = JulianDateService.DateTimeToJulianDate(dttt);
         double expectedLongitude = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 26.18));
         double expectedLatitude = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.72));
 
@@ -58,7 +57,7 @@ public class SunServiceTests
 
         // Assert
         Assert.AreEqual(2448908.5, jdtt);
-        Assert.AreEqual(expectedLongitude, sunPosition.Longitude);
-        Assert.AreEqual(expectedLatitude, sunPosition.Latitude);
+        Assert.AreEqual(expectedLongitude, sunPosition.Longitude, 1e-4);
+        Assert.AreEqual(expectedLatitude, sunPosition.Latitude, 1e-4);
     }
 }

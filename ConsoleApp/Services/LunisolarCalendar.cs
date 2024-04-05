@@ -565,7 +565,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             double diff = Math.Abs(LsDeg);
             if (diff < 1)
             {
-                DateTime dtEquinox = seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
+                DateTime dtEquinox = seasonalMarkerService.GetSeasonalMarkerAsDateTimeUniversal(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
                 double diffDays =
                     Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -579,7 +579,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             diff = Math.Abs(LsDeg + 90);
             if (diff < 1)
             {
-                DateTime dtSolstice = seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
+                DateTime dtSolstice = seasonalMarkerService.GetSeasonalMarkerAsDateTimeUniversal(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
                 double diffDays =
                     Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -624,7 +624,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
         for (int y = 2000; y <= 2200; y++)
         {
             // Get the Besselian New Year.
-            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTime(y);
+            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTimeUniversal(y);
 
             // Keep the ones within an hour of midnight UTC.
             DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);

@@ -389,7 +389,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 2000; y <= 9000; y += 1000)
         {
             DateTime dt = GregorianCalendarExtensions.YearStart(y);
-            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dt);
+            double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dt);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(T);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
@@ -412,7 +412,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 3000; y < 4000; y++)
         {
             DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
-            double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dtMidYear);
+            double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dtMidYear);
             double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
             double diff = Math.Abs(yearLengthSolar - targetAvg);
@@ -467,7 +467,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 2024; y <= 2100; y++)
         {
             // Get the Besselian New Year.
-            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTime(y);
+            DateTime besselianNye = seasonalMarkerService.GetBesselianNewYearAsDateTimeUniversal(y);
 
             // Keep the ones within an hour of midnight UTC.
             DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);

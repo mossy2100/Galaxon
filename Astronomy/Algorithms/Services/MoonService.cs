@@ -111,7 +111,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double jdtt = JulianDateService.DateTimeToJulianDateTerrestrial(dtPhaseApprox);
+        double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
         double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
         double T2 = T * T;
         double T3 = T * T2;
@@ -278,7 +278,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         jdtt += C1 + C2;
 
         // Convert the jdtt to a UTC DateTime.
-        DateTime dtPhase = JulianDateService.JulianDateTerrestrialToDateTime(jdtt);
+        DateTime dtPhase = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Construct and return the LunarPhase object.
         return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };

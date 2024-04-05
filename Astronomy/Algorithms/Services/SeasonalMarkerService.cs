@@ -53,130 +53,6 @@ public class SeasonalMarkerService(SunService sunService)
     #region Instance methods
 
     /// <summary>
-    /// High-accuracy method for calculating seasonal marker.
-    /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
-    /// "Equinoxes and Solstices" (p180).
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
-    /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarkerAsJulianDateTerrestrialTime(int year, ESeasonalMarkerType markerType)
-    {
-        // Get the mean value as a Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, markerType);
-
-        // Find the target Ls in radians (0, π/2, -π, or -π/2).
-        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
-
-        // Calculate max difference to get within 0.5 second.
-        const double sunMovementRadiansPerHalfSecond =
-            Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
-
-        // Loop until sufficient accuracy is achieved.
-        do
-        {
-            // Get the longitude of the Sun in radians.
-            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
-
-            // Calculate the difference between the computed longitude of the Sun at this time, and
-            // the target value.
-            double diffLs = Angles.WrapRadians(targetLs - Ls);
-
-            // Check if we're done.
-            if (Abs(diffLs) < sunMovementRadiansPerHalfSecond)
-            {
-                break;
-            }
-
-            // Make a correction.
-            jdtt += 58 * Sin(diffLs);
-        }
-        while (true);
-
-        return jdtt;
-    }
-
-    /// <summary>
-    /// High-accuracy method for calculating seasonal marker.
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
-    /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
-    {
-        double jdtt = GetSeasonalMarkerAsJulianDateTerrestrialTime(year, markerType);
-
-        // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdtt);
-
-        // Round it off to the nearest minute.
-        return DateTimeExtensions.RoundToNearestMinute(dt);
-    }
-
-    /// <summary>
-    /// Calculate the moment of the Besselian New Year (Ls=280°), for a given year.
-    /// Note, the result could be early in the following year.
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetBesselianNewYearAsJulianDateTerrestrialTime(int year)
-    {
-        // Get the approximate moment of the northern winter (southern summer) solstice as a Julian
-        // Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
-
-        // Add 10°.
-        jdtt += 10.0 / 360 * TimeConstants.DAYS_PER_TROPICAL_YEAR;
-
-        // Find the target Ls in radians.
-        double targetLs = Angles.WrapRadians(Angles.DegreesToRadians(280));
-
-        // Loop until sufficient accuracy is achieved.
-        do
-        {
-            // Get the longitude of the Sun in radians.
-            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
-
-            // Calculate the difference between the computed longitude of the Sun at this time, and
-            // the target value.
-            double diffLs = Angles.WrapRadians(targetLs - Ls);
-
-            // Check if we're done.
-            if (Abs(diffLs) < SUN_MOVEMENT_RADIANS_PER_HALF_SECOND)
-            {
-                break;
-            }
-
-            // Make a correction.
-            jdtt += 58 * Sin(diffLs);
-        }
-        while (true);
-
-        return jdtt;
-    }
-
-    /// <summary>
-    /// High-accuracy method for calculating Besselian New Year.
-    /// Note, the result could be early in the following year.
-    /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetBesselianNewYearAsDateTime(int year)
-    {
-        double jdtt = GetBesselianNewYearAsJulianDateTerrestrialTime(year);
-
-        // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdtt);
-
-        // Round it off to the nearest minute.
-        return DateTimeExtensions.RoundToNearestMinute(dt);
-    }
-
-    #endregion Instance methods
-
-    #region Static methods
-
-    /// <summary>
     /// Calculate mean value for a seasonal marker as as a Julian Date in Terrestrial Time.
     /// Algorithm from AA2 p178.
     /// </summary>
@@ -218,7 +94,8 @@ public class SeasonalMarkerService(SunService sunService)
                 ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber), "Invalid value.")
+                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber),
+                    "Invalid value.")
             };
         }
         else
@@ -238,7 +115,8 @@ public class SeasonalMarkerService(SunService sunService)
                 ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     2451900.05952, 365242.74049, -0.06223, -0.00823, 0.00032
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber), "Invalid value.")
+                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber),
+                    "Invalid value.")
             };
         }
     }
@@ -250,7 +128,7 @@ public class SeasonalMarkerService(SunService sunService)
     /// This method is accurate to within 51 seconds for years 1951-2050 (see the book).
     /// Therefore, results are given rounded off to nearest minute, as anything more precise would
     /// be false precision.
-    /// For improved accuracy <see cref="GetSeasonalMarkerAsJulianDateTerrestrialTime"/>
+    /// For improved accuracy <see cref="GetSeasonalMarkerAsJulianDateTerrestrial"/>
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <param name="markerTypeNumber">The marker number (as enum)</param>
@@ -269,15 +147,120 @@ public class SeasonalMarkerService(SunService sunService)
         // Equation from p178.
         double jdtt = JDE0 + 0.000_01 * S / dLambda;
 
-        // Get the Julian Date in Universal Time.
-        double jdut = JulianDateService.JulianDateTerrestrialToUniversal(jdtt);
-
         // Convert to DateTime.
-        DateTime dt = JulianDateService.JulianDateTerrestrialToDateTime(jdut);
-
-        // Round off to nearest minute.
-        return DateTimeExtensions.RoundToNearestMinute(dt);
+        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
     }
 
-    #endregion Static methods
+    /// <summary>
+    /// High-accuracy method for calculating seasonal marker.
+    /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
+    /// "Equinoxes and Solstices" (p180).
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <param name="markerType">The marker number (use enum)</param>
+    /// <returns>The result as a Julian Date (TT).</returns>
+    public double GetSeasonalMarkerAsJulianDateTerrestrial(int year,
+        ESeasonalMarkerType markerType)
+    {
+        // Get the mean value as a Julian Date (TT).
+        double jdtt = GetSeasonalMarkerMean(year, markerType);
+
+        // Find the target Ls in radians (0, π/2, -π, or -π/2).
+        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
+
+        // Calculate max difference to get within 0.5 second.
+        const double sunMovementRadiansPerHalfSecond =
+            Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
+
+        // Loop until sufficient accuracy is achieved.
+        do
+        {
+            // Get the longitude of the Sun in radians.
+            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
+
+            // Calculate the difference between the computed longitude of the Sun at this time, and
+            // the target value.
+            double diffLs = Angles.WrapRadians(targetLs - Ls);
+
+            // Check if we're done.
+            if (Abs(diffLs) < sunMovementRadiansPerHalfSecond)
+            {
+                break;
+            }
+
+            // Make a correction.
+            jdtt += 58 * Sin(diffLs);
+        }
+        while (true);
+
+        return jdtt;
+    }
+
+    /// <summary>
+    /// High-accuracy method for calculating seasonal marker.
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <param name="markerType">The marker number (use enum)</param>
+    /// <returns>The result as a DateTime (UT).</returns>
+    public DateTime GetSeasonalMarkerAsDateTimeUniversal(int year, ESeasonalMarkerType markerType)
+    {
+        double jdtt = GetSeasonalMarkerAsJulianDateTerrestrial(year, markerType);
+        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+    }
+
+    /// <summary>
+    /// Calculate the moment of the Besselian New Year (Ls=280°) at the end of a given Gregorian
+    /// year.
+    /// Note, the result could be early in the following year.
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <returns>The result as a Julian Date (TT).</returns>
+    public double GetBesselianNewYearAsJulianDateTerrestrial(int year)
+    {
+        // Get the approximate moment of the northern winter (southern summer) solstice (which
+        // occurs at Ls=270°) as a Julian Date (TT).
+        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
+
+        // Add 10° (270° + 10° = 280°).
+        jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;
+
+        // Find the target Ls in radians.
+        double targetLs = Angles.WrapRadians(Angles.DegreesToRadians(280));
+
+        // Loop until sufficient accuracy is achieved.
+        while (true)
+        {
+            // Get the longitude of the Sun in radians.
+            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
+
+            // Calculate the difference between the computed longitude of the Sun at this time, and
+            // the target value.
+            double diffLs = Angles.WrapRadians(targetLs - Ls);
+
+            // Check if we're done.
+            if (Abs(diffLs) < SUN_MOVEMENT_RADIANS_PER_HALF_SECOND)
+            {
+                break;
+            }
+
+            // Make a correction.
+            jdtt += 58 * Sin(diffLs);
+        }
+
+        return jdtt;
+    }
+
+    /// <summary>
+    /// High-accuracy method for calculating Besselian New Year.
+    /// Note, the result could be early in the following year.
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <returns>The result as a DateTime (UT).</returns>
+    public DateTime GetBesselianNewYearAsDateTimeUniversal(int year)
+    {
+        double jdtt = GetBesselianNewYearAsJulianDateTerrestrial(year);
+        return JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+    }
+
+    #endregion Instance methods
 }
