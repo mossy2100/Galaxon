@@ -125,9 +125,11 @@ class Program
         // LeapWeekCalendar.FindIntercalationFraction();
         // LeapWeekCalendar.FindIntercalationRule();
         // LeapWeekCalendar.VerifyIntercalationRule();
-        LeapWeekCalendar.PrintLeapWeekPattern();
-        // LeapWeekCalendar.PrintCalendarPages13();
-
+        // LeapWeekCalendar.PrintLeapWeekPattern();
+        // LeapWeekCalendar.PrintIsoWeekCalendarLeapYearPattern();
+        // LeapWeekCalendar.PrintExampleIsoWeekCalendar();
+        // LeapWeekCalendar.PrintCalendarPages12b();
+        // LeapWeekCalendar.PrintYearsEndOnSunday();
         // RuleFinder.PrintLeapYearPattern(11, 62, 17, 6, 0);
     }
 

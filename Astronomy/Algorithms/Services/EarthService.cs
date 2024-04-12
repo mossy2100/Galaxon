@@ -84,37 +84,56 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double GetTropicalYearLengthInEphemerisDays(double T)
+    public static double GetTropicalYearLengthInEphemerisDays1(double T)
     {
         return Polynomials.EvaluatePolynomial([365.242_189_6698, -6.15359e-6, -7.29e-10, 2.64e-10],
             T);
     }
 
     /// <summary>
-    /// Calculate the approximate length of the solar day in SI seconds at a point in time.
-    /// The formula comes from https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time
-    /// This is similar to:
-    /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
-    /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
+    /// Calculate the mean tropical year length in ephemeris days for a given year.
+    /// The year can have a fractional part.
     /// </summary>
-    /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
-    /// <returns>The day length in seconds at that point in time.</returns>
-    public static double GetSolarDayLengthInSeconds(double T)
+    /// <param name="y">The year as a decimal.</param>
+    /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
+    public static double GetTropicalYearLengthInEphemerisDays(double y)
     {
-        // The length of the day has been increasing by about 1.62±0.21 ms/day/cy since 1820.
-        return TimeConstants.SECONDS_PER_DAY + 1.7e-3 * (T + 1.80);
+        // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
+        double jdtt = TimeScaleService.DecimalYearToJulianDateUniversal(y);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        return GetTropicalYearLengthInEphemerisDays1(T);
     }
 
     /// <summary>
-    /// Calculate the mean tropical year length in solar days at a point in time.
+    /// Calculate the approximate length of the solar day in SI seconds at a point in time.
+    ///
+    /// The formula comes from https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time
+    ///
+    /// It is similar to:
+    /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
+    /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
     /// </summary>
-    /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
-    /// <returns>The tropical year length in solar days at that point in time.</returns>
-    public static double GetTropicalYearLengthInSolarDays(double T)
+    /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
+    /// <param name="y">The year as a decimal.</param>
+    /// <returns>The day length in seconds at that point in time.</returns>
+    public static double GetSolarDayLengthInSeconds(double y)
     {
-        return GetTropicalYearLengthInEphemerisDays(T)
+        // The length of the day has been increasing by about 1.7 ms/d/cy.
+        // According to the above link at cnmoc.usff.navy.mil, the solar day was equal to exactly
+        // 86,400 seconds in approximately 1820.
+        return TimeConstants.SECONDS_PER_DAY + 1.7e-5 * (y - 1820);
+    }
+
+    /// <summary>
+    /// Calculate the mean tropical year length in solar days for a given calendar year.
+    /// </summary>
+    /// <param name="y">The year as a decimal.</param>
+    /// <returns>The tropical year length in solar days at that point in time.</returns>
+    public static double GetTropicalYearLengthInSolarDays(double y)
+    {
+        return GetTropicalYearLengthInEphemerisDays(y)
             * TimeConstants.SECONDS_PER_DAY
-            / GetSolarDayLengthInSeconds(T);
+            / GetSolarDayLengthInSeconds(y);
     }
 
     #endregion Static methods

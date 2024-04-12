@@ -380,7 +380,8 @@ public static class GregorianCalendarExtensions
     {
         // Look for matches in the dictionary.
         List<KeyValuePair<int, string>> matches = MonthNames
-            .Where(pair => pair.Value.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
+            .Where(pair =>
+                pair.Value.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
             .ToList();
 
         // Handle failure modes.

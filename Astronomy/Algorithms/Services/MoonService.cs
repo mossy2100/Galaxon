@@ -390,9 +390,23 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double CalcLengthOfLunation(double T)
+    public static double GetLengthOfLunation1(double T)
     {
         return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
+    }
+
+    /// <summary>
+    /// Calculate the approximate average length of a lunation in SI seconds for a given year.
+    /// The year can have a fractional part.
+    /// </summary>
+    /// <param name="y">The year as a decimal.</param>
+    /// <returns>The average lunation length in seconds at that point in time.</returns>
+    public static double GetLengthOfLunation(double y)
+    {
+        // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
+        double jdtt = TimeScaleService.DecimalYearToJulianDateUniversal(y);
+        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        return GetLengthOfLunation1(T);
     }
 
     #endregion Static methods

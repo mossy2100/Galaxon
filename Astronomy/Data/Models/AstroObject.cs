@@ -67,8 +67,7 @@ public class AstroObject : DataObject
     public virtual List<VSOP87DRecord>? VSOP87DRecords { get; set; }
 
     /// <summary>
-    /// Check for case-sensitive match on name, number, packed designation, or readable
-    /// designation.
+    /// Check for case-sensitive match on name or number.
     /// Only matches on full string (although with whitespace trimmed).
     /// </summary>
     /// <param name="searchString">The search string.</param>

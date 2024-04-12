@@ -1,3 +1,4 @@
+using System.Globalization;
 using Galaxon.Core.Strings;
 using Galaxon.Time;
 
@@ -95,7 +96,7 @@ public class LeapWeekCalendar
         Console.WriteLine();
     }
 
-    public static void PrintCalendarPages12()
+    public static void PrintCalendarPages12a()
     {
         List<PrintedMonth> printedMonths = new ();
         int dayOfWeek = 0;
@@ -238,5 +239,136 @@ public class LeapWeekCalendar
                 ln++;
             }
         }
+    }
+
+    public static void PrintCalendarPages12b()
+    {
+        List<PrintedMonth> printedMonths = new ();
+        int dayOfWeek = 0;
+        int[] longMonths = [1, 4, 7, 10, 12];
+
+        for (int m = 1; m <= 12; m++)
+        {
+            PrintedMonth printedMonth = new ();
+
+            // Add the title and the days of the week.
+            string title = LatinMonthNames[m].PadBoth(28, ' ', false);
+            printedMonth.AddLine(title);
+            printedMonth.AddLine(" Mon Tue Wed Thu Fri Sat Sun");
+
+            string curLine = "    ".Repeat(dayOfWeek);
+            int daysInMonth = longMonths.Contains(m) ? 35 : 28;
+            for (int d = 1; d <= daysInMonth; d++)
+            {
+                curLine += $"{d,4}";
+
+                // Go to next day.
+                dayOfWeek++;
+
+                // Check for new line.
+                if (dayOfWeek == 7)
+                {
+                    dayOfWeek = 0;
+                    printedMonth.AddLine(curLine);
+                    curLine = "";
+                }
+            }
+
+            // Add an incomplete line.
+            if (curLine != "")
+            {
+                curLine = curLine.PadRight(28);
+                printedMonth.AddLine(curLine);
+            }
+
+            printedMonths.Add(printedMonth);
+        }
+
+        for (int row = 0; row < 4; row++)
+        {
+            // How many lines?
+            int i = row * 3;
+            int ln = 0;
+            var pm1 = printedMonths[i];
+            var pm2 = printedMonths[i + 1];
+            var pm3 = printedMonths[i + 2];
+            while (true)
+            {
+                string fullLine = $"{pm1.GetLine(ln)}   {pm2.GetLine(ln)}   {pm3.GetLine(ln)}";
+                Console.WriteLine(fullLine);
+                if (string.IsNullOrWhiteSpace(fullLine))
+                {
+                    break;
+                }
+                ln++;
+            }
+        }
+    }
+
+    public static void PrintIsoWeekCalendarLeapYearPattern()
+    {
+        GregorianCalendar gc = new ();
+        Dictionary<int, bool> leapYears = new ();
+        Console.Write("  ");
+        for (int y = 2001; y < 2401; y++)
+        {
+            if (ISOWeek.GetWeeksInYear(y) == 53)
+            {
+                leapYears.Add(y, true);
+                Console.Write(" 1 ");
+            }
+            else
+            {
+                Console.Write(" 0 ");
+            }
+            if (y % 25 == 0)
+            {
+                Console.WriteLine();
+                Console.Write("  ");
+            }
+        }
+        Console.WriteLine();
+        Console.WriteLine($"Total number of leap years = {leapYears.Count}");
+    }
+
+    private static void PrintIsoWeek(int y, int w)
+    {
+        string strW = w.ToString().ZeroPad();
+        Console.Write($"Week {strW}:");
+        for (int i = 0; i < 7; i++)
+        {
+            DayOfWeek dow = i == 6 ? DayOfWeek.Sunday : (DayOfWeek)(i + 1);
+            DateTime d = ISOWeek.ToDateTime(y, w, dow);
+            Console.Write($"  {d.GetDateOnly().ToIsoString()}");
+        }
+        Console.WriteLine();
+    }
+
+    public static void PrintExampleIsoWeekCalendar()
+    {
+        Console.WriteLine("             Mon         Tue         Wed         Thu         Fri         Sat         Sun");
+        for (int y = 2025; y <= 2034; y++)
+        {
+            Console.WriteLine(y);
+            PrintIsoWeek(y, 1);
+            Console.WriteLine("...");
+            PrintIsoWeek(y, ISOWeek.GetWeeksInYear(y));
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+    }
+
+    public static void PrintYearsEndOnSunday()
+    {
+        Console.WriteLine("Years starting on Monday.");
+        for (int y = 2024; y <= 2100; y++)
+        {
+            DateOnly d = new DateOnly(y, 1, 1);
+            if (d.DayOfWeek == DayOfWeek.Monday)
+            {
+                Console.Write($"{y}, ");
+            }
+        }
+        Console.WriteLine();
     }
 }

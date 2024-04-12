@@ -197,4 +197,18 @@ public static class DateTimeExtensions
     }
 
     #endregion Rounding off
+
+    #region Month names
+
+    /// <summary>
+    /// Get the English month name of a datetime.
+    /// </summary>
+    /// <param name="dt">The datetime.</param>
+    /// <returns>The month name.</returns>
+    public static string GetMonthName(this DateTime dt)
+    {
+        return dt.GetDateOnly().GetMonthName();
+    }
+
+    #endregion Month names
 }

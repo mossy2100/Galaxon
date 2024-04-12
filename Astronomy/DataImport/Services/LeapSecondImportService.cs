@@ -104,7 +104,7 @@ public class LeapSecondImportService(
     /// <see href="https://www.nist.gov/pml/time-and-frequency-division/time-realization/leap-seconds"/>
     /// </summary>
     /// <remarks>
-    /// TODO Set up the cron job to check the IERS website periodically.
+    /// TODO Set up a cron job to check the IERS website periodically.
     /// </remarks>
     public async Task ImportIersBulletins()
     {

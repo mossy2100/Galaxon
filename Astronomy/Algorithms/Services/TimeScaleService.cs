@@ -1,3 +1,4 @@
+using System.Globalization;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
@@ -130,7 +131,7 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
 
     #endregion Instance methods
 
-    #region Delta-T methods
+    #region Decimal year methods
 
     /// <summary>
     /// Convert a year and month into a decimal year.
@@ -150,6 +151,38 @@ public class TimeScaleService(LeapSecondRepository leapSecondRepository)
     {
         return CalcDecimalYear(dt.Year, dt.Month);
     }
+
+    /// <summary>
+    /// Convert a decimal year to a DateTime.
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static DateTime DecimalYearToDateTime(double y)
+    {
+        GregorianCalendar gc = new ();
+        int iYear = (int)Floor(y);
+        DateTime yearStart = GregorianCalendarExtensions.YearStart(iYear);
+        double frac = y - iYear;
+        int nDays = gc.GetDaysInYear(iYear);
+        long ticksInYear = nDays * TimeConstants.TICKS_PER_DAY;
+        long ticks = (long)(frac * ticksInYear);
+        return yearStart.AddTicks(ticks);
+    }
+
+    /// <summary>
+    /// Convert a decimal year to a Julian Date (UT).
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static double DecimalYearToJulianDateUniversal(double y)
+    {
+        DateTime dt = DecimalYearToDateTime(y);
+        return JulianDateService.DateTimeToJulianDate(dt);
+    }
+
+    #endregion Decimal year methods
+
+    #region Delta-T methods
 
     /// <summary>
     /// Calculate ∆T in seconds using NASA's equations.

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Extensions;
 
 namespace Galaxon.Numerics.Algebra;
@@ -73,7 +74,7 @@ public class Polynomials
     /// <exception cref="ArgumentOutOfRangeException">If a == 0 and b == 0.</exception>
     public static List<double> SolveQuadratic(double a, double b, double c)
     {
-        // Guard.
+        // Check a solution is possible.
         if (a == 0 && b == 0)
         {
             throw new ArgumentOutOfRangeException(nameof(b),
@@ -115,6 +116,23 @@ public class Polynomials
         // Order the solutions so the results are predictable and testable.
         result.Sort();
         return result;
+    }
+
+    /// <summary>
+    /// This overload uses the same form of coefficients array as used by EvaluatePolynomial.
+    /// </summary>
+    /// <param name="coeffs">The coefficients of the quadratic.</param>
+    /// <returns></returns>
+    /// <exception cref=""></exception>
+    public static List<double> SolveQuadratic(double[] coeffs)
+    {
+        // Check that exactly 3 coefficients have been provided.
+        if (coeffs.Length != 3)
+        {
+            throw new ArgumentInvalidException(nameof(coeffs), "Array must have 3 doubles.");
+        }
+
+        return SolveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
     }
 
     /// <summary>

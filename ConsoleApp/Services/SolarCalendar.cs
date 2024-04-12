@@ -388,12 +388,9 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         for (int y = 2000; y <= 9000; y += 1000)
         {
-            DateTime dt = GregorianCalendarExtensions.YearStart(y);
-            double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dt);
-            double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
-            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(T);
-            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
-            double dayLengthSeconds = EarthService.GetSolarDayLengthInSeconds(T);
+            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(y);
+            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
+            double dayLengthSeconds = EarthService.GetSolarDayLengthInSeconds(y);
             Console.WriteLine($"Tropical year {y}");
             string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
             Console.WriteLine($"  Year length in ephemeris days: {yearLengthEphemeris:F6} ({timeString})");
@@ -411,10 +408,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         double closestYearLength = 0;
         for (int y = 3000; y < 4000; y++)
         {
-            DateTime dtMidYear = GregorianCalendarExtensions.YearMidPoint(y);
-            double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dtMidYear);
-            double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
-            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(T);
+            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
             double diff = Math.Abs(yearLengthSolar - targetAvg);
             if (diff < smallestDiff)
             {

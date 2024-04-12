@@ -221,4 +221,18 @@ public static class DateOnlyExtensions
     }
 
     #endregion Create new object
+
+    #region Month names
+
+    /// <summary>
+    /// Get the English month name of a date.
+    /// </summary>
+    /// <param name="d">The date.</param>
+    /// <returns>The month name.</returns>
+    public static string GetMonthName(this DateOnly d)
+    {
+        return GregorianCalendarExtensions.MonthNumberToName(d.Month);
+    }
+
+    #endregion Month names
 }
