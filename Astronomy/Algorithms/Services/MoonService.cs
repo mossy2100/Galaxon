@@ -168,9 +168,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         double A13 = Angles.DegreesToRadiansWithWrap(239.56 + 25.513_099 * k);
         double A14 = Angles.DegreesToRadiansWithWrap(331.55 + 3.592_518 * k);
 
-        // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can be
-        // negative and we want a non-negative result.
-        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
+        // I'm using FloorMod() here instead of the modulo operator (%) because the phaseNumber can
+        // be negative and we want a non-negative result.
+        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.FloorMod(phaseNumber, 4);
         double C1;
         if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {

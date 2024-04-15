@@ -140,29 +140,27 @@ public static class NumberExtensions
 
     /// <summary>
     /// Modulo operation using floored division.
-    /// With this version, the result will always have the same sign as the divisor.
+    ///
+    /// With this variation of the modulo operation, the result will always have the same sign as
+    /// the divisor.
     ///
     /// Unlike the truncated division version of the modulo operator in C# and other C-based
     /// languages, the floored division version produces a regular cycling pattern through both
     /// negative and positive divisors.
     /// It permits things like:
-    ///     bool isOdd = Mod(num, 2) == 1;
+    ///     bool isOdd = FloorMod(num, 2) == 1;
     /// Doing this with the % operator will fail for negative divisors. e.g.
     ///     bool isOdd = num % 2 == 1;
     /// In this case, if num is negative 0, num % 2 == -1
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>
-    public static T FlooredModulo<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
+    /// <see href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#floorMod-int-int-"/>
+    public static T FloorMod<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
         IComparisonOperators<T, T, bool>
     {
         T r = a % b;
         return r < T.Zero ? r + b : r;
     }
-
-    /// <summary>
-    /// Alias for the int version of the FlooredModulo method.
-    /// </summary>
-    public static readonly Func<int, int, int> Mod = FlooredModulo;
 
     #endregion Division-related methods
 

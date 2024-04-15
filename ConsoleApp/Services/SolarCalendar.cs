@@ -16,7 +16,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     /// <returns></returns>
     public static bool IsLeapYear1(int year)
     {
-        return Mod(year, 4) == 0 && Mod(year, 128) != 0;
+        return FloorMod(year, 4) == 0 && FloorMod(year, 128) != 0;
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     /// </summary>
     public static bool IsLeapYear2(int y)
     {
-        return Mod(Mod(Mod(y, 5000), 95), 4) == 3;
+        return FloorMod(FloorMod(FloorMod(y, 5000), 95), 4) == 3;
     }
 
     /// <summary>

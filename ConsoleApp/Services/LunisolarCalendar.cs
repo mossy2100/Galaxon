@@ -17,7 +17,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 {
     public static bool IsFullMonth(int m)
     {
-        return Mod(m, 2) == 0 || Mod(Mod(m, 850), 32) == 25;
+        return FloorMod(m, 2) == 0 || FloorMod(FloorMod(m, 850), 32) == 25;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     /// <returns></returns>
     public static bool IsFullMonth2(int m)
     {
-        return Mod(m, 2) == 1 || Mod(Mod(Mod(m, 5000), 49), 13) == 10;
+        return FloorMod(m, 2) == 1 || FloorMod(FloorMod(FloorMod(m, 5000), 49), 13) == 10;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     /// <returns></returns>
     public static bool IsLeapYear(int y)
     {
-        return Mod(Mod(Mod(y, 1021), 19), 3) == 0;
+        return FloorMod(FloorMod(FloorMod(y, 1021), 19), 3) == 0;
     }
 
     private static int _MonthsInYear(int y)
