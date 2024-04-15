@@ -13,9 +13,9 @@ public class Metonic
         int yearThen = -433;
         int yearNow = 2024;
 
-        double dayLengthThen = EarthService.GetSolarDayLengthInSeconds(yearThen);
+        double dayLengthThen = EarthService.GetSolarDayLength(yearThen);
         Console.WriteLine($"The solar day length in {yearThen} was {dayLengthThen} days.");
-        double dayLengthNow = EarthService.GetSolarDayLengthInSeconds(yearNow);
+        double dayLengthNow = EarthService.GetSolarDayLength(yearNow);
         Console.WriteLine($"The solar day length in {yearNow} is {dayLengthNow} seconds.");
         double dayDiff = dayLengthNow - dayLengthThen;
         string dayIncreaseVerb = dayLengthNow > dayLengthThen ? "increased" : "decreased";

@@ -24,7 +24,8 @@ class Program
         {
             // Solar();
             // Lunisolar();
-            LeapWeek();
+            // LeapWeek();
+            TotalDrift();
         }
         catch (Exception ex)
         {
@@ -95,23 +96,26 @@ class Program
 
     static void Solar()
     {
-        SolarCalendar solarCalendar =
-            _serviceProvider!.GetRequiredService<SolarCalendar>();
+        // SolarCalendar solarCalendar =
+        //     _serviceProvider!.GetRequiredService<SolarCalendar>();
 
-        double avg = TropicalYear.GetAverageLengthInSolarDays(2000, 5000);
-        Console.WriteLine($"Average tropical year length 2000-5000: {avg:F6} solar days.");
+        // double avg = TropicalYear.GetAverageLengthInSolarDays(2000, 5000);
+        // Console.WriteLine($"Average tropical year length 2000-5000: {avg:F6} solar days.");
 
-        solarCalendar.PrintMillennialYearInfo();
+        // solarCalendar.PrintMillennialYearInfo();
 
         // solarCalendar.FindYearWithIdealLength();
-        Console.WriteLine();
-        solarCalendar.CountLeapYears();
-
-        Console.WriteLine();
+        // Console.WriteLine();
+        // solarCalendar.CountLeapYears();
+        //
+        // Console.WriteLine();
         // solarCalendar.FindSynchronisationPoints();
-        solarCalendar.FindOptimalPeriod();
+        // solarCalendar.FindOptimalPeriod();
 
         // RuleFinder.PrintLeapYearPattern(121, 500, 33, 4, 2);
+        // RuleFinder.FindRuleWith2Mods(31, 128);
+        RuleFinder.FindRuleWith3Mods(31, 128);
+        // RuleFinder.FindRuleWith4Mods(31, 128);
 
         // Console.WriteLine($"Checking solar day.");
         // double T = -1;
@@ -133,10 +137,29 @@ class Program
         // RuleFinder.PrintLeapYearPattern(11, 62, 17, 6, 0);
     }
 
-    static void Lunisolar()
+    static void LunisolarSynch()
     {
         LunisolarCalendar lunisolarCalendar =
             _serviceProvider!.GetRequiredService<LunisolarCalendar>();
         lunisolarCalendar.FindSynchronisationPoints();
+    }
+
+    public static void TotalDrift()
+    {
+        Console.WriteLine("The 97/400 solution:");
+        TropicalYear.CalculateTotalDrift(365.2425);
+        Console.WriteLine();
+
+        Console.WriteLine("The 969/4000 solution:");
+        TropicalYear.CalculateTotalDrift(365.24225);
+        Console.WriteLine();
+
+        Console.WriteLine("The 31/128 solution:");
+        TropicalYear.CalculateTotalDrift(365.2421875);
+        Console.WriteLine();
+
+        Console.WriteLine("The 121/500 solution:");
+        TropicalYear.CalculateTotalDrift(365.242);
+        Console.WriteLine();
     }
 }

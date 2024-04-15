@@ -50,39 +50,30 @@ public class SeasonalMarkerServiceTests
     public void CalcSeasonalMarker_CompareWithUsno()
     {
         // Arrange
-        int goalMaxDiff = 0;
-        int maxDiff = 0;
+        TimeSpan maxDiff = TimeSpan.FromMinutes(2);
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        SeasonalMarkerService seasonalMarkerService =
-            ServiceManager.GetService<SeasonalMarkerService>();
-        List<SeasonalMarker> seasonalMarkers =
-            astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
+        SeasonalMarkerService seasonalMarkerService = ServiceManager.GetService<SeasonalMarkerService>();
+        List<SeasonalMarker> seasonalMarkers = astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
 
         // Check each.
         foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
         {
-            double jdtt = seasonalMarkerService.GetSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
-            DateTime dt = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+            // Arrange.
+            DateTime expected = seasonalMarker.DateTimeUtcUsno;
 
-            int diff =
-                (int)Round(
-                    Abs(seasonalMarker.DateTimeUtcUsno.GetTotalSeconds() - dt.GetTotalSeconds())
-                    / TimeConstants.SECONDS_PER_MINUTE);
-            if (diff > goalMaxDiff)
-            {
-                Console.WriteLine(
-                    $"{seasonalMarker.Type.GetDescription(),60}: {seasonalMarker.DateTimeUtcUsno.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
-                if (diff > maxDiff)
-                {
-                    maxDiff = diff;
-                }
-            }
-            // else
+            // Act.
+            double jdtt = seasonalMarkerService.GetSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
+            DateTime actual = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+
+            // Assert.
+            DateTimeAssert.AreEqual(expected, actual, maxDiff);
+            // if (diff > goalMaxDiff)
             // {
-            //     Assert.IsTrue(diff <= goalMaxDiff);
+            //     Console.WriteLine(
+            //         $"{seasonalMarker.Type.GetDescription(),60}: {seasonalMarker.DateTimeUtcUsno.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
             // }
         }
 
-        Console.WriteLine($"Maximum difference = {maxDiff} minutes.");
+        // Console.WriteLine($"Maximum difference = {maxDiff} minutes.");
     }
 }

@@ -144,7 +144,7 @@ public class JulianDateService
     #region Julian periods since start J2000 epoch.
 
     /// <summary>
-    /// Number of days since beginning of the J2000 epoch, in TT.
+    /// Number of days since beginning of the J2000 epoch (TT).
     /// </summary>
     /// <param name="jdtt">The Julian Ephemeris Day.</param>
     /// <returns></returns>

@@ -625,30 +625,23 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
     public void FindSynchronisationPoints()
     {
-        for (int y = 2000; y <= 2200; y++)
+        for (int y = 2000; y <= 3000; y++)
         {
-            // Get the Besselian New Year.
-            double jdtt = seasonalMarkerService.GetBesselianNewYear(y);
-            DateTime besselianNye =
+            // Get the southern solstice.
+            double jdtt =
+                seasonalMarkerService.GetSeasonalMarker(y, ESeasonalMarkerType.SouthernSolstice);
+            DateTime solstice =
                 JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
-            // Keep the ones within an hour of midnight UTC.
-            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);
-            // TimeSpan diff = besselianNye - closestMidnight;
-            // if (Math.Abs(diff.Ticks) >= TimeConstants.TICKS_PER_HOUR)
-            // {
-            //     continue;
-            // }
-
             // Check if there's also a New Moon at this time.
-            MoonPhase closestPhase = moonService.GetPhaseNearDateTimeHumble(besselianNye);
-            if (closestPhase.Type != ELunarPhaseType.NewMoon)
+            MoonPhase newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
+            if (newMoon.Type != ELunarPhaseType.NewMoon)
             {
                 continue;
             }
-            TimeSpan diff = besselianNye - closestPhase.DateTimeUtc;
+            TimeSpan diff = solstice - newMoon.DateTimeUtc;
             diff = TimeSpanExtensions.Abs(diff);
-            if (diff.Ticks >= TimeConstants.TICKS_PER_DAY)
+            if (diff.Ticks >= TimeConstants.TICKS_PER_HOUR)
             {
                 continue;
             }
@@ -656,10 +649,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             // Print candidate.
             Console.WriteLine();
             Console.WriteLine($"Possible alignment in year {y}");
-            Console.WriteLine($"Besselian New Year: {besselianNye.ToIsoString()}");
-            Console.WriteLine($"Closest midnight:   {closestMidnight.ToIsoString()}");
-            Console.WriteLine($"New Moon:           {closestPhase.DateTimeUtc.ToIsoString()}");
-            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff)}");
+            Console.WriteLine($"Southern Solstice:  {solstice.ToString("R")}");
+            Console.WriteLine($"New Moon:           {newMoon.DateTimeUtc.ToString("R")}");
+            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }
     }
 }

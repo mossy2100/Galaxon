@@ -52,34 +52,28 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <returns>The closest lunar phase.</returns>
     public MoonPhase GetPhaseNearDateTimeHumble(DateTime dt)
     {
-        // Get any lunar phases from the database that match within 1 day.
-        LunarPhase? lunarPhase = astroDbContext.LunarPhases
-            .FirstOrDefault(lp =>
-                (lp.DateTimeUtcUsno != null
-                    && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1)
-                || (lp.DateTimeUtcAstroPixels != null
-                    && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1));
-
+        // Look for a lunar phase in the database with a USNO datetime within 1 day.
+        LunarPhase? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp => lp.DateTimeUtcUsno != null && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1);
         if (lunarPhase != null)
         {
-            if (lunarPhase.DateTimeUtcUsno != null)
+            // We found a USNO calculation, so return that.
+            return new MoonPhase
             {
-                // We found a USNO calculation, so return that.
-                return new MoonPhase
-                {
-                    Type = lunarPhase.Type,
-                    DateTimeUtc = lunarPhase.DateTimeUtcUsno!.Value
-                };
-            }
-            if (lunarPhase.DateTimeUtcAstroPixels != null)
+                Type = lunarPhase.Type,
+                DateTimeUtc = lunarPhase.DateTimeUtcUsno!.Value
+            };
+        }
+
+        // Look for a lunar phase in the database with an AstroPixels datetime within 1 day.
+        lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp => lp.DateTimeUtcAstroPixels != null && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1);
+        if (lunarPhase != null)
+        {
+            // We found an AstroPixels calculation, so return that.
+            return new MoonPhase
             {
-                // We found an AstroPixels calculation, so return that.
-                return new MoonPhase
-                {
-                    Type = lunarPhase.Type,
-                    DateTimeUtc = lunarPhase.DateTimeUtcAstroPixels!.Value
-                };
-            }
+                Type = lunarPhase.Type,
+                DateTimeUtc = lunarPhase.DateTimeUtcAstroPixels!.Value
+            };
         }
 
         // Use my calculation.
@@ -390,7 +384,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double GetLengthOfLunation1(double T)
+    public static double CalcLengthOfLunation(double T)
     {
         return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
     }
@@ -404,9 +398,10 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     public static double GetLengthOfLunation(double y)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdtt = TimeScaleService.DecimalYearToJulianDateUniversal(y);
+        double jdut = TimeScaleService.DecimalYearToJulianDateUniversal(y);
+        double jdtt = JulianDateService.JulianDateUniversalToTerrestrial(jdut);
         double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
-        return GetLengthOfLunation1(T);
+        return CalcLengthOfLunation(T);
     }
 
     #endregion Static methods

@@ -1,5 +1,6 @@
 using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
@@ -390,10 +391,12 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         {
             double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(y);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
-            double dayLengthSeconds = EarthService.GetSolarDayLengthInSeconds(y);
+            double dayLengthSeconds = EarthService.GetSolarDayLength(y);
             Console.WriteLine($"Tropical year {y}");
-            string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
-            Console.WriteLine($"  Year length in ephemeris days: {yearLengthEphemeris:F6} ({timeString})");
+            string timeString =
+                TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
+            Console.WriteLine(
+                $"  Year length in ephemeris days: {yearLengthEphemeris:F6} ({timeString})");
             Console.WriteLine($"  Solar day length: {dayLengthSeconds:F6} seconds");
             Console.WriteLine($"  Year length in solar days: {yearLengthSolar:F6}");
             Console.WriteLine();
@@ -417,7 +420,8 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
                 closestYearLength = yearLengthSolar;
             }
         }
-        Console.WriteLine($"In year {closestYear} the tropical year is {closestYearLength:F6} solar days.");
+        Console.WriteLine(
+            $"In year {closestYear} the tropical year is {closestYearLength:F6} solar days.");
     }
 
     public void CountLeapYears()
@@ -460,14 +464,14 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         for (int y = 2024; y <= 2100; y++)
         {
-            // Get the Besselian New Year.
-            double jdtt = seasonalMarkerService.GetBesselianNewYear(y);
-            DateTime besselianNye =
-                JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+            // Get the southern solstice.
+            double jdtt =
+                seasonalMarkerService.GetSeasonalMarker(y, ESeasonalMarkerType.SouthernSolstice);
+            DateTime soltice = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
             // Keep the ones within an hour of midnight UTC.
-            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(besselianNye);
-            TimeSpan diff = TimeSpanExtensions.Abs(besselianNye - closestMidnight);
+            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(soltice);
+            TimeSpan diff = TimeSpanExtensions.Abs(soltice - closestMidnight);
             if (diff.Ticks >= TimeConstants.TICKS_PER_HOUR)
             {
                 continue;
@@ -476,9 +480,9 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             // Print candidate.
             Console.WriteLine();
             Console.WriteLine($"Possible alignment in year {y}");
-            Console.WriteLine($"Besselian New Year: {besselianNye.ToIsoString()}");
-            Console.WriteLine($"Closest midnight:   {closestMidnight.ToIsoString()}");
-            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff)}");
+            Console.WriteLine($"Southern solstice: {soltice.ToIsoString()}");
+            Console.WriteLine($"Closest midnight:  {closestMidnight.ToIsoString()}");
+            Console.WriteLine($"Difference:        {TimeSpanExtensions.GetTimeString(diff)}");
         }
     }
 
@@ -502,7 +506,8 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             maxYear++;
         }
         Console.WriteLine($"Target average year length: {targetAvgYearLength} solar days.");
-        Console.WriteLine($"Average year length from {minYear}-{bestMaxYear - 1}: {avgYearLength} solar days.");
+        Console.WriteLine(
+            $"Average year length from {minYear}-{bestMaxYear - 1}: {avgYearLength} solar days.");
         Console.WriteLine($"Difference: {minDiff} solar days.");
     }
 }

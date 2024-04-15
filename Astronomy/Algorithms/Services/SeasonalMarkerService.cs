@@ -147,27 +147,21 @@ public class SeasonalMarkerService(SunService sunService)
     }
 
     /// <summary>
-    /// High-accuracy method for calculating seasonal marker as as a Julian Date (TT).
-    /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
-    /// "Equinoxes and Solstices" (p180).
+    /// Loop until sufficient accuracy is achieved between the supplied Julian Date (TT) and the
+    /// desired value for Ls (longitude of the Sun).
     /// </summary>
-    /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
-    /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarker(int year,
-        ESeasonalMarkerType markerType)
+    /// <param name="jdtt">Initial estimate for Julian Date (TT).</param>
+    /// <param name="targetLs">Target longitude of the Sun, in radians.</param>
+    /// <returns>Improved value for the Julian Date (TT)</returns>
+    private double _LoopUntilDesiredPrecision(double jdtt, double targetLs)
     {
-        // Get the mean value as a Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, markerType);
-
-        // Find the target Ls in radians (0, π/2, -π, or -π/2).
-        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
-
-        // Calculate max difference to get within 0.5 second.
+        // Get the maximum difference in radians. As we want precision of 1 second, set this equal
+        // to the angular distance the mean Sun moves through the ecliptic in half a second. This
+        // might be excessively precise given other imprecisions in the calculation method, but the
+        // method doesn't take too long with this value.
         const double sunMovementRadiansPerHalfSecond =
             Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
 
-        // Loop until sufficient accuracy is achieved.
         do
         {
             // Get the longitude of the Sun in radians.
@@ -192,6 +186,25 @@ public class SeasonalMarkerService(SunService sunService)
     }
 
     /// <summary>
+    /// High-accuracy method for calculating seasonal marker as as a Julian Date (TT).
+    /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
+    /// "Equinoxes and Solstices" (p180).
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <param name="markerType">The marker number (use enum)</param>
+    /// <returns>The result as a Julian Date (TT).</returns>
+    public double GetSeasonalMarker(int year, ESeasonalMarkerType markerType)
+    {
+        // Get the approximate result as a Julian Date (TT).
+        double jdtt = GetSeasonalMarkerMean(year, markerType);
+
+        // Find the target Ls in radians (0, π/2, -π, or -π/2).
+        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
+
+        return _LoopUntilDesiredPrecision(jdtt, targetLs);
+    }
+
+    /// <summary>
     /// Calculate the moment of the Besselian New Year (Ls=280°) at the end of a given Gregorian
     /// year.
     /// Note, the result could be early in the following year.
@@ -204,33 +217,13 @@ public class SeasonalMarkerService(SunService sunService)
         // occurs at Ls=270°) as a Julian Date (TT).
         double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
 
-        // Add 10° (270° + 10° = 280°).
+        // Add 10° (270° + 10° = 280°) in days.
         jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;
 
         // Find the target Ls in radians.
         double targetLs = Angles.WrapRadians(Angles.DegreesToRadians(280));
 
-        // Loop until sufficient accuracy is achieved.
-        while (true)
-        {
-            // Get the longitude of the Sun in radians.
-            (double Ls, double _, double _) = sunService.CalcPosition(jdtt);
-
-            // Calculate the difference between the computed longitude of the Sun at this time, and
-            // the target value.
-            double diffLs = Angles.WrapRadians(targetLs - Ls);
-
-            // Check if we're done.
-            if (Abs(diffLs) < SUN_MOVEMENT_RADIANS_PER_HALF_SECOND)
-            {
-                break;
-            }
-
-            // Make a correction.
-            jdtt += 58 * Sin(diffLs);
-        }
-
-        return jdtt;
+        return _LoopUntilDesiredPrecision(jdtt, targetLs);
     }
 
     #endregion Instance methods

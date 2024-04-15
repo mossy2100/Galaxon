@@ -59,11 +59,17 @@ public static class TimeSpanExtensions
     /// Break a timespan into days (ephemeris), hours, minutes, and seconds.
     /// </summary>
     /// <param name="t">The TimeSpan.</param>
+    /// <param name="precision">The unit to round off to.</param>
     /// <returns>An array of time parts.</returns>
-    public static Dictionary<ETimeUnit, double> GetTimeParts(this TimeSpan t)
+    public static Dictionary<ETimeUnit, double> GetTimeParts(this TimeSpan t,
+        ETimeUnit precision = ETimeUnit.Millisecond)
     {
+        // Round off to the nearest unit specified as precision.
+        long units = (long)Math.Round(Convert(t.Ticks, ETimeUnit.Tick, precision));
+        // Convert back to ticks for breaking down into parts.
+        long ticks = (long)Math.Round(Convert(units, precision));
+
         Dictionary<ETimeUnit, double> result = new ();
-        long ticks = t.Ticks;
 
         // Get days.
         double nDays = (double)ticks / TimeConstants.TICKS_PER_DAY;
@@ -94,19 +100,43 @@ public static class TimeSpanExtensions
     /// Convert an array of time parts into a descriptive string.
     /// </summary>
     /// <param name="parts">The array of time parts.</param>
+    /// <param name="precision">The unit to round off to.</param>
     /// <returns>A string describing the time.</returns>
-    public static string GetTimeString(Dictionary<ETimeUnit, double> parts)
+    public static string GetTimeString(Dictionary<ETimeUnit, double> parts,
+        ETimeUnit precision = ETimeUnit.Millisecond)
     {
         List<string> sParts = [];
+        bool foundFirstUnit = false;
         foreach (KeyValuePair<ETimeUnit, double> part in parts)
         {
-            if (part.Value != 0)
+            if (part.Value != 0 || (part.Key == precision && !foundFirstUnit))
             {
-                string value = part.Key == ETimeUnit.Second ? $"{part.Value:F3}" : $"{part.Value}";
-                string unit = $"{part.Key}".ToLower() + (part.Value == 1 ? "" : "s");
-                sParts.Add($"{value} {unit}");
+                double value = foundFirstUnit ? Math.Abs(part.Value) : part.Value;
+
+                string strValue;
+                if (part.Key == ETimeUnit.Second)
+                {
+                    int decimals = precision switch
+                    {
+                        ETimeUnit.Nanosecond => 9,
+                        ETimeUnit.Tick => 7,
+                        ETimeUnit.Microsecond => 6,
+                        ETimeUnit.Millisecond => 3,
+                        _ => 0
+                    };
+                    strValue = value.ToString("F" + decimals);
+                }
+                else
+                {
+                    strValue = value.ToString("F0");
+                }
+
+                string unit = $"{part.Key}".ToLower() + (value == 1 ? "" : "s");
+                sParts.Add($"{strValue} {unit}");
+                foundFirstUnit = true;
             }
         }
+
         return string.Join(", ", sParts);
     }
 
@@ -114,10 +144,11 @@ public static class TimeSpanExtensions
     /// Convert a time period (as a TimeSpan) into a descriptive string.
     /// </summary>
     /// <param name="t">The TimeSpan.</param>
+    /// <param name="precision">The unit to round off to.</param>
     /// <returns>A string describing the time period.</returns>
-    public static string GetTimeString(TimeSpan t)
+    public static string GetTimeString(TimeSpan t, ETimeUnit precision = ETimeUnit.Millisecond)
     {
-        return GetTimeString(t.GetTimeParts());
+        return GetTimeString(t.GetTimeParts(precision), precision);
     }
 
     /// <summary>

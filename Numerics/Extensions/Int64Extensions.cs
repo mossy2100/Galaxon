@@ -40,4 +40,23 @@ public static class Int64Extensions
             _ => (ulong)(-n)
         };
     }
+
+    /// <summary>
+    /// Get the ordinal suffix of an integer.
+    /// </summary>
+    /// <param name="n">An integer.</param>
+    /// <returns>The suffix.</returns>
+    public static string GetOrdinalSuffix(long n)
+    {
+        ulong m = Abs(n);
+        ulong a = m % 10;
+        ulong b = m % 100;
+        return a switch
+        {
+            1 when b != 11 => "st",
+            2 when b != 12 => "nd",
+            3 when b != 13 => "rd",
+            _ => "th"
+        };
+    }
 }

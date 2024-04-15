@@ -97,18 +97,14 @@ public class RuleFinder
                     {
                         gaps[0] += gap;
                     }
-                    gaps = gaps.Distinct().ToList();
 
-                    if (count == num && gaps.Count <= 2)
+                    // See if we found a valid solution.
+                    if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
                     {
                         Console.WriteLine($"Found solution: y % {den} % {a2} % {b2} == {r2};");
-                        Console.WriteLine(string.Join(", ", gaps.Distinct()));
-                        Console.WriteLine($"Minimum gap: {gaps.Min()}");
-                        Console.WriteLine($"Maximum gap: {gaps.Max()}");
-                        if (gaps.Min() == minGap && gaps.Max() == maxGap)
-                        {
-                            Console.WriteLine("OPTIMAL GAPS");
-                        }
+                        Console.WriteLine(string.Join(", ", gaps));
+                        Console.WriteLine($"Minimum gap: {minGap} ({gaps.Count(g => g == minGap)})");
+                        Console.WriteLine($"Maximum gap: {maxGap} ({gaps.Count(g => g == maxGap)})");
                     }
                 }
             }
