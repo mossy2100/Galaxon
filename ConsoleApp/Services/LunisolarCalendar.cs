@@ -5,6 +5,7 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
+using Galaxon.Core.Types;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
@@ -625,7 +626,10 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
     public void FindSynchronisationPoints()
     {
-        for (int y = 2000; y <= 6000; y++)
+        // For some reason this breaks after year 5000. Some error in the lunar phase calculator;
+        // perhaps the Meeus algorithm doesn't support years later than that, although there's no
+        // year range specified.
+        for (int y = 2052; y < 5000; y++)
         {
             // Get the southern solstice.
             double jdtt =
@@ -639,6 +643,8 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             {
                 continue;
             }
+
+            // Check the difference isn't too large.
             TimeSpan diff = solstice - newMoon.DateTimeUtc;
             diff = TimeSpanExtensions.Abs(diff);
             if (diff.Ticks >= TimeConstants.TICKS_PER_HOUR)
@@ -648,10 +654,10 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
             // Print candidate.
             Console.WriteLine();
-            Console.WriteLine($"Alignment in year {y}");
-            Console.WriteLine($"Southern Solstice:  {solstice.ToString("R")}");
-            Console.WriteLine($"New Moon:           {newMoon.DateTimeUtc.ToString("R")}");
-            Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
+            Console.WriteLine($"Alignment in year {y}:");
+            Console.WriteLine($"{"Southern Solstice",20}: {solstice:R}");
+            Console.WriteLine($"{newMoon.Type.GetDescriptionOrName(),20}: {newMoon.DateTimeUtc:R}");
+            Console.WriteLine($"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }
     }
 }
