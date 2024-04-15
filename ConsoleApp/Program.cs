@@ -25,7 +25,8 @@ class Program
             // Solar();
             // Lunisolar();
             // LeapWeek();
-            TotalDrift();
+            // TotalDrift();
+            LunisolarSynch();
         }
         catch (Exception ex)
         {

@@ -625,7 +625,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
     public void FindSynchronisationPoints()
     {
-        for (int y = 2000; y <= 3000; y++)
+        for (int y = 2000; y <= 6000; y++)
         {
             // Get the southern solstice.
             double jdtt =
@@ -648,7 +648,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
             // Print candidate.
             Console.WriteLine();
-            Console.WriteLine($"Possible alignment in year {y}");
+            Console.WriteLine($"Alignment in year {y}");
             Console.WriteLine($"Southern Solstice:  {solstice.ToString("R")}");
             Console.WriteLine($"New Moon:           {newMoon.DateTimeUtc.ToString("R")}");
             Console.WriteLine($"Difference:         {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");

@@ -122,6 +122,47 @@ public class SeasonalMarkerService(SunService sunService)
     }
 
     /// <summary>
+    /// Expands the range of GetSeasonalMarkerMean() by using the GetTropicalYearLengthInEphemerisDays() method.
+    /// </summary>
+    /// <param name="year">The year to get the seasonal marker for.</param>
+    /// <param name="markerType">The marker type.</param>
+    /// <returns>The approximate Julian date (TT) of the event.</returns>
+    private double GetSeasonalMarkerMeanExpanded(int year, ESeasonalMarkerType markerType)
+    {
+        // Check year is in valid range.
+        if (year is < -7999 or > 12000)
+        {
+            throw new ArgumentOutOfRangeException(nameof(year),
+                "Must be in the range 8000 BCE to 12000 CE (-7999..12000).");
+        }
+
+        // Get the approximate result as a Julian Date (TT).
+        double jdtt;
+        if (year < -1000)
+        {
+            jdtt = GetSeasonalMarkerMean(-1000, markerType);
+            for (int i = -1000; i > year; i--)
+            {
+                jdtt -= EarthService.GetTropicalYearLengthInEphemerisDays(year);
+            }
+        }
+        else if (year > 3000)
+        {
+            jdtt = GetSeasonalMarkerMean(3000, markerType);
+            for (int i = 3000; i < year; i++)
+            {
+                jdtt += EarthService.GetTropicalYearLengthInEphemerisDays(year);
+            }
+        }
+        else
+        {
+            jdtt = GetSeasonalMarkerMean(year, markerType);
+        }
+
+        return jdtt;
+    }
+
+    /// <summary>
     /// Calculate approximate datetime of a seasonal marker as as a Julian Date (TT).
     /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
     /// "Equinoxes and Solstices" (pp177-180).
@@ -195,12 +236,13 @@ public class SeasonalMarkerService(SunService sunService)
     /// <returns>The result as a Julian Date (TT).</returns>
     public double GetSeasonalMarker(int year, ESeasonalMarkerType markerType)
     {
-        // Get the approximate result as a Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, markerType);
+        // Get an approximate time for the event.
+        double jdtt = GetSeasonalMarkerMeanExpanded(year, markerType);
 
         // Find the target Ls in radians (0, π/2, -π, or -π/2).
         double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
 
+        // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);
     }
 
@@ -213,16 +255,17 @@ public class SeasonalMarkerService(SunService sunService)
     /// <returns>The result as a Julian Date (TT).</returns>
     public double GetBesselianNewYear(int year)
     {
-        // Get the approximate moment of the northern winter (southern summer) solstice (which
-        // occurs at Ls=270°) as a Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
+        // Get the approximate moment of the Southern Solstice (which occurs at Ls=270°) as a
+        // Julian Date (TT).
+        double jdtt = GetSeasonalMarkerMeanExpanded(year, ESeasonalMarkerType.SouthernSolstice);
 
-        // Add 10° (270° + 10° = 280°) in days.
+        // Add 10° (in days) to get the approximate moment when Ls=280°.
         jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;
 
         // Find the target Ls in radians.
-        double targetLs = Angles.WrapRadians(Angles.DegreesToRadians(280));
+        double targetLs = Angles.DegreesToRadiansWithWrap(280);
 
+        // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);
     }
 

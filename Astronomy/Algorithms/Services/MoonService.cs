@@ -53,7 +53,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     public MoonPhase GetPhaseNearDateTimeHumble(DateTime dt)
     {
         // Look for a lunar phase in the database with a USNO datetime within 1 day.
-        LunarPhase? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp => lp.DateTimeUtcUsno != null && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1);
+        LunarPhase? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
+            lp.DateTimeUtcUsno != null
+            && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1);
         if (lunarPhase != null)
         {
             // We found a USNO calculation, so return that.
@@ -65,7 +67,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         }
 
         // Look for a lunar phase in the database with an AstroPixels datetime within 1 day.
-        lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp => lp.DateTimeUtcAstroPixels != null && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1);
+        lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
+            lp.DateTimeUtcAstroPixels != null
+            && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1);
         if (lunarPhase != null)
         {
             // We found an AstroPixels calculation, so return that.
