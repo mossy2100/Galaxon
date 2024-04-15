@@ -170,7 +170,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
 
         // I'm using FloorMod() here instead of the modulo operator (%) because the phaseNumber can
         // be negative and we want a non-negative result.
-        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.FloorMod(phaseNumber, 4);
+        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
         double C1;
         if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {

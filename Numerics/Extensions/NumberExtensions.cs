@@ -155,7 +155,7 @@ public static class NumberExtensions
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>
     /// <see href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#floorMod-int-int-"/>
-    public static T FloorMod<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
+    public static T Mod<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
         IComparisonOperators<T, T, bool>
     {
         T r = a % b;
