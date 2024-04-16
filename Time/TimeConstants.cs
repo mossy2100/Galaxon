@@ -3,7 +3,7 @@ namespace Galaxon.Time;
 /// <summary>
 /// Constants for converting between units of time and time scales.
 ///
-/// For consistency with TimeSpan, I've used `long` as the type for any integer constants, and for
+/// For consistency with TimeSpan, I've used `int` as the type for any integer constants, and for
 /// non-integer constants I've used `double`.
 ///
 /// Constants from TimeSpace are reproduced here, for convenience. I find this saves me always
@@ -14,71 +14,57 @@ namespace Galaxon.Time;
 /// </summary>
 public static class TimeConstants
 {
-    #region Units of time per tick
-
-    /// <summary>
-    /// The number of nanoseconds in a tick.
-    /// </summary>
-    public const long NANOSECONDS_PER_TICK = 100L;
-
-    /// <summary>
-    /// The number of shakes in a tick.
-    /// </summary>
-    public const long SHAKES_PER_TICK = 10L;
-
-    #endregion Units of time per tick
-
     #region Ticks per unit of time
 
     /// <summary>
     /// The number of ticks in a microsecond.
     /// </summary>
-    public const long TICKS_PER_MICROSECOND = 10L;
+    public const int TICKS_PER_MICROSECOND = 10;
 
     /// <summary>
     /// The number of ticks in a millisecond.
     /// </summary>
-    public const long TICKS_PER_MILLISECOND = 10_000L;
+    public const int TICKS_PER_MILLISECOND = 10_000;
 
     /// <summary>
     /// The number of ticks in a second.
     /// </summary>
-    public const long TICKS_PER_SECOND = 10_000_000L;
+    public const int TICKS_PER_SECOND = 10_000_000;
 
     /// <summary>
     /// The number of ticks in a minute.
     /// </summary>
-    public const long TICKS_PER_MINUTE = 600_000_000L;
+    public const int TICKS_PER_MINUTE = 600_000_000;
 
     /// <summary>
     /// The number of ticks in an hour.
     /// </summary>
-    public const long TICKS_PER_HOUR = 36_000_000_000L;
+    public const long TICKS_PER_HOUR = 36_000_000_000;
 
     /// <summary>
     /// The number of ticks in a day.
     /// </summary>
-    public const long TICKS_PER_DAY = 864_000_000_000L;
+    public const long TICKS_PER_DAY = 864_000_000_000;
 
     /// <summary>
     /// The number of ticks in a week (7 days).
     /// </summary>
-    public const long TICKS_PER_WEEK = 6_048_000_000_000L;
+    public const long TICKS_PER_WEEK = 6_048_000_000_000;
 
     /// <summary>
     /// The average number of ticks in a Gregorian month.
     /// </summary>
-    public const long TICKS_PER_MONTH = 26_297_460_000_000L;
+    public const long TICKS_PER_MONTH = 26_297_460_000_000;
 
     /// <summary>
     /// The average number of ticks in a Gregorian year.
     /// </summary>
-    public const long TICKS_PER_YEAR = 315_569_520_000_000L;
+    public const long TICKS_PER_YEAR = 315_569_520_000_000;
 
     /// <summary>
     /// The average number of ticks in an olympiad
     /// </summary>
-    public const long TICKS_PER_OLYMPIAD = 1_262_278_080_000_000L;
+    public const long TICKS_PER_OLYMPIAD = 1_262_278_080_000_000;
 
     #endregion Seconds per unit of time
 
@@ -87,37 +73,37 @@ public static class TimeConstants
     /// <summary>
     /// The number of milliseconds in a second.
     /// </summary>
-    public const long MILLISECONDS_PER_SECOND = 1000L;
+    public const int MILLISECONDS_PER_SECOND = 1000;
 
     /// <summary>
     /// The number of milliseconds in a minute.
     /// </summary>
-    public const long MILLISECONDS_PER_MINUTE = 60_000L;
+    public const int MILLISECONDS_PER_MINUTE = 60_000;
 
     /// <summary>
     /// The number of milliseconds in an hour.
     /// </summary>
-    public const long MILLISECONDS_PER_HOUR = 3_600_000L;
+    public const int MILLISECONDS_PER_HOUR = 3_600_000;
 
     /// <summary>
     /// The number of milliseconds in an ephemeris day.
     /// </summary>
-    public const long MILLISECONDS_PER_DAY = 86_400_000L;
+    public const int MILLISECONDS_PER_DAY = 86_400_000;
 
     /// <summary>
     /// The number of milliseconds in a week.
     /// </summary>
-    public const long MILLISECONDS_PER_WEEK = 604_800_000L;
+    public const int MILLISECONDS_PER_WEEK = 604_800_000;
 
     /// <summary>
     /// The average number of milliseconds in a Gregorian month.
     /// </summary>
-    public const long MILLISECONDS_PER_MONTH = 2_629_746_000L;
+    public const long MILLISECONDS_PER_MONTH = 2_629_746_000;
 
     /// <summary>
     /// The average number of milliseconds in a Gregorian year.
     /// </summary>
-    public const long MILLISECONDS_PER_YEAR = 31_556_952_000L;
+    public const long MILLISECONDS_PER_YEAR = 31_556_952_000;
 
     #endregion Milliseconds per unit of time
 
@@ -126,32 +112,32 @@ public static class TimeConstants
     /// <summary>
     /// The number of seconds in a minute.
     /// </summary>
-    public const long SECONDS_PER_MINUTE = 60L;
+    public const int SECONDS_PER_MINUTE = 60;
 
     /// <summary>
     /// The number of seconds in an hour.
     /// </summary>
-    public const long SECONDS_PER_HOUR = 3600L;
+    public const int SECONDS_PER_HOUR = 3600;
 
     /// <summary>
     /// The number of seconds in an ephemeris day.
     /// </summary>
-    public const long SECONDS_PER_DAY = 86_400L;
+    public const int SECONDS_PER_DAY = 86_400;
 
     /// <summary>
     /// The number of seconds in a week.
     /// </summary>
-    public const long SECONDS_PER_WEEK = 604_800L;
+    public const int SECONDS_PER_WEEK = 604_800;
 
     /// <summary>
     /// The average number of seconds in a Gregorian month.
     /// </summary>
-    public const long SECONDS_PER_MONTH = 2_629_746L;
+    public const int SECONDS_PER_MONTH = 2_629_746;
 
     /// <summary>
     /// The average number of seconds in a Gregorian year.
     /// </summary>
-    public const long SECONDS_PER_YEAR = 31_556_952L;
+    public const int SECONDS_PER_YEAR = 31_556_952;
 
     #endregion Seconds per unit of time
 
@@ -160,17 +146,17 @@ public static class TimeConstants
     /// <summary>
     /// The number of minutes in an hour.
     /// </summary>
-    public const long MINUTES_PER_HOUR = 60L;
+    public const int MINUTES_PER_HOUR = 60;
 
     /// <summary>
     /// The number of minutes in a day.
     /// </summary>
-    public const long MINUTES_PER_DAY = 1440L;
+    public const int MINUTES_PER_DAY = 1440;
 
     /// <summary>
     /// The number of minutes in a week.
     /// </summary>
-    public const long MINUTES_PER_WEEK = 10080L;
+    public const int MINUTES_PER_WEEK = 10080;
 
     #endregion Minutes per unit of time
 
@@ -179,12 +165,12 @@ public static class TimeConstants
     /// <summary>
     /// The number of hours in an ephemeris day.
     /// </summary>
-    public const long HOURS_PER_DAY = 24L;
+    public const int HOURS_PER_DAY = 24;
 
     /// <summary>
     /// The number of hours in a week.
     /// </summary>
-    public const long HOURS_PER_WEEK = 168L;
+    public const int HOURS_PER_WEEK = 168;
 
     #endregion Hours per unit of time
 
@@ -193,7 +179,7 @@ public static class TimeConstants
     /// <summary>
     /// The number of days in a Gregorian week.
     /// </summary>
-    public const long DAYS_PER_WEEK = 7L;
+    public const int DAYS_PER_WEEK = 7;
 
     /// <summary>
     /// The average number of days in a Gregorian month.
@@ -226,7 +212,7 @@ public static class TimeConstants
     /// <summary>
     /// The number of months in a Gregorian year.
     /// </summary>
-    public const long MONTHS_PER_YEAR = 12L;
+    public const int MONTHS_PER_YEAR = 12;
 
     #endregion Months per unit of time
 
@@ -235,22 +221,22 @@ public static class TimeConstants
     /// <summary>
     /// Number of years in an olympiad.
     /// </summary>
-    public const long YEARS_PER_OLYMPIAD = 4L;
+    public const int YEARS_PER_OLYMPIAD = 4;
 
     /// <summary>
     /// The number of years in a decade.
     /// </summary>
-    public const long YEARS_PER_DECADE = 10L;
+    public const int YEARS_PER_DECADE = 10;
 
     /// <summary>
     /// The number of years in a century.
     /// </summary>
-    public const long YEARS_PER_CENTURY = 100L;
+    public const int YEARS_PER_CENTURY = 100;
 
     /// <summary>
     /// The number of years in a millennium.
     /// </summary>
-    public const long YEARS_PER_MILLENNIUM = 1000L;
+    public const int YEARS_PER_MILLENNIUM = 1000;
 
     #endregion Years per unit of time
 
@@ -290,42 +276,42 @@ public static class TimeConstants
     /// - <see href="https://en.wikipedia.org/wiki/Solar_cycle_(calendar)"/>
     /// - <see href="https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar"/>
     /// </summary>
-    public const long YEARS_PER_GREGORIAN_SOLAR_CYCLE = 400L;
+    public const int YEARS_PER_GREGORIAN_SOLAR_CYCLE = 400;
 
     /// <summary>
     /// Number of olympiads in a Gregorian solar cycle.
     /// </summary>
-    public const long OLYMPIADS_PER_GREGORIAN_SOLAR_CYCLE = 100L;
+    public const int OLYMPIADS_PER_GREGORIAN_SOLAR_CYCLE = 100;
 
     /// <summary>
     /// Number of centuries in a Gregorian solar cycle.
     /// </summary>
-    public const long CENTURIES_PER_GREGORIAN_SOLAR_CYCLE = 4L;
+    public const int CENTURIES_PER_GREGORIAN_SOLAR_CYCLE = 4;
 
     /// <summary>
     /// The number of leap years in a Gregorian solar cycle.
     /// </summary>
-    public const long LEAP_YEARS_PER_GREGORIAN_SOLAR_CYCLE = 97L;
+    public const int LEAP_YEARS_PER_GREGORIAN_SOLAR_CYCLE = 97;
 
     /// <summary>
     /// The number of weeks in a Gregorian solar cycle.
     /// </summary>
-    public const long WEEKS_PER_GREGORIAN_SOLAR_CYCLE = 20_871L;
+    public const int WEEKS_PER_GREGORIAN_SOLAR_CYCLE = 20_871;
 
     /// <summary>
     /// The number of days in a Gregorian solar cycle.
     /// </summary>
-    public const long DAYS_PER_GREGORIAN_SOLAR_CYCLE = 146_097L;
+    public const int DAYS_PER_GREGORIAN_SOLAR_CYCLE = 146_097;
 
     /// <summary>
     /// The number of seconds in a Gregorian solar cycle.
     /// </summary>
-    public const long SECONDS_PER_GREGORIAN_SOLAR_CYCLE = 12_622_780_800L;
+    public const long SECONDS_PER_GREGORIAN_SOLAR_CYCLE = 12_622_780_800;
 
     /// <summary>
     /// The number of ticks in a Gregorian solar cycle.
     /// </summary>
-    public const long TICKS_PER_GREGORIAN_SOLAR_CYCLE = 126_227_808_000_000_000L;
+    public const long TICKS_PER_GREGORIAN_SOLAR_CYCLE = 126_227_808_000_000_000;
 
     #endregion Gregorian solar cycles
 
@@ -363,12 +349,12 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar year.
     /// </summary>
-    public const long SECONDS_PER_JULIAN_YEAR = 31_557_600L;
+    public const int SECONDS_PER_JULIAN_YEAR = 31_557_600;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar year.
     /// </summary>
-    public const long TICKS_PER_JULIAN_YEAR = 315_576_000_000_000L;
+    public const long TICKS_PER_JULIAN_YEAR = 315_576_000_000_000;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar decade.
@@ -378,48 +364,48 @@ public static class TimeConstants
     /// <summary>
     /// The number of SI seconds in a Julian Calendar decade.
     /// </summary>
-    public const long SECONDS_PER_JULIAN_DECADE = 315_576_000L;
+    public const int SECONDS_PER_JULIAN_DECADE = 315_576_000;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar year.
     /// </summary>
-    public const long TICKS_PER_JULIAN_DECADE = 3_155_760_000_000_000L;
+    public const long TICKS_PER_JULIAN_DECADE = 3_155_760_000_000_000;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar century.
     /// </summary>
-    public const long DAYS_PER_JULIAN_CENTURY = 36_525L;
+    public const int DAYS_PER_JULIAN_CENTURY = 36_525;
 
     /// <summary>
     /// The number of SI seconds in a Julian Calendar century.
     /// </summary>
-    public const long SECONDS_PER_JULIAN_CENTURY = 3_155_760_000L;
+    public const long SECONDS_PER_JULIAN_CENTURY = 3_155_760_000;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar century.
     /// </summary>
-    public const long TICKS_PER_JULIAN_CENTURY = 31_557_600_000_000_000L;
+    public const long TICKS_PER_JULIAN_CENTURY = 31_557_600_000_000_000;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar millennium.
     /// </summary>
-    public const long DAYS_PER_JULIAN_MILLENNIUM = 365_250L;
+    public const int DAYS_PER_JULIAN_MILLENNIUM = 365_250;
 
     /// <summary>
     /// The number of SI seconds in a Julian Calendar millennium.
     /// </summary>
-    public const long SECONDS_PER_JULIAN_MILLENNIUM = 31_557_600_000L;
+    public const long SECONDS_PER_JULIAN_MILLENNIUM = 31_557_600_000;
 
     /// <summary>
     /// The number of ticks in a Julian Calendar millennium.
     /// </summary>
-    public const long TICKS_PER_JULIAN_MILLENNIUM = 315_576_000_000_000_000L;
+    public const long TICKS_PER_JULIAN_MILLENNIUM = 315_576_000_000_000_000;
 
     /// <summary>
     /// Number of milliseconds difference between TAI and TT.
     /// TT = TAI + 32,184 ms
     /// </summary>
-    public const long TT_MINUS_TAI_MILLISECONDS = 32_184L;
+    public const int TT_MINUS_TAI_MILLISECONDS = 32_184;
 
     #endregion Time scales
 
@@ -445,7 +431,7 @@ public static class TimeConstants
     /// <summary>
     /// Number of ticks in a lunation.
     /// </summary>
-    public const long TICKS_PER_LUNATION = 25_514_428_775_904L;
+    public const long TICKS_PER_LUNATION = 25_514_428_775_904;
 
     #endregion Moon
 
