@@ -13,7 +13,9 @@ using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
+public class LunarPhaseDataImportService(
+    AstroDbContext astroDbContext,
+    GregorianCalendar gregorianCalendar)
 {
     /// <summary>
     /// Get the links to the AstroPixels lunar phase data tables.
@@ -141,7 +143,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                     }
 
                     // Extract the date parts.
-                    int month = GregorianCalendarExtensions.MonthNameToNumber(
+                    int month = gregorianCalendar.MonthNameToNumber(
                         dateTimeMatches[0].Groups["month"].Value);
                     int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
                     int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);

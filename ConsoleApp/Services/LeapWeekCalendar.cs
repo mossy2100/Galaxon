@@ -98,6 +98,7 @@ public class LeapWeekCalendar
 
     public static void PrintCalendarPages12a()
     {
+        GregorianCalendar gc = new ();
         List<PrintedMonth> printedMonths = new ();
         int dayOfWeek = 0;
         for (int m = 1; m <= 12; m++)
@@ -105,7 +106,7 @@ public class LeapWeekCalendar
             PrintedMonth printedMonth = new ();
 
             // Add the title and the days of the week.
-            string title = GregorianCalendarExtensions.MonthNumberToName(m).PadBoth(28, ' ', false);
+            string title = gc.MonthNumberToName(m).PadBoth(28, ' ', false);
             printedMonth.AddLine(title);
             printedMonth.AddLine(" Mon Tue Wed Thu Fri Sat Sun");
 
@@ -307,7 +308,6 @@ public class LeapWeekCalendar
 
     public static void PrintIsoWeekCalendarLeapYearPattern()
     {
-        GregorianCalendar gc = new ();
         Dictionary<int, bool> leapYears = new ();
         Console.Write("  ");
         for (int y = 2001; y < 2401; y++)

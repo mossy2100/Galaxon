@@ -1,3 +1,4 @@
+using System.Globalization;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Time;
@@ -38,8 +39,11 @@ public class GregorianCalendarExtensionsTests
     public void MonthNameToNumber_ValidInput_ReturnsExpectedNumber(string monthName,
         int expectedNumber)
     {
+        // Arrange.
+        GregorianCalendar gc = new ();
+
         // Act
-        int actualNumber = GregorianCalendarExtensions.MonthNameToNumber(monthName);
+        int actualNumber = gc.MonthNameToNumber(monthName);
 
         // Assert
         Assert.AreEqual(expectedNumber, actualNumber);
@@ -48,17 +52,21 @@ public class GregorianCalendarExtensionsTests
     [TestMethod]
     public void MonthNameToNumber_InvalidInput_ThrowsArgumentException()
     {
+        // Arrange.
+        GregorianCalendar gc = new ();
+
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() =>
-            GregorianCalendarExtensions.MonthNameToNumber("InvalidMonth"));
+        Assert.ThrowsException<ArgumentException>(() => gc.MonthNameToNumber("InvalidMonth"));
     }
 
     [TestMethod]
     public void MonthNameToNumber_AmbiguousInput_ThrowsArgumentException()
     {
+        // Arrange.
+        GregorianCalendar gc = new ();
+
+        Assert.ThrowsException<ArgumentException>(() => gc.MonthNameToNumber("Ju"));
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() =>
-            GregorianCalendarExtensions.MonthNameToNumber("Ju"));
     }
 
     #endregion MonthNameToNumber

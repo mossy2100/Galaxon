@@ -231,7 +231,8 @@ public static class DateOnlyExtensions
     /// <returns>The month name.</returns>
     public static string GetMonthName(this DateOnly d)
     {
-        return GregorianCalendarExtensions.MonthNumberToName(d.Month);
+        GregorianCalendar gc = new ();
+        return gc.MonthNumberToName(d.Month);
     }
 
     #endregion Month names
