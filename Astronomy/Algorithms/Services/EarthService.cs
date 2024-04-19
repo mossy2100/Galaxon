@@ -154,7 +154,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The length of that day in seconds.</returns>
     public static double GetSolarDayLength(DateOnly d)
     {
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         int daysInYear = gc.GetDaysInYear(d.Year);
         double frac = (d.Day - 0.5) / daysInYear;
         return GetSolarDayLength(d.Year + frac);

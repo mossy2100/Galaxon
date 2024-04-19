@@ -98,7 +98,7 @@ public class LeapWeekCalendar
 
     public static void PrintCalendarPages12a()
     {
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         List<PrintedMonth> printedMonths = new ();
         int dayOfWeek = 0;
         for (int m = 1; m <= 12; m++)

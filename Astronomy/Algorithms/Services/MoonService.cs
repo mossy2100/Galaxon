@@ -355,7 +355,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
                 "Month must be in the range 1..12");
         }
 
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         return GetPhasesInPeriod(gc.GetMonthStart(year, month, DateTimeKind.Utc),
             gc.GetMonthEnd(year, month, DateTimeKind.Utc), phaseType);
     }
@@ -376,7 +376,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
                 "Year must be in the range 1..9999");
         }
 
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         return GetPhasesInPeriod(gc.GetYearStart(year, DateTimeKind.Utc),
             gc.GetYearEnd(year, DateTimeKind.Utc), phaseType);
     }

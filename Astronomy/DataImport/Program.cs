@@ -79,10 +79,6 @@ public class Program
             .AddSingleton<SunImportService>()
             .AddSingleton<VSOP87ImportService>();
 
-        // Add other services.
-        serviceCollection
-            .AddSingleton<GregorianCalendar>();
-
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>
         {

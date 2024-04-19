@@ -8,6 +8,14 @@ namespace Galaxon.Time;
 /// </summary>
 public static class GregorianCalendarExtensions
 {
+    #region Providing a singleton instance of GregorianCalendar
+
+    private static readonly Lazy<GregorianCalendar> _gc = new (() => new GregorianCalendar());
+
+    public static GregorianCalendar GetInstance() => _gc.Value;
+
+    #endregion Providing a singleton instance of GregorianCalendar
+
     #region Guard clauses
 
     /// <summary>

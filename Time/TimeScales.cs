@@ -35,7 +35,7 @@ public static class TimeScales
     /// <returns></returns>
     public static DateTime DecimalYearToDateTime(double decimalYear)
     {
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         int intYear = (int)Floor(decimalYear);
         DateTime yearStart = gc.GetYearStart(intYear, DateTimeKind.Utc);
         double frac = decimalYear - intYear;

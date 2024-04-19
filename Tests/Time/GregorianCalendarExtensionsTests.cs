@@ -40,7 +40,7 @@ public class GregorianCalendarExtensionsTests
         int expectedNumber)
     {
         // Arrange.
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         // Act
         int actualNumber = gc.MonthNameToNumber(monthName);
@@ -53,7 +53,7 @@ public class GregorianCalendarExtensionsTests
     public void MonthNameToNumber_InvalidInput_ThrowsArgumentException()
     {
         // Arrange.
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         // Act & Assert
         Assert.ThrowsException<ArgumentException>(() => gc.MonthNameToNumber("InvalidMonth"));
@@ -63,7 +63,7 @@ public class GregorianCalendarExtensionsTests
     public void MonthNameToNumber_AmbiguousInput_ThrowsArgumentException()
     {
         // Arrange.
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         Assert.ThrowsException<ArgumentException>(() => gc.MonthNameToNumber("Ju"));
         // Act & Assert

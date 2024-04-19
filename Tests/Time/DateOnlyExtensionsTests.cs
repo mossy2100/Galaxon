@@ -125,7 +125,7 @@ public class DateOnlyExtensionsTests
     public void TestEaster()
     {
         DateOnly date;
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         date = gc.Easter(1991);
         Assert.AreEqual(date.ToIsoString(), "1991-03-31");
@@ -162,7 +162,7 @@ public class DateOnlyExtensionsTests
     public void TestGetNthWeekdayInMonth()
     {
         DateOnly d;
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         // 1st Monday in January, 2023.
         d = gc.GetNthWeekdayInMonth(2023, 1, 1, DayOfWeek.Monday);
@@ -225,7 +225,7 @@ public class DateOnlyExtensionsTests
     public void TestGetThanksgiving()
     {
         DateOnly d;
-        GregorianCalendar gc = new ();
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
         d = gc.Thanksgiving(2023);
         Assert.AreEqual("2023-11-23", d.ToIsoString());

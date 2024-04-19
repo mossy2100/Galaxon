@@ -10,8 +10,7 @@ namespace Galaxon.Astronomy.DataImport.Services;
 
 public class LeapSecondImportService(
     ILogger<LeapSecondImportService> logger,
-    AstroDbContext astroDbContext,
-    GregorianCalendar gregorianCalendar)
+    AstroDbContext astroDbContext)
 {
     /// <summary>
     /// NIST web page showing a table of leap seconds.
@@ -110,6 +109,7 @@ public class LeapSecondImportService(
     /// </remarks>
     public async Task ImportIersBulletins()
     {
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         logger.LogInformation("Importing IERS Bulletin Cs.");
 
         using var httpClient = new HttpClient();
@@ -139,7 +139,7 @@ public class LeapSecondImportService(
 
             // Regular expression to match any of the "no leap second" phrases.
             var rxNoLeapSecond = new Regex("(NO|No) (positive )?leap second will be introduced");
-            var months = string.Join('|', gregorianCalendar.GetMonthNames().Values);
+            var months = string.Join('|', gc.GetMonthNames().Values);
             var rxLeapSecond = new Regex(
                 $@"A (?<sign>positive|negative) leap second will be introduced at the end of (?<month>{months}) (?<year>\d{{4}}).");
 
@@ -216,10 +216,9 @@ public class LeapSecondImportService(
 
                     GroupCollection groups = matches[0].Groups;
                     iersBulletinC.Value = (sbyte)(groups["sign"].Value == "positive" ? 1 : -1);
-                    int month = gregorianCalendar.MonthNameToNumber(groups["month"].Value);
+                    int month = gc.MonthNameToNumber(groups["month"].Value);
                     var year = int.Parse(groups["year"].Value);
-                    iersBulletinC.LeapSecondDate =
-                        gregorianCalendar.GetMonthLastDay(year, month);
+                    iersBulletinC.LeapSecondDate = gc.GetMonthLastDay(year, month);
 
                     // Update or insert the leap second record.
                     LeapSecond? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>
