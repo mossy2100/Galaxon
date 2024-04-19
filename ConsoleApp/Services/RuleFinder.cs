@@ -1,8 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
-namespace Galaxon.ConsoleApp.Services;
+﻿namespace Galaxon.ConsoleApp.Services;
 
 public class RuleFinder
 {

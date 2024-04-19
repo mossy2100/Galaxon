@@ -6,8 +6,9 @@ public struct GregorianDate
     /// The date is stored internally as a Julian Day Number (integer) not a Julian Date (float).
     /// A Julian Day Number, if converted to a float and used as a Julian Date, would refer to noon
     /// on that day.
+    /// The use of an int permits support for dates far into the past and future.
     /// </summary>
-    private long JulianDayNumber;
+    private int JulianDayNumber;
 
     #region Operators
 

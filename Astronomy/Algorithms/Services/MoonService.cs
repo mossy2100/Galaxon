@@ -1,4 +1,4 @@
-using System.Data;
+using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Models;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
@@ -109,8 +109,8 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double jdtt = TimeScaleService.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
-        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
+        double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
         double T2 = T * T;
         double T3 = T * T2;
         double T4 = T * T3;
@@ -276,7 +276,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         jdtt += C1 + C2;
 
         // Convert the jdtt to a UTC DateTime.
-        DateTime dtPhase = TimeScaleService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Construct and return the LunarPhase object.
         return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };
@@ -355,9 +355,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
                 "Month must be in the range 1..12");
         }
 
-        return GetPhasesInPeriod(
-            GregorianCalendarExtensions.MonthStart(year, month, DateTimeKind.Utc),
-            GregorianCalendarExtensions.MonthEnd(year, month, DateTimeKind.Utc), phaseType);
+        GregorianCalendar gc = new ();
+        return GetPhasesInPeriod(gc.GetMonthStart(year, month, DateTimeKind.Utc),
+            gc.GetMonthEnd(year, month, DateTimeKind.Utc), phaseType);
     }
 
     /// <summary>
@@ -376,9 +376,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
                 "Year must be in the range 1..9999");
         }
 
-        return GetPhasesInPeriod(
-            GregorianCalendarExtensions.YearStart(year, DateTimeKind.Utc),
-            GregorianCalendarExtensions.YearEnd(year, DateTimeKind.Utc), phaseType);
+        GregorianCalendar gc = new ();
+        return GetPhasesInPeriod(gc.GetYearStart(year, DateTimeKind.Utc),
+            gc.GetYearEnd(year, DateTimeKind.Utc), phaseType);
     }
 
     /// <summary>
@@ -402,9 +402,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     public static double GetLengthOfLunation(double y)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdut = TimeScaleService.DecimalYearToJulianDateUniversal(y);
-        double jdtt = TimeScaleService.JulianDateUniversalToTerrestrial(jdut);
-        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
+        double jdut = TimeScales.DecimalYearToJulianDateUniversal(y);
+        double jdtt = TimeScales.JulianDateUniversalToTerrestrial(jdut);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
         return CalcLengthOfLunation(T);
     }
 

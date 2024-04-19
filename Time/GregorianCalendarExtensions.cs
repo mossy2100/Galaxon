@@ -22,7 +22,7 @@ public static class GregorianCalendarExtensions
     /// <see href="https://www.assa.org.au/edm"/>
     /// <param name="year">The Gregorian year number.</param>
     /// <returns>The date of Easter Sunday for the given year.</returns>
-    public static DateOnly Easter(int year)
+    public static DateOnly Easter(this GregorianCalendar gc, int year)
     {
         int a = year % 19;
         int b = year / 100;
@@ -46,7 +46,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="year">The year.</param>
     /// <returns>The date of Christmas in the given year.</returns>
-    public static DateOnly Christmas(int year)
+    public static DateOnly Christmas(this GregorianCalendar gc, int year)
     {
         return new DateOnly(year, 12, 31);
     }
@@ -73,7 +73,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The requested date.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If Abs(n) not in the range 1..5</exception>
     /// <exception cref="ArgumentOutOfRangeException">If a valid date could not be found.</exception>
-    public static DateOnly NthWeekdayInMonth(int year, int month, int n, DayOfWeek dayOfWeek)
+    public static DateOnly GetNthWeekdayInMonth(this GregorianCalendar gc, int year, int month, int n, DayOfWeek dayOfWeek)
     {
         // Guard.
         if (Math.Abs(n) is < 1 or > 5)
@@ -110,10 +110,10 @@ public static class GregorianCalendarExtensions
     /// <see href="https://en.wikipedia.org/wiki/Thanksgiving#Observance"/>
     /// <param name="year">The year.</param>
     /// <returns>The date of Thanksgiving.</returns>
-    public static DateOnly Thanksgiving(int year)
+    public static DateOnly Thanksgiving(this GregorianCalendar gc, int year)
     {
         // Get the 4th Thursday in November.
-        return NthWeekdayInMonth(year, 11, 4, DayOfWeek.Thursday);
+        return gc.GetNthWeekdayInMonth(year, 11, 4, DayOfWeek.Thursday);
     }
 
     #endregion Find special dates
@@ -126,7 +126,7 @@ public static class GregorianCalendarExtensions
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the start of the year (UT).</returns>
-    public static DateTime YearStart(int year, DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearStart(this GregorianCalendar gc, int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -144,7 +144,7 @@ public static class GregorianCalendarExtensions
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the year (UT).</returns>
-    public static DateTime YearEnd(int year, DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearEnd(this GregorianCalendar gc, int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -156,26 +156,7 @@ public static class GregorianCalendarExtensions
         // There isn't a DateTime constructor that allows us to specify the time of day with
         // resolution of 1 tick (the best is microsecond), so instead, we get the start point of the
         // following year and subtract 1 tick.
-        return YearStart(year + 1, kind).Subtract(new TimeSpan(1));
-    }
-
-    /// <summary>
-    /// Get the number of ticks in a given Gregorian Calendar year.
-    /// </summary>
-    /// <param name="year">The year.</param>
-    /// <returns>The number of ticks in the year.</returns>
-    public static long GetTicksInYear(int year)
-    {
-        // Check year is valid.
-        if (year is < 1 or > 9999)
-        {
-            throw new ArgumentOutOfRangeException(nameof(year),
-                "Year must be in the range 1..9999");
-        }
-
-        GregorianCalendar gc = new ();
-        int days = gc.GetDaysInYear(year);
-        return days * TimeConstants.TICKS_PER_DAY;
+        return gc.GetYearStart(year + 1, kind).Subtract(new TimeSpan(1));
     }
 
     /// <summary>
@@ -184,7 +165,7 @@ public static class GregorianCalendarExtensions
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the year (UT).</returns>
-    public static DateTime YearMidPoint(int year, DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearMidPoint(this GregorianCalendar gc, int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -193,7 +174,7 @@ public static class GregorianCalendarExtensions
                 "Year must be in the range 1..9999");
         }
 
-        return YearStart(year, kind).AddTicks(GetTicksInYear(year) / 2);
+        return gc.GetYearStart(year, kind).AddTicks(gc.GetTicksInYear(year) / 2);
     }
 
     /// <summary>
@@ -203,7 +184,7 @@ public static class GregorianCalendarExtensions
     /// <param name="month">The month (1 through 12).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the start of the month (UT).</returns>
-    public static DateTime MonthStart(int year, int month,
+    public static DateTime GetMonthStart(this GregorianCalendar gc, int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
         // Check year is valid.
@@ -230,7 +211,7 @@ public static class GregorianCalendarExtensions
     /// <param name="month">The month (1 through 12).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the month (UT).</returns>
-    public static DateTime MonthEnd(int year, int month,
+    public static DateTime GetMonthEnd(this GregorianCalendar gc, int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
         // Check year is valid.
@@ -255,7 +236,7 @@ public static class GregorianCalendarExtensions
             month = 1;
             year++;
         }
-        return MonthStart(year, month, kind).Subtract(new TimeSpan(1));
+        return gc.GetMonthStart(year, month, kind).Subtract(new TimeSpan(1));
     }
 
     /// <summary>
@@ -263,7 +244,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="year">The year (1 through 9999).</param>
     /// <returns>The first day of the specified year.</returns>
-    public static DateOnly YearFirstDay(int year)
+    public static DateOnly GetYearFirstDay(this GregorianCalendar gc, int year)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -280,7 +261,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="year">The year (1 through 9999).</param>
     /// <returns>The last day of the specified year.</returns>
-    public static DateOnly YearLastDay(int year)
+    public static DateOnly GetYearLastDay(this GregorianCalendar gc, int year)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -298,7 +279,7 @@ public static class GregorianCalendarExtensions
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="month">The month (1 through 12).</param>
     /// <returns>The first day of the specified month.</returns>
-    public static DateOnly MonthFirstDay(int year, int month)
+    public static DateOnly GetMonthFirstDay(this GregorianCalendar gc, int year, int month)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -324,7 +305,7 @@ public static class GregorianCalendarExtensions
     /// <param name="month">The month (1 through 12).</param>
     /// <returns>The last day of the specified month and year.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the month is not in the valid range (1-12).</exception>
-    public static DateOnly MonthLastDay(int year, int month)
+    public static DateOnly GetMonthLastDay(this GregorianCalendar gc, int year, int month)
     {
         // Check year is valid.
         if (year is < 1 or > 9999)
@@ -340,11 +321,26 @@ public static class GregorianCalendarExtensions
                 "Month must be in the range 1..12");
         }
 
-        GregorianCalendar gc = new ();
         return new DateOnly(year, month, gc.GetDaysInMonth(year, month));
     }
 
     #endregion Year and month start and end
+
+    #region Time units
+
+    /// <summary>
+    /// Get the number of ticks in a given Gregorian Calendar year.
+    /// </summary>
+    /// <param name="gc">The GregorianCalendar object.</param>
+    /// <param name="year">The year.</param>
+    /// <returns>The number of ticks in the year.</returns>
+    public static long GetTicksInYear(this GregorianCalendar gc, int year)
+    {
+        int days = gc.GetDaysInYear(year);
+        return days * TimeConstants.TICKS_PER_DAY;
+    }
+
+    #endregion Time units
 
     #region Month names
 

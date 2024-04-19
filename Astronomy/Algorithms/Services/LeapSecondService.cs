@@ -104,7 +104,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
         return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS
             / TimeConstants.MILLISECONDS_PER_SECOND
-            - TimeScaleService.CalcDeltaT(dt.Value)
+            - TimeScales.CalcDeltaT(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
     }
 
@@ -114,7 +114,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
         {
             var dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             int LSC = TotalLeapSeconds(dt);
-            double deltaT = TimeScaleService.CalcDeltaT(dt);
+            double deltaT = TimeScales.CalcDeltaT(dt);
             double DUT1 = CalcDUT1(dt);
             Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
             if (Abs(DUT1) > 0.9)

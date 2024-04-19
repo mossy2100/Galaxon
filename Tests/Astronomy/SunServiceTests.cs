@@ -47,7 +47,7 @@ public class SunServiceTests
         // Arrange
         SunService sunService = ServiceManager.GetService<SunService>();
         DateTime dttt = new (1992, 10, 13, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt = TimeScaleService.DateTimeToJulianDate(dttt);
+        double jdtt = TimeScales.DateTimeToJulianDate(dttt);
         double expectedLongitude = Angles.WrapRadians(Angles.DMSToRadians(199, 54, 26.18));
         double expectedLatitude = Angles.WrapRadians(Angles.DMSToRadians(0, 0, 0.72));
 

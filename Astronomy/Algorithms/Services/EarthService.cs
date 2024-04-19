@@ -62,7 +62,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The Earth Rotation Angles.</returns>
     public static double CalcEarthRotationAngle(double jdut)
     {
-        double t = TimeScaleService.JulianDaysSinceJ2000(jdut);
+        double t = TimeScales.JulianDaysSinceJ2000(jdut);
         double radians = Tau * (0.779_057_273_264 + 1.002_737_811_911_354_48 * t);
         return Angles.WrapRadians(radians);
     }
@@ -74,7 +74,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double jdut = TimeScaleService.DateTimeToJulianDate(dt);
+        double jdut = TimeScales.DateTimeToJulianDate(dt);
         return CalcEarthRotationAngle(jdut);
     }
 
@@ -119,9 +119,9 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
         }
 
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdut = TimeScaleService.DecimalYearToJulianDateUniversal(year);
-        double jdtt = TimeScaleService.JulianDateUniversalToTerrestrial(jdut);
-        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
+        double jdut = TimeScales.DecimalYearToJulianDateUniversal(year);
+        double jdtt = TimeScales.JulianDateUniversalToTerrestrial(jdut);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
         return CalcTropicalYearLengthInEphemerisDays(T);

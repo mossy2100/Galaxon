@@ -5,7 +5,7 @@ using static System.Math;
 
 namespace Galaxon.Time;
 
-public static class TimeScaleService
+public static class TimeScales
 {
     #region Decimal year methods
 
@@ -29,18 +29,17 @@ public static class TimeScaleService
     }
 
     /// <summary>
-    /// Convert a decimal year to a DateTime.
+    /// Convert a decimal year to a DateTime (UTC).
     /// </summary>
-    /// <param name="y"></param>
+    /// <param name="decimalYear"></param>
     /// <returns></returns>
-    public static DateTime DecimalYearToDateTime(double y)
+    public static DateTime DecimalYearToDateTime(double decimalYear)
     {
         GregorianCalendar gc = new ();
-        int iYear = (int)Floor(y);
-        DateTime yearStart = GregorianCalendarExtensions.YearStart(iYear);
-        double frac = y - iYear;
-        int nDays = gc.GetDaysInYear(iYear);
-        long ticksInYear = nDays * TimeConstants.TICKS_PER_DAY;
+        int intYear = (int)Floor(decimalYear);
+        DateTime yearStart = gc.GetYearStart(intYear, DateTimeKind.Utc);
+        double frac = decimalYear - intYear;
+        long ticksInYear = gc.GetTicksInYear(intYear);
         long ticks = (long)(frac * ticksInYear);
         return yearStart.AddTicks(ticks);
     }
@@ -478,7 +477,7 @@ public static class TimeScaleService
     public static double JulianDateUniversalToTerrestrial(double jdut)
     {
         DateTime dt = JulianDateToDateTime(jdut);
-        double deltaT = TimeScaleService.CalcDeltaT(dt);
+        double deltaT = CalcDeltaT(dt);
         return jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
 
@@ -495,7 +494,7 @@ public static class TimeScaleService
         // method expects a DateTime in UT. This shouldn't matter, though, as the result should be
         // virtually identical given the lack of precision in delta-T calculations.
         DateTime dt = JulianDateToDateTime(jdtt);
-        double deltaT = TimeScaleService.CalcDeltaT(dt);
+        double deltaT = CalcDeltaT(dt);
         return jdtt - deltaT / TimeConstants.SECONDS_PER_DAY;
     }
 

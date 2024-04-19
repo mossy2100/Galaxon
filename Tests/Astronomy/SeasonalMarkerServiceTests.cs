@@ -2,7 +2,6 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Core.Types;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
 
@@ -37,7 +36,7 @@ public class SeasonalMarkerServiceTests
 
         // Act
         double jdtt = seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarkerType.NorthernSolstice);
-        DateTime dt = TimeScaleService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        DateTime dt = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Assert
         DateTimeAssert.AreEqual(dt, expected, delta);

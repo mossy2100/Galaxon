@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
@@ -9,7 +10,8 @@ namespace Galaxon.Astronomy.DataImport.Services;
 
 public class LeapSecondImportService(
     ILogger<LeapSecondImportService> logger,
-    AstroDbContext astroDbContext)
+    AstroDbContext astroDbContext,
+    GregorianCalendar gregorianCalendar)
 {
     /// <summary>
     /// NIST web page showing a table of leap seconds.
@@ -218,7 +220,7 @@ public class LeapSecondImportService(
                         GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
                     var year = int.Parse(groups["year"].Value);
                     iersBulletinC.LeapSecondDate =
-                        GregorianCalendarExtensions.MonthLastDay(year, month);
+                        gregorianCalendar.GetMonthLastDay(year, month);
 
                     // Update or insert the leap second record.
                     LeapSecond? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>

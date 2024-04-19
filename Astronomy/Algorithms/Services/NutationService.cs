@@ -86,7 +86,7 @@ public class NutationService
     public static Nutation CalcNutation(double jdtt)
     {
         // Calculate the number of Julian centuries since J2000.0.
-        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
 
         // Calculate mean elongation of the Moon from the Sun.
         double D = Polynomials.EvaluatePolynomial([297.850_36, 445_267.111_480, -0.001_9142,

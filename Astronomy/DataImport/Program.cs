@@ -1,4 +1,5 @@
-﻿using Galaxon.Astronomy.Data;
+﻿using System.Globalization;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Astronomy.DataImport.Services;
 using Galaxon.Core.Files;
@@ -77,6 +78,10 @@ public class Program
             .AddSingleton<SeasonalMarkerImportService>()
             .AddSingleton<SunImportService>()
             .AddSingleton<VSOP87ImportService>();
+
+        // Add other services.
+        serviceCollection
+            .AddSingleton<GregorianCalendar>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>

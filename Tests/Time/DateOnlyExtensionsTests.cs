@@ -1,3 +1,4 @@
+using System.Globalization;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Time;
@@ -124,35 +125,36 @@ public class DateOnlyExtensionsTests
     public void TestEaster()
     {
         DateOnly date;
+        GregorianCalendar gc = new ();
 
-        date = GregorianCalendarExtensions.Easter(1991);
+        date = gc.Easter(1991);
         Assert.AreEqual(date.ToIsoString(), "1991-03-31");
 
-        date = GregorianCalendarExtensions.Easter(1992);
+        date = gc.Easter(1992);
         Assert.AreEqual(date.ToIsoString(), "1992-04-19");
 
-        date = GregorianCalendarExtensions.Easter(1993);
+        date = gc.Easter(1993);
         Assert.AreEqual(date.ToIsoString(), "1993-04-11");
 
-        date = GregorianCalendarExtensions.Easter(1954);
+        date = gc.Easter(1954);
         Assert.AreEqual(date.ToIsoString(), "1954-04-18");
 
-        date = GregorianCalendarExtensions.Easter(2000);
+        date = gc.Easter(2000);
         Assert.AreEqual(date.ToIsoString(), "2000-04-23");
 
-        date = GregorianCalendarExtensions.Easter(1818);
+        date = gc.Easter(1818);
         Assert.AreEqual(date.ToIsoString(), "1818-03-22");
 
-        date = GregorianCalendarExtensions.Easter(2285);
+        date = gc.Easter(2285);
         Assert.AreEqual(date.ToIsoString(), "2285-03-22");
 
-        date = GregorianCalendarExtensions.Easter(1886);
+        date = gc.Easter(1886);
         Assert.AreEqual(date.ToIsoString(), "1886-04-25");
 
-        date = GregorianCalendarExtensions.Easter(1943);
+        date = gc.Easter(1943);
         Assert.AreEqual(date.ToIsoString(), "1943-04-25");
 
-        date = GregorianCalendarExtensions.Easter(2038);
+        date = gc.Easter(2038);
         Assert.AreEqual(date.ToIsoString(), "2038-04-25");
     }
 
@@ -160,70 +162,72 @@ public class DateOnlyExtensionsTests
     public void TestGetNthWeekdayInMonth()
     {
         DateOnly d;
+        GregorianCalendar gc = new ();
 
         // 1st Monday in January, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 1, 1, DayOfWeek.Monday);
+        d = gc.GetNthWeekdayInMonth(2023, 1, 1, DayOfWeek.Monday);
         Assert.AreEqual("2023-01-02", d.ToIsoString());
 
         // 2nd Thursday in February, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 2, 2, DayOfWeek.Thursday);
+        d = gc.GetNthWeekdayInMonth(2023, 2, 2, DayOfWeek.Thursday);
         Assert.AreEqual("2023-02-09", d.ToIsoString());
 
         // 3rd Saturday in April, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 4, 3, DayOfWeek.Saturday);
+        d = gc.GetNthWeekdayInMonth(2023, 4, 3, DayOfWeek.Saturday);
         Assert.AreEqual("2023-04-15", d.ToIsoString());
 
         // 4th Tuesday in September, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 9, 4, DayOfWeek.Tuesday);
+        d = gc.GetNthWeekdayInMonth(2023, 9, 4, DayOfWeek.Tuesday);
         Assert.AreEqual("2023-09-26", d.ToIsoString());
 
         // 5th Sunday in October, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 10, 5, DayOfWeek.Sunday);
+        d = gc.GetNthWeekdayInMonth(2023, 10, 5, DayOfWeek.Sunday);
         Assert.AreEqual("2023-10-29", d.ToIsoString());
 
         // 5th Friday in November, 2023 (doesn't exist).
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.NthWeekdayInMonth(2023, 11, 5, DayOfWeek.Friday));
+            gc.GetNthWeekdayInMonth(2023, 11, 5, DayOfWeek.Friday));
 
         // 6th Monday in January, 2024 (doesn't exist).
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.NthWeekdayInMonth(2024, 1, 6, DayOfWeek.Monday));
+            gc.GetNthWeekdayInMonth(2024, 1, 6, DayOfWeek.Monday));
 
         // Last Wednesday in July, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 7, -1, DayOfWeek.Wednesday);
+        d = gc.GetNthWeekdayInMonth(2023, 7, -1, DayOfWeek.Wednesday);
         Assert.AreEqual("2023-07-26", d.ToIsoString());
 
         // 2nd-last Sunday in March, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 3, -2, DayOfWeek.Sunday);
+        d = gc.GetNthWeekdayInMonth(2023, 3, -2, DayOfWeek.Sunday);
         Assert.AreEqual("2023-03-19", d.ToIsoString());
 
         // 3rd-last Thursday in June, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 6, -3, DayOfWeek.Thursday);
+        d = gc.GetNthWeekdayInMonth(2023, 6, -3, DayOfWeek.Thursday);
         Assert.AreEqual("2023-06-15", d.ToIsoString());
 
         // 4th-last Monday in May, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 5, -4, DayOfWeek.Monday);
+        d = gc.GetNthWeekdayInMonth(2023, 5, -4, DayOfWeek.Monday);
         Assert.AreEqual("2023-05-08", d.ToIsoString());
 
         // 5th-last Friday in December, 2023.
-        d = GregorianCalendarExtensions.NthWeekdayInMonth(2023, 12, -5, DayOfWeek.Friday);
+        d = gc.GetNthWeekdayInMonth(2023, 12, -5, DayOfWeek.Friday);
         Assert.AreEqual("2023-12-01", d.ToIsoString());
 
         // 5th-last Saturday in August, 2023 (doesn't exist).
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.NthWeekdayInMonth(2023, 8, -5, DayOfWeek.Saturday));
+            gc.GetNthWeekdayInMonth(2023, 8, -5, DayOfWeek.Saturday));
 
         // 6th-last Tuesday in February, 2024 (doesn't exist).
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.NthWeekdayInMonth(2024, 2, -6, DayOfWeek.Monday));
+            gc.GetNthWeekdayInMonth(2024, 2, -6, DayOfWeek.Monday));
     }
 
     [TestMethod]
     public void TestGetThanksgiving()
     {
         DateOnly d;
+        GregorianCalendar gc = new ();
 
-        d = GregorianCalendarExtensions.Thanksgiving(2023);
+        d = gc.Thanksgiving(2023);
         Assert.AreEqual("2023-11-23", d.ToIsoString());
     }
 }

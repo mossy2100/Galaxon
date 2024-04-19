@@ -177,7 +177,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerTypeNumber)
     {
         double JDE0 = GetSeasonalMarkerMean(year, markerTypeNumber);
-        double T = TimeScaleService.JulianCenturiesSinceJ2000(JDE0);
+        double T = TimeScales.JulianCenturiesSinceJ2000(JDE0);
         double W = Angles.DegreesToRadians(35999.373 * T - 2.47);
         double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
 
@@ -256,7 +256,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a DateTime (UT).</returns>
     public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
     {
-        return TimeScaleService.JulianDateTerrestrialToDateTimeUniversal(
+        return TimeScales.JulianDateTerrestrialToDateTimeUniversal(
             GetSeasonalMarker(year, markerType));
     }
 

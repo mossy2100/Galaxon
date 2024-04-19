@@ -62,7 +62,7 @@ public class PlanetService(AstroDbContext astroDbContext)
         }
 
         // Get T in Julian millennia from the epoch J2000.0.
-        double T = TimeScaleService.JulianMillenniaSinceJ2000(jdtt);
+        double T = TimeScales.JulianMillenniaSinceJ2000(jdtt);
 
         // Calculate the coefficients for each coordinate variable.
         Dictionary<char, double[]> coeffs = new ();
