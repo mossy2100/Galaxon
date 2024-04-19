@@ -465,13 +465,13 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 2024; y <= 2100; y++)
         {
             // Get the southern solstice.
-            double jdtt =
-                seasonalMarkerService.GetSeasonalMarker(y, ESeasonalMarkerType.SouthernSolstice);
-            DateTime soltice = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+            DateTime solstice =
+                seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
+                    ESeasonalMarkerType.SouthernSolstice);
 
             // Keep the ones within an hour of midnight UTC.
-            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(soltice);
-            TimeSpan diff = TimeSpanExtensions.Abs(soltice - closestMidnight);
+            DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(solstice);
+            TimeSpan diff = TimeSpanExtensions.Abs(solstice - closestMidnight);
             if (diff.Ticks >= TimeConstants.TICKS_PER_HOUR)
             {
                 continue;
@@ -480,10 +480,53 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             // Print candidate.
             Console.WriteLine();
             Console.WriteLine($"Possible alignment in year {y}");
-            Console.WriteLine($"Southern solstice: {soltice.ToIsoString()}");
+            Console.WriteLine($"Southern solstice: {solstice.ToIsoString()}");
             Console.WriteLine($"Closest midnight:  {closestMidnight.ToIsoString()}");
             Console.WriteLine($"Difference:        {TimeSpanExtensions.GetTimeString(diff)}");
         }
+    }
+
+    public void CalculateYearLengths()
+    {
+        int firstYear = 2000;
+        int lastYear = 2100;
+        double totalYearsLengthInDays = 0;
+
+        // Find the Southern Solstices and new year starts.
+        Dictionary<int, DateTime> southernSolstices = new ();
+        Dictionary<int, DateTime> yearEnds = new ();
+        for (int year = firstYear - 1; year < lastYear; year++)
+        {
+            southernSolstices[year] = seasonalMarkerService.GetSeasonalMarkerAsDateTimeHumble(year, ESeasonalMarkerType.SouthernSolstice);
+            yearEnds[year] = DateTimeExtensions.RoundToNearestMidnight(southernSolstices[year]);
+        }
+
+        Console.Write("    Year (new calendar)");
+        Console.Write("    Length");
+        Console.Write("    Start date (Greg)");
+        Console.Write("    Southern Solstice (Greg)");
+        Console.Write("    Days between solstices");
+        Console.WriteLine();
+        Console.WriteLine("  ----------------------------------------------------------------------------------");
+
+        for (int year = firstYear; year < lastYear; year++)
+        {
+            // Get the year length.
+            int yearLengthInDays = (int)(yearEnds[year] - yearEnds[year - 1]).TotalDays;
+            string commonOrLeap = yearLengthInDays == 365 ? "COMMON" : "LEAP";
+            double diffSolsticesInDays = (southernSolstices[year] - southernSolstices[year - 1]).TotalDays;
+            totalYearsLengthInDays += diffSolsticesInDays;
+
+            Console.Write($"    {year}");
+            Console.Write($"                   {commonOrLeap,-6}");
+            Console.Write($"      {yearEnds[year - 1]:dd-MMM-yyyy}");
+            Console.Write($"        {southernSolstices[year - 1]:dd-MMM-yyyy HH:mm} UTC");
+            Console.Write($"       {diffSolsticesInDays:F6}");
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+        double avg = totalYearsLengthInDays / (lastYear - firstYear);
+        Console.WriteLine($"Average calendar year length = {avg:F6} days.");
     }
 
     public void FindOptimalPeriod()

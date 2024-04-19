@@ -1,11 +1,13 @@
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
+using Galaxon.Astronomy.Data.Models;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class SeasonalMarkerService(SunService sunService)
+public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sunService)
 {
     #region Static fields and properties
 
@@ -175,7 +177,7 @@ public class SeasonalMarkerService(SunService sunService)
     public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerTypeNumber)
     {
         double JDE0 = GetSeasonalMarkerMean(year, markerTypeNumber);
-        double T = JulianDateService.JulianCenturiesSinceJ2000(JDE0);
+        double T = TimeScaleService.JulianCenturiesSinceJ2000(JDE0);
         double W = Angles.DegreesToRadians(35999.373 * T - 2.47);
         double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
 
@@ -244,6 +246,42 @@ public class SeasonalMarkerService(SunService sunService)
 
         // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);
+    }
+
+    /// <summary>
+    /// Get a seasonal marker as a DateTime (UT).
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <param name="markerType">The marker number (use enum)</param>
+    /// <returns>The result as a DateTime (UT).</returns>
+    public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
+    {
+        return TimeScaleService.JulianDateTerrestrialToDateTimeUniversal(
+            GetSeasonalMarker(year, markerType));
+    }
+
+    /// <summary>
+    /// Get the specified seasonal marker, deferring first to other calculations likely to be better
+    /// than mine, i.e. USNO and AstroPixels.
+    /// Because the USNO values are DateTime (UT), this method also returns a DateTime (UT) rather
+    /// than a Julian Date (TT) like the others.
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <param name="markerType">The marker number (use enum)</param>
+    /// <returns>The result as a DateTime (UT).</returns>
+    public DateTime GetSeasonalMarkerAsDateTimeHumble(int year, ESeasonalMarkerType markerType)
+    {
+        // Look for a matching seasonal marker in the database with a USNO datetime.
+        SeasonalMarker? seasonalMarker =
+            astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
+                sm.Type == markerType && sm.DateTimeUtcUsno.Year == year);
+        if (seasonalMarker != null)
+        {
+            return seasonalMarker.DateTimeUtcUsno;
+        }
+
+        // Use my calculation.
+        return GetSeasonalMarkerAsDateTime(year, markerType);
     }
 
     /// <summary>

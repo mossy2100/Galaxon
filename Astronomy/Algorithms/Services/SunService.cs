@@ -1,6 +1,7 @@
 ﻿using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Quantities;
+using Galaxon.Time;
 using static Galaxon.Numerics.Geometry.Angles;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -14,7 +15,7 @@ public class SunService(EarthService earthService)
     /// <returns></returns>
     public static double CalcVariationInSunLongitude(double jdtt)
     {
-        double TM = JulianDateService.JulianMillenniaSinceJ2000(jdtt);
+        double TM = TimeScaleService.JulianMillenniaSinceJ2000(jdtt);
         double TM2 = TM * TM;
 
         double deltaLambdaInArcseconds = 3548.193
@@ -64,7 +65,7 @@ public class SunService(EarthService earthService)
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
         // the date.
-        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
         double lambdaPrime = Polynomials.EvaluatePolynomial(
             [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
         Ls -= DMSToRadians(0, 0, 0.090_33);
@@ -98,6 +99,6 @@ public class SunService(EarthService earthService)
     /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
     public Coordinates CalcPosition(DateTime dt)
     {
-        return CalcPosition(JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dt));
+        return CalcPosition(TimeScaleService.DateTimeUniversalToJulianDateTerrestrial(dt));
     }
 }

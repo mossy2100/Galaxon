@@ -1,15 +1,29 @@
-﻿namespace Galaxon.ConsoleApp.Services;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
+namespace Galaxon.ConsoleApp.Services;
 
 public class RuleFinder
 {
     /// <summary>
-    /// Find the best formula using the module chain formula with 2 operations.
+    /// Test a leap year function.
     /// </summary>
-    public static void FindRuleWith2Mods(int num, int den)
+    private static bool TestSolution(int num, int den, Func<int, bool> func, string funcString)
     {
-        bool isLeapYear(int y, int a, int r)
+        // Test the formula.
+        int count = 0;
+        int gap = 0;
+        List<int> gaps = new ();
+        for (int y = 0; y < den; y++)
         {
-            return y % den % a == r;
+            if (func(y))
+            {
+                count++;
+                gaps.Add(gap);
+                gap = 0;
+            }
+            gap++;
         }
 
         // Invert fraction to find the min and max gaps.
@@ -17,159 +31,225 @@ public class RuleFinder
         int minGap = (int)double.Truncate(avgGap);
         int maxGap = minGap + 1;
 
-        for (int a2 = 2; a2 < den; a2++)
+        // Add any remaining gap to the first one.
+        if (gaps.Count > 0)
         {
-            for (int r2 = 0; r2 < a2; r2++)
-            {
-                // Test the formula.
-                int count = 0;
-                int gap = 0;
-                List<int> gaps = new ();
-                for (int y2 = 0; y2 < den; y2++)
-                {
-                    if (isLeapYear(y2, a2, r2))
-                    {
-                        count++;
-                        gaps.Add(gap);
-                        gap = 0;
-                    }
-                    gap++;
-                }
-                // Add any remaining gap to the first one.
-                if (gaps.Count > 0)
-                {
-                    gaps[0] += gap;
-                }
-                gaps = gaps.Distinct().ToList();
-
-                if (count == num && gaps.Count <= 2)
-                {
-                    Console.WriteLine($"Found solution: y % {den} % {a2} == {r2};");
-                    Console.WriteLine(string.Join(", ", gaps.Distinct()));
-                    Console.WriteLine($"Minimum gap: {gaps.Min()}");
-                    Console.WriteLine($"Maximum gap: {gaps.Max()}");
-                    if (gaps.Min() == minGap && gaps.Max() == maxGap)
-                    {
-                        Console.WriteLine("OPTIMAL GAPS");
-                    }
-                }
-            }
+            gaps[0] += gap;
         }
+
+        bool result = false;
+
+        if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
+        {
+            Console.WriteLine($"Found possible solution: {funcString}");
+            Console.WriteLine($"Gaps: {string.Join(", ", gaps)}");
+            Console.WriteLine($"Minimum gap: {gaps.Min()}");
+            Console.WriteLine($"Maximum gap: {gaps.Max()}");
+            Console.WriteLine();
+            result = true;
+        }
+
+        return result;
     }
 
     /// <summary>
-    /// Find the best formula using the module chain formula with 3 operations.
+    /// Find the best formula using the modulo chain formula with 2 operations.
     /// </summary>
-    public static void FindRuleWith3Mods(int num, int den)
+    public static bool FindRuleWith2Mods(int num, int den)
     {
-        bool isLeapYear(int y, int a, int b, int r)
+        bool result = false;
+        int a = (int)Math.Round((double)den / num);
+        for (int r = 0; r < a; r++)
         {
-            return y % den % a % b == r;
-        }
-
-        // Invert fraction to find the min and max gaps.
-        double avgGap = (double)den / num;
-        int minGap = (int)double.Truncate(avgGap);
-        int maxGap = minGap + 1;
-
-        for (int a2 = 2; a2 < den; a2++)
-        {
-            for (int b2 = 2; b2 < a2; b2++)
+            Func<int, bool> isLeapYear = y => y % den % a == r;
+            string funcString = $"y => y % {den} % {a} == {r}";
+            if (TestSolution(num, den, isLeapYear, funcString))
             {
-                for (int r2 = 0; r2 < b2; r2++)
-                {
-                    // Test the formula.
-                    int count = 0;
-                    int gap = 0;
-                    List<int> gaps = new ();
-                    for (int y2 = 0; y2 < den; y2++)
-                    {
-                        if (isLeapYear(y2, a2, b2, r2))
-                        {
-                            count++;
-                            gaps.Add(gap);
-                            gap = 0;
-                        }
-                        gap++;
-                    }
-                    // Add any remaining gap to the first one.
-                    if (gaps.Count > 0)
-                    {
-                        gaps[0] += gap;
-                    }
-
-                    // See if we found a valid solution.
-                    if (count == num && gaps.Min() == minGap && gaps.Max() == maxGap)
-                    {
-                        Console.WriteLine($"Found solution: y % {den} % {a2} % {b2} == {r2};");
-                        Console.WriteLine(string.Join(", ", gaps));
-                        Console.WriteLine($"Minimum gap: {minGap} ({gaps.Count(g => g == minGap)})");
-                        Console.WriteLine($"Maximum gap: {maxGap} ({gaps.Count(g => g == maxGap)})");
-                    }
-                }
+                result = true;
             }
         }
+        return result;
     }
 
     /// <summary>
-    /// Find the best formula using the module chain formula with 3 operations.
+    /// Find the best formula using the modulo chain formula with 3 operations.
     /// </summary>
-    public static void FindRuleWith4Mods(int num, int den)
+    public static bool FindRuleWith3Mods(int num, int den)
     {
-        bool isLeapYear(int y, int a, int b, int c, int r)
+        bool result = false;
+        int b = (int)Math.Round((double)den / num);
+        for (int a = 2; a < den; a++)
         {
-            return y % den % a % b % c == r;
-        }
-
-        // Invert fraction to find the min and max gaps.
-        double avgGap = (double)den / num;
-        int minGap = (int)double.Truncate(avgGap);
-        int maxGap = minGap + 1;
-
-        for (int a2 = 2; a2 < den; a2++)
-        {
-            for (int b2 = 2; b2 < a2; b2++)
+            for (int r = 0; r < b; r++)
             {
-                for (int c2 = 2; c2 < b2; c2++)
+                Func<int, bool> isLeapYear = y => y % den % a % b == r;
+                string funcString = $"y => y % {den} % {a} % {b} == {r}";
+                if (TestSolution(num, den, isLeapYear, funcString))
                 {
-                    for (int r2 = 0; r2 < c2; r2++)
-                    {
-                        // Test the formula.
-                        int count = 0;
-                        int gap = 0;
-                        List<int> gaps = new ();
-                        for (int y2 = 0; y2 < den; y2++)
-                        {
-                            if (isLeapYear(y2, a2, b2, c2, r2))
-                            {
-                                count++;
-                                gaps.Add(gap);
-                                gap = 0;
-                            }
-                            gap++;
-                        }
-                        // Add any remaining gap to the first one.
-                        if (gaps.Count > 0)
-                        {
-                            gaps[0] += gap;
-                        }
-                        gaps = gaps.Distinct().ToList();
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
 
-                        bool optimalGaps = gaps.Min() == minGap && gaps.Max() == maxGap;
-                        if (count == num && optimalGaps)
-                        {
-                            Console.WriteLine($"Found solution: y % {den} % {a2} % {b2} % {c2} == {r2};");
-                            Console.WriteLine(string.Join(", ", gaps.Distinct()));
-                            Console.WriteLine($"Minimum gap: {gaps.Min()}");
-                            Console.WriteLine($"Maximum gap: {gaps.Max()}");
-                            if (optimalGaps)
-                            {
-                                Console.WriteLine("OPTIMAL GAPS");
-                            }
-                        }
+    /// <summary>
+    /// Find the best formula using the modulo chain formula with 3 operations.
+    /// </summary>
+    public static bool FindRuleWith4Mods(int num, int den)
+    {
+        bool result = false;
+        int c = (int)Math.Round((double)den / num);
+        for (int a = 2; a < den; a++)
+        {
+            for (int b = 2; b < a; b++)
+            {
+                for (int r = 0; r < c; r++)
+                {
+                    Func<int, bool> isLeapYear = y => y % den % a % b % c == r;
+                    string funcString = $"y => y % {den} % {a} % {b} % {c} == {r}";
+                    if (TestSolution(num, den, isLeapYear, funcString))
+                    {
+                        result = true;
                     }
                 }
             }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Find solutions using the modulo chain formula.
+    /// </summary>
+    public static void FindModRule(int num, int den)
+    {
+        // Check for invalid input.
+        if (num <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(num), "Numerator must be positive.");
+        }
+        if (den <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(den), "Denominator must be positive.");
+        }
+        if (num >= den)
+        {
+            throw new ArgumentOutOfRangeException(nameof(num),
+                "Numerator must be less than denominator.");
+        }
+
+        // Check for simple solution.
+        if (num == 1)
+        {
+            Console.WriteLine($"Solution: y => y % {den} == 0;");
+            return;
+        }
+
+        // Check if we need to reverse the fraction.
+        if ((double)num / den > 0.5)
+        {
+            num = den - num;
+            Console.WriteLine(
+                $"Fraction is reversed. Solution is for common years, not leap years.");
+        }
+
+        if (FindRuleWith2Mods(num, den))
+        {
+            return;
+        }
+        if (FindRuleWith3Mods(num, den))
+        {
+            return;
+        }
+        if (FindRuleWith4Mods(num, den))
+        {
+            return;
+        }
+    }
+
+    public static void FindHumanRule(double leapYearFrac)
+    {
+        if (leapYearFrac is <= 0 or >= 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(leapYearFrac), "Must be between 0 and 1.");
+        }
+
+        Console.WriteLine($"Target fraction: {leapYearFrac}");
+
+        double frac;
+        double newFrac;
+        string commonOrLeap;
+        if (leapYearFrac <= 0.5)
+        {
+            frac = leapYearFrac;
+            Console.WriteLine("By default, a year is a common year.");
+            commonOrLeap = "leap";
+        }
+        else
+        {
+            frac = 1 - leapYearFrac;
+            Console.WriteLine("By default, a year is a leap year.");
+            commonOrLeap = "common";
+        }
+
+        // Start with the closest fraction 1/n greater than frac.
+        int a = (int)Math.Floor(1 / leapYearFrac);
+        double fracPart = 1.0 / a;
+        newFrac = fracPart;
+        Console.WriteLine($"Unless the year is divisible by {a}, then it's a {commonOrLeap} year. This gives a fraction of {newFrac:F9}");
+        // int nRules = 1;
+        while (true)
+        {
+            double diff = Math.Abs(frac - newFrac);
+            Console.WriteLine($"Current difference: {diff:F9}.");
+            if (diff < 1e-6)
+            {
+                return;
+            }
+
+            // We need to subtract a fraction part, roughly equal to rem.
+            // So, find the closest value 1/b where b is a multiple of a, greater than rem.
+            int b = a;
+            while (true)
+            {
+                // Get next multiple of a.
+                b += a;
+                fracPart = 1.0 / b;
+                if (fracPart <= diff)
+                {
+                    if (b == 2 * a)
+                    {
+                        Console.WriteLine("Possibly no solution of this form.");
+                    }
+                    else
+                    {
+                        // Next part found. Go back one step to get the closest below.
+                        b -= a;
+                        fracPart = 1.0 / b;
+                    }
+                    break;
+                }
+            }
+
+            // Avoid numbers too large to be useful.
+            if (b > 4000)
+            {
+                return;
+            }
+
+            a = b;
+            if (commonOrLeap == "leap")
+            {
+                newFrac -= fracPart;
+                commonOrLeap = "common";
+            }
+            else
+            {
+                newFrac += fracPart;
+                commonOrLeap = "leap";
+            }
+            Console.WriteLine(
+                $"Unless the year is divisible by {b}, then it's a {commonOrLeap} year. This gives a fraction of {newFrac:F9}");
         }
     }
 

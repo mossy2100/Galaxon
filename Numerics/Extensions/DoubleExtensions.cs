@@ -66,7 +66,7 @@ public static class DoubleExtensions
     /// </summary>
     /// <param name="x">A double value.</param>
     /// <returns>The fractional part of the value.</returns>
-    public static double Frac(double x)
+    public static double Frac(this double x)
     {
         return x - double.Truncate(x);
     }

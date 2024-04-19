@@ -327,7 +327,7 @@ public static class TimeConstants
     /// Julian Date (TT) of the start point of the J2000 epoch.
     /// Or: the number of ephemeris days difference between the start of the Julian epoch and the
     /// start of the J2000 epoch (in Terrestrial Time).
-    /// This is equivalent to noon on 2000-01-01 in Terrestrial Time (not UTC).
+    /// This is equivalent to noon on 2000-01-01 (TT).
     /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000"/>
     /// </summary>
     public const double START_J2000_EPOCH_JDTT = 2_451_545.0;
@@ -340,6 +340,13 @@ public static class TimeConstants
     /// <returns>A DateTime object representing the start point of the J2000 epoch in UTC.</returns>
     public static readonly DateTime START_J2000_EPOCH_UTC =
         new (2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
+
+    /// <summary>
+    /// Julian Date (TT) of the start point of the B1900 epoch.
+    /// This is equivalent to 1900 January 0.8135 (TT).
+    /// <see href="https://en.wikipedia.org/wiki/Epoch_(astronomy)#Besselian_years"/>
+    /// </summary>
+    public const double START_B1900_EPOCH_JDTT = 2_415_020.313_5;
 
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar year.

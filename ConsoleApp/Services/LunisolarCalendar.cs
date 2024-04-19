@@ -550,12 +550,13 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
         PlanetService planetService = new (astroDbContext);
         EarthService earthService = new (astroObjectRepository, planetService);
         var sunService = new SunService(earthService);
-        var seasonalMarkerService = new SeasonalMarkerService(sunService);
+        var seasonalMarkerService = new SeasonalMarkerService(astroDbContext, sunService);
 
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<MoonPhase> newMoons = MoonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
+        List<MoonPhase> newMoons =
+            MoonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (MoonPhase newMoon in newMoons)
         {
             // Get Ls.
@@ -566,9 +567,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             double diff = Math.Abs(LsDeg);
             if (diff < 1)
             {
-                double jdtt = seasonalMarkerService.GetSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.NorthwardEquinox);
                 DateTime dtEquinox =
-                    JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+                    seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
+                        ESeasonalMarkerType.NorthwardEquinox);
                 double diffDays =
                     Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -582,9 +583,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             diff = Math.Abs(LsDeg + 90);
             if (diff < 1)
             {
-                double jdtt = seasonalMarkerService.GetSeasonalMarker(newMoon.DateTimeUtc.Year, ESeasonalMarkerType.SouthernSolstice);
                 DateTime dtSolstice =
-                    JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+                    seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
+                        ESeasonalMarkerType.SouthernSolstice);
                 double diffDays =
                     Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -605,20 +606,26 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             }
 
             // Check for New Moon within 1 day of the Gregorian New Year.
-            DateTime nextNewYear = new DateTime(newMoon.DateTimeUtc.Year, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-            DateTime prevNewYear = new DateTime(newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-            double diff1 = Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
-            double diff2 = Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - prevNewYear.GetTotalDays());
+            DateTime nextNewYear =
+                new DateTime(newMoon.DateTimeUtc.Year, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+            DateTime prevNewYear = new DateTime(newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0,
+                DateTimeKind.Utc);
+            double diff1 =
+                Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
+            double diff2 =
+                Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - prevNewYear.GetTotalDays());
             if (diff1 < 1)
             {
                 Console.WriteLine();
-                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
+                Console.WriteLine(
+                    $"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
                 Console.WriteLine($"Difference = {diff1} days");
             }
             else if (diff2 < 1)
             {
                 Console.WriteLine();
-                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
+                Console.WriteLine(
+                    $"The New Moon of {newMoon.DateTimeUtc} is a close match to Gregorian New Year.");
                 Console.WriteLine($"Difference = {diff2} days");
             }
         }
@@ -632,10 +639,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
         for (int y = 2052; y < 5000; y++)
         {
             // Get the southern solstice.
-            double jdtt =
-                seasonalMarkerService.GetSeasonalMarker(y, ESeasonalMarkerType.SouthernSolstice);
             DateTime solstice =
-                JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+                seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
+                    ESeasonalMarkerType.SouthernSolstice);
 
             // Check if there's also a New Moon at this time.
             MoonPhase newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
@@ -657,7 +663,8 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             Console.WriteLine($"Alignment in year {y}:");
             Console.WriteLine($"{"Southern Solstice",20}: {solstice:R}");
             Console.WriteLine($"{newMoon.Type.GetDescriptionOrName(),20}: {newMoon.DateTimeUtc:R}");
-            Console.WriteLine($"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
+            Console.WriteLine(
+                $"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }
     }
 }

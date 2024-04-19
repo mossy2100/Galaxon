@@ -109,8 +109,8 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double jdtt = JulianDateService.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
-        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        double jdtt = TimeScaleService.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
+        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
         double T2 = T * T;
         double T3 = T * T2;
         double T4 = T * T3;
@@ -276,7 +276,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         jdtt += C1 + C2;
 
         // Convert the jdtt to a UTC DateTime.
-        DateTime dtPhase = JulianDateService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        DateTime dtPhase = TimeScaleService.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Construct and return the LunarPhase object.
         return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };
@@ -403,8 +403,8 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
         double jdut = TimeScaleService.DecimalYearToJulianDateUniversal(y);
-        double jdtt = JulianDateService.JulianDateUniversalToTerrestrial(jdut);
-        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        double jdtt = TimeScaleService.JulianDateUniversalToTerrestrial(jdut);
+        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
         return CalcLengthOfLunation(T);
     }
 

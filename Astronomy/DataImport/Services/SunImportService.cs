@@ -98,7 +98,7 @@ public class SunImportService(
         // 29,000 light years in metres.
         sun.Orbit.SemiMajorAxis = 29_000 * LengthConstants.METRES_PER_LIGHT_YEAR;
         // 230 million years in seconds.
-        sun.Orbit.SiderealOrbitPeriod = 230_000_000 * TimeConstants.SECONDS_PER_YEAR;
+        sun.Orbit.SiderealOrbitPeriod = 230_000_000.0 * TimeConstants.SECONDS_PER_YEAR;
         // Orbital speed in m/s.
         sun.Orbit.AvgOrbitSpeed = 251_000;
         astroDbContext.SaveChanges();

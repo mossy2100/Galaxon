@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\Numerics\Algebra\Algebra.csproj" />
       <ProjectReference Include="..\Numerics\Extensions\Extensions.csproj" />
     </ItemGroup>
 

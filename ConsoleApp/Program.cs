@@ -3,6 +3,8 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
+using Galaxon.Numerics.Extensions;
+using Galaxon.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -22,11 +24,11 @@ class Program
 
         try
         {
-            // Solar();
+            Solar();
             // Lunisolar();
             // LeapWeek();
             // TotalDrift();
-            LunisolarSynch();
+            // LunisolarSynch();
         }
         catch (Exception ex)
         {
@@ -97,32 +99,41 @@ class Program
 
     static void Solar()
     {
-        // SolarCalendar solarCalendar =
-        //     _serviceProvider!.GetRequiredService<SolarCalendar>();
-
-        // double avg = TropicalYear.GetAverageLengthInSolarDays(2000, 5000);
-        // Console.WriteLine($"Average tropical year length 2000-5000: {avg:F6} solar days.");
-
-        // solarCalendar.PrintMillennialYearInfo();
-
-        // solarCalendar.FindYearWithIdealLength();
-        // Console.WriteLine();
-        // solarCalendar.CountLeapYears();
-        //
-        // Console.WriteLine();
+        SolarCalendar solarCalendar = _serviceProvider!.GetRequiredService<SolarCalendar>();
         // solarCalendar.FindSynchronisationPoints();
-        // solarCalendar.FindOptimalPeriod();
+        solarCalendar.CalculateYearLengths();
+    }
 
-        // RuleFinder.PrintLeapYearPattern(121, 500, 33, 4, 2);
-        // RuleFinder.FindRuleWith2Mods(31, 128);
-        RuleFinder.FindRuleWith3Mods(31, 128);
-        // RuleFinder.FindRuleWith4Mods(31, 128);
+    private static void SolarCalendarFindIntercalationRules()
+    {
+        // RuleFinder.FindRule(8, 33);
+        // RuleFinder.FindRule(11, 62);
+        // RuleFinder.FindRule(31, 128);
+        // RuleFinder.FindRule(121, 500);
+        // RuleFinder.FindModRule(330, 896);
+        // Console.WriteLine("======================================================================");
+        // RuleFinder.FindRule(358, 566);
+        // Console.WriteLine("======================================================================");
+        // RuleFinder.FindRule(34, 330);
 
-        // Console.WriteLine($"Checking solar day.");
-        // double T = -1;
-        // double len1 = EarthService.GetSolarDayLengthInSeconds(T) * EarthService.GetTropicalYearLengthInEphemerisDays(T);
-        // double len2 = 31_556_925.9747;
-        // Console.WriteLine($"Solar day length at J1900: {len1} c.f. {len2}");
+        RuleFinder.FindHumanRule(0.242189);
+        Console.WriteLine();
+        RuleFinder.FindHumanRule(0.2422);
+        Console.WriteLine();
+        RuleFinder.FindHumanRule(0.242);
+        Console.WriteLine();
+
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("Leap week:");
+        double nWeeks = TimeConstants.DAYS_PER_TROPICAL_YEAR / 7;
+        RuleFinder.FindHumanRule(nWeeks.Frac());
+
+        Console.WriteLine("======================================================================");
+        Console.WriteLine("Lunisolar:");
+        double nMonths = TimeConstants.DAYS_PER_TROPICAL_YEAR / TimeConstants.DAYS_PER_LUNATION;
+        RuleFinder.FindHumanRule(nMonths.Frac());
+        Console.WriteLine();
+        RuleFinder.FindHumanRule(0.36825);
     }
 
     static void LeapWeek()

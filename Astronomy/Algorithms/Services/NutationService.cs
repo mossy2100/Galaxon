@@ -1,6 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -85,7 +86,7 @@ public class NutationService
     public static Nutation CalcNutation(double jdtt)
     {
         // Calculate the number of Julian centuries since J2000.0.
-        double T = JulianDateService.JulianCenturiesSinceJ2000(jdtt);
+        double T = TimeScaleService.JulianCenturiesSinceJ2000(jdtt);
 
         // Calculate mean elongation of the Moon from the Sun.
         double D = Polynomials.EvaluatePolynomial([297.850_36, 445_267.111_480, -0.001_9142,

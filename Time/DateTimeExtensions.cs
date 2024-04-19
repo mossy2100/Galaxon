@@ -163,7 +163,7 @@ public static class DateTimeExtensions
     public static DateTime Round(DateTime dt, TimeSpan ts)
     {
         long ticks = (long)Math.Round((double)dt.Ticks / ts.Ticks) * ts.Ticks;
-        return new DateTime(ticks);
+        return new DateTime(ticks, dt.Kind);
     }
 
     /// <summary>
