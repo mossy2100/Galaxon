@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Galaxon.Astronomy.Algorithms.Services;
+﻿using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
@@ -25,11 +24,12 @@ class Program
 
         try
         {
-            Solar();
+            // Solar();
             // Lunisolar();
             // LeapWeek();
             // TotalDrift();
             // LunisolarSynch();
+            CalcTicksInLongPeriod();
         }
         catch (Exception ex)
         {
@@ -160,19 +160,35 @@ class Program
     public static void TotalDrift()
     {
         Console.WriteLine("The 97/400 solution:");
-        TropicalYear.CalculateTotalDrift(365.2425);
+        TropicalYear.CalculateTotalDrift(97, 400);
         Console.WriteLine();
 
         Console.WriteLine("The 969/4000 solution:");
-        TropicalYear.CalculateTotalDrift(365.24225);
+        TropicalYear.CalculateTotalDrift(969, 4000);
         Console.WriteLine();
 
         Console.WriteLine("The 31/128 solution:");
-        TropicalYear.CalculateTotalDrift(365.2421875);
+        TropicalYear.CalculateTotalDrift(31, 128);
+        Console.WriteLine();
+
+        Console.WriteLine("The 29/120 solution:");
+        TropicalYear.CalculateTotalDrift(29, 120);
         Console.WriteLine();
 
         Console.WriteLine("The 121/500 solution:");
-        TropicalYear.CalculateTotalDrift(365.242);
+        TropicalYear.CalculateTotalDrift(121, 500);
         Console.WriteLine();
+    }
+
+    public static void CalcTicksInLongPeriod()
+    {
+        int minYear = -10000;
+        ulong maxNumTicks = ulong.MaxValue;
+        double nYears = (double)maxNumTicks / TimeConstants.TICKS_PER_TROPICAL_YEAR;
+        Console.WriteLine(nYears);
+        double maxYear = nYears + minYear;
+        Console.WriteLine($"We can support a tick count from {minYear} to {maxYear}");
+        double nTicks = 20000 * TimeConstants.DAYS_PER_TROPICAL_YEAR * TimeConstants.TICKS_PER_DAY;
+        Console.WriteLine($"{nTicks:N0}");
     }
 }

@@ -128,8 +128,9 @@ public static class TropicalYear
         Console.WriteLine();
     }
 
-    public static void CalculateTotalDrift(double avgCalendarYearLengthInDays)
+    public static void CalculateTotalDrift(int num, int den)
     {
+        double avgCalendarYearLengthInDays = 365 + (double)num / den;
         Console.WriteLine($"Average calendar year length = {avgCalendarYearLengthInDays} days:");
         double totalDriftInSeconds = 0;
         bool oneDayShiftYearReported = false;

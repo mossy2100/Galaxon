@@ -255,7 +255,7 @@ public static class TimeConstants
     /// <summary>
     /// Number of ticks in a tropical year.
     /// </summary>
-    public const long TICKS_PER_TROPICAL_YEAR = (long)(DAYS_PER_TROPICAL_YEAR * TICKS_PER_YEAR);
+    public const long TICKS_PER_TROPICAL_YEAR = (long)(DAYS_PER_TROPICAL_YEAR * TICKS_PER_DAY);
 
     #endregion Tropical year
 

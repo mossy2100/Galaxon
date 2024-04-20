@@ -10,29 +10,10 @@ public static class TimeScales
     #region Decimal year methods
 
     /// <summary>
-    /// Convert a year and month into a decimal year.
-    /// </summary>
-    /// <returns>The year as a decimal.</returns>
-    public static double CalcDecimalYear(int year, int month)
-    {
-        return year + (month - 0.5) / 12;
-    }
-
-    /// <summary>
-    /// Get a datetime as a decimal year.
-    /// </summary>
-    /// <param name="dt">The datetime.</param>
-    /// <returns>The year as a decimal.</returns>
-    public static double CalcDecimalYear(DateTime dt)
-    {
-        return CalcDecimalYear(dt.Year, dt.Month);
-    }
-
-    /// <summary>
     /// Convert a decimal year to a DateTime (UTC).
     /// </summary>
-    /// <param name="decimalYear"></param>
-    /// <returns></returns>
+    /// <param name="decimalYear">The decimal year.</param>
+    /// <returns>The equivalent DateTime.</returns>
     public static DateTime DecimalYearToDateTime(double decimalYear)
     {
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
@@ -42,6 +23,20 @@ public static class TimeScales
         long ticksInYear = gc.GetTicksInYear(intYear);
         long ticks = (long)(frac * ticksInYear);
         return yearStart.AddTicks(ticks);
+    }
+
+    /// <summary>
+    /// Convert a DateTime (UTC) to a decimal year.
+    /// </summary>
+    /// <param name="dt">The DateTime.</param>
+    /// <returns>The equivalent decimal year.</returns>
+    public static double DateTimeToDecimalYear(DateTime dt)
+    {
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        DateTime yearStart = gc.GetYearStart(dt.Year, DateTimeKind.Utc);
+        long ticks = (dt - yearStart).Ticks;
+        long ticksInYear = gc.GetTicksInYear(dt.Year);
+        return dt.Year + (double)ticks / ticksInYear;
     }
 
     /// <summary>
@@ -249,10 +244,10 @@ public static class TimeScales
     /// ∆T = TT - UT1
     /// </summary>
     /// <param name="dt">A date.</param>
-    /// <returns></returns>
+    /// <returns>Delta-T at that point in time.</returns>
     public static double CalcDeltaT(DateTime dt = new ())
     {
-        return CalcDeltaT(CalcDecimalYear(dt));
+        return CalcDeltaT(DateTimeToDecimalYear(dt));
     }
 
     /// <summary>
@@ -260,42 +255,17 @@ public static class TimeScales
     /// </summary>
     /// <param name="year">The year.</param>
     /// <param name="month">The month.</param>
-    /// <returns></returns>
+    /// <returns>Delta-T at the midpoint of the month.</returns>
     public static double CalcDeltaT(int year, int month)
     {
-        return CalcDeltaT(CalcDecimalYear(year, month));
+        return CalcDeltaT(year + (month - 0.5) / 12);
     }
 
     #endregion Delta-T methods
 
-    #region Time scale conversion methods
-
-    /// <summary>
-    /// Convert a value in Terrestrial Time (TT) to International Atomic Time (TAI).
-    /// </summary>
-    /// <param name="TT">Terrestrial Time (TT) in ticks.</param>
-    /// <returns>International Atomic Time in ticks.</returns>
-    public static ulong TerrestrialTimeToInternationalAtomicTime(ulong TT)
-    {
-        return TT - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-    }
-
-    /// <summary>
-    /// Convert a value in International Atomic Time (TAI) to Terrestrial Time (TT).
-    /// </summary>
-    /// <param name="TAI">International Atomic Time (TAI) in ticks.</param>
-    /// <returns>Terrestrial Time in ticks.</returns>
-    public static ulong InternationalAtomicTimeToTerrestrialTime(ulong TAI)
-    {
-        return TAI + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
-    }
-
-    #endregion Time scale conversion methods
-
+    #region Meeus Delta-T methods
     //----------------------------------------------------------------------------------------------
     // This stuff can be removed later if I don't need it. Although, it should be kept somewhere.
-
-    #region Meeus Delta-T
 
     /// <summary>
     /// Copy of Table 10A in Astronomical Algorithms 2nd Ed. by Jean Meeus.
@@ -392,7 +362,31 @@ public static class TimeScales
         return deltaT;
     }
 
-    #endregion Meeus Delta-T
+    #endregion Meeus Delta-T methods
+
+    #region Time scale conversion methods
+
+    /// <summary>
+    /// Convert a value in Terrestrial Time (TT) to International Atomic Time (TAI).
+    /// </summary>
+    /// <param name="TT">Terrestrial Time (TT) in ticks.</param>
+    /// <returns>International Atomic Time in ticks.</returns>
+    public static ulong TerrestrialTimeToInternationalAtomicTime(ulong TT)
+    {
+        return TT - TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
+    }
+
+    /// <summary>
+    /// Convert a value in International Atomic Time (TAI) to Terrestrial Time (TT).
+    /// </summary>
+    /// <param name="TAI">International Atomic Time (TAI) in ticks.</param>
+    /// <returns>Terrestrial Time in ticks.</returns>
+    public static ulong InternationalAtomicTimeToTerrestrialTime(ulong TAI)
+    {
+        return TAI + TimeConstants.TT_MINUS_TAI_MILLISECONDS * TimeSpan.TicksPerMillisecond;
+    }
+
+    #endregion Time scale conversion methods
 
     #region Conversion between Julian dates and other time scales
 
