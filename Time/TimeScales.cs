@@ -16,11 +16,10 @@ public static class TimeScales
     /// <returns>The equivalent DateTime.</returns>
     public static DateTime DecimalYearToDateTime(double decimalYear)
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         int intYear = (int)Floor(decimalYear);
-        DateTime yearStart = gc.GetYearStart(intYear, DateTimeKind.Utc);
+        DateTime yearStart = GregorianCalendarExtensions.GetYearStart(intYear, DateTimeKind.Utc);
         double frac = decimalYear - intYear;
-        long ticksInYear = gc.GetTicksInYear(intYear);
+        long ticksInYear = GregorianCalendarExtensions.GetTicksInYear(intYear);
         long ticks = (long)(frac * ticksInYear);
         return yearStart.AddTicks(ticks);
     }
@@ -32,22 +31,53 @@ public static class TimeScales
     /// <returns>The equivalent decimal year.</returns>
     public static double DateTimeToDecimalYear(DateTime dt)
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
-        DateTime yearStart = gc.GetYearStart(dt.Year, DateTimeKind.Utc);
+        DateTime yearStart = GregorianCalendarExtensions.GetYearStart(dt.Year, DateTimeKind.Utc);
         long ticks = (dt - yearStart).Ticks;
-        long ticksInYear = gc.GetTicksInYear(dt.Year);
+        long ticksInYear = GregorianCalendarExtensions.GetTicksInYear(dt.Year);
         return dt.Year + (double)ticks / ticksInYear;
     }
 
     /// <summary>
     /// Convert a decimal year to a Julian Date (UT).
     /// </summary>
-    /// <param name="y"></param>
+    /// <param name="year"></param>
     /// <returns></returns>
-    public static double DecimalYearToJulianDateUniversal(double y)
+    public static double DecimalYearToJulianDateUniversal(double year)
     {
-        DateTime dt = DecimalYearToDateTime(y);
+        DateTime dt = DecimalYearToDateTime(year);
         return DateTimeToJulianDate(dt);
+    }
+
+    /// <summary>
+    /// Convert a decimal year to a Julian Date (UT).
+    /// </summary>
+    /// <param name="year"></param>
+    /// <returns></returns>
+    public static double DecimalYearToJulianDateUniversal2(double year)
+    {
+        double jdut = TimeConstants.START_GREGORIAN_EPOCH_JDUT;
+        int intYear = (int)Floor(year);
+        double frac = year - intYear;
+
+        int nGregorianSolarCycles = intYear / 400;
+        jdut += nGregorianSolarCycles * TimeConstants.DAYS_PER_GREGORIAN_SOLAR_CYCLE;
+        intYear -= nGregorianSolarCycles * TimeConstants.YEARS_PER_GREGORIAN_SOLAR_CYCLE;
+
+        int nCenturies = intYear / 100;
+        jdut += nCenturies * 36524;
+        intYear -= nCenturies * 100;
+
+        int nOlympiads = intYear / 4;
+        jdut += nOlympiads * 1461;
+        intYear -= nOlympiads * 4;
+
+        jdut += intYear * 365;
+
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        long daysInYear = gc.GetDaysInYear(intYear);
+        jdut += frac * daysInYear;
+
+        return jdut;
     }
 
     #endregion Decimal year methods

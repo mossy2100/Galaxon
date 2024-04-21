@@ -29,7 +29,8 @@ class Program
             // LeapWeek();
             // TotalDrift();
             // LunisolarSynch();
-            CalcTicksInLongPeriod();
+            // CalcTicksInLongPeriod();
+            TestDecimalYearToJulianDateUniversal2();
         }
         catch (Exception ex)
         {
@@ -190,5 +191,15 @@ class Program
         Console.WriteLine($"We can support a tick count from {minYear} to {maxYear}");
         double nTicks = 20000 * TimeConstants.DAYS_PER_TROPICAL_YEAR * TimeConstants.TICKS_PER_DAY;
         Console.WriteLine($"{nTicks:N0}");
+    }
+
+    public static void TestDecimalYearToJulianDateUniversal2()
+    {
+        for (int year = 1; year <= 3000; year++)
+        {
+            double a = TimeScales.DecimalYearToJulianDateUniversal(year);
+            double b = TimeScales.DecimalYearToJulianDateUniversal2(year);
+            Console.WriteLine($"{a} == {b}");
+        }
     }
 }

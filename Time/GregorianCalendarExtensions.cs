@@ -10,9 +10,16 @@ public static class GregorianCalendarExtensions
 {
     #region Provide a singleton instance of GregorianCalendar
 
-    private static readonly Lazy<GregorianCalendar> _gc = new (() => new GregorianCalendar());
+    private static readonly Lazy<GregorianCalendar> _GregorianCalendarInstance =
+        new (() => new GregorianCalendar());
 
-    public static GregorianCalendar GetInstance() => _gc.Value;
+    /// <summary>
+    /// Get the single GregorianCalendar object.
+    /// </summary>
+    public static GregorianCalendar GetInstance()
+    {
+        return _GregorianCalendarInstance.Value;
+    }
 
     #endregion Provide a singleton instance of GregorianCalendar
 
@@ -60,10 +67,9 @@ public static class GregorianCalendarExtensions
     /// <see href="https://en.wikipedia.org/wiki/Date_of_Easter#Anonymous_Gregorian_algorithm"/>
     /// <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
     /// <see href="https://www.assa.org.au/edm"/>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The Gregorian year number.</param>
     /// <returns>The date of Easter Sunday for the given year.</returns>
-    public static DateOnly Easter(this GregorianCalendar gc, int year)
+    public static DateOnly GetEaster(int year)
     {
         CheckYear(year);
 
@@ -87,10 +93,9 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Get the date of Christmas Day in the given year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year.</param>
     /// <returns>The date of Christmas in the given year.</returns>
-    public static DateOnly Christmas(this GregorianCalendar gc, int year)
+    public static DateOnly GetChristmas(int year)
     {
         CheckYear(year);
 
@@ -112,7 +117,6 @@ public static class GregorianCalendarExtensions
     /// DateOnly meetup = DateOnlyExtensions.GetNthWeekdayInMonth(2025, 11, -1, DayOfWeek.Monday);
     /// </code>
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year.</param>
     /// <param name="month">The month.</param>
     /// <param name="n">Which occurence of the day of the week within the month.</param>
@@ -120,8 +124,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The requested date.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If Abs(n) not in the range 1..5</exception>
     /// <exception cref="ArgumentOutOfRangeException">If a valid date could not be found.</exception>
-    public static DateOnly GetNthWeekdayInMonth(this GregorianCalendar gc, int year, int month,
-        int n, DayOfWeek dayOfWeek)
+    public static DateOnly GetNthWeekdayInMonth(int year, int month, int n, DayOfWeek dayOfWeek)
     {
         CheckYear(year);
 
@@ -158,15 +161,14 @@ public static class GregorianCalendarExtensions
     /// Find the date of Thanksgiving (US and some other countries).
     /// </summary>
     /// <see href="https://en.wikipedia.org/wiki/Thanksgiving#Observance"/>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year.</param>
     /// <returns>The date of Thanksgiving.</returns>
-    public static DateOnly Thanksgiving(this GregorianCalendar gc, int year)
+    public static DateOnly GetThanksgiving(int year)
     {
         CheckYear(year);
 
         // Get the 4th Thursday in November.
-        return gc.GetNthWeekdayInMonth(year, 11, 4, DayOfWeek.Thursday);
+        return GetNthWeekdayInMonth(year, 11, 4, DayOfWeek.Thursday);
     }
 
     #endregion Find special dates
@@ -176,60 +178,52 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Get the DateTime for the start of a given Gregorian year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the start of the year (UT).</returns>
-    public static DateTime GetYearStart(this GregorianCalendar gc, int year,
-        DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearStart(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
-
         return new DateTime(year, 1, 1, 0, 0, 0, kind);
     }
 
     /// <summary>
     /// Get the DateTime for the end of a given Gregorian year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the year (UT).</returns>
-    public static DateTime GetYearEnd(this GregorianCalendar gc, int year,
-        DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearEnd(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
 
         // There isn't a DateTime constructor that allows us to specify the time of day with
         // resolution of 1 tick (the best is microsecond), so instead, we get the start point of the
         // following year and subtract 1 tick.
-        return gc.GetYearStart(year + 1, kind).Subtract(new TimeSpan(1));
+        return GetYearStart(year + 1, kind).Subtract(new TimeSpan(1));
     }
 
     /// <summary>
     /// Get the DateTime for the midpoint of a given Gregorian year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the year (UT).</returns>
-    public static DateTime GetYearMidPoint(this GregorianCalendar gc, int year,
-        DateTimeKind kind = DateTimeKind.Unspecified)
+    public static DateTime GetYearMidPoint(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
 
-        return gc.GetYearStart(year, kind).AddTicks(gc.GetTicksInYear(year) / 2);
+        return GetYearStart(year, kind).AddTicks(GetTicksInYear(year) / 2);
     }
 
     /// <summary>
     /// Get the DateTime for the start of a given Gregorian month.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="month">The month (1 through 12).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the start of the month (UT).</returns>
-    public static DateTime GetMonthStart(this GregorianCalendar gc, int year, int month,
+    public static DateTime GetMonthStart(int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
@@ -241,12 +235,11 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Get the DateTime for the end of a given Gregorian month.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="month">The month (1 through 12).</param>
     /// <param name="kind">The DateTimeKind.</param>
     /// <returns>A DateTime representing the end of the month (UT).</returns>
-    public static DateTime GetMonthEnd(this GregorianCalendar gc, int year, int month,
+    public static DateTime GetMonthEnd(int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
@@ -260,16 +253,16 @@ public static class GregorianCalendarExtensions
             month = 1;
             year++;
         }
-        return gc.GetMonthStart(year, month, kind).Subtract(new TimeSpan(1));
+
+        return GetMonthStart(year, month, kind).Subtract(new TimeSpan(1));
     }
 
     /// <summary>
     /// Returns the date of the first day of the year for the specified year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <returns>The first day of the specified year.</returns>
-    public static DateOnly GetYearFirstDay(this GregorianCalendar gc, int year)
+    public static DateOnly GetYearFirstDay(int year)
     {
         CheckYear(year);
 
@@ -279,10 +272,9 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Returns the last day of the year for the specified year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <returns>The last day of the specified year.</returns>
-    public static DateOnly GetYearLastDay(this GregorianCalendar gc, int year)
+    public static DateOnly GetYearLastDay(int year)
     {
         CheckYear(year);
 
@@ -292,11 +284,10 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Returns the date of the first day of the specified month.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="month">The month (1 through 12).</param>
     /// <returns>The first day of the specified month.</returns>
-    public static DateOnly GetMonthFirstDay(this GregorianCalendar gc, int year, int month)
+    public static DateOnly GetMonthFirstDay(int year, int month)
     {
         CheckYear(year);
         CheckMonth(month);
@@ -307,16 +298,16 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Returns the date of the last day of the specified month for the specified year.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year (1 through 9999).</param>
     /// <param name="month">The month (1 through 12).</param>
     /// <returns>The last day of the specified month and year.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the month is not in the valid range (1-12).</exception>
-    public static DateOnly GetMonthLastDay(this GregorianCalendar gc, int year, int month)
+    public static DateOnly GetMonthLastDay(int year, int month)
     {
         CheckYear(year);
         CheckMonth(month);
 
+        GregorianCalendar gc = GetInstance();
         return new DateOnly(year, month, gc.GetDaysInMonth(year, month));
     }
 
@@ -328,15 +319,32 @@ public static class GregorianCalendarExtensions
     /// Get the number of ticks in a given Gregorian Calendar year.
     /// Does not include leap seconds.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="year">The year.</param>
     /// <returns>The number of ticks in the year.</returns>
-    public static long GetTicksInYear(this GregorianCalendar gc, int year)
+    public static long GetTicksInYear(int year)
     {
-        CheckYear(year);
-
-        int days = gc.GetDaysInYear(year);
+        int days = GetDaysInYear(year);
         return days * TimeConstants.TICKS_PER_DAY;
+    }
+
+    /// <summary>
+    /// Get the number of days in a given Gregorian Calendar year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <returns>The number of days in the year.</returns>
+    public static int GetDaysInYear(int year)
+    {
+        return IsLeapYear(year) ? 366 : 365;
+    }
+
+    /// <summary>
+    /// See if a given year is a leap year.
+    /// </summary>
+    /// <param name="year">The Gregorian Calendar year number (AD/CE).</param>
+    /// <returns>If the year is a leap year.</returns>
+    private static bool IsLeapYear(int year)
+    {
+        return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
     }
 
     #endregion Time units
@@ -346,7 +354,7 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Dictionary mapping month numbers (1-12) to month names.
     /// </summary>
-    private static readonly Dictionary<int, string> _MonthNames = new ()
+    public static readonly Dictionary<int, string> MonthNames = new ()
     {
         { 1, "January" },
         { 2, "February" },
@@ -363,29 +371,18 @@ public static class GregorianCalendarExtensions
     };
 
     /// <summary>
-    /// Get the month names in the Gregorian Calendar.
-    /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
-    /// <returns></returns>
-    public static Dictionary<int, string> GetMonthNames(this GregorianCalendar gc)
-    {
-        return _MonthNames;
-    }
-
-    /// <summary>
     /// Converts a month name or abbreviations to its corresponding number (1-12).
     /// Fails if 0 or more than 1 match is found.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
     /// <returns>The month number.</returns>
     /// <exception cref="ArgumentException">
     /// Thrown when the provided month name or abbreviation doesn't produce a unique result.
     /// </exception>
-    public static int MonthNameToNumber(this GregorianCalendar gc, string monthName)
+    public static int MonthNameToNumber(string monthName)
     {
         // Look for matches in the dictionary.
-        List<KeyValuePair<int, string>> matches = _MonthNames
+        List<KeyValuePair<int, string>> matches = MonthNames
             .Where(pair =>
                 pair.Value.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
             .ToList();
@@ -407,15 +404,14 @@ public static class GregorianCalendarExtensions
     /// <summary>
     /// Converts a month number (1-12) to its corresponding name.
     /// </summary>
-    /// <param name="gc">The GregorianCalendar object.</param>
     /// <param name="month">The month number (1-12).</param>
     /// <returns>The month name.</returns>
     /// <exception cref="ArgumentException">Thrown when the provided month number is invalid.</exception>
-    public static string MonthNumberToName(this GregorianCalendar gc, int month)
+    public static string MonthNumberToName(int month)
     {
         CheckMonth(month);
 
-        if (_MonthNames.TryGetValue(month, out string? name))
+        if (MonthNames.TryGetValue(month, out string? name))
         {
             return name;
         }

@@ -142,7 +142,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                     }
 
                     // Extract the date parts.
-                    int month = gc.MonthNameToNumber(dateTimeMatches[0].Groups["month"].Value);
+                    int month = GregorianCalendarExtensions.MonthNameToNumber(dateTimeMatches[0].Groups["month"].Value);
                     int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
                     int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);
                     int minute = int.Parse(dateTimeMatches[0].Groups["minute"].Value);
