@@ -37,25 +37,25 @@ public static class TimeScales
         return dt.Year + (double)ticks / ticksInYear;
     }
 
-    // /// <summary>
-    // /// Convert a decimal year to a Julian Date (UT).
-    // /// </summary>
-    // /// <param name="year"></param>
-    // /// <returns></returns>
-    // public static double DecimalYearToJulianDateUniversal1(double year)
-    // {
-    //     return DateTimeToJulianDate(DecimalYearToDateTime(year));
-    // }
-    //
-    // /// <summary>
-    // /// Convert a decimal year to a Julian Date (UT).
-    // /// </summary>
-    // /// <param name="year"></param>
-    // /// <returns></returns>
-    // public static double JulianDateUniversalToDecimalYear1(double jdut)
-    // {
-    //     return DateTimeToDecimalYear(JulianDateToDateTime(jdut));
-    // }
+    /// <summary>
+    /// Convert a decimal year to a Julian Date (UT).
+    /// </summary>
+    /// <param name="year"></param>
+    /// <returns></returns>
+    public static double DecimalYearToJulianDateUniversal1(double year)
+    {
+        return DateTimeToJulianDate(DecimalYearToDateTime(year));
+    }
+
+    /// <summary>
+    /// Convert a decimal year to a Julian Date (UT).
+    /// </summary>
+    /// <param name="year"></param>
+    /// <returns></returns>
+    public static double JulianDateUniversalToDecimalYear1(double jdut)
+    {
+        return DateTimeToDecimalYear(JulianDateToDateTime(jdut));
+    }
 
     /// <summary>
     /// Convert a decimal year to a Julian Date (UT).
@@ -69,30 +69,17 @@ public static class TimeScales
         // Start at beginning of year 1.
         double jdut = TimeConstants.START_GREGORIAN_EPOCH_JDUT;
 
-        // Get the whole number and fractional parts of the year.
-        int intYear = (int)Floor(year);
-        double fracYear = year - intYear;
+        // Add common years.
+        int i = (int)Floor(year);
+        int j = i - 1;
+        jdut += 365 * j;
 
-        // Add Gregorian solar cycles.
-        int nGregorianSolarCycles = (int)Floor((double)(intYear - 1) / TimeConstants.YEARS_PER_GREGORIAN_SOLAR_CYCLE);
-        jdut += nGregorianSolarCycles * TimeConstants.DAYS_PER_GREGORIAN_SOLAR_CYCLE;
-        intYear -= nGregorianSolarCycles * TimeConstants.YEARS_PER_GREGORIAN_SOLAR_CYCLE;
+        // Add intercalary days.
+        int leapDays = j / 4 - j / 100 + j / 400;
+        jdut += leapDays;
 
-        // Add centuries.
-        int nCenturies = (int)Floor((double)(intYear - 1) / TimeConstants.YEARS_PER_CENTURY);
-        jdut += nCenturies * 36524;
-        intYear -= nCenturies * TimeConstants.YEARS_PER_CENTURY;
-
-        // Add olympiads.
-        int nOlympiads = (int)Floor((double)(intYear - 1) / TimeConstants.YEARS_PER_OLYMPIAD);
-        jdut += nOlympiads * 1461;
-        intYear -= nOlympiads * TimeConstants.YEARS_PER_OLYMPIAD;
-
-        // Add remaining years.
-        jdut += (intYear - 1) * 365;
-
-        // Add fraction of year.
-        jdut += fracYear * GregorianCalendarExtensions.GetDaysInYear(intYear);
+        // Add the fractional part.
+        jdut += (year - i) * GregorianCalendarExtensions.GetDaysInYear(i);
 
         return jdut;
     }

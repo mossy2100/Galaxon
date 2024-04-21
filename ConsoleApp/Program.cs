@@ -27,10 +27,10 @@ class Program
             // Solar();
             // Lunisolar();
             // LeapWeek();
-            TotalDrift();
+            // TotalDrift();
             // LunisolarSynch();
             // CalcTicksInLongPeriod();
-            // TestDecimalYearToJulianDateUniversal();
+            TestDecimalYearToJulianDateUniversal();
         }
         catch (Exception ex)
         {
@@ -196,21 +196,25 @@ class Program
     public static void TestDecimalYearToJulianDateUniversal()
     {
         Random rnd = new ();
-        for (int i = 1; i < 10; i++)
+        for (int i = 1; i < 1000; i++)
         {
             double y = rnd.Next(1, 9999) + rnd.NextDouble();
-            Console.WriteLine($"Year: {y}");
 
-            // double jdut1 = TimeScales.DecimalYearToJulianDateUniversal1(y);
+            double jdut1 = TimeScales.DecimalYearToJulianDateUniversal1(y);
             double jdut2 = TimeScales.DecimalYearToJulianDateUniversal(y);
-            // Console.WriteLine($"JDUT old method: {jdut1}");
-            Console.WriteLine($"JDUT new method: {jdut2}");
 
-            // double y1 = TimeScales.JulianDateUniversalToDecimalYear1(jdut1);
+            double y1 = TimeScales.JulianDateUniversalToDecimalYear1(jdut1);
             double y2 = TimeScales.JulianDateUniversalToDecimalYear(jdut2);
-            // Console.WriteLine($"Decimal year old method: {y1}");
-            Console.WriteLine($"Decimal year new method: {y2}");
-            Console.WriteLine();
+
+            if (!jdut1.FuzzyEquals(jdut2) || !y1.FuzzyEquals(y2))
+            {
+                Console.WriteLine($"Year: {y}");
+                Console.WriteLine($"JDUT old method: {jdut1}");
+                Console.WriteLine($"JDUT new method: {jdut2}");
+                Console.WriteLine($"Decimal year old method: {y1}");
+                Console.WriteLine($"Decimal year new method: {y2}");
+                Console.WriteLine();
+            }
         }
     }
 }
