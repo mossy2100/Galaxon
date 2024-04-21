@@ -134,7 +134,7 @@ public static class TropicalYear
         Console.WriteLine($"Average calendar year length = {avgCalendarYearLengthInDays} days:");
         double totalDriftInSeconds = 0;
         bool oneDayShiftYearReported = false;
-        for (int y = 2025; y < 10000; y++)
+        for (int y = 2025; y <= 12000; y++)
         {
             if (y % 1000 == 0 || totalDriftInSeconds > TimeConstants.SECONDS_PER_DAY && !oneDayShiftYearReported)
             {
