@@ -16,6 +16,13 @@ public static class TimeScales
     /// <returns>The equivalent DateTime.</returns>
     public static DateTime DecimalYearToDateTime(double decimalYear)
     {
+        // Guard.
+        if (decimalYear is < 1 or >= 10000)
+        {
+            throw new ArgumentOutOfRangeException(nameof(decimalYear),
+                "Must be greater then or equal to 1, and less than 10,000.");
+        }
+
         int intYear = (int)Floor(decimalYear);
         DateTime yearStart = GregorianCalendarExtensions.GetYearStart(intYear, DateTimeKind.Utc);
         double frac = decimalYear - intYear;

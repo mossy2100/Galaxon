@@ -138,8 +138,8 @@ public class LeapSecondImportService(
             }
 
             // Regular expression to match any of the "no leap second" phrases.
-            var rxNoLeapSecond = new Regex("(NO|No) (positive )?leap second will be introduced");
-            var months = string.Join('|', GregorianCalendarExtensions.MonthNames.Values);
+            var rxNoLeapSecond = new Regex("(NO|No) ((posi|nega)tive )?leap second will be introduced");
+            var months = string.Join('|', GregorianCalendarExtensions.GetMonthNames().Values);
             var rxLeapSecond = new Regex(
                 $@"A (?<sign>positive|negative) leap second will be introduced at the end of (?<month>{months}) (?<year>\d{{4}}).");
 

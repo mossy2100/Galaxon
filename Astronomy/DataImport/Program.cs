@@ -24,7 +24,8 @@ public class Program
         {
             // await ImportDwarfPlanets();
             // await ImportNaturalSatellites();
-            await ImportLunarPhases();
+            // await ImportLunarPhases();
+            await ImportLeapSeconds();
         }
         catch (Exception ex)
         {

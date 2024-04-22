@@ -184,6 +184,7 @@ public static class GregorianCalendarExtensions
     public static DateTime GetYearStart(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
         CheckYear(year);
+
         return new DateTime(year, 1, 1, 0, 0, 0, kind);
     }
 
@@ -200,7 +201,7 @@ public static class GregorianCalendarExtensions
         // There isn't a DateTime constructor that allows us to specify the time of day with
         // resolution of 1 tick (the best is microsecond), so instead, we get the start point of the
         // following year and subtract 1 tick.
-        return GetYearStart(year + 1, kind).Subtract(new TimeSpan(1));
+        return GetYearStart(year + 1, kind) - new TimeSpan(1);
     }
 
     /// <summary>
@@ -213,7 +214,7 @@ public static class GregorianCalendarExtensions
     {
         CheckYear(year);
 
-        return GetYearStart(year, kind).AddTicks(GetTicksInYear(year) / 2);
+        return GetYearStart(year, kind) + new TimeSpan(GetTicksInYear(year) / 2);
     }
 
     /// <summary>
@@ -313,65 +314,42 @@ public static class GregorianCalendarExtensions
 
     #endregion Year and month start and end
 
-    #region Time units
+    #region Month names and lengths
 
     /// <summary>
-    /// Get the number of ticks in a given Gregorian Calendar year.
-    /// Does not include leap seconds.
+    /// Dictionary mapping month numbers (1-12) to months with names and usual lengths.
     /// </summary>
-    /// <param name="year">The year.</param>
-    /// <returns>The number of ticks in the year.</returns>
-    public static long GetTicksInYear(int year)
+    public static readonly Dictionary<int, GregorianMonth> Months = new ()
     {
-        int days = GetDaysInYear(year);
-        return days * TimeConstants.TICKS_PER_DAY;
-    }
-
-    /// <summary>
-    /// Get the number of days in a given Gregorian Calendar year.
-    /// </summary>
-    /// <param name="year">The year.</param>
-    /// <returns>The number of days in the year.</returns>
-    public static int GetDaysInYear(int year)
-    {
-        return IsLeapYear(year) ? 366 : 365;
-    }
-
-    /// <summary>
-    /// See if a given year is a leap year.
-    /// </summary>
-    /// <param name="year">The Gregorian Calendar year number (AD/CE).</param>
-    /// <returns>If the year is a leap year.</returns>
-    private static bool IsLeapYear(int year)
-    {
-        return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
-    }
-
-    #endregion Time units
-
-    #region Month names
-
-    /// <summary>
-    /// Dictionary mapping month numbers (1-12) to month names.
-    /// </summary>
-    public static readonly Dictionary<int, string> MonthNames = new ()
-    {
-        { 1, "January" },
-        { 2, "February" },
-        { 3, "March" },
-        { 4, "April" },
-        { 5, "May" },
-        { 6, "June" },
-        { 7, "July" },
-        { 8, "August" },
-        { 9, "September" },
-        { 10, "October" },
-        { 11, "November" },
-        { 12, "December" }
+        { 1, new GregorianMonth("January", 31) },
+        { 2, new GregorianMonth("February", 28) },
+        { 3, new GregorianMonth("March", 31) },
+        { 4, new GregorianMonth("April", 30) },
+        { 5, new GregorianMonth("May", 31) },
+        { 6, new GregorianMonth("June", 30) },
+        { 7, new GregorianMonth("July", 31) },
+        { 8, new GregorianMonth("August", 31) },
+        { 9, new GregorianMonth("September", 30) },
+        { 10, new GregorianMonth("October", 31) },
+        { 11, new GregorianMonth("November", 30) },
+        { 12, new GregorianMonth("December", 31) }
     };
 
     /// <summary>
-    /// Converts a month name or abbreviations to its corresponding number (1-12).
+    /// Create a new dictionary to store month names with their corresponding month number.
+    /// </summary>
+    /// <returns>
+    /// A dictionary where the key is the month number and the value is the month name.
+    /// </returns>
+    public static Dictionary<int, string> GetMonthNames()
+    {
+        // Using LINQ to transform the GregorianMonths dictionary into a dictionary of month numbers
+        // and names.
+        return Months.ToDictionary(pair => pair.Key, pair => pair.Value.Name);
+    }
+
+    /// <summary>
+    /// Converts a month name to its corresponding number (1-12).
     /// Fails if 0 or more than 1 match is found.
     /// </summary>
     /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
@@ -381,10 +359,10 @@ public static class GregorianCalendarExtensions
     /// </exception>
     public static int MonthNameToNumber(string monthName)
     {
-        // Look for matches in the dictionary.
-        List<KeyValuePair<int, string>> matches = MonthNames
-            .Where(pair =>
-                pair.Value.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
+        // Look for matches in the Months dictionary.
+        List<int> matches = Months
+            .Where(pair => pair.Value.Name.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
+            .Select(pair => pair.Key)
             .ToList();
 
         // Handle failure modes.
@@ -398,7 +376,7 @@ public static class GregorianCalendarExtensions
         }
 
         // Return the result.
-        return matches[0].Key;
+        return matches[0];
     }
 
     /// <summary>
@@ -406,18 +384,88 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="month">The month number (1-12).</param>
     /// <returns>The month name.</returns>
-    /// <exception cref="ArgumentException">Thrown when the provided month number is invalid.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the provided month number is invalid.
+    /// </exception>
     public static string MonthNumberToName(int month)
     {
         CheckMonth(month);
 
-        if (MonthNames.TryGetValue(month, out string? name))
-        {
-            return name;
-        }
+        return Months[month].Name;
+    }
 
-        throw new ArgumentOutOfRangeException(nameof(month), "Invalid month number.");
+    /// <summary>
+    /// Converts a month number (1-12) to its corresponding abbreviation (e.g. Jan, Feb).
+    /// </summary>
+    /// <param name="month">The month number (1-12).</param>
+    /// <returns>The abbreviated month name.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the provided month number is invalid.
+    /// </exception>
+    public static string MonthNumberToAbbrev(int month)
+    {
+        return MonthNumberToName(month)[..3];
     }
 
     #endregion Month names
+
+    #region Time units
+
+    /// <summary>
+    /// See if a given year is a leap year.
+    /// </summary>
+    /// <param name="year">The Gregorian Calendar year number (AD/CE).</param>
+    /// <returns>If the year is a leap year.</returns>
+    private static bool IsLeapYear(int year)
+    {
+        return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
+    }
+
+    /// <summary>
+    /// Get the number of days in a given Gregorian Calendar year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <returns>The number of days in the year.</returns>
+    public static int GetDaysInYear(int year)
+    {
+        return IsLeapYear(year) ? 366 : 365;
+    }
+
+    /// <summary>
+    /// Get the number of ticks in a given Gregorian Calendar year.
+    /// Does not include leap seconds.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <returns>The number of ticks in the year.</returns>
+    public static long GetTicksInYear(int year)
+    {
+        return GetDaysInYear(year) * TimeConstants.TICKS_PER_DAY;
+    }
+
+    /// <summary>
+    /// Get the number of days in a given Gregorian Calendar year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <param name="month">The month (1..12).</param>
+    /// <returns>The number of days in the month.</returns>
+    public static int GetDaysInMonth(int year, int month)
+    {
+        CheckMonth(month);
+
+        return (month == 2 && IsLeapYear(year)) ? 29 : Months[month].LengthInDays;
+    }
+
+    /// <summary>
+    /// Get the number of ticks in a given Gregorian Calendar month.
+    /// Does not include leap seconds.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <param name="month">The month (1..12).</param>
+    /// <returns>The number of ticks in the month.</returns>
+    public static long GetTicksInMonth(int year, int month)
+    {
+        return GetDaysInMonth(year, month) * TimeConstants.TICKS_PER_DAY;
+    }
+
+    #endregion Time units
 }

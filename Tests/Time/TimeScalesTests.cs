@@ -1,12 +1,16 @@
-﻿using Galaxon.Time;
+﻿using Galaxon.Numerics.Extensions;
+using Galaxon.Time;
+using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Time;
 
 [TestClass]
 public class TimeScalesTests
 {
+    #region DateOnlyToJulianDate
+
     [TestMethod]
-    public void TestDateOnlyToJulianDay()
+    public void DateOnlyToJulianDate_ReturnsCorrectValue()
     {
         DateOnly date;
 
@@ -27,8 +31,12 @@ public class TimeScalesTests
         Assert.AreEqual(TimeScales.DateOnlyToJulianDate(date), 5373483.5);
     }
 
+    #endregion DateOnlyToJulianDate
+
+    #region JulianDateToDateOnly
+
     [TestMethod]
-    public void TestDateOnlyFromJulianDay()
+    public void JulianDateToDateOnly_ReturnsCorrectValue()
     {
         DateOnly date1, date2;
 
@@ -53,8 +61,12 @@ public class TimeScalesTests
         Assert.AreEqual(date1.GetTicks(), date2.GetTicks());
     }
 
+    #endregion JulianDateToDateOnly
+
+    #region DateTimeToJulianDate
+
     [TestMethod]
-    public void TestDateTimeToJulianDay()
+    public void DateTimeToJulianDate_ReturnsCorrectValue()
     {
         DateTime dt;
 
@@ -95,8 +107,12 @@ public class TimeScalesTests
         Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2305812.5);
     }
 
+    #endregion DateTimeToJulianDate
+
+    #region JulianDateToDateTime
+
     [TestMethod]
-    public void TestDateTimeFromJulianDay()
+    public void JulianDateToDateTime_ReturnsCorrectValue()
     {
         DateTime dt1, dt2;
 
@@ -116,6 +132,10 @@ public class TimeScalesTests
         dt2 = TimeScales.JulianDateToDateTime(5373483.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
     }
+
+    #endregion JulianDateToDateTime
+
+    #region JulianCalendarDateToGregorianDate
 
     [DataTestMethod]
     [DataRow(100, 2, 29, 2, 27)]
@@ -188,4 +208,185 @@ public class TimeScalesTests
         // Assert
         Assert.AreEqual(expected, actual);
     }
+
+    #endregion JulianCalendarDateToGregorianDate
+
+    #region DecimalYearToDateTime
+
+    [TestMethod]
+    public void DecimalYearToDateTime_BeginningYear_ConvertsCorrectly()
+    {
+        // Arrange
+        double decimalYear = 2024.0;
+        DateTime expectedDateTime = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert
+        Assert.AreEqual(expectedDateTime, actualDateTime);
+    }
+
+    [TestMethod]
+    public void DecimalYearToDateTime_MidCommonYear_ConvertsCorrectly()
+    {
+        // Arrange
+        double decimalYear = 2025.5;
+        DateTime expectedDateTime =
+            new DateTime(2025, 7, 2, 12, 0, 0, DateTimeKind.Utc); // Expected mid-year date and time
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert
+        Assert.AreEqual(expectedDateTime, actualDateTime);
+    }
+
+    [TestMethod]
+    public void DecimalYearToDateTime_MidLeapYear_ConvertsCorrectly()
+    {
+        // Arrange
+        double decimalYear = 2024.5;
+        DateTime expectedDateTime =
+            new DateTime(2024, 7, 2, 0, 0, 0, DateTimeKind.Utc); // Expected mid-year date and time
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert
+        Assert.AreEqual(expectedDateTime, actualDateTime);
+    }
+
+    [TestMethod]
+    public void DecimalYearToDateTime_EndOfYear_ConvertsCorrectly()
+    {
+        // Arrange
+        double decimalYear = 2024.999_999_999;
+        DateTime expectedDateTime = new DateTime(2024, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc);
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert
+        DateTimeAssert.AreEqual(expectedDateTime, actualDateTime, TimeSpan.FromSeconds(1));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void DecimalYearToDateTime_NegativeYear_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        double decimalYear = -2024.5;
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert is handled by ExpectedException
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void DecimalYearToDateTime_ExtremeYear_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        double decimalYear = 10000.0; // Using an extreme future year
+
+        // Act
+        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+
+        // Assert is handled by ExpectedException
+    }
+
+    #endregion DecimalYearToDateTime
+
+    #region DateTimeToDecimalYear
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_StartOfYear_ReturnsWholeNumber()
+    {
+        // Arrange
+        DateTime dt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        double expectedDecimalYear = 2024.0;
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear);
+    }
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_MidCommonYear_ReturnsCorrectDecimal()
+    {
+        // Arrange
+        DateTime dt =
+            new DateTime(2025, 7, 2, 12, 0, 0, DateTimeKind.Utc); // Approximately mid-year
+        double expectedDecimalYear = 2025.5;
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear);
+    }
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_MidLeapYear_ReturnsCorrectDecimal()
+    {
+        // Arrange
+        DateTime dt =
+            new DateTime(2024, 7, 2, 0, 0, 0, DateTimeKind.Utc); // Approximately mid-year
+        double expectedDecimalYear = 2024.5;
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear);
+    }
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_EndOfYear_ReturnsNearlyNextYear()
+    {
+        // Arrange
+        DateTime dt = new DateTime(2024, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc);
+        double expectedDecimalYear = 2024.999_999_999;
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear, DoubleExtensions.DELTA);
+    }
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_LeapYear_MidLeapDay_ReturnsCorrectDecimal()
+    {
+        // Arrange
+        DateTime dt =
+            new DateTime(2024, 2, 29, 12, 0, 0, DateTimeKind.Utc); // Leap year, mid leap day
+        double expectedDecimalYear = 2024 + 59.5 / 366; // Leap year calculation
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear);
+    }
+
+    [TestMethod]
+    public void DateTimeToDecimalYear_VeryEarlyDate_ReturnsCorrectDecimal()
+    {
+        // Arrange
+        DateTime dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc); // Very early date
+        double expectedDecimalYear = 1.0;
+
+        // Act
+        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+
+        // Assert
+        Assert.AreEqual(expectedDecimalYear, actualDecimalYear);
+    }
+
+    #endregion DateTimeToDecimalYear
 }
