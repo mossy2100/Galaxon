@@ -86,91 +86,40 @@ public static class StringExtensions
         return string.Concat(Enumerable.Repeat(s, n));
     }
 
-    /// <summary>
-    /// Pad a string at both ends to create a new string with a given total width.
-    /// If the total number of padding characters is odd, there will be one extra padding character
-    /// on the left.
-    /// If the total width is less than or equal to the original string length, the method will
-    /// return the original string without complaining.
-    /// This method is designed to have the same API and behaviour as PadLeft() and PadRight().
-    /// </summary>
-    /// <param name="s">The input string.</param>
-    /// <param name="totalWidth">The total width.</param>
-    /// <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
-    /// <param name="extraOnRight">
-    /// Flag to specify where to place the extra char if the number of padding chars is odd. Default
-    /// behaviour is to add it on the right. Set to false to add it on the left.
-    /// </param>
-    /// <returns>A new string with padding characters appended and prepended as needed.</returns>
-    public static string PadBoth(this string s, int totalWidth, char paddingChar = ' ', bool extraOnRight = true)
-    {
-        // Check the string is shorted than the width.
-        if (totalWidth <= s.Length)
-        {
-            return s;
-        }
-
-        int half = (totalWidth - s.Length) / 2;
-        if (extraOnRight)
-        {
-            return s.PadLeft(s.Length + half, paddingChar).PadRight(totalWidth, paddingChar);
-        }
-        else
-        {
-            return s.PadRight(s.Length + half, paddingChar).PadLeft(totalWidth, paddingChar);
-        }
-    }
-
     #endregion Extension methods
 
     #region Strip brackets
 
     /// <summary>
-    /// Remove brackets (and whatever is between them) from a string.
+    /// Remove brackets, and whatever is between them, from a string.
     /// One use case is stripping HTML tags.
-    /// TODO Unit tests, if I decide to keep this method.
     /// </summary>
     /// <param name="str">The string to process.</param>
-    /// <param name="round">If round brackets should be removed.</param>
-    /// <param name="square">If square brackets should be removed</param>
-    /// <param name="curly">If curly brackets should be removed</param>
-    /// <param name="angle">If angle brackets should be removed</param>
+    /// <param name="bracketsType">The type of brackets to remove.</param>
     /// <returns>The string with brackets removed.</returns>
-    public static string StripBrackets(this string str, bool round = true, bool square = true,
-        bool curly = true, bool angle = true)
+    public static string StripBrackets(this string str, EBracketsType bracketsType)
     {
-        if (round)
+        string rx = bracketsType switch
         {
-            str = Regex.Replace(str, @"\([^\)]*\)", "");
-        }
+            EBracketsType.Round => @"\([^\)]*\)",
+            EBracketsType.Square => @"\[[^\]]*\]",
+            EBracketsType.Curly => @"\{[^\}]*\}",
+            EBracketsType.Angle => "<[^>]*>",
+            _ => throw new ArgumentOutOfRangeException(nameof(bracketsType), bracketsType,
+                "Invalid value.")
+        };
 
-        if (square)
-        {
-            str = Regex.Replace(str, @"\[[^\]]*\]", "");
-        }
-
-        if (curly)
-        {
-            str = Regex.Replace(str, @"{[^}]*}", "");
-        }
-
-        if (angle)
-        {
-            str = Regex.Replace(str, @"<[^>]*>", "");
-        }
-
-        return str;
+        return Regex.Replace(str, rx, "");
     }
 
     /// <summary>
     /// Strip HTML tags from a string.
-    /// TODO Unit tests, if I decide to keep this method.
     /// </summary>
     /// <param name="str">The string to process.</param>
     /// <returns>The string with HTML tags removed.</returns>
     public static string StripTags(this string str)
     {
-        return str.StripBrackets(false, false, false);
+        return str.StripBrackets(EBracketsType.Angle);
     }
 
     #endregion Strip brackets
@@ -188,7 +137,7 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Check if a string is a palindrome.
+    /// Check if a string is a palindrome. Case-sensitive.
     /// </summary>
     public static bool IsPalindrome(this string str)
     {
@@ -389,14 +338,50 @@ public static class StringExtensions
             EStringCase.Upper => str.ToUpper(),
             EStringCase.UpperFirstLetter => str.ToUpperFirstLetter(),
             EStringCase.Proper => str.ToProper(),
-            // Default case, return the original string.
-            _ => str
+            EStringCase.None or EStringCase.Mixed => str,
+            _ => throw new ArgumentOutOfRangeException(nameof(stringCase), "Invalid letter case.")
         };
     }
 
     #endregion String case
 
     #region Format numbers
+
+    /// <summary>
+    /// Pad a string at both ends to create a new string with a given total width.
+    /// If the total number of padding characters is odd, there will be one extra padding character
+    /// on the left.
+    /// If the total width is less than or equal to the original string length, the method will
+    /// return the original string without complaining.
+    /// This method is designed to have the same API and behaviour as PadLeft() and PadRight().
+    /// </summary>
+    /// <param name="s">The input string.</param>
+    /// <param name="totalWidth">The total width.</param>
+    /// <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
+    /// <param name="extraOnRight">
+    /// Flag to specify where to place the extra char if the number of padding chars is odd. Default
+    /// behaviour is to add it on the right. Set to false to add it on the left.
+    /// </param>
+    /// <returns>A new string with padding characters appended and prepended as needed.</returns>
+    public static string PadBoth(this string s, int totalWidth, char paddingChar = ' ',
+        bool extraOnRight = true)
+    {
+        // Check the string is shorted than the width.
+        if (totalWidth <= s.Length)
+        {
+            return s;
+        }
+
+        int half = (totalWidth - s.Length) / 2;
+        if (extraOnRight)
+        {
+            return s.PadLeft(s.Length + half, paddingChar).PadRight(totalWidth, paddingChar);
+        }
+        else
+        {
+            return s.PadRight(s.Length + half, paddingChar).PadLeft(totalWidth, paddingChar);
+        }
+    }
 
     /// <summary>
     /// Pad a string on the left with zeroes to make it up to a certain width.

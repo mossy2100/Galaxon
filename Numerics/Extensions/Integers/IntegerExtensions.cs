@@ -1,12 +1,12 @@
 using System.Numerics;
 using Galaxon.Core.Strings;
 
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.Integers;
 
 /// <summary>
 /// Extension methods for IBinaryInteger{T}.
 /// </summary>
-public static class BinaryIntegerExtensions
+public static class IntegerExtensions
 {
     #region Superscript and subscript
 

@@ -2,7 +2,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 

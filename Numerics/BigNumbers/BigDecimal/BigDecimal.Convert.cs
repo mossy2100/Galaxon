@@ -1,6 +1,6 @@
 using System.Numerics;
 using Galaxon.Core.Types;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
 
 namespace Galaxon.Numerics.BigNumbers;
 

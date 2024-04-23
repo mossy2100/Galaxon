@@ -41,6 +41,19 @@ public class EnumExtensionsTests
         Assert.AreEqual(expected, actual);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void GetDescription_InvalidEnum_ThrowsException()
+    {
+        // Arrange
+        var invalidEnum = (Animal)2;
+
+        // Act
+        invalidEnum.GetDescription();
+
+        // Assert is handled by the ExpectedException attribute
+    }
+
     #endregion GetDescription
 
     #region GetDescriptionOrName

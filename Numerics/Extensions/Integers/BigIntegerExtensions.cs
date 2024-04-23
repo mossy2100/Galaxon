@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Functional;
 
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.Integers;
 
 /// <summary>
 /// Extension methods for BigInteger.

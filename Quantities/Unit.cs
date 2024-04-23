@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.Integers;
 
 namespace Galaxon.Quantities;
 

@@ -6,6 +6,8 @@ namespace Galaxon.Tests.Core.Collections;
 [TestClass]
 public class DictionaryExtensionsTests
 {
+    #region HasUniqueValues
+
     [TestMethod]
     public void HasUniqueValues_EmptyDictionary_ReturnsTrue()
     {
@@ -55,6 +57,10 @@ public class DictionaryExtensionsTests
         Assert.IsFalse(result);
     }
 
+    #endregion HasUniqueValues
+
+    #region Flip
+
     [TestMethod]
     public void Flip_DictionaryWithUniqueValues_ReturnsFlippedDictionary()
     {
@@ -89,4 +95,6 @@ public class DictionaryExtensionsTests
         // Act & Assert
         Assert.ThrowsException<ArgumentInvalidException>(() => dict.Flip());
     }
+
+    #endregion Flip
 }

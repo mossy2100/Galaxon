@@ -1,4 +1,4 @@
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.Integers;
 
 /// <summary>Extension methods for long.</summary>
 public static class Int64Extensions

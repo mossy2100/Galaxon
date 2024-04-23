@@ -1,4 +1,4 @@
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.Integers;
 
 /// <summary>Extension methods for short.</summary>
 public static class Int16Extensions

@@ -1,7 +1,7 @@
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.Integers;
 
 /// <summary>Extension methods for sbyte.</summary>
-public static class SByteExtensions
+public static class Int8Extensions
 {
     /// <summary>
     /// Return the absolute value of an sbyte as a byte.

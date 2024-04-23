@@ -226,7 +226,7 @@ public static class ReflectionExtensions
         if (methodInfo == null)
         {
             throw new InvalidCastException(
-                $"No operator exists for converting from {sourceType.Name} to {targetType.Name}.");
+                $"No method exists for converting from {sourceType.Name} to {targetType.Name}.");
         }
 
         // Try to do the conversion.
@@ -236,7 +236,7 @@ public static class ReflectionExtensions
         try
         {
             result = methodInfo.Invoke(null, [src]);
-            // We'll assume a null result means the conversion failed.
+            // Since src is null, we'll assume a null result means the conversion failed.
             ok = result != null;
         }
         catch (Exception ex)

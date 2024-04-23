@@ -1,4 +1,4 @@
-﻿using Galaxon.Numerics.Extensions;
+﻿using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.UnitTesting;
 using static Galaxon.Numerics.Geometry.Angles;
 

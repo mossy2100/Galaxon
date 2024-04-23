@@ -3,7 +3,7 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;

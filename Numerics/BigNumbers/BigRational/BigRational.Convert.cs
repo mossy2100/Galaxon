@@ -1,5 +1,7 @@
 using System.Numerics;
 using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
+using Galaxon.Numerics.Extensions.Integers;
 
 namespace Galaxon.Numerics.BigNumbers;
 

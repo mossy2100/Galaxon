@@ -252,6 +252,31 @@
             <typeparam name="TResult">Result type.</typeparam>
             <returns>The memoized version of the pure function.</returns>
         </member>
+        <member name="T:Galaxon.Core.Strings.EBracketsType">
+            <summary>
+            Represents a list of bracket types for various use cases.
+            </summary>
+        </member>
+        <member name="F:Galaxon.Core.Strings.EBracketsType.Round">
+            <summary>
+            Round brackets or parentheses: ( and )
+            </summary>
+        </member>
+        <member name="F:Galaxon.Core.Strings.EBracketsType.Square">
+            <summary>
+            Square brackets: [ and ]
+            </summary>
+        </member>
+        <member name="F:Galaxon.Core.Strings.EBracketsType.Curly">
+            <summary>
+            Curly brackets or braces: { and }
+            </summary>
+        </member>
+        <member name="F:Galaxon.Core.Strings.EBracketsType.Angle">
+            <summary>
+            Angle brackets: &lt; and &gt;
+            </summary>
+        </member>
         <member name="T:Galaxon.Core.Strings.EStringCase">
             <summary>
             May extend later with LowerSnake, LowerCamel, UpperSnake, UpperCamel, but I'd prefer to keep it
@@ -345,41 +370,18 @@
             <returns>A new string that consists of 'n' repetitions of the input string.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when 'n' is negative.</exception>
         </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.PadBoth(System.String,System.Int32,System.Char,System.Boolean)">
+        <member name="M:Galaxon.Core.Strings.StringExtensions.StripBrackets(System.String,Galaxon.Core.Strings.EBracketsType)">
             <summary>
-            Pad a string at both ends to create a new string with a given total width.
-            If the total number of padding characters is odd, there will be one extra padding character
-            on the left.
-            If the total width is less than or equal to the original string length, the method will
-            return the original string without complaining.
-            This method is designed to have the same API and behaviour as PadLeft() and PadRight().
-            </summary>
-            <param name="s">The input string.</param>
-            <param name="totalWidth">The total width.</param>
-            <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
-            <param name="extraOnRight">
-            Flag to specify where to place the extra char if the number of padding chars is odd. Default
-            behaviour is to add it on the right. Set to false to add it on the left.
-            </param>
-            <returns>A new string with padding characters appended and prepended as needed.</returns>
-        </member>
-        <member name="M:Galaxon.Core.Strings.StringExtensions.StripBrackets(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-            Remove brackets (and whatever is between them) from a string.
+            Remove brackets, and whatever is between them, from a string.
             One use case is stripping HTML tags.
-            TODO Unit tests, if I decide to keep this method.
             </summary>
             <param name="str">The string to process.</param>
-            <param name="round">If round brackets should be removed.</param>
-            <param name="square">If square brackets should be removed</param>
-            <param name="curly">If curly brackets should be removed</param>
-            <param name="angle">If angle brackets should be removed</param>
+            <param name="bracketsType">The type of brackets to remove.</param>
             <returns>The string with brackets removed.</returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.StripTags(System.String)">
             <summary>
             Strip HTML tags from a string.
-            TODO Unit tests, if I decide to keep this method.
             </summary>
             <param name="str">The string to process.</param>
             <returns>The string with HTML tags removed.</returns>
@@ -393,7 +395,7 @@
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.IsPalindrome(System.String)">
             <summary>
-            Check if a string is a palindrome.
+            Check if a string is a palindrome. Case-sensitive.
             </summary>
         </member>
         <member name="F:Galaxon.Core.Strings.StringExtensions.SmallCapsChars">
@@ -439,6 +441,24 @@
             <param name="str">Source string.</param>
             <param name="stringCase">The string case to convert to.</param>
             <returns>The new string.</returns>
+        </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.PadBoth(System.String,System.Int32,System.Char,System.Boolean)">
+            <summary>
+            Pad a string at both ends to create a new string with a given total width.
+            If the total number of padding characters is odd, there will be one extra padding character
+            on the left.
+            If the total width is less than or equal to the original string length, the method will
+            return the original string without complaining.
+            This method is designed to have the same API and behaviour as PadLeft() and PadRight().
+            </summary>
+            <param name="s">The input string.</param>
+            <param name="totalWidth">The total width.</param>
+            <param name="paddingChar">The padding character. Defaults to a space (' ').</param>
+            <param name="extraOnRight">
+            Flag to specify where to place the extra char if the number of padding chars is odd. Default
+            behaviour is to add it on the right. Set to false to add it on the left.
+            </param>
+            <returns>A new string with padding characters appended and prepended as needed.</returns>
         </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ZeroPad(System.String,System.Int32)">
             <summary>

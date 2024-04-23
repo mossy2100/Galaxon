@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Types;
 
-namespace Galaxon.Numerics.Extensions;
+namespace Galaxon.Numerics.Extensions.FloatingPoint;
 
 /// <summary>Extension methods for IFloatingPoint{T}.</summary>
 public static class FloatingPointExtensions

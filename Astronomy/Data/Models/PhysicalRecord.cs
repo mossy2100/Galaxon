@@ -1,4 +1,4 @@
-﻿using Galaxon.Numerics.Extensions;
+﻿using Galaxon.Numerics.Extensions.FloatingPoint;
 
 namespace Galaxon.Astronomy.Data.Models;
 

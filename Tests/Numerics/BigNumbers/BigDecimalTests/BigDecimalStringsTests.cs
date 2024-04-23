@@ -1,7 +1,7 @@
 using System.Numerics;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.BigNumbers;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.Integers;
 
 namespace Galaxon.Tests.Numerics.BigNumbers.BigDecimalTests;
 

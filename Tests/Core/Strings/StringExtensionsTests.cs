@@ -221,6 +221,112 @@ public class StringExtensionsTests
 
     #endregion Repeat
 
+    #region StripBrackets
+
+    [TestMethod]
+    public void StripBrackets_ShouldRemoveRoundBracketsAndContents()
+    {
+        var input = "Hello (World)";
+        var expected = "Hello ";
+
+        var result = input.StripBrackets(EBracketsType.Round);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripBrackets_ShouldRemoveSquareBracketsAndContents()
+    {
+        var input = "Hello [World]";
+        var expected = "Hello ";
+
+        var result = input.StripBrackets(EBracketsType.Square);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripBrackets_ShouldRemoveCurlyBracketsAndContents()
+    {
+        var input = "Hello {World}";
+        var expected = "Hello ";
+
+        var result = input.StripBrackets(EBracketsType.Curly);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripBrackets_ShouldRemoveAngleBracketsAndContents()
+    {
+        var input = "Hello <World>";
+        var expected = "Hello ";
+
+        var result = input.StripBrackets(EBracketsType.Angle);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripBrackets_ShouldRemoveNothing()
+    {
+        var input = "Hello <World>";
+        var expected = "Hello <World>";
+
+        var result = input.StripBrackets(EBracketsType.Curly);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void StripBrackets_ShouldThrowWhenInvalidBracketType()
+    {
+        var input = "Hello <World>";
+
+        // This will throw as ((EBracketsType)5) is not a valid value of the EBracketsType enum
+        input.StripBrackets((EBracketsType)5);
+    }
+
+    #endregion StripBrackets
+
+    #region StripTags
+
+    [TestMethod]
+    public void StripTags_ShouldRemoveHtmlTags()
+    {
+        var input = "<h1>Hello World!</h1>";
+        var expected = "Hello World!";
+
+        var result = input.StripTags();
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripTags_ShouldHandleEmptyStrings()
+    {
+        var input = "";
+        var expected = "";
+
+        var result = input.StripTags();
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void StripTags_ShouldHandleStringsWithoutHtmlTags()
+    {
+        var input = "Hello World!";
+        var expected = "Hello World!";
+
+        var result = input.StripTags();
+
+        Assert.AreEqual(expected, result);
+    }
+
+    #endregion StripTags
+
     #region IsAscii
 
     [TestMethod]
@@ -724,7 +830,82 @@ public class StringExtensionsTests
         Assert.ThrowsException<InvalidOperationException>(() => input.SetCase(EStringCase.None));
     }
 
+    [TestMethod]
+    public void SetCase_InputHasNoLettersAndDesiredCaseIsNone_ReturnsSameString()
+    {
+        // Arrange
+        string input = "1234-5678";
+        string expected = "1234-5678";
+
+        // Act
+        string result = input.SetCase(EStringCase.None);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_DesiredCaseIsMixed_ReturnsSameString()
+    {
+        // Arrange
+        string input = "Phone 1300-TEST-CASE";
+        string expected = "Phone 1300-TEST-CASE";
+
+        // Act
+        string result = input.SetCase(EStringCase.Mixed);
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void SetCase_InvalidInput_ThrowsException()
+    {
+        var original = "original";
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => original.SetCase((EStringCase)10));
+    }
+
     #endregion SetCase
+
+    #region PadBoth
+
+    [TestMethod]
+    public void PadBoth_WithSpaces_EqualSpacing()
+    {
+        const string original = "Hello";
+        const string expected = "  Hello  ";
+
+        Assert.AreEqual(expected, original.PadBoth(9, ' '));
+    }
+
+    [TestMethod]
+    public void PadBoth_WithSpaces_ExtraOnLeft()
+    {
+        const string original = "Hello";
+        const string expected = "  Hello ";
+
+        Assert.AreEqual(expected, original.PadBoth(8, ' ', false));
+    }
+
+    [TestMethod]
+    public void PadBoth_WithSpaces_ExtraOnRight()
+    {
+        const string original = "Hello";
+        const string expected = " Hello  ";
+
+        Assert.AreEqual(expected, original.PadBoth(8, ' ', true));
+    }
+
+    [TestMethod]
+    public void PadBoth_WithStringLongerThanLength()
+    {
+        const string original = "Hello";
+        const string expected = "Hello";
+
+        Assert.AreEqual(expected, original.PadBoth(4, ' ', true));
+    }
+
+    #endregion PadBoth
 
     #region ZeroPad
 

@@ -17,6 +17,8 @@ public class EnumerableExtensionsTests
         public string? Name { get; set; }
     }
 
+    #region Diff
+
     [TestMethod]
     public void Diff_RemovesValuesFromList2FromList1()
     {
@@ -51,6 +53,10 @@ public class EnumerableExtensionsTests
         Assert.AreEqual("dog", result[0]);
         Assert.AreEqual("cat", result[1]);
     }
+
+    #endregion Diff
+
+    #region ToIndex
 
     [TestMethod]
     public void ToIndex_WithValidItems_ReturnsDictionary()
@@ -104,4 +110,6 @@ public class EnumerableExtensionsTests
         // Act
         _ = items.ToIndex();
     }
+
+    #endregion ToIndex
 }

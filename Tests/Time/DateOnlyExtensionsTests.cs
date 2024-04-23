@@ -1,4 +1,3 @@
-using System.Globalization;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Time;

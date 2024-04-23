@@ -6,7 +6,7 @@ using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;

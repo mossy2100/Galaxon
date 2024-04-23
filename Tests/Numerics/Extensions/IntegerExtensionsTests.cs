@@ -1,10 +1,10 @@
 using System.Diagnostics;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.Integers;
 
 namespace Galaxon.Tests.Numerics.Extensions;
 
 [TestClass]
-public class BinaryIntegerExtensionsTests
+public class IntegerExtensionsTests
 {
     #region Superscript and subscript
 
@@ -53,15 +53,15 @@ public class BinaryIntegerExtensionsTests
         string s2;
 
         s1 = "x2";
-        s2 = BinaryIntegerExtensions.DigitsToSuperscript(s1);
+        s2 = IntegerExtensions.DigitsToSuperscript(s1);
         Assert.AreEqual("x²", s2);
 
         s1 = "m/s2";
-        s2 = BinaryIntegerExtensions.DigitsToSuperscript(s1);
+        s2 = IntegerExtensions.DigitsToSuperscript(s1);
         Assert.AreEqual("m/s²", s2);
 
         s1 = "23";
-        s2 = "6.02 * 10" + BinaryIntegerExtensions.DigitsToSuperscript(s1);
+        s2 = "6.02 * 10" + IntegerExtensions.DigitsToSuperscript(s1);
         Assert.AreEqual("6.02 * 10²³", s2);
     }
 
@@ -72,15 +72,15 @@ public class BinaryIntegerExtensionsTests
         string s2;
 
         s1 = "CH4";
-        s2 = BinaryIntegerExtensions.DigitsToSubscript(s1);
+        s2 = IntegerExtensions.DigitsToSubscript(s1);
         Assert.AreEqual("CH₄", s2);
 
         s1 = "CH3OH";
-        s2 = BinaryIntegerExtensions.DigitsToSubscript(s1);
+        s2 = IntegerExtensions.DigitsToSubscript(s1);
         Assert.AreEqual("CH₃OH", s2);
 
         s1 = "v0";
-        s2 = BinaryIntegerExtensions.DigitsToSubscript(s1);
+        s2 = IntegerExtensions.DigitsToSubscript(s1);
         Assert.AreEqual("v₀", s2);
     }
 

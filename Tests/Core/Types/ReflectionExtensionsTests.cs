@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Galaxon.Core.Types;
 using Galaxon.Numerics.BigNumbers;
@@ -13,6 +14,29 @@ public class ReflectionExtensionsTests
 
         public static string SomeProperty => "Hello, world!";
     }
+
+    interface ITestInterface;
+
+    class TestClassWithInterface : ITestInterface;
+
+    class TestClassWithoutInterface;
+
+    interface ITestGenericInterface<T>;
+
+    class TestClassWithGenericInterface : ITestGenericInterface<string>;
+
+    class TestClassWithoutGenericInterface;
+
+    public interface ISelfReferencingInterface<TSelf>;
+
+    public class
+        ClassImplementingSelfReference : ISelfReferencingInterface<ClassImplementingSelfReference>;
+
+    public class
+        ClassImplementingNonSelfReference : ISelfReferencingInterface<
+        ClassImplementingSelfReference>;
+
+    public class ClassNotImplementingInterface;
 
     #region GetStaticFieldValue
 
@@ -330,12 +354,133 @@ public class ReflectionExtensionsTests
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidCastException))]
     public void Convert_WhenNoConversionExists_ThrowException()
     {
-        // Act & Assert
-        Assert.ThrowsException<InvalidCastException>(() =>
-            ReflectionExtensions.Convert<bool, DateTime>(true));
+        // Act.
+        ReflectionExtensions.Convert<long, GregorianCalendar>(1234L);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidCastException))]
+    public void Convert_CastFailed_ThrowException()
+    {
+        // Act.
+        ReflectionExtensions.Convert<bool, DateTime>(true);
     }
 
     #endregion Convert
+
+    #region ImplementsInterface
+
+    [TestMethod]
+    public void ImplementsInterface_ClassWithInterface_ReturnsTrue()
+    {
+        // Arrange
+        Type type = typeof(TestClassWithInterface);
+        Type interfaceType = typeof(ITestInterface);
+
+        // Act
+        bool result = ReflectionExtensions.ImplementsInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void ImplementsInterface_ClassWithoutInterface_ReturnsFalse()
+    {
+        // Arrange
+        Type type = typeof(TestClassWithoutInterface);
+        Type interfaceType = typeof(ITestInterface);
+
+        // Act
+        bool result = ReflectionExtensions.ImplementsInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion ImplementsInterface
+
+    #region ImplementsGenericInterface
+
+    [TestMethod]
+    public void ImplementsGenericInterface_GenericClass_ReturnsTrue()
+    {
+        // Arrange
+        Type type = typeof(TestClassWithGenericInterface);
+        Type interfaceType = typeof(ITestGenericInterface<>);
+
+        // Act
+        bool result = ReflectionExtensions.ImplementsGenericInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void ImplementsGenericInterface_NonGenericClass_ReturnsFalse()
+    {
+        // Arrange
+        Type type = typeof(TestClassWithoutGenericInterface);
+        Type interfaceType = typeof(ITestGenericInterface<>);
+
+        // Act
+        bool result = ReflectionExtensions.ImplementsGenericInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion ImplementsGenericInterface
+
+    #region ImplementsSelfReferencingGenericInterface
+
+    [TestMethod]
+    public void ImplementsSelfReferencingGenericInterface_WithCorrectSelfReference_ReturnsTrue()
+    {
+        // Arrange
+        Type type = typeof(ClassImplementingSelfReference);
+        Type interfaceType = typeof(ISelfReferencingInterface<>);
+
+        // Act
+        bool result =
+            ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void ImplementsSelfReferencingGenericInterface_WithIncorrectSelfReference_ReturnsFalse()
+    {
+        // Arrange
+        Type type = typeof(ClassImplementingNonSelfReference);
+        Type interfaceType = typeof(ISelfReferencingInterface<>);
+
+        // Act
+        bool result =
+            ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void ImplementsSelfReferencingGenericInterface_NotImplementingInterface_ReturnsFalse()
+    {
+        // Arrange
+        Type type = typeof(ClassNotImplementingInterface);
+        Type interfaceType = typeof(ISelfReferencingInterface<>);
+
+        // Act
+        bool result =
+            ReflectionExtensions.ImplementsSelfReferencingGenericInterface(type, interfaceType);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    #endregion ImplementsSelfReferencingGenericInterface
 }

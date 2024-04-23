@@ -1,7 +1,7 @@
 using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
-using Galaxon.Numerics.Extensions;
+using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 

@@ -6,8 +6,6 @@ namespace Galaxon.Tests.Core.Types;
 [TestClass]
 public class FieldExtensionsTests
 {
-    #region GetValue
-
     public class TestClass
     {
         public static string staticField = "Hello";
@@ -19,6 +17,8 @@ public class FieldExtensionsTests
 
         public string fieldWithoutDescription = "Pizza";
     }
+
+    #region GetValue
 
     [TestMethod]
     public void GetValue_StaticField_ReturnsCorrectValue()
