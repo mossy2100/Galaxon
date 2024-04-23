@@ -1,4 +1,3 @@
-using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Geometry;
 using GeoCoordinatePortable;
 
@@ -20,26 +19,27 @@ public class DistanceService
     /// <param name="radiusPolar">The polar radius in kilometres.</param>
     /// <returns>The distance between the two locations in kilometres.</returns>
     /// <remarks>
-    /// The formula used in this method is from Astronomical Algorithms 2nd ed. by
-    /// Jean Meeus, page 85. Unlike the Haversine formula, which assumes a spherical
-    /// body, Andoyer's method takes flattening into account. This algorithm was
-    /// designed for Earth and therefore assumes:
+    /// The formula used in this method is the higher-accuracy Andoyer's method as described on page 85
+    /// of Astronomical Algorithms 2nd ed. by Jean Meeus.
+    /// Unlike the Haversine formula, which assumes a spherical body, Andoyer's method takes
+    /// flattening into account. This algorithm was designed for Earth and therefore assumes:
     /// (a) the object is an oblate spheroid;
     /// (b) coordinates are given in degrees;
     /// (c) the usual coordinate system is used, i.e., latitude is in the range -90..90,
     ///     and longitude is in the range -180..180. Altitude is ignored.
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">If either location is unknown.</exception>
     public static double CalculateShortestDistanceBetween(GeoCoordinate location1,
         GeoCoordinate location2, double radiusEquat, double radiusPolar)
     {
         // Validate inputs.
         if (location1.IsUnknown)
         {
-            throw new ArgumentInvalidException(nameof(location1), "Cannot be unknown.");
+            throw new ArgumentOutOfRangeException(nameof(location1), "Cannot be unknown.");
         }
         if (location2.IsUnknown)
         {
-            throw new ArgumentInvalidException(nameof(location2), "Cannot be unknown.");
+            throw new ArgumentOutOfRangeException(nameof(location2), "Cannot be unknown.");
         }
 
         // Calculate the flattening.

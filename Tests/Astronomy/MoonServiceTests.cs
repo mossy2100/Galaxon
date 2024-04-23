@@ -1,5 +1,5 @@
 using System.Globalization;
-using Galaxon.Astronomy.Algorithms.Models;
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
@@ -127,40 +127,35 @@ public class MoonServiceTests
             .Where(lp => lp.DateTimeUtcUsno != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels)
             .ToList();
+        const int maxDiffSeconds = 120;
 
         // Check each.
         foreach (LunarPhase astroPixelsPhase in astroPixelsPhases)
         {
-            if (astroPixelsPhase.DateTimeUtcUsno == null)
-            {
-                continue;
-            }
-
+            // Act.
             MoonPhase myPhase =
                 MoonService.GetPhaseNearDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
-            myPhase.DateTimeUtc = DateTimeExtensions.RoundToNearestMinute(myPhase.DateTimeUtc);
 
-            // Assert
+            // Report on different type.
             if (astroPixelsPhase.Type != myPhase.Type)
             {
                 Console.WriteLine(
                     $"{astroPixelsPhase.Type.GetDescriptionOrName(),15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
             }
 
-            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
-
-            long diffMinutes =
+            // Calculate the difference in seconds between their and my calculations.
+            long diffSeconds =
                 (astroPixelsPhase.DateTimeUtcUsno.Value.Ticks - myPhase.DateTimeUtc.Ticks)
-                / TimeConstants.TICKS_PER_MINUTE;
-            if (diffMinutes > 1)
+                / TimeConstants.TICKS_PER_SECOND;
+            if (diffSeconds > maxDiffSeconds)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diffMinutes} minutes");
+                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diffSeconds} seconds");
             }
-            // else
-            // {
-            //     Assert.IsTrue(diffMinutes <= 1);
-            // }
+
+            // Assert.
+            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
+            Assert.IsTrue(diffSeconds <= maxDiffSeconds);
         }
     }
 

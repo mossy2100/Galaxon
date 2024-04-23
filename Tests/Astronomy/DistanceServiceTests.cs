@@ -21,9 +21,16 @@ public class DistanceServiceTests
         ServiceManager.Dispose();
     }
 
+    #region CalculateShortestDistanceBetween
+
+    /// <summary>
+    /// Test the algorithm for finding the distance between 2 locations on Earth's surface.
+    /// Compare with example 11.c on page 85 of Astronomical Algorithms 2nd ed. by Jean Meeus.
+    /// </summary>
     [TestMethod]
-    public void TestShortestDistance()
+    public void CalculateShortestDistanceBetween_Example11c_ReturnsCorrectResult()
     {
+        // Arrange.
         // Calculate distance in metres.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
@@ -45,7 +52,7 @@ public class DistanceServiceTests
         double long2 = Angles.DMSToDegrees(77, 3, 56);
         GeoCoordinate washington = new (lat2, long2);
 
-        // Calculate distance in metres.
+        // Act. Calculate distance in metres.
         double dist = earth.CalculateShortestDistanceBetween(paris, washington);
 
         // Assert.
@@ -53,4 +60,62 @@ public class DistanceServiceTests
         // metres).
         Assert.AreEqual(dist, 6_181_630, 5);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CalculateShortestDistanceBetween_UnknownLocation1_ThrowsException()
+    {
+        // Arrange.
+        // Calculate distance in metres.
+        AstroObjectRepository astroObjectRepository =
+            ServiceManager.GetService<AstroObjectRepository>();
+        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
+
+        if (earth == null)
+        {
+            Assert.Fail("Earth could not be found in the database.");
+            return;
+        }
+
+        // Unknown.
+        GeoCoordinate unknown = new ();
+
+        // Washington.
+        double lat2 = Angles.DMSToDegrees(38, 55, 17);
+        double long2 = Angles.DMSToDegrees(77, 3, 56);
+        GeoCoordinate washington = new (lat2, long2);
+
+        // Act. Calculate distance in metres.
+        double dist = earth.CalculateShortestDistanceBetween(unknown, washington);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CalculateShortestDistanceBetween_UnknownLocation2_ThrowsException()
+    {
+        // Arrange.
+        // Calculate distance in metres.
+        AstroObjectRepository astroObjectRepository =
+            ServiceManager.GetService<AstroObjectRepository>();
+        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
+
+        if (earth == null)
+        {
+            Assert.Fail("Earth could not be found in the database.");
+            return;
+        }
+
+        // Washington.
+        double lat2 = Angles.DMSToDegrees(38, 55, 17);
+        double long2 = Angles.DMSToDegrees(77, 3, 56);
+        GeoCoordinate washington = new (lat2, long2);
+
+        // Unknown.
+        GeoCoordinate unknown = new ();
+
+        // Act. Calculate distance in metres.
+        double dist = earth.CalculateShortestDistanceBetween(washington, unknown);
+    }
+
+    #endregion CalculateShortestDistanceBetween
 }

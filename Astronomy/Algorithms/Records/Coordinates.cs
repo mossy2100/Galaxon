@@ -1,3 +1,3 @@
 namespace Galaxon.Astronomy.Algorithms.Records;
 
-public record Coordinates(double Longitude, double Latitude, double Radius = 0);
+public record struct Coordinates(double Longitude, double Latitude, double Radius = 0);

@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Models;
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;

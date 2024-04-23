@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Models;
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
