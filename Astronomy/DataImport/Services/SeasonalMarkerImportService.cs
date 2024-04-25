@@ -90,7 +90,7 @@ public class SeasonalMarkerImportService
                             if (isSeasonalMarker)
                             {
                                 // Construct the SeasonalMarker record.
-                                SeasonalMarker newSeasonalMarker = new SeasonalMarker
+                                SeasonalMarkerRecord newSeasonalMarkerRecord = new SeasonalMarkerRecord
                                 {
                                     Type = seasonalMarkerType,
                                     DateTimeUtcUsno = dt
@@ -101,13 +101,13 @@ public class SeasonalMarkerImportService
                                     $"{seasonalMarkerTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
-                                SeasonalMarker? existingSeasonalMarker =
+                                SeasonalMarkerRecord? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
                                         sm.Type == seasonalMarkerType
                                         && sm.DateTimeUtcUsno.Year == year);
                                 if (existingSeasonalMarker == null)
                                 {
-                                    astroDbContext.SeasonalMarkers.Add(newSeasonalMarker);
+                                    astroDbContext.SeasonalMarkers.Add(newSeasonalMarkerRecord);
                                     await astroDbContext.SaveChangesAsync();
                                 }
                                 else if (existingSeasonalMarker.DateTimeUtcUsno != dt)

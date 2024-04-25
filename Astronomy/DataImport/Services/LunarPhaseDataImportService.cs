@@ -68,9 +68,9 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <param name="url"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<LunarPhase>> ImportAstroPixelsPage(string url)
+    public async Task<List<LunarPhaseRecord>> ImportAstroPixelsPage(string url)
     {
-        List<LunarPhase> lunarPhases = new ();
+        List<LunarPhaseRecord> lunarPhases = new ();
         JulianCalendar jc = new ();
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
 
@@ -171,7 +171,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                     }
 
                     // Construct the new LunarPhase and add it to the results.
-                    LunarPhase lunarPhase = new LunarPhase
+                    LunarPhaseRecord lunarPhase = new LunarPhaseRecord
                     {
                         Type = (ELunarPhaseType)phaseType,
                         DateTimeUtcAstroPixels = phaseDateTime
@@ -196,10 +196,10 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
         foreach (string url in urls)
         {
             // Get all the lunar phases on this page.
-            List<LunarPhase> lunarPhases = await ImportAstroPixelsPage(url);
+            List<LunarPhaseRecord> lunarPhases = await ImportAstroPixelsPage(url);
 
             // Loop through and add the new ones to the database.
-            foreach (LunarPhase lunarPhase in lunarPhases)
+            foreach (LunarPhaseRecord lunarPhase in lunarPhases)
             {
                 // See if this lunar phase is already in the database. If not, add it.
                 if (!astroDbContext.LunarPhases.Any(lp =>
@@ -269,7 +269,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                         Console.WriteLine($"{ulp.phase,20}: {dt.ToIsoString()}");
 
                         // See if we need to update or insert a record.
-                        LunarPhase? existingLunarPhase = astroDbContext.LunarPhases
+                        LunarPhaseRecord? existingLunarPhase = astroDbContext.LunarPhases
                             .Where(lp => lp.Type == lunarPhaseType)
                             .ToList()
                             .FirstOrDefault(lp =>
@@ -283,7 +283,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                         if (existingLunarPhase == null)
                         {
                             // Insert new record.
-                            LunarPhase newLunarPhase = new LunarPhase
+                            LunarPhaseRecord newLunarPhase = new LunarPhaseRecord
                             {
                                 Type = lunarPhaseType,
                                 DateTimeUtcUsno = dt

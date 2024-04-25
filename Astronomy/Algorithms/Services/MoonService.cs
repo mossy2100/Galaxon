@@ -49,16 +49,16 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="dt">The approximate DateTime of the phase.</param>
     /// <returns>The closest lunar phase.</returns>
-    public MoonPhase GetPhaseNearDateTimeHumble(DateTime dt)
+    public LunarPhase GetPhaseNearDateTimeHumble(DateTime dt)
     {
         // Look for a lunar phase in the database with a USNO datetime within 1 day.
-        LunarPhase? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
+        LunarPhaseRecord? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
             lp.DateTimeUtcUsno != null
             && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1);
         if (lunarPhase != null)
         {
             // We found a USNO calculation, so return that.
-            return new MoonPhase
+            return new LunarPhase
             {
                 Type = lunarPhase.Type,
                 DateTimeUtc = lunarPhase.DateTimeUtcUsno!.Value
@@ -72,7 +72,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         if (lunarPhase != null)
         {
             // We found an AstroPixels calculation, so return that.
-            return new MoonPhase
+            return new LunarPhase
             {
                 Type = lunarPhase.Type,
                 DateTimeUtc = lunarPhase.DateTimeUtcAstroPixels!.Value
@@ -94,16 +94,19 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="dt">Approximate DateTime of the phase.</param>
     /// <returns>
-    /// A LunarPhase object, which contains information about which phase it is, and the approximate
-    /// datetime of the event.
+    /// An object containing information about what type of phase it is, and the approximate
+    /// datetime of the event in UTC.
     /// </returns>
-    public static MoonPhase GetPhaseNearDateTime(DateTime dt)
+    public static LunarPhase GetPhaseNearDateTime(DateTime dt)
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
-        double k = (double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNATION;
-        int phaseNumber = (int)Round(k * 4.0);
-        k = phaseNumber / 4.0;
+        int phaseNumber = (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
+        double k = phaseNumber / 4.0;
+
+        // Get the Lunation Number and Phase Number.
+        int lunationNumber = (int)Floor(k);
+        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
 
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
@@ -169,7 +172,6 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
 
         // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can
         // be negative and we want a non-negative result.
-        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
         double C1;
         if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {
@@ -277,8 +279,26 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         // Convert the Julian Date (TT) to a DateTime (UT).
         DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
-        // Construct and return the MoonPhase object.
-        return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };
+        // Construct and return the LunarPhase object.
+        return new LunarPhase
+        {
+            LunationNumber = lunationNumber,
+            Type = phaseType,
+            DateTimeUtc = dtPhase
+        };
+    }
+
+    /// <summary>
+    /// Find the DateTime (UTC) of the next specified lunar phase closest to the given date.
+    /// </summary>
+    /// <param name="d">Approximate date of the phase.</param>
+    /// <returns>
+    /// An object containing information about what type of phase it is, and the approximate
+    /// datetime of the event in UTC.
+    /// </returns>
+    public static LunarPhase GetPhaseNearDate(DateOnly d)
+    {
+        return GetPhaseNearDateTime(d.ToDateTime());
     }
 
     /// <summary>
@@ -288,22 +308,22 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <param name="end">The end of the period.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns></returns>
-    public static List<MoonPhase> GetPhasesInPeriod(DateTime start, DateTime end,
+    public static List<LunarPhase> GetPhasesInPeriod(DateTime start, DateTime end,
         ELunarPhaseType? phaseType = null)
     {
-        List<MoonPhase> result = [];
+        List<LunarPhase> result = [];
 
         // Find the phase nearest to start.
-        MoonPhase phase = GetPhaseNearDateTime(start);
+        LunarPhase phase = GetPhaseNearDateTime(start);
 
         // If it's in range, add it.
-        if (phase.DateTimeUtc >= start)
+        if (phase.DateTimeUtc >= start && phase.DateTimeUtc <= end)
         {
             result.Add(phase);
         }
 
         // Get the average number of days between phases.
-        const double daysPerPhase = TimeConstants.DAYS_PER_LUNATION / 4.0;
+        const double daysPerPhase = TimeConstants.DAYS_PER_LUNATION / 4;
 
         // Iteratively jump forward to the approximate moment of the next phase, and find the
         // exact moment of the phase, until we reach the finish DateTime.
@@ -337,7 +357,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <param name="month">The month number.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<MoonPhase> GetPhasesInMonth(int year, int month,
+    public static List<LunarPhase> GetPhasesInMonth(int year, int month,
         ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
@@ -360,13 +380,13 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     }
 
     /// <summary>
-    /// Get the DateTimes of all occurrences of lunar phases (optionally restricted to the specified
+    /// Get the DateTimes of all occurrences of lunar phases (optionally restricted to a specific
     /// phase) in a given Gregorian calendar year (UTC).
     /// </summary>
     /// <param name="year">The year number.</param>
     /// <param name="phaseType">The phase type to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<MoonPhase> GetPhasesInYear(int year, ELunarPhaseType? phaseType = null)
+    public static List<LunarPhase> GetPhasesInYear(int year, ELunarPhaseType? phaseType = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -386,7 +406,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double CalcLengthOfLunation(double T)
+    public static double GetLengthOfLunation(double T)
     {
         return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
     }
@@ -397,13 +417,13 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="y">The year as a decimal.</param>
     /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double GetLengthOfLunation(double y)
+    public static double GetLengthOfLunationForYear(double y)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
         double jdut = TimeScales.DecimalYearToJulianDateUniversal(y);
         double jdtt = TimeScales.JulianDateUniversalToTerrestrial(jdut);
         double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
-        return CalcLengthOfLunation(T);
+        return GetLengthOfLunation(T);
     }
 
     #endregion Static methods

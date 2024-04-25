@@ -85,7 +85,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double CalcTropicalYearLengthInEphemerisDays(double T)
+    public static double GetTropicalYearLengthInEphemerisDays(double T)
     {
         // To limit the valid range to 8000 BCE - 12000 CE, convert these value to Julian centuries
         // since 2000. This will be approximate, as we won't factor in delta-T, but then delta-T is
@@ -109,7 +109,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double GetTropicalYearLengthInEphemerisDays(double year)
+    public static double GetTropicalYearLengthInEphemerisDaysForYear(double year)
     {
         // Check year is in valid range.
         if (year is < -7999 or > 12000)
@@ -124,7 +124,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
         double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
-        return CalcTropicalYearLengthInEphemerisDays(T);
+        return GetTropicalYearLengthInEphemerisDays(T);
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <returns>The tropical year length in solar days at that point in time.</returns>
     public static double GetTropicalYearLengthInSolarDays(double y)
     {
-        return GetTropicalYearLengthInEphemerisDays(y)
+        return GetTropicalYearLengthInEphemerisDaysForYear(y)
             * TimeConstants.SECONDS_PER_DAY
             / GetSolarDayLength(y);
     }

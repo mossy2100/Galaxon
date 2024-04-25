@@ -1,3 +1,6 @@
+using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Data;
+using Galaxon.Astronomy.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI;
@@ -8,14 +11,23 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // Usual stuff.
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddSwaggerGen();
 
+        // Add services to the container.
+        builder.Services.AddSingleton<AstroDbContext>();
+        builder.Services.AddSingleton<AstroObjectGroupRepository>();
+        builder.Services.AddSingleton<AstroObjectRepository>();
+        builder.Services.AddSingleton<PlanetService>();
+        builder.Services.AddSingleton<EarthService>();
+        builder.Services.AddSingleton<SunService>();
+        builder.Services.AddSingleton<SeasonalMarkerService>();
+
+        // Build.
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.

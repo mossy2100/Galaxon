@@ -3,14 +3,19 @@ using Galaxon.Astronomy.Data.Enums;
 namespace Galaxon.Astronomy.Algorithms.Records;
 
 /// <summary>
-/// This type is similar to, but different from, Galaxon.Astronomy.Data.Models.LunarPhase.
-/// That type represents a database record.
+/// This type is similar to, but different from, Galaxon.Astronomy.Data.Models.LunarPhaseRecord,
+/// which represents a database record.
 /// This type represents a specific lunar phase, usually a method result.
 /// </summary>
-public record struct MoonPhase
+public record struct LunarPhase
 {
     /// <summary>
-    /// This value is:
+    /// Meeus Lunation Number.
+    /// </summary>
+    public int LunationNumber { get; set; }
+
+    /// <summary>
+    /// Enum representing the lunar phase type.
     ///   0 = New Moon
     ///   1 = First Quarter
     ///   2 = Full Moon

@@ -389,7 +389,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         for (int y = 2000; y <= 9000; y += 1000)
         {
-            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDays(y);
+            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDaysForYear(y);
             double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
             double dayLengthSeconds = EarthService.GetSolarDayLength(y);
             Console.WriteLine($"Tropical year {y}");

@@ -52,10 +52,10 @@ public class SeasonalMarkerServiceTests
         TimeSpan maxDiff = TimeSpan.FromMinutes(2);
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
         SeasonalMarkerService seasonalMarkerService = ServiceManager.GetService<SeasonalMarkerService>();
-        List<SeasonalMarker> seasonalMarkers = astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
+        List<SeasonalMarkerRecord> seasonalMarkers = astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
 
         // Check each.
-        foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
+        foreach (SeasonalMarkerRecord seasonalMarker in seasonalMarkers)
         {
             // Arrange.
             DateTime expected = seasonalMarker.DateTimeUtcUsno;

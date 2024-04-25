@@ -57,9 +57,9 @@ public class AstroDbContext : DbContext
     // ---------------------------------------------------------------------------------------------
     // Other stuff.
 
-    public DbSet<SeasonalMarker> SeasonalMarkers => Set<SeasonalMarker>();
+    public DbSet<SeasonalMarkerRecord> SeasonalMarkers => Set<SeasonalMarkerRecord>();
 
-    public DbSet<LunarPhase> LunarPhases => Set<LunarPhase>();
+    public DbSet<LunarPhaseRecord> LunarPhases => Set<LunarPhaseRecord>();
 
     public DbSet<Apside> Apsides => Set<Apside>();
 

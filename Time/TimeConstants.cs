@@ -436,9 +436,14 @@ public static class TimeConstants
     public const double SECONDS_PER_LUNATION = DAYS_PER_LUNATION * SECONDS_PER_DAY;
 
     /// <summary>
-    /// Number of ticks in a lunation.
+    /// Number of ticks in the average lunation.
     /// </summary>
     public const long TICKS_PER_LUNATION = 25_514_428_775_904;
+
+    /// <summary>
+    /// Number of ticks between two lunar phases, on average.
+    /// </summary>
+    public const long TICKS_PER_LUNAR_PHASE = 6_378_607_193_976;
 
     #endregion Moon
 

@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
+/// <summary>
+/// Controller for API endpoints relating to lunar phases.
+/// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class LunarPhaseController : ControllerBase
 {
     private readonly ILogger<LunarPhaseController> _logger;
@@ -17,25 +20,19 @@ public class LunarPhaseController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    [Route("/LunarPhaseNearDate")]
-    public IActionResult GetLunarPhaseNear(DateTime dateTime)
+    [HttpGet("NearDate")]
+    public IActionResult GetLunarPhaseNearDate(string date)
     {
         try
         {
-            MoonPhase moonPhase = MoonService.GetPhaseNearDateTime(dateTime);
+            DateOnly d = DateOnly.Parse(date);
+            LunarPhase lunarPhase = MoonService.GetPhaseNearDate(d);
+            LunarPhaseDto dto = new (lunarPhase);
 
-            // Construct the result.
-            LunarPhaseDto result = new ()
-            {
-                PhaseType = moonPhase.Type.GetDescription(),
-                DateTimeUTC = $"{moonPhase.DateTimeUtc:s}"
-            };
-
-            _logger.LogInformation("Lunar phases calculated: {Result}", result);
+            _logger.LogInformation("Lunar phases calculated: {Result}", dto);
 
             // Return the lunar phase as HTTP response in JSON.
-            return Ok(result);
+            return Ok(dto);
         }
         catch (Exception ex)
         {
@@ -43,26 +40,50 @@ public class LunarPhaseController : ControllerBase
         }
     }
 
-    [HttpGet]
-    [Route("/LunarPhasesInYear")]
+    [HttpGet("InYear")]
     public IActionResult GetLunarPhasesInYear(int year)
     {
         try
         {
-            List<MoonPhase> moonPhases = MoonService.GetPhasesInYear(year);
+            List<LunarPhase> lunarPhases = MoonService.GetPhasesInYear(year);
 
             // Construct the result.
             List<LunarPhaseDto> results = [];
-            foreach (MoonPhase moonPhase in moonPhases)
+            foreach (LunarPhase lunarPhase in lunarPhases)
+            {
+                results.Add(new LunarPhaseDto(lunarPhase));
+            }
+
+            _logger.LogInformation("{Count} lunar phases found.", lunarPhases.Count);
+
+            // Return the lunar phases as HTTP response in JSON.
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return Program.ReturnException(this, ex, _logger);
+        }
+    }
+
+    [HttpGet("InMonth")]
+    public IActionResult GetLunarPhasesInMonth(int year, int month)
+    {
+        try
+        {
+            List<LunarPhase> lunarPhases = MoonService.GetPhasesInMonth(year, month);
+
+            // Construct the result.
+            List<LunarPhaseDto> results = [];
+            foreach (LunarPhase lunarPhase in lunarPhases)
             {
                 results.Add(new LunarPhaseDto
                 {
-                    PhaseType = moonPhase.Type.GetDescription(),
-                    DateTimeUTC = $"{moonPhase.DateTimeUtc:s}"
+                    Type = lunarPhase.Type.GetDescription(),
+                    DateTimeUTC = $"{lunarPhase.DateTimeUtc:s}"
                 });
             }
 
-            _logger.LogInformation("{Count} lunar phases found.", moonPhases.Count);
+            _logger.LogInformation("{Count} lunar phases found.", lunarPhases.Count);
 
             // Return the lunar phases as HTTP response in JSON.
             return Ok(results);

@@ -50,7 +50,7 @@ public class Program
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
-            .WriteTo.File(Path.Combine(solnDir, "logs/Astronomy.DataImport.log"))
+            .WriteTo.File(Path.Combine(solnDir, "logs/Galaxon.Astronomy.DataImport.log"))
             .CreateLogger();
     }
 

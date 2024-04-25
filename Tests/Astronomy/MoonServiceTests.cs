@@ -34,7 +34,7 @@ public class MoonServiceTests
         DateTime dtApprox = new (1977, 2, 15);
 
         // Act
-        MoonPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
+        LunarPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.NewMoon, phase.Type);
@@ -55,7 +55,7 @@ public class MoonServiceTests
         DateTime dtApprox = new (2044, 1, 20);
 
         // Act
-        MoonPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
+        LunarPhase phase = MoonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.Type);
@@ -76,17 +76,17 @@ public class MoonServiceTests
     {
         // Arrange
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        List<LunarPhase> phasesFromDb = astroDbContext.LunarPhases
+        List<LunarPhaseRecord> phasesFromDb = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcAstroPixels != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels).ToList();
         const double maxDiffSeconds = 320;
         double maxDiffSecondsFound = 0;
 
         // Check each.
-        foreach (LunarPhase phaseFromDb in phasesFromDb)
+        foreach (LunarPhaseRecord phaseFromDb in phasesFromDb)
         {
             // Act.
-            MoonPhase phaseFromMethod =
+            LunarPhase phaseFromMethod =
                 MoonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcAstroPixels!.Value);
 
             // Report on different type.
@@ -124,7 +124,7 @@ public class MoonServiceTests
     {
         // Arrange
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        List<LunarPhase> phasesFromDb = astroDbContext.LunarPhases
+        List<LunarPhaseRecord> phasesFromDb = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcUsno != null)
             .OrderBy(lp => lp.DateTimeUtcUsno)
             .ToList();
@@ -132,10 +132,10 @@ public class MoonServiceTests
         double maxDiffSecondsFound = 0;
 
         // Check each.
-        foreach (LunarPhase phaseFromDb in phasesFromDb)
+        foreach (LunarPhaseRecord phaseFromDb in phasesFromDb)
         {
             // Act.
-            MoonPhase phaseFromMethod =
+            LunarPhase phaseFromMethod =
                 MoonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcUsno!.Value);
 
             // Report on different type.

@@ -555,9 +555,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<MoonPhase> newMoons =
+        List<LunarPhase> newMoons =
             MoonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
-        foreach (MoonPhase newMoon in newMoons)
+        foreach (LunarPhase newMoon in newMoons)
         {
             // Get Ls.
             (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.DateTimeUtc);
@@ -644,7 +644,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
                     ESeasonalMarkerType.SouthernSolstice);
 
             // Check if there's also a New Moon at this time.
-            MoonPhase newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
+            LunarPhase newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
             if (newMoon.Type != ELunarPhaseType.NewMoon)
             {
                 continue;

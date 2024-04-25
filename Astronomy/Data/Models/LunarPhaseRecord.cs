@@ -2,10 +2,15 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class LunarPhase : DataObject
+public class LunarPhaseRecord : DataObject
 {
     /// <summary>
-    /// This value is:
+    /// Meeus Lunation Number.
+    /// </summary>
+    public int LunationNumber { get; set; }
+
+    /// <summary>
+    /// Integer representing the lunar phase type.
     ///   0 = New Moon
     ///   1 = First Quarter
     ///   2 = Full Moon
@@ -15,7 +20,7 @@ public class LunarPhase : DataObject
     public ELunarPhaseType Type { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the lunar phase according to AstroPixels..
+    /// The UTC datetime of the lunar phase according to AstroPixels.
     /// </summary>
     [Column(TypeName = "datetime2")]
     public DateTime? DateTimeUtcAstroPixels { get; set; }

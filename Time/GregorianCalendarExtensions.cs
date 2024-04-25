@@ -247,15 +247,9 @@ public static class GregorianCalendarExtensions
         CheckMonth(month);
 
         // There isn't a DateTime constructor that allows us to specify the time of day with
-        // resolution of 1 tick (the best is microsecond), so instead, we get the start point of the
-        // following month and subtract 1 tick.
-        if (month == 12)
-        {
-            month = 1;
-            year++;
-        }
-
-        return GetMonthStart(year, month, kind).Subtract(new TimeSpan(1));
+        // resolution of 1 tick (the best is microsecond), so instead, we'll add the number of ticks
+        // in the month less 1.
+        return GetMonthStart(year, month, kind) + new TimeSpan(GetTicksInMonth(year, month) - 1);
     }
 
     /// <summary>

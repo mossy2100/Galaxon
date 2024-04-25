@@ -1,3 +1,4 @@
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -145,7 +146,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
             jdtt = GetSeasonalMarkerMean(-1000, markerType);
             for (int i = -1000; i > year; i--)
             {
-                jdtt -= EarthService.GetTropicalYearLengthInEphemerisDays(year);
+                jdtt -= EarthService.GetTropicalYearLengthInEphemerisDaysForYear(year);
             }
         }
         else if (year > 3000)
@@ -153,7 +154,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
             jdtt = GetSeasonalMarkerMean(3000, markerType);
             for (int i = 3000; i < year; i++)
             {
-                jdtt += EarthService.GetTropicalYearLengthInEphemerisDays(year);
+                jdtt += EarthService.GetTropicalYearLengthInEphemerisDaysForYear(year);
             }
         }
         else
@@ -239,7 +240,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     public double GetSeasonalMarker(int year, ESeasonalMarkerType markerType)
     {
         // Get an approximate time for the event.
-        double jdtt = GetSeasonalMarkerMeanExpanded(year, markerType);
+        double jdtt = GetSeasonalMarkerMean(year, markerType);
 
         // Find the target Ls in radians (0, π/2, -π, or -π/2).
         double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
@@ -256,8 +257,29 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a DateTime (UT).</returns>
     public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
     {
-        return TimeScales.JulianDateTerrestrialToDateTimeUniversal(
-            GetSeasonalMarker(year, markerType));
+        double jdtt = GetSeasonalMarker(year, markerType);
+        return TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+    }
+
+    /// <summary>
+    /// Get all four seasonal markers in a year.
+    /// </summary>
+    /// <param name="year">The year (-1000..3000)</param>
+    /// <returns>The result as a collection of SeasonalMarker objects.</returns>
+    public List<SeasonalMarker> GetSeasonalMarkersInYear(int year)
+    {
+        List<SeasonalMarker> results = new ();
+
+        foreach (ESeasonalMarkerType markerType in Enum.GetValues(typeof(ESeasonalMarkerType)))
+        {
+            results.Add(new SeasonalMarker
+            {
+                Type = markerType,
+                DateTimeUtc = GetSeasonalMarkerAsDateTime(year, markerType)
+            });
+        }
+
+        return results;
     }
 
     /// <summary>
@@ -272,7 +294,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     public DateTime GetSeasonalMarkerAsDateTimeHumble(int year, ESeasonalMarkerType markerType)
     {
         // Look for a matching seasonal marker in the database with a USNO datetime.
-        SeasonalMarker? seasonalMarker =
+        SeasonalMarkerRecord? seasonalMarker =
             astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
                 sm.Type == markerType && sm.DateTimeUtcUsno.Year == year);
         if (seasonalMarker != null)
@@ -285,7 +307,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     }
 
     /// <summary>
-    /// Calculate the moment of the Besselian New Year (Ls=280°) at the end of a given Gregorian
+    /// Calculate the moment of the "Besselian New Year" (Ls=280°) at the end of a given Gregorian
     /// year.
     /// Note, the result could be early in the following year.
     /// </summary>
@@ -295,7 +317,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     {
         // Get the approximate moment of the Southern Solstice (which occurs at Ls=270°) as a
         // Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMeanExpanded(year, ESeasonalMarkerType.SouthernSolstice);
+        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
 
         // Add 10° (in days) to get the approximate moment when Ls=280°.
         jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;

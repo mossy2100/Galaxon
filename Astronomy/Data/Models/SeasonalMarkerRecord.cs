@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class SeasonalMarker : DataObject
+public class SeasonalMarkerRecord : DataObject
 {
     /// <summary>
     /// This value is:
