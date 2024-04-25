@@ -21,7 +21,7 @@ public static class DateTimeExtensions
     /// <summary>
     /// Format the date using ISO format YYYY-MM-DDThh:mm:ss.
     /// This format is useful for databases.
-    /// The time zone is not shown. For that, call ToString() with the format specifier "U" or
+    /// The time zone is not shown. For that, call ToString() with the format specifier "u" for
     /// UniversalSortableDateTimePattern.
     /// See
     /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring?view=net-7.0"/>
@@ -30,8 +30,7 @@ public static class DateTimeExtensions
     /// <returns>A string representing the datetime in ISO format.</returns>
     public static string ToIsoString(this DateTime date)
     {
-        DateTimeFormatInfo dtfi = new ();
-        return date.ToString(dtfi.SortableDateTimePattern);
+        return $"{date:s}";
     }
 
     #endregion Formatting

@@ -1,48 +1,75 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Time;
+using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
+using Galaxon.Core.Types;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class LunarPhaseController(ILogger<LunarPhaseController> logger) : ControllerBase
+public class LunarPhaseController : ControllerBase
 {
+    private readonly ILogger<LunarPhaseController> _logger;
+
+    public LunarPhaseController(ILogger<LunarPhaseController> logger)
+    {
+        _logger = logger;
+    }
+
     [HttpGet]
-    public IActionResult GetLunarPhase(DateTime dateTime)
+    [Route("/LunarPhaseNearDate")]
+    public IActionResult GetLunarPhaseNear(DateTime dateTime)
     {
         try
         {
             MoonPhase moonPhase = MoonService.GetPhaseNearDateTime(dateTime);
 
             // Construct the result.
-            var result = new
+            LunarPhaseDto result = new ()
             {
-                PhaseType = moonPhase.Type.ToString(),
-                DateTimeUtc = moonPhase.DateTimeUtc.ToIsoString()
+                PhaseType = moonPhase.Type.GetDescription(),
+                DateTimeUTC = $"{moonPhase.DateTimeUtc:s}"
             };
 
-            logger.LogInformation("Lunar phases calculated: {Result}", result);
+            _logger.LogInformation("Lunar phases calculated: {Result}", result);
 
             // Return the lunar phase as HTTP response in JSON.
             return Ok(result);
         }
         catch (Exception ex)
         {
-            // Return exception details in JSON format.
-            string errorMessage = ex.Message;
-            if (ex.InnerException != null)
-            {
-                errorMessage += $"; {ex.InnerException.Message}";
-            }
-            logger.LogError("Error calculating lunar phases: {ErrorMessage}", errorMessage);
+            return Program.ReturnException(this, ex, _logger);
+        }
+    }
 
-            return StatusCode(500, new
+    [HttpGet]
+    [Route("/LunarPhasesInYear")]
+    public IActionResult GetLunarPhasesInYear(int year)
+    {
+        try
+        {
+            List<MoonPhase> moonPhases = MoonService.GetPhasesInYear(year);
+
+            // Construct the result.
+            List<LunarPhaseDto> results = [];
+            foreach (MoonPhase moonPhase in moonPhases)
             {
-                Error =
-                    "There was an error calculating the lunar phase. The error has been logged. Please email shaun@astromultimedia.com if you have questions."
-            });
+                results.Add(new LunarPhaseDto
+                {
+                    PhaseType = moonPhase.Type.GetDescription(),
+                    DateTimeUTC = $"{moonPhase.DateTimeUtc:s}"
+                });
+            }
+
+            _logger.LogInformation("{Count} lunar phases found.", moonPhases.Count);
+
+            // Return the lunar phases as HTTP response in JSON.
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return Program.ReturnException(this, ex, _logger);
         }
     }
 }
