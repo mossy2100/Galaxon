@@ -7,19 +7,4 @@ namespace Galaxon.Astronomy.Algorithms.Records;
 /// That type represents a database record.
 /// This type represents a specific seasonal marker, usually a method result.
 /// </summary>
-public record struct SeasonalMarker
-{
-    /// <summary>
-    /// This value is:
-    ///   0 = Northward (March) Equinox
-    ///   1 = Northern (June) Solstice
-    ///   2 = Southward (September) Equinox
-    ///   3 = Southern (December) Solstice
-    /// </summary>
-    public ESeasonalMarkerType Type { get; init; }
-
-    /// <summary>
-    /// The UTC datetime of the seasonal marker.
-    /// </summary>
-    public DateTime DateTimeUtc { get; init; }
-}
+public record struct SeasonalMarker(ESeasonalMarkerType Type, DateTime DateTimeUtc);

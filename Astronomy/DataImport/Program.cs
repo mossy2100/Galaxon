@@ -23,8 +23,8 @@ public class Program
         {
             // await ImportDwarfPlanets();
             // await ImportNaturalSatellites();
-            // await ImportLunarPhases();
-            await ImportLeapSeconds();
+            await ImportLunarPhases();
+            // await ImportLeapSeconds();
         }
         catch (Exception ex)
         {
@@ -136,8 +136,8 @@ public class Program
     {
         LunarPhaseDataImportService lunarPhaseDataImportService =
             _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
-        // await lunarPhaseDataImportService.ImportAstroPixels();
-        await lunarPhaseDataImportService.ImportUsno();
+        await lunarPhaseDataImportService.ImportAstroPixels();
+        // await lunarPhaseDataImportService.ImportUsno();
     }
 
     public static async Task ImportSeasonalMarkers()

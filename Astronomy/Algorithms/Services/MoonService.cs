@@ -51,32 +51,28 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <returns>The closest lunar phase.</returns>
     public LunarPhase GetPhaseNearDateTimeHumble(DateTime dt)
     {
-        // Look for a lunar phase in the database with a USNO datetime within 1 day.
+        // Look for a lunar phase in the database with a USNO datetime within 24 hours.
         LunarPhaseRecord? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
             lp.DateTimeUtcUsno != null
-            && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcUsno, dt)!.Value) <= 1);
+            && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
+            <= TimeConstants.HOURS_PER_DAY);
         if (lunarPhase != null)
         {
             // We found a USNO calculation, so return that.
-            return new LunarPhase
-            {
-                Type = lunarPhase.Type,
-                DateTimeUtc = lunarPhase.DateTimeUtcUsno!.Value
-            };
+            return new LunarPhase(lunarPhase.LunationNumber, lunarPhase.Type,
+                lunarPhase.DateTimeUtcUsno!.Value);
         }
 
-        // Look for a lunar phase in the database with an AstroPixels datetime within 1 day.
+        // Look for a lunar phase in the database with an AstroPixels datetime within 24 hours.
         lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
             lp.DateTimeUtcAstroPixels != null
-            && Abs(EF.Functions.DateDiffDay(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1);
+            && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!.Value)
+            <= TimeConstants.HOURS_PER_DAY);
         if (lunarPhase != null)
         {
             // We found an AstroPixels calculation, so return that.
-            return new LunarPhase
-            {
-                Type = lunarPhase.Type,
-                DateTimeUtc = lunarPhase.DateTimeUtcAstroPixels!.Value
-            };
+            return new LunarPhase(lunarPhase.LunationNumber, lunarPhase.Type,
+                lunarPhase.DateTimeUtcAstroPixels!.Value);
         }
 
         // Use my calculation.
@@ -101,11 +97,14 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
-        int phaseNumber = (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
+        int phaseNumber =
+            (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
         double k = phaseNumber / 4.0;
 
-        // Get the Lunation Number and Phase Number.
+        // Get the lunation number and phase type.
         int lunationNumber = (int)Floor(k);
+        // Have to use Mod() here instead of % because phaseNumber can be negative and we want a
+        // positive result.
         ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
 
         // Calculate T and powers of T.
@@ -280,12 +279,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Construct and return the LunarPhase object.
-        return new LunarPhase
-        {
-            LunationNumber = lunationNumber,
-            Type = phaseType,
-            DateTimeUtc = dtPhase
-        };
+        return new LunarPhase(lunationNumber, phaseType, dtPhase);
     }
 
     /// <summary>

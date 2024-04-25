@@ -268,18 +268,11 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a collection of SeasonalMarker objects.</returns>
     public List<SeasonalMarker> GetSeasonalMarkersInYear(int year)
     {
-        List<SeasonalMarker> results = new ();
-
-        foreach (ESeasonalMarkerType markerType in Enum.GetValues(typeof(ESeasonalMarkerType)))
-        {
-            results.Add(new SeasonalMarker
-            {
-                Type = markerType,
-                DateTimeUtc = GetSeasonalMarkerAsDateTime(year, markerType)
-            });
-        }
-
-        return results;
+        return Enum.GetValues(typeof(ESeasonalMarkerType))
+            .Cast<ESeasonalMarkerType>()
+            .Select(markerType =>
+                new SeasonalMarker(markerType, GetSeasonalMarkerAsDateTime(year, markerType)))
+            .ToList();
     }
 
     /// <summary>

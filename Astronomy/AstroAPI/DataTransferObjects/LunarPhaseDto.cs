@@ -27,9 +27,9 @@ public record struct LunarPhaseDto
     /// <summary>
     /// Construct from internal type.
     /// </summary>
-    /// <param name="lunarPhase"></param>
     public LunarPhaseDto(LunarPhase lunarPhase)
     {
+        LunationNumber = lunarPhase.LunationNumber;
         Type = lunarPhase.Type.GetDescription();
         DateTimeUTC = $"{lunarPhase.DateTimeUtc:s}";
     }

@@ -76,11 +76,7 @@ public class LunarPhaseController : ControllerBase
             List<LunarPhaseDto> results = [];
             foreach (LunarPhase lunarPhase in lunarPhases)
             {
-                results.Add(new LunarPhaseDto
-                {
-                    Type = lunarPhase.Type.GetDescription(),
-                    DateTimeUTC = $"{lunarPhase.DateTimeUtc:s}"
-                });
+                results.Add(new LunarPhaseDto(lunarPhase));
             }
 
             _logger.LogInformation("{Count} lunar phases found.", lunarPhases.Count);
