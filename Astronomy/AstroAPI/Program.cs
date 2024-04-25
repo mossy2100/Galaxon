@@ -4,7 +4,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
         builder.Services.AddAuthorization();
@@ -20,6 +20,14 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+            // The default HSTS value is 30 days. You may want to change this for production
+            // scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
         }
 
         app.UseHttpsRedirection();
