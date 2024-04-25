@@ -114,7 +114,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         double T3 = T * T2;
         double T4 = T * T3;
 
-        // Calculate jdtt.
+        // Calculate Julian Date (TT).
         jdtt = 2_451_550.097_66
             + 29.530_588_861 * k
             + 0.000_154_37 * T2
@@ -125,13 +125,13 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         double E = 1 - 0.002_516 * T - 0.000_0074 * T2;
         double E2 = E * E;
 
-        // Calculate Sun's mean anomaly at time jdtt (radians).
+        // Calculate Sun's mean anomaly (radians).
         double M = Angles.DegreesToRadiansWithWrap(2.5534
             + 29.105_356_70 * k
             - 0.000_001_4 * T2
             - 0.000_000_11 * T3);
 
-        // Calculate Luna's mean anomaly at time jdtt (radians).
+        // Calculate Luna's mean anomaly (radians).
         double L = Angles.DegreesToRadiansWithWrap(201.5643
             + 385.816_935_28 * k
             + 0.010_758_2 * T2
@@ -167,7 +167,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         double A13 = Angles.DegreesToRadiansWithWrap(239.56 + 25.513_099 * k);
         double A14 = Angles.DegreesToRadiansWithWrap(331.55 + 3.592_518 * k);
 
-        // I'm using FloorMod() here instead of the modulo operator (%) because the phaseNumber can
+        // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can
         // be negative and we want a non-negative result.
         ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseNumber, 4);
         double C1;
@@ -274,10 +274,10 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         // Apply corrections.
         jdtt += C1 + C2;
 
-        // Convert the jdtt to a UTC DateTime.
+        // Convert the Julian Date (TT) to a DateTime (UT).
         DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
-        // Construct and return the LunarPhase object.
+        // Construct and return the MoonPhase object.
         return new MoonPhase { Type = phaseType, DateTimeUtc = dtPhase };
     }
 

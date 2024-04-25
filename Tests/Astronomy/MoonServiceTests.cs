@@ -69,50 +69,51 @@ public class MoonServiceTests
     }
 
     /// <summary>
-    /// Compare my lunar phase algorithm with data from the AstroPixels ephmeris.
+    /// Compare my lunar phase algorithm with data from the AstroPixels ephemeris.
     /// </summary>
     [TestMethod]
     public void GetPhasesInYear_CompareWithAstroPixels()
     {
-        int maxDiff = 60;
-
         // Arrange
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        List<LunarPhase> astroPixelsPhases = astroDbContext.LunarPhases
+        List<LunarPhase> phasesFromDb = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcAstroPixels != null)
             .OrderBy(lp => lp.DateTimeUtcAstroPixels).ToList();
+        const double maxDiffSeconds = 320;
+        double maxDiffSecondsFound = 0;
 
         // Check each.
-        foreach (LunarPhase astroPixelsPhase in astroPixelsPhases)
+        foreach (LunarPhase phaseFromDb in phasesFromDb)
         {
-            if (astroPixelsPhase.DateTimeUtcAstroPixels == null)
-            {
-                continue;
-            }
+            // Act.
+            MoonPhase phaseFromMethod =
+                MoonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcAstroPixels!.Value);
 
-            MoonPhase myPhase =
-                MoonService.GetPhaseNearDateTime(astroPixelsPhase.DateTimeUtcAstroPixels.Value);
-
-            // Assert
-            if (astroPixelsPhase.Type != myPhase.Type)
+            // Report on different type.
+            if (phaseFromDb.Type != phaseFromMethod.Type)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
+                    $"{phaseFromDb.Type,15}: {phaseFromDb.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {phaseFromMethod.Type,15}: {phaseFromMethod.DateTimeUtc.ToIsoString()}");
             }
 
-            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
+            // Calculate the difference in seconds between their and my calculations.
+            TimeSpan diff = phaseFromDb.DateTimeUtcAstroPixels.Value - phaseFromMethod.DateTimeUtc;
+            // if (diff.TotalSeconds > maxDiffSeconds)
+            // {
+            //     Console.WriteLine(
+            //         $"{phaseFromDb.Type,15}: {phaseFromDb.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {phaseFromMethod.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
+            // }
+            if (diff.TotalSeconds > maxDiffSecondsFound)
+            {
+                maxDiffSecondsFound = diff.TotalSeconds;
+            }
 
-            TimeSpan diff = astroPixelsPhase.DateTimeUtcAstroPixels.Value - myPhase.DateTimeUtc;
-            if (diff.TotalSeconds > maxDiff)
-            {
-                Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F2} s");
-            }
-            else
-            {
-                Assert.IsTrue(diff.TotalSeconds <= maxDiff);
-            }
+            // Assert.
+            Assert.AreEqual(phaseFromDb.Type, phaseFromMethod.Type);
+            Assert.IsTrue(diff.TotalSeconds <= maxDiffSeconds);
         }
+
+        Console.WriteLine($"Maximum difference found was {maxDiffSecondsFound:F2} seconds.");
     }
 
     /// <summary>
@@ -123,40 +124,45 @@ public class MoonServiceTests
     {
         // Arrange
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        List<LunarPhase> astroPixelsPhases = astroDbContext.LunarPhases
+        List<LunarPhase> phasesFromDb = astroDbContext.LunarPhases
             .Where(lp => lp.DateTimeUtcUsno != null)
-            .OrderBy(lp => lp.DateTimeUtcAstroPixels)
+            .OrderBy(lp => lp.DateTimeUtcUsno)
             .ToList();
-        const int maxDiffSeconds = 120;
+        const double maxDiffSeconds = 121;
+        double maxDiffSecondsFound = 0;
 
         // Check each.
-        foreach (LunarPhase astroPixelsPhase in astroPixelsPhases)
+        foreach (LunarPhase phaseFromDb in phasesFromDb)
         {
             // Act.
-            MoonPhase myPhase =
-                MoonService.GetPhaseNearDateTime(astroPixelsPhase.DateTimeUtcUsno.Value);
+            MoonPhase phaseFromMethod =
+                MoonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcUsno!.Value);
 
             // Report on different type.
-            if (astroPixelsPhase.Type != myPhase.Type)
+            if (phaseFromDb.Type != phaseFromMethod.Type)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type.GetDescriptionOrName(),15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.Type,15}: {myPhase.DateTimeUtc.ToIsoString()}");
+                    $"{phaseFromDb.Type.GetDescriptionOrName(),15}: {phaseFromDb.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseFromMethod.Type,15}: {phaseFromMethod.DateTimeUtc.ToIsoString()}");
             }
 
             // Calculate the difference in seconds between their and my calculations.
-            long diffSeconds =
-                (astroPixelsPhase.DateTimeUtcUsno.Value.Ticks - myPhase.DateTimeUtc.Ticks)
-                / TimeConstants.TICKS_PER_SECOND;
-            if (diffSeconds > maxDiffSeconds)
+            TimeSpan diff = phaseFromDb.DateTimeUtcUsno.Value - phaseFromMethod.DateTimeUtc;
+            if (diff.TotalSeconds > maxDiffSeconds)
             {
                 Console.WriteLine(
-                    $"{astroPixelsPhase.Type,15}: {astroPixelsPhase.DateTimeUtcUsno.Value.ToIsoString()} c.f. {myPhase.DateTimeUtc.ToIsoString()} = {diffSeconds} seconds");
+                    $"{phaseFromDb.Type,15}: {phaseFromDb.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseFromMethod.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F1} seconds");
+            }
+            if (diff.TotalSeconds > maxDiffSecondsFound)
+            {
+                maxDiffSecondsFound = diff.TotalSeconds;
             }
 
             // Assert.
-            Assert.AreEqual(astroPixelsPhase.Type, myPhase.Type);
-            Assert.IsTrue(diffSeconds <= maxDiffSeconds);
+            Assert.AreEqual(phaseFromDb.Type, phaseFromMethod.Type);
+            Assert.IsTrue(diff.TotalSeconds <= maxDiffSeconds);
         }
+
+        Console.WriteLine($"Maximum difference found was {maxDiffSecondsFound:F2} seconds.");
     }
 
     /// <summary>

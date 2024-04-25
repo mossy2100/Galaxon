@@ -7,8 +7,7 @@ namespace Galaxon.Astronomy.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class LunarPhaseController(ILogger<LunarPhaseController> logger)
-    : ControllerBase
+public class LunarPhaseController(ILogger<LunarPhaseController> logger) : ControllerBase
 {
     [HttpGet]
     public IActionResult GetLunarPhase(DateTime dateTime)
