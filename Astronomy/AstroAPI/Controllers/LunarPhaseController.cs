@@ -3,7 +3,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Galaxon.Astronomy.API.Controllers;
+namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
