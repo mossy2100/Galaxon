@@ -5,10 +5,10 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
-using Galaxon.Core.Types;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
+using Microsoft.OpenApi.Extensions;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.ConsoleApp.Services;
@@ -659,7 +659,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             Console.WriteLine();
             Console.WriteLine($"Alignment in year {y}:");
             Console.WriteLine($"{"Southern Solstice",20}: {solstice:R}");
-            Console.WriteLine($"{newMoon.Phase.GetDescriptionOrName(),20}: {newMoon.DateTimeUtc:R}");
+            Console.WriteLine($"{newMoon.Phase.GetDisplayName(),20}: {newMoon.DateTimeUtc:R}");
             Console.WriteLine(
                 $"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }

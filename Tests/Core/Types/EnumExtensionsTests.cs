@@ -1,4 +1,5 @@
 using Galaxon.Core.Types;
+using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Tests.Core.Types;
 
@@ -9,82 +10,9 @@ public class EnumExtensionsTests
     {
         Cat,
 
-        [System.ComponentModel.Description("Good boy")]
+        [Display("Good boy")]
         Dog
     }
-
-    #region GetDescription
-
-    [TestMethod]
-    public void GetDescription_FieldWithoutDescription_ReturnsEmptyString()
-    {
-        // Arrange
-        string expected = "";
-
-        // Act
-        string actual = Animal.Cat.GetDescription();
-
-        // Assert
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void GetDescription_FieldWithDescription_ReturnsDescription()
-    {
-        // Arrange
-        string expected = "Good boy";
-
-        // Act
-        string actual = Animal.Dog.GetDescription();
-
-        // Assert
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentOutOfRangeException))]
-    public void GetDescription_InvalidEnum_ThrowsException()
-    {
-        // Arrange
-        var invalidEnum = (Animal)2;
-
-        // Act
-        invalidEnum.GetDescription();
-
-        // Assert is handled by the ExpectedException attribute
-    }
-
-    #endregion GetDescription
-
-    #region GetDescriptionOrName
-
-    [TestMethod]
-    public void GetDescriptionOrName_FieldWithoutDescription_ReturnsName()
-    {
-        // Arrange
-        string expected = "Cat";
-
-        // Act
-        string actual = Animal.Cat.GetDescriptionOrName();
-
-        // Assert
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void GetDescriptionOrName_FieldWithDescription_ReturnsDescription()
-    {
-        // Arrange
-        string expected = "Good boy";
-
-        // Act
-        string actual = Animal.Dog.GetDescriptionOrName();
-
-        // Assert
-        Assert.AreEqual(expected, actual);
-    }
-
-    #endregion GetDescriptionOrName
 
     #region TryParse
 
@@ -104,7 +32,7 @@ public class EnumExtensionsTests
     }
 
     [TestMethod]
-    public void TryParse_EnumDescription_ReturnsTrue()
+    public void TryParse_EnumDisplay_ReturnsTrue()
     {
         // Arrange
         string description = "Good boy";
@@ -119,11 +47,11 @@ public class EnumExtensionsTests
     }
 
     [TestMethod]
-    public void TryParse_InvalidNameOrDescription_ReturnsFalse()
+    public void TryParse_InvalidDisplayName_ReturnsFalse()
     {
         // Arrange
         string invalid = "Invalid";
-        Animal defaultValue = default(Animal);
+        Animal defaultValue = default;
 
         // Act
         bool result = EnumExtensions.TryParse(invalid, out Animal actual);

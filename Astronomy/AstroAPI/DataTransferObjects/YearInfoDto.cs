@@ -20,9 +20,13 @@ public record struct YearInfoDto
 
     public double StartOfYearJulianDate { get; init; }
 
+    public int Century { get; init; }
+
+    public int Millennium { get; init; }
+
     public YearInfoDto(int year, bool isLeapYear, string yearType, int numberOfDays,
         bool hasLeapSecond, DateOnly? leapSecondDate, DayOfWeek firstDayOfYearDayOfWeek,
-        double startOfYearJulianDate)
+        double startOfYearJulianDate, int century, int millennium)
     {
         Year = year;
         IsLeapYear = isLeapYear;
@@ -32,5 +36,7 @@ public record struct YearInfoDto
         LeapSecondDate = leapSecondDate?.ToString("O");
         FirstDayOfYearDayOfWeek = firstDayOfYearDayOfWeek.GetDisplayName();
         StartOfYearJulianDate = startOfYearJulianDate;
+        Century = century;
+        Millennium = millennium;
     }
 }

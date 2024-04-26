@@ -20,6 +20,7 @@
 
     <ItemGroup>
         <PackageReference Include="DecimalMath.DecimalEx" Version="1.0.2"/>
+        <PackageReference Include="Microsoft.OpenApi" Version="1.6.14" />
         <PackageReference Include="MSTest.TestFramework" Version="3.2.2" />
     </ItemGroup>
 

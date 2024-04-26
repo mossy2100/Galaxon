@@ -72,7 +72,7 @@ public class SeasonalMarkerServiceTests
             // if (diff > goalMaxDiff)
             // {
             //     Console.WriteLine(
-            //         $"{seasonalMarker.Type.GetDescription(),60}: {seasonalMarker.DateTimeUtcUsno.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
+            //         $"{seasonalMarker.Marker.GetDisplayName(),60}: {seasonalMarker.DateTimeUtcUsno.ToIsoString()} c.f. {dt.ToIsoString()} = {diff} minutes");
             // }
         }
 

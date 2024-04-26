@@ -4,8 +4,8 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Core.Types;
 using Galaxon.Time;
+using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Tests.Astronomy;
 
@@ -143,7 +143,7 @@ public class MoonServiceTests
             if (phaseEventRecord.PhaseNumber != (int)phaseEventCalculation.Phase)
             {
                 Console.WriteLine(
-                    $"{phaseEventRecordPhase.GetDescriptionOrName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Phase,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
+                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Phase,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
             }
 
             // Calculate the difference in seconds between their and my calculations.
@@ -151,7 +151,7 @@ public class MoonServiceTests
             if (diff.TotalSeconds > maxDiffSeconds)
             {
                 Console.WriteLine(
-                    $"{phaseEventRecordPhase.GetDescriptionOrName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F1} seconds");
+                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F1} seconds");
             }
             if (diff.TotalSeconds > maxDiffSecondsFound)
             {

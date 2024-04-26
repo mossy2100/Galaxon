@@ -3,8 +3,8 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
-using Galaxon.Core.Types;
 using Galaxon.Time;
+using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
@@ -90,13 +90,13 @@ public class SeasonalMarkerImportService
                             if (isSeasonalMarker)
                             {
                                 // Construct the SeasonalMarker record.
-                                SeasonalMarkerRecord newSeasonalMarkerRecord = new SeasonalMarkerRecord
-                                {
-                                    MarkerNumber = (int)seasonalMarker,
-                                    DateTimeUtcUsno = dt
-                                };
-                                string seasonalMarkerTypeName =
-                                    seasonalMarker.GetDescriptionOrName();
+                                SeasonalMarkerRecord newSeasonalMarkerRecord =
+                                    new SeasonalMarkerRecord
+                                    {
+                                        MarkerNumber = (int)seasonalMarker,
+                                        DateTimeUtcUsno = dt
+                                    };
+                                string seasonalMarkerTypeName = seasonalMarker.GetDisplayName();
                                 Console.WriteLine(
                                     $"{seasonalMarkerTypeName,60}: {dt.ToIsoString()}");
 
@@ -124,7 +124,7 @@ public class SeasonalMarkerImportService
                                     Type = apsideType,
                                     DateTimeUtcUsno = dt
                                 };
-                                string apsideTypeName = apsideType.GetDescriptionOrName();
+                                string apsideTypeName = apsideType.GetDisplayName();
                                 Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.

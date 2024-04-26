@@ -31,8 +31,12 @@ public class GregorianCalendarController(
             double jdut = TimeScales.DateOnlyToJulianDate(firstDayOfYear);
             GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
             DayOfWeek dayOfWeek = gc.GetDayOfWeek(firstDayOfYear.ToDateTime());
+            int century = (year - 1) / 100 + 1;
+            int millennium = (year - 1) / 1000 + 1;
+
+            // Construct result.
             YearInfoDto dto = new (year, isLeapYear, yearType, nDays, hasLeapSecond, leapSecondDate,
-                dayOfWeek, jdut);
+                dayOfWeek, jdut, century, millennium);
 
             // Log it.
             logger.LogInformation(

@@ -1,5 +1,5 @@
-using System.ComponentModel;
 using System.Reflection;
+using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Core.Types;
 
@@ -21,13 +21,15 @@ public static class FieldInfoExtensions
     }
 
     /// <summary>
-    /// Get the value of the Description attribute for a field.
-    /// If there is no Description attribute, returns an empty string.
+    /// Get the value of the Display attribute for a field.
+    /// If there is no Display attribute, return an empty string.
     /// </summary>
     /// <param name="field">A FieldInfo object.</param>
-    /// <returns>The field's description.</returns>
-    public static string GetDescription(this FieldInfo field)
+    /// <returns>The field's display name.</returns>
+    public static string GetDisplayName(this FieldInfo field)
     {
-        return (field.GetCustomAttribute(typeof(DescriptionAttribute), true) is DescriptionAttribute attr) ? attr.Description : "";
+        return (field.GetCustomAttribute(typeof(DisplayAttribute), true) is DisplayAttribute attr)
+            ? attr.Name
+            : "";
     }
 }

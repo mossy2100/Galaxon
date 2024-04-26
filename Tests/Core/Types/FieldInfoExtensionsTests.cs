@@ -1,5 +1,6 @@
 using System.Reflection;
 using Galaxon.Core.Types;
+using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Tests.Core.Types;
 
@@ -12,7 +13,7 @@ public class FieldExtensionsTests
 
         public string instanceField = "World";
 
-        [System.ComponentModel.Description("Coder's breakfast")]
+        [Display("Coder's breakfast")]
         public string fieldWithDescription = "Coffee";
 
         public string fieldWithoutDescription = "Pizza";
@@ -48,33 +49,33 @@ public class FieldExtensionsTests
 
     #endregion GetValue
 
-    #region GetDescription
+    #region GetDisplayName
 
     [TestMethod]
-    public void GetDescription_FieldWithDescriptionAttribute_ReturnsDescription()
+    public void GetDisplayName_FieldWithDescriptionAttribute_ReturnsDescription()
     {
         // Arrange
         FieldInfo? fieldInfo = typeof(TestClass).GetField("fieldWithDescription");
 
         // Act
-        string description = fieldInfo!.GetDescription();
+        string description = fieldInfo!.GetDisplayName();
 
         // Assert
         Assert.AreEqual("Coder's breakfast", description);
     }
 
     [TestMethod]
-    public void GetDescription_FieldWithoutDescriptionAttribute_ReturnsEmptyString()
+    public void GetDisplayName_FieldWithoutDescriptionAttribute_ReturnsEmptyString()
     {
         // Arrange
         FieldInfo? fieldInfo = typeof(TestClass).GetField("fieldWithoutDescription");
 
         // Act
-        string description = fieldInfo!.GetDescription();
+        string description = fieldInfo!.GetDisplayName();
 
         // Assert
         Assert.AreEqual("", description);
     }
 
-    #endregion GetDescription
+    #endregion GetDisplayName
 }
