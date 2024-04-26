@@ -25,12 +25,12 @@ public static class ColorUtility
     public static double GetPerceivedLightness(this Color color)
     {
         // Convert RGB values to linear values.
-        var r = Linearize(color.Red);
-        var g = Linearize(color.Green);
-        var b = Linearize(color.Blue);
+        double r = Linearize(color.Red);
+        double g = Linearize(color.Green);
+        double b = Linearize(color.Blue);
 
         // Calculate luminance.
-        var y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        double y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
         // Find perceived lightness.
         return y <= 216.0 / 24389

@@ -27,7 +27,7 @@ internal static class TextUtility
         // Set the font style if specified.
         if (bold || italic)
         {
-            var attr = FontAttributes.None;
+            FontAttributes attr = FontAttributes.None;
             if (bold)
             {
                 attr |= FontAttributes.Bold;
@@ -82,7 +82,7 @@ internal static class TextUtility
 
     public static FormattedString StyleText(string text, string styleName)
     {
-        var style = ResourceUtility.LookupStyle(styleName);
+        Style? style = ResourceUtility.LookupStyle(styleName);
         return CreateFormattedString(text, style: style);
     }
 
@@ -105,7 +105,7 @@ internal static class TextUtility
         {
             Text = CollapseWhitespace(text),
             FontSize = fontSize,
-            FontAttributes = fontAttributes,
+            FontAttributes = fontAttributes
         };
 
         // Get the last label in the layout.
@@ -145,26 +145,26 @@ internal static class TextUtility
                 // Create a new Label if necessary.
                 if (node.Name is "p" or "h1" or "h2" or "li" or "br")
                 {
-                    var topMargin = node.Name switch
+                    int topMargin = node.Name switch
                     {
                         "br" => 0,
                         "li" => node == node.ParentNode.ChildNodes[0] ? _DefaultMargin : 0,
-                        _ => _DefaultMargin,
+                        _ => _DefaultMargin
                     };
-                    var bottomMargin = node.Name switch
+                    int bottomMargin = node.Name switch
                     {
                         "br" => 0,
                         "li" => node == node.ParentNode.ChildNodes[^1] ? _DefaultMargin : 0,
-                        _ => _DefaultMargin,
+                        _ => _DefaultMargin
                     };
                     layout.Add(new Label
                     {
-                        Margin = new Thickness(0, topMargin, 0, bottomMargin),
+                        Margin = new Thickness(0, topMargin, 0, bottomMargin)
                     });
                 }
 
                 // Determine the font attributes.
-                var fontAttributes = parentFontAttributes;
+                FontAttributes fontAttributes = parentFontAttributes;
                 switch (node.Name)
                 {
                     case "b" or "strong":
@@ -177,11 +177,11 @@ internal static class TextUtility
                 }
 
                 // Determine the font size.
-                var fontSize = node.Name switch
+                int fontSize = node.Name switch
                 {
                     "h1" => 24,
                     "h2" => 20,
-                    _ => parentFontSize,
+                    _ => parentFontSize
                 };
 
                 // Handle unordered lists.
@@ -194,7 +194,7 @@ internal static class TextUtility
                 if (node.HasChildNodes)
                 {
                     // Add new labels and spans for each child node.
-                    foreach (var childNode in node.ChildNodes)
+                    foreach (HtmlNode? childNode in node.ChildNodes)
                     {
                         ProcessHtmlDocument(childNode, fontSize, fontAttributes, layout);
                     }
@@ -207,7 +207,7 @@ internal static class TextUtility
 
             case HtmlNodeType.Document:
                 // Add new spans for each child node.
-                foreach (var childNode in node.ChildNodes)
+                foreach (HtmlNode? childNode in node.ChildNodes)
                 {
                     ProcessHtmlDocument(childNode, parentFontSize, parentFontAttributes, layout);
                 }
@@ -225,7 +225,7 @@ internal static class TextUtility
     public static async Task LoadHtmlIntoLayout(string filename, Layout layout)
     {
         // Load the HTML.
-        await using var stream = await FileSystem.OpenAppPackageFileAsync(filename);
+        await using Stream stream = await FileSystem.OpenAppPackageFileAsync(filename);
         var doc = new HtmlDocument();
         doc.Load(stream);
 
@@ -239,12 +239,12 @@ internal static class TextUtility
     public static void SetLayoutTextColor(Layout layout)
     {
         // Get the text color.
-        var textColor = Application.Current!.RequestedTheme == AppTheme.Light
+        Color? textColor = Application.Current!.RequestedTheme == AppTheme.Light
             ? Colors.Black
             : Colors.White;
 
         // Change the color of every label and span in the layout.
-        foreach (var item in layout)
+        foreach (IView? item in layout)
         {
             // Ignore non-labels.
             if (item is not Label label)
@@ -258,7 +258,7 @@ internal static class TextUtility
             // Update the color of any spans in the label.
             if (label.FormattedText is { Spans.Count: > 0 })
             {
-                foreach (var span in label.FormattedText.Spans)
+                foreach (Span? span in label.FormattedText.Spans)
                 {
                     span.TextColor = textColor;
                 }
@@ -272,7 +272,7 @@ internal static class TextUtility
         {
             BackgroundColor = Colors.Grey,
             WidthRequest = width,
-            HeightRequest = 1,
+            HeightRequest = 1
         };
     }
 }

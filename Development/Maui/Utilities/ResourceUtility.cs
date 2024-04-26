@@ -5,28 +5,28 @@ public static class ResourceUtility
     public static T? LookupResource<T>(string resourceName, ContentPage? page = null)
     {
         // 1. Look in the page.
-        if (page != null && page.Resources.TryGetValue(resourceName, out var resource))
+        if (page != null && page.Resources.TryGetValue(resourceName, out object? resource))
         {
             return (T)resource;
         }
 
         // 2. Look in the app resources. This is where I usually put custom styles.
-        var app = Application.Current;
+        Application? app = Application.Current;
         if (app == null)
         {
             return default(T);
         }
-        var appResources = app.Resources;
+        ResourceDictionary appResources = app.Resources;
         if (appResources.TryGetValue(resourceName, out resource))
         {
             return (T)resource;
         }
 
         // 3. Look in the merged dictionaries (Styles.xml and Colors.xml).
-        var resourceDicts = appResources.MergedDictionaries;
+        ICollection<ResourceDictionary>? resourceDicts = appResources.MergedDictionaries;
         if (resourceDicts is { Count: > 0 })
         {
-            foreach (var resourceDict in resourceDicts)
+            foreach (ResourceDictionary resourceDict in resourceDicts)
             {
                 if (resourceDict.TryGetValue(resourceName, out resource))
                 {

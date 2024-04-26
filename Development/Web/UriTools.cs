@@ -17,7 +17,7 @@ public static class UriTools
     public static string MakeSlug(string str)
     {
         // Convert to ASCII.
-        var result = str.Transliterate();
+        string? result = str.Transliterate();
 
         // Remove apostrophes.
         result = result.Replace("'", "");

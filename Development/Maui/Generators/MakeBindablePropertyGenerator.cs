@@ -16,22 +16,22 @@ public class MakeBindablePropertyGenerator : ISourceGenerator
     public void Execute(GeneratorExecutionContext context)
     {
         // Logic to find fields marked with [Bindable] and generate properties
-        foreach (var syntaxTree in context.Compilation.SyntaxTrees)
+        foreach (SyntaxTree syntaxTree in context.Compilation.SyntaxTrees)
         {
-            var root = syntaxTree.GetRoot();
-            var fields = root.DescendantNodes().OfType<FieldDeclarationSyntax>();
+            SyntaxNode root = syntaxTree.GetRoot();
+            IEnumerable<FieldDeclarationSyntax> fields = root.DescendantNodes().OfType<FieldDeclarationSyntax>();
 
-            foreach (var field in fields)
+            foreach (FieldDeclarationSyntax field in fields)
             {
-                var hasBindableAttribute = field.AttributeLists
+                bool hasBindableAttribute = field.AttributeLists
                     .SelectMany(a => a.Attributes)
                     .Any(a => a.Name.ToString() == "MakeBindableProperty");
 
                 if (hasBindableAttribute)
                 {
-                    var fieldName = field.Declaration.Variables.First().Identifier.ValueText;
-                    var fieldType = field.Declaration.Type.ToString();
-                    var propertyCode = GeneratePropertyCode(fieldName, fieldType);
+                    string fieldName = field.Declaration.Variables.First().Identifier.ValueText;
+                    string fieldType = field.Declaration.Type.ToString();
+                    string propertyCode = GeneratePropertyCode(fieldName, fieldType);
                     context.AddSource($"{fieldName}_property.cs",
                         SourceText.From(propertyCode, Encoding.UTF8));
                 }
@@ -53,7 +53,7 @@ public class MakeBindablePropertyGenerator : ISourceGenerator
 
     private string GeneratePropertyCode(string fieldName, string fieldType)
     {
-        var propertyName = PropertyNameFromFieldName(fieldName);
+        string propertyName = PropertyNameFromFieldName(fieldName);
         return $@"
 private {fieldType} {fieldName};
 

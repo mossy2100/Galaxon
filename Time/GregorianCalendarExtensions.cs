@@ -410,7 +410,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="year">The Gregorian Calendar year number (AD/CE).</param>
     /// <returns>If the year is a leap year.</returns>
-    private static bool IsLeapYear(int year)
+    public static bool IsLeapYear(int year)
     {
         return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
     }

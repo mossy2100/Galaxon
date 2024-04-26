@@ -67,12 +67,15 @@ public class Program
         {
             errorMessage += $" ({ex.InnerException.Message})";
         }
+
         logger.LogError("Error: {ErrorMessage}", errorMessage);
 
         return source.StatusCode(500, new
         {
             Error =
-                "There was an error. It has been logged. Please email shaun@astromultimedia.com if you have questions. About this API, I mean. Not just whatever random stuff is on your mind."
+                "There was an error. It has been logged. Please email shaun@astromultimedia.com if you have questions. About this API, I mean. Not just whatever random stuff is on your mind.",
+            Exception = ex.Message,
+            InnerException = ex.InnerException?.Message
         });
     }
 }
