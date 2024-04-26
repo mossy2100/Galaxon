@@ -61,7 +61,7 @@ public class AstroDbContext : DbContext
 
     public DbSet<LunarPhaseRecord> LunarPhases => Set<LunarPhaseRecord>();
 
-    public DbSet<Apside> Apsides => Set<Apside>();
+    public DbSet<ApsideEvent> Apsides => Set<ApsideEvent>();
 
     public DbSet<EasterDate> EasterDates => Set<EasterDate>();
 

@@ -1,6 +1,6 @@
 namespace Galaxon.Astronomy.Data.Enums;
 
-public enum EApsideType
+public enum EApside
 {
     Periapsis = 0,
 

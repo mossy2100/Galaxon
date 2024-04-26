@@ -43,7 +43,7 @@ public class SeasonalMarkerImportService
                         {
                             bool isSeasonalMarker;
                             ESeasonalMarker seasonalMarker = default;
-                            EApsideType apsideType = default;
+                            EApside apside = default;
 
                             // Get the seasonal marker or apside type.
                             if (usm.month == 3 && usm.phenom == "Equinox")
@@ -69,12 +69,12 @@ public class SeasonalMarkerImportService
                             else if (usm.phenom == "Perihelion")
                             {
                                 isSeasonalMarker = false;
-                                apsideType = EApsideType.Periapsis;
+                                apside = EApside.Periapsis;
                             }
                             else if (usm.phenom == "Aphelion")
                             {
                                 isSeasonalMarker = false;
-                                apsideType = EApsideType.Apoapsis;
+                                apside = EApside.Apoapsis;
                             }
                             else
                             {
@@ -119,22 +119,22 @@ public class SeasonalMarkerImportService
                             else
                             {
                                 // Construct the Apside record.
-                                Apside newApside = new Apside
+                                ApsideEvent newApsideEvent = new ()
                                 {
-                                    Type = apsideType,
+                                    ApsideNumber = (int)apside,
                                     DateTimeUtcUsno = dt
                                 };
-                                string apsideTypeName = apsideType.GetDisplayName();
+                                string apsideTypeName = apside.GetDisplayName();
                                 Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
-                                Apside? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
-                                    a.Type == apsideType
+                                ApsideEvent? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
+                                    a.ApsideNumber == (int)apside
                                     && a.DateTimeUtcUsno.Year == year
                                     && a.DateTimeUtcUsno.Month == usm.month);
                                 if (existingApside == null)
                                 {
-                                    astroDbContext.Apsides.Add(newApside);
+                                    astroDbContext.Apsides.Add(newApsideEvent);
                                     await astroDbContext.SaveChangesAsync();
                                 }
                                 else if (existingApside.DateTimeUtcUsno != dt)

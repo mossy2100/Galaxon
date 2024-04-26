@@ -506,9 +506,9 @@
         </member>
         <member name="M:Galaxon.Core.Types.EnumExtensions.TryParse``1(System.String,``0@)">
             <summary>
-            Similar to Enum.TryParse(), this method finds an enum value given a name or description.
-            If no values are found with a matching name, looks for a match on description.
-            Must match exactly (case-sensitive) the value's name or description.
+            Similar to Enum.TryParse(), this method finds an enum value given a name or display name.
+            If no values are found with a matching name, looks for a match on display name.
+            Must match exactly (case-sensitive) one or the other.
             </summary>
             <param name="displayName">The enum value's name or display name.</param>
             <param name="value">The matching enum value, or default if not found.</param>

@@ -1,8 +1,6 @@
-using Galaxon.Astronomy.Data.Enums;
-
 namespace Galaxon.Astronomy.Data.Models;
 
-public class Apside : DataObject
+public class ApsideEvent : DataObject
 {
     /// <summary>
     /// This value is:
@@ -10,7 +8,7 @@ public class Apside : DataObject
     ///   1 = Apoapsis (aphelion, apogee, etc.)
     /// </summary>
     [Column(TypeName = "tinyint")]
-    public EApsideType Type { get; set; }
+    public int ApsideNumber { get; set; }
 
     /// <summary>
     /// The UTC datetime of the apside according to USNO.
