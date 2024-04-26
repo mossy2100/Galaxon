@@ -39,7 +39,7 @@ public class MakeBindablePropertyGenerator : ISourceGenerator
         }
     }
 
-    private string PropertyNameFromFieldName(string fieldName)
+    private static string PropertyNameFromFieldName(string fieldName)
     {
         if (char.IsUpper(fieldName[0]))
         {

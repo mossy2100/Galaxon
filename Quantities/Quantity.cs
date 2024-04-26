@@ -119,7 +119,7 @@ public class Quantity
 
     internal const string RxsPrefixBase = @"(?<prefixBase>[a-zΩ°""'″′]{1,6})";
 
-    internal const string RxsUnit = $@"(?<unit>{RxsPrefixBase}{RxsUnitExp})";
+    internal const string RxsUnit = $"(?<unit>{RxsPrefixBase}{RxsUnitExp})";
 
     internal const string RxsOp = @"(?<op>[\*⋅/])";
 
@@ -135,11 +135,11 @@ public class Quantity
         $"(?<currencyPrefix>[{UnitPrefix.CurrencyPrefixes}]?)";
 
     internal const string RxsMoney =
-        $@"({RxsSign}{RxsCurrencySymbol}{RxsDecimal}{RxsCurrencyPrefix}{RxsOpUnit}*)";
+        $"({RxsSign}{RxsCurrencySymbol}{RxsDecimal}{RxsCurrencyPrefix}{RxsOpUnit}*)";
 
     internal const string RxsDouble = @"(?<amt>([-+]?\d+(\.\d+)?(e[-+]?\d+)?)?)";
 
-    internal const string RxsCompoundUnit = $@"(?<compound>(?<op>/?){RxsUnit}{RxsOpUnit}*)";
+    internal const string RxsCompoundUnit = $"(?<compound>(?<op>/?){RxsUnit}{RxsOpUnit}*)";
 
     internal const string RxsPhysical = $"{RxsDouble} ?{RxsCompoundUnit}";
 

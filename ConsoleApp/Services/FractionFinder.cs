@@ -11,7 +11,6 @@ public class FractionFinder
         double frac = avg - whole;
         Console.WriteLine($"Average = {avg}");
         Console.WriteLine($"Fraction = {frac}");
-        double smallestDiff = double.MaxValue;
         int bestNum = 0;
         int bestDen = 0;
 
@@ -26,7 +25,6 @@ public class FractionFinder
             {
                 double diffInSeconds = TimeSpanExtensions.Convert(diff, timeUnit, ETimeUnit.Second);
                 Console.WriteLine($"Found fraction {num}/{den} = {frac2}. Difference = {diffInSeconds} seconds per year.");
-                smallestDiff = diff;
                 bestNum = num;
                 bestDen = den;
             }

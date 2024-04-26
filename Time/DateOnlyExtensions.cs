@@ -146,7 +146,7 @@ public static class DateOnlyExtensions
     /// <returns>The resulting date.</returns>
     public static DateOnly AddWeeks(this DateOnly date, int weeks)
     {
-        return date.AddDays(weeks * (int)TimeConstants.DAYS_PER_WEEK);
+        return date.AddDays(weeks * TimeConstants.DAYS_PER_WEEK);
     }
 
     /// <summary>

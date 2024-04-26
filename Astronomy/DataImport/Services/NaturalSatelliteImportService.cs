@@ -12,8 +12,7 @@ public class NaturalSatelliteImportService
     {
         AstroDbContext astroDbContext = new ();
         AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository =
-            new (astroDbContext, astroObjectGroupRepository);
+        AstroObjectRepository astroObjectRepository = new (astroDbContext);
 
         try
         {

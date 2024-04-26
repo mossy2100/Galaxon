@@ -96,7 +96,7 @@ public static class TropicalYear
 
     public static void GetAverageLengthInSolarDaysPerMillennium()
     {
-        Console.WriteLine($"Average tropical year length in solar days:");
+        Console.WriteLine("Average tropical year length in solar days:");
         for (int c = 2; c < 10; c++)
         {
             int minYear = c * 1000;

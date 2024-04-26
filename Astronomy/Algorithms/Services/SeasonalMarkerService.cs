@@ -62,7 +62,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <param name="year">The year (Gregorian) in the range -1000..3000.</param>
     /// <param name="marker">The seasonal marker (as enum).</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarkerMean(int year, ESeasonalMarker marker)
+    public static double GetSeasonalMarkerMean(int year, ESeasonalMarker marker)
     {
         // Check year is in valid range.
         if (year is < -1000 or > 3000)

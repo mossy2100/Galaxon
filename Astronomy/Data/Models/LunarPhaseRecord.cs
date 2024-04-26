@@ -1,6 +1,4 @@
-﻿using Galaxon.Astronomy.Data.Enums;
-
-namespace Galaxon.Astronomy.Data.Models;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
 public class LunarPhaseRecord : DataObject
 {

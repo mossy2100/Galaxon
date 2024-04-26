@@ -1,6 +1,6 @@
 namespace Galaxon.Maui.Attributes;
 
-[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Field)]
 public class MakeBindablePropertyAttribute : Attribute
 {
     // You can add properties to the attribute if needed

@@ -2,9 +2,7 @@ using Galaxon.Astronomy.Data.Models;
 
 namespace Galaxon.Astronomy.Data.Repositories;
 
-public class AstroObjectRepository(
-    AstroDbContext astroDbContext,
-    AstroObjectGroupRepository astroObjectGroupRepository)
+public class AstroObjectRepository(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Load an AstroObject from the database by specifying an object name and optional group name.
@@ -36,7 +34,7 @@ public class AstroObjectRepository(
         // Filter by group if specified and necessary.
         if (results.Count > 0 && groupName != null)
         {
-            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName))
+            results = results.Where(ao => AstroObjectGroupRepository.IsInGroup(ao, groupName))
                 .ToList();
         }
 
@@ -81,6 +79,6 @@ public class AstroObjectRepository(
     {
         // Get objects with matching name.
         return astroDbContext.AstroObjects.ToList()
-            .Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName)).ToList();
+            .Where(ao => AstroObjectGroupRepository.IsInGroup(ao, groupName)).ToList();
     }
 }

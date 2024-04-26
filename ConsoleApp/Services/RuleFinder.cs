@@ -145,8 +145,7 @@ public class RuleFinder
         if ((double)num / den > 0.5)
         {
             num = den - num;
-            Console.WriteLine(
-                $"Fraction is reversed. Solution is for common years, not leap years.");
+            Console.WriteLine("Fraction is reversed. Solution is for common years, not leap years.");
         }
 
         if (FindRuleWith2Mods(num, den))

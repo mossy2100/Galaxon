@@ -233,7 +233,7 @@ public static class FloatingPointExtensions
     /// <summary>Get the exponent bits from a floating point number.</summary>
     public static ushort GetExpBits<T>(this T x) where T : IFloatingPointIeee754<T>
     {
-        var (_, expBits, _) = x.Disassemble<T>();
+        var (_, expBits, _) = x.Disassemble();
         return expBits;
     }
 

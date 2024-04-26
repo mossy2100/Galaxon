@@ -33,7 +33,7 @@ public partial struct BigDecimal
         // Check the string format and extract salient info.
         var strRxSign = @"[\-+]?";
         var strRxInt = $@"(?<int>{strRxSign}\d+)";
-        var strRxFrac = $@"(\.(?<frac>\d+))?";
+        var strRxFrac = @"(\.(?<frac>\d+))?";
         var strRxExp = $@"(e(?<exp>{strRxSign}\d+))?";
         var strRx = $"^{strRxInt}{strRxFrac}{strRxExp}$";
         var match = Regex.Match(s, strRx, RegexOptions.IgnoreCase);

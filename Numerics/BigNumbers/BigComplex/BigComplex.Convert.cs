@@ -561,7 +561,7 @@ public partial struct BigComplex
     {
         if (IsRealNumber(bc))
         {
-            return ReflectionExtensions.Convert<BigDecimal, T>(bc.Real)!;
+            return ReflectionExtensions.Convert<BigDecimal, T>(bc.Real);
         }
 
         throw new InvalidCastException("Cannot cast a complex number to a real number.");

@@ -23,7 +23,7 @@ public static class UriTools
         result = result.Replace("'", "");
 
         // Replace non-alphanumeric characters with hyphens.
-        result = Regex.Replace(result, @"[^0-9a-z]+", "-", RegexOptions.IgnoreCase);
+        result = Regex.Replace(result, "[^0-9a-z]+", "-", RegexOptions.IgnoreCase);
 
         // Trim hyphens from the start and end and lower-case the result.
         return result.Trim('-').ToLower();

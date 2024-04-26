@@ -43,7 +43,7 @@ public partial struct BigComplex
 
         // Different components of the patterns.
         var rxSign = @"[\-+]";
-        var rxReal = $@"(\d+(\.\d+)?)";
+        var rxReal = @"(\d+(\.\d+)?)";
         var rxUnsignedReal = $@"{rxReal}(e{rxSign}?\d+)?";
         var rxSignedReal = $"{rxSign}?{rxUnsignedReal}";
         var rxUnsignedImag = $"({rxUnsignedReal}[ij]|[ij]{rxUnsignedReal})";

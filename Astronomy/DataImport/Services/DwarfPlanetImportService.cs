@@ -12,7 +12,7 @@ public class DwarfPlanetImportService
     {
         AstroDbContext astroDbContext = new ();
         AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository = new (astroDbContext, astroObjectGroupRepository);
+        AstroObjectRepository astroObjectRepository = new (astroDbContext);
 
         // Get the Sun.
         AstroObject? sun = astroObjectRepository.Load("Sun", "Star");

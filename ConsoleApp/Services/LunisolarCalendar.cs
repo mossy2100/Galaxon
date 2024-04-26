@@ -179,7 +179,6 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
 
                     if (b2 <= 20 && nLeapMonths == nLeapMonthsWanted)
                     {
-                        foundSolution = true;
                         double frac2 = (double)nLeapMonths / nMonthsInCycle;
                         double avgMonthLength = 29 + frac2;
                         Console.WriteLine($"{a2}, {b2}, {r2}");
@@ -544,9 +543,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     {
         // Construct a SunService.
         AstroDbContext astroDbContext = new ();
-        AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository =
-            new (astroDbContext, astroObjectGroupRepository);
+        AstroObjectRepository astroObjectRepository = new (astroDbContext);
         PlanetService planetService = new (astroDbContext);
         EarthService earthService = new (astroObjectRepository, planetService);
         var sunService = new SunService(earthService);
