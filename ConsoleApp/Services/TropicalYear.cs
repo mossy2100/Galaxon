@@ -19,9 +19,9 @@ public static class TropicalYear
         for (int y = minYear; y <= maxYear; y++)
         {
             double tropicalYearLengthInEphemerisDays =
-                EarthService.GetTropicalYearLengthInEphemerisDaysForYear(y);
-            double solarDayLengthInSeconds = EarthService.GetSolarDayLength(y);
-            double tropicalYearLengthInSolarDays = EarthService.GetTropicalYearLengthInSolarDays(y);
+                EarthService.GetTropicalYearInEphemerisDaysForYear(y);
+            double solarDayLengthInSeconds = EarthService.GetSolarDayInSeconds(y);
+            double tropicalYearLengthInSolarDays = EarthService.GetTropicalYearInSolarDays(y);
 
             if (y < maxYear)
             {
@@ -88,7 +88,7 @@ public static class TropicalYear
         double totalSolarDays = 0;
         for (int y = minYear; y < maxYear; y++)
         {
-            double yearLengthInSolarDays = EarthService.GetTropicalYearLengthInSolarDays(y);
+            double yearLengthInSolarDays = EarthService.GetTropicalYearInSolarDays(y);
             totalSolarDays += yearLengthInSolarDays;
         }
         return totalSolarDays / (maxYear - minYear);
@@ -150,9 +150,9 @@ public static class TropicalYear
 
             // Calculate the approximate drift in seconds for this year.
             double avgCalendarYearLengthInSeconds =
-                avgCalendarYearLengthInDays * EarthService.GetSolarDayLength(y);
+                avgCalendarYearLengthInDays * EarthService.GetSolarDayInSeconds(y);
             double tropicalYearLengthInSeconds =
-                EarthService.GetTropicalYearLengthInEphemerisDaysForYear(y)
+                EarthService.GetTropicalYearInEphemerisDaysForYear(y)
                 * TimeConstants.SECONDS_PER_DAY;
             double driftInSeconds = avgCalendarYearLengthInSeconds - tropicalYearLengthInSeconds;
             totalDriftInSeconds += driftInSeconds;

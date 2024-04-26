@@ -21,7 +21,7 @@ public class DeltaTController(ILogger<LunarPhaseController> logger) : Controller
                 deltaT);
 
             // Return the delta-T value as HTTP response in JSON.
-            return Ok(deltaT);
+            return Ok($"{deltaT:F2} seconds");
         }
         catch (Exception ex)
         {

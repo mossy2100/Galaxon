@@ -13,9 +13,9 @@ public class Metonic
         int yearThen = -433;
         int yearNow = 2024;
 
-        double dayLengthThen = EarthService.GetSolarDayLength(yearThen);
+        double dayLengthThen = EarthService.GetSolarDayInSeconds(yearThen);
         Console.WriteLine($"The solar day length in {yearThen} was {dayLengthThen} days.");
-        double dayLengthNow = EarthService.GetSolarDayLength(yearNow);
+        double dayLengthNow = EarthService.GetSolarDayInSeconds(yearNow);
         Console.WriteLine($"The solar day length in {yearNow} is {dayLengthNow} seconds.");
         double dayDiff = dayLengthNow - dayLengthThen;
         string dayIncreaseVerb = dayLengthNow > dayLengthThen ? "increased" : "decreased";
@@ -24,9 +24,9 @@ public class Metonic
 
         Console.WriteLine();
 
-        double lunationLengthThen = MoonService.GetLunationLengthInEphemerisDaysForYear(yearThen);
+        double lunationLengthThen = MoonService.GetLunationInEphemerisDaysForYear(yearThen);
         Console.WriteLine($"The lunation length in {yearThen} was {lunationLengthThen} days.");
-        double lunationLengthNow = MoonService.GetLunationLengthInEphemerisDaysForYear(yearNow);
+        double lunationLengthNow = MoonService.GetLunationInEphemerisDaysForYear(yearNow);
         Console.WriteLine($"The lunation length in {yearNow} is {lunationLengthNow} days.");
         double lunationDiff = lunationLengthNow - lunationLengthThen;
         string lunationIncreaseVerb = lunationLengthNow > lunationLengthThen ? "increased" : "decreased";
@@ -35,9 +35,9 @@ public class Metonic
 
         Console.WriteLine();
 
-        double yearLengthThen = EarthService.GetTropicalYearLengthInEphemerisDaysForYear(yearThen);
+        double yearLengthThen = EarthService.GetTropicalYearInEphemerisDaysForYear(yearThen);
         Console.WriteLine($"The tropical year length in {yearThen} was {yearLengthThen} days.");
-        double yearLengthNow = EarthService.GetTropicalYearLengthInEphemerisDaysForYear(yearNow);
+        double yearLengthNow = EarthService.GetTropicalYearInEphemerisDaysForYear(yearNow);
         Console.WriteLine($"The tropical year length in {yearNow} is {yearLengthNow} days.");
         double yearDiff = yearLengthNow - yearLengthThen;
         string yearIncreaseVerb = yearLengthNow > yearLengthThen ? "increased" : "decreased";

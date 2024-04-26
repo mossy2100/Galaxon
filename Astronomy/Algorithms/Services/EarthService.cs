@@ -85,7 +85,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double GetTropicalYearLengthInEphemerisDays(double T)
+    public static double GetTropicalYearInEphemerisDays(double T)
     {
         // To limit the valid range to 8000 BCE - 12000 CE, convert these value to Julian centuries
         // since 2000. This will be approximate, as we won't factor in delta-T, but then delta-T is
@@ -109,7 +109,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The tropical year length in ephemeris days at that point in time.</returns>
-    public static double GetTropicalYearLengthInEphemerisDaysForYear(double year)
+    public static double GetTropicalYearInEphemerisDaysForYear(double year)
     {
         // Check year is in valid range.
         if (year is < -7999 or > 12000)
@@ -124,7 +124,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
         double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
-        return GetTropicalYearLengthInEphemerisDays(T);
+        return GetTropicalYearInEphemerisDays(T);
     }
 
     /// <summary>
@@ -139,7 +139,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The day length in seconds at that point in time.</returns>
-    public static double GetSolarDayLength(double year)
+    public static double GetSolarDayInSeconds(double year)
     {
         // The length of the day has been increasing by about 1.7 ms/d/cy.
         // According to the above link at cnmoc.usff.navy.mil, the solar day was equal to exactly
@@ -152,12 +152,12 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="date">The date of the day.</param>
     /// <returns>The approximate length of that day in seconds.</returns>
-    public static double GetSolarDayLength(DateOnly date)
+    public static double GetSolarDayInSeconds(DateOnly date)
     {
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         int daysInYear = gc.GetDaysInYear(date.Year);
         double frac = (date.Day - 0.5) / daysInYear;
-        return GetSolarDayLength(date.Year + frac);
+        return GetSolarDayInSeconds(date.Year + frac);
     }
 
     /// <summary>
@@ -165,11 +165,11 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The tropical year length in solar days at that point in time.</returns>
-    public static double GetTropicalYearLengthInSolarDays(double year)
+    public static double GetTropicalYearInSolarDays(double year)
     {
-        return GetTropicalYearLengthInEphemerisDaysForYear(year)
+        return GetTropicalYearInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY
-            / GetSolarDayLength(year);
+            / GetSolarDayInSeconds(year);
     }
 
     #endregion Static methods

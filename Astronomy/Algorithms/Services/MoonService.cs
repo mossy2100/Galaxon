@@ -400,7 +400,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
     /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double GetLunationLengthInEphemerisDays(double T)
+    public static double GetLunationInEphemerisDays(double T)
     {
         return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
     }
@@ -410,14 +410,16 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// The year can have a fractional part.
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
-    /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double GetLunationLengthInEphemerisDaysForYear(double year)
+    /// <returns>The average lunation length in days at that point in time.</returns>
+    public static double GetLunationInEphemerisDaysForYear(double year)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
         double jdut = TimeScales.DecimalYearToJulianDateUniversal(year);
-        double jdtt = TimeScales.JulianDateUniversalToTerrestrial(jdut);
+        double deltaT = TimeScales.CalcDeltaT(year);
+        double jdtt = jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
         double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
-        return GetLunationLengthInEphemerisDays(T);
+        // Evaluate the polynomial.
+        return GetLunationInEphemerisDays(T);
     }
 
     /// <summary>
@@ -427,9 +429,9 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <returns>The lunation length in solar days at that point in time.</returns>
     public static double GetLunationLengthInSolarDays(double year)
     {
-        return GetLunationLengthInEphemerisDaysForYear(year)
+        return GetLunationInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY
-            / EarthService.GetSolarDayLength(year);
+            / EarthService.GetSolarDayInSeconds(year);
     }
 
     #endregion Static methods

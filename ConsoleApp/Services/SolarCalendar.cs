@@ -389,9 +389,9 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         for (int y = 2000; y <= 9000; y += 1000)
         {
-            double yearLengthEphemeris = EarthService.GetTropicalYearLengthInEphemerisDaysForYear(y);
-            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
-            double dayLengthSeconds = EarthService.GetSolarDayLength(y);
+            double yearLengthEphemeris = EarthService.GetTropicalYearInEphemerisDaysForYear(y);
+            double yearLengthSolar = EarthService.GetTropicalYearInSolarDays(y);
+            double dayLengthSeconds = EarthService.GetSolarDayInSeconds(y);
             Console.WriteLine($"Tropical year {y}");
             string timeString =
                 TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
@@ -411,7 +411,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         double closestYearLength = 0;
         for (int y = 3000; y < 4000; y++)
         {
-            double yearLengthSolar = EarthService.GetTropicalYearLengthInSolarDays(y);
+            double yearLengthSolar = EarthService.GetTropicalYearInSolarDays(y);
             double diff = Math.Abs(yearLengthSolar - targetAvg);
             if (diff < smallestDiff)
             {

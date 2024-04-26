@@ -17,14 +17,14 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
         try
         {
             double tropicalYearLength =
-                EarthService.GetTropicalYearLengthInEphemerisDaysForYear(year);
+                EarthService.GetTropicalYearInEphemerisDaysForYear(year);
 
             logger.LogInformation(
                 "Length of tropical year {Year} computed to be {TropicalYearLength} days.",
                 year, tropicalYearLength);
 
-            // Return the delta-T value as HTTP response in JSON.
-            return Ok(tropicalYearLength);
+            // Return the tropical year as JSON.
+            return Ok($"{tropicalYearLength:F9} ephemeris days");
         }
         catch (Exception ex)
         {
@@ -37,14 +37,14 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
     {
         try
         {
-            double solarDayLength = EarthService.GetSolarDayLength(year);
+            double solarDayLength = EarthService.GetSolarDayInSeconds(year);
 
             logger.LogInformation(
                 "Length of solar day {Year} computed to be {SolarDayLength} seconds.", year,
                 solarDayLength);
 
-            // Return the delta-T value as HTTP response in JSON.
-            return Ok(solarDayLength);
+            // Return the result as JSON.
+            return Ok($"{solarDayLength:F4} seconds");
         }
         catch (Exception ex)
         {
@@ -57,14 +57,14 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
     {
         try
         {
-            double lunationLength = MoonService.GetLunationLengthInEphemerisDaysForYear(year);
+            double lunationLength = MoonService.GetLunationInEphemerisDaysForYear(year);
 
             logger.LogInformation(
                 "Length of tropical year {Year} computed to be {LunationLength} days.",
                 year, lunationLength);
 
-            // Return the lunation length as HTTP response in JSON.
-            return Ok(lunationLength);
+            // Return the result as JSON.
+            return Ok($"{lunationLength:F9} ephemeris days");
         }
         catch (Exception ex)
         {
