@@ -467,7 +467,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             // Get the southern solstice.
             DateTime solstice =
                 seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
-                    ESeasonalMarkerType.SouthernSolstice);
+                    ESeasonalMarker.SouthernSolstice);
 
             // Keep the ones within an hour of midnight UTC.
             DateTime closestMidnight = DateTimeExtensions.RoundToNearestMidnight(solstice);
@@ -497,7 +497,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         Dictionary<int, DateTime> yearEnds = new ();
         for (int year = firstYear - 1; year < lastYear; year++)
         {
-            southernSolstices[year] = seasonalMarkerService.GetSeasonalMarkerAsDateTimeHumble(year, ESeasonalMarkerType.SouthernSolstice);
+            southernSolstices[year] = seasonalMarkerService.GetSeasonalMarkerAsDateTimeHumble(year, ESeasonalMarker.SouthernSolstice);
             yearEnds[year] = DateTimeExtensions.RoundToNearestMidnight(southernSolstices[year]);
         }
 

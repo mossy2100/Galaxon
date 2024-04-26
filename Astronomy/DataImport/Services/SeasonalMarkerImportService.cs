@@ -42,29 +42,29 @@ public class SeasonalMarkerImportService
                         foreach (UsnoSeasonalMarker usm in usms.data)
                         {
                             bool isSeasonalMarker;
-                            ESeasonalMarkerType seasonalMarkerType = default;
+                            ESeasonalMarker seasonalMarker = default;
                             EApsideType apsideType = default;
 
                             // Get the seasonal marker or apside type.
                             if (usm.month == 3 && usm.phenom == "Equinox")
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarkerType = ESeasonalMarkerType.NorthwardEquinox;
+                                seasonalMarker = ESeasonalMarker.NorthwardEquinox;
                             }
                             else if (usm.month == 6 && usm.phenom == "Solstice")
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarkerType = ESeasonalMarkerType.NorthernSolstice;
+                                seasonalMarker = ESeasonalMarker.NorthernSolstice;
                             }
                             else if (usm.month == 9 && usm.phenom == "Equinox")
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarkerType = ESeasonalMarkerType.SouthwardEquinox;
+                                seasonalMarker = ESeasonalMarker.SouthwardEquinox;
                             }
                             else if (usm.month == 12 && usm.phenom == "Solstice")
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarkerType = ESeasonalMarkerType.SouthernSolstice;
+                                seasonalMarker = ESeasonalMarker.SouthernSolstice;
                             }
                             else if (usm.phenom == "Perihelion")
                             {
@@ -92,18 +92,18 @@ public class SeasonalMarkerImportService
                                 // Construct the SeasonalMarker record.
                                 SeasonalMarkerRecord newSeasonalMarkerRecord = new SeasonalMarkerRecord
                                 {
-                                    Type = seasonalMarkerType,
+                                    MarkerNumber = (int)seasonalMarker,
                                     DateTimeUtcUsno = dt
                                 };
                                 string seasonalMarkerTypeName =
-                                    seasonalMarkerType.GetDescriptionOrName();
+                                    seasonalMarker.GetDescriptionOrName();
                                 Console.WriteLine(
                                     $"{seasonalMarkerTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
                                 SeasonalMarkerRecord? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                                        sm.Type == seasonalMarkerType
+                                        sm.MarkerNumber == (int)seasonalMarker
                                         && sm.DateTimeUtcUsno.Year == year);
                                 if (existingSeasonalMarker == null)
                                 {

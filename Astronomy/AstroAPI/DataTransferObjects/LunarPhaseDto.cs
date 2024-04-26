@@ -9,7 +9,7 @@ public record struct LunarPhaseDto
     /// <summary>
     /// Meeus Lunation Number.
     /// </summary>
-    public int LunationNumber { get; set; }
+    public int LunationNumber { get; init; }
 
     /// <summary>
     /// Number representing the phase.
@@ -18,17 +18,17 @@ public record struct LunarPhaseDto
     ///   2 = Full Moon
     ///   3 = Third Quarter
     /// </summary>
-    public int PhaseNumber { get; set; }
+    public int PhaseNumber { get; init; }
 
     /// <summary>
     /// String representing the phase.
     /// </summary>
-    public string Phase { get; set; }
+    public string Phase { get; init; }
 
     /// <summary>
     /// The UTC datetime of the lunar phase.
     /// </summary>
-    public string DateTimeUTC { get; set; }
+    public string DateTimeUTC { get; init; }
 
     /// <summary>
     /// Construct from internal type.

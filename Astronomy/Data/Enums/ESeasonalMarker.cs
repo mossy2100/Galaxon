@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Galaxon.Astronomy.Data.Enums;
 
-public enum ESeasonalMarkerType
+public enum ESeasonalMarker
 {
     [Description("March/northern vernal/southern autumnal equinox")]
     NorthwardEquinox = 0,

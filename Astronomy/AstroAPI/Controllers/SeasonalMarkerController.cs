@@ -20,12 +20,12 @@ public class SeasonalMarkerController(
         try
         {
             // Get the seasonal markers for the specified year.
-            List<SeasonalMarker> seasonalMarkers =
+            List<SeasonalMarkerEvent> seasonalMarkers =
                 seasonalMarkerService.GetSeasonalMarkersInYear(year);
 
             // Construct the result.
             List<SeasonalMarkerDto> results = [];
-            foreach (SeasonalMarker seasonalMarker in seasonalMarkers)
+            foreach (SeasonalMarkerEvent seasonalMarker in seasonalMarkers)
             {
                 results.Add(new SeasonalMarkerDto(seasonalMarker));
             }

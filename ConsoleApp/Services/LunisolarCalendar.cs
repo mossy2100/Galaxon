@@ -569,7 +569,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             {
                 DateTime dtEquinox =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarkerType.NorthwardEquinox);
+                        ESeasonalMarker.NorthwardEquinox);
                 double diffDays =
                     Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -585,7 +585,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             {
                 DateTime dtSolstice =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarkerType.SouthernSolstice);
+                        ESeasonalMarker.SouthernSolstice);
                 double diffDays =
                     Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -641,7 +641,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
             // Get the southern solstice.
             DateTime solstice =
                 seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
-                    ESeasonalMarkerType.SouthernSolstice);
+                    ESeasonalMarker.SouthernSolstice);
 
             // Check if there's also a New Moon at this time.
             LunarPhaseEvent newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);

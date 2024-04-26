@@ -13,21 +13,21 @@ public record struct SeasonalMarkerDto
     ///   2 = Southward Equinox
     ///   3 = Southern Solstice
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; init; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker, as a string.
     /// </summary>
-    public string DateTimeUTC { get; set; }
+    public string DateTimeUTC { get; init; }
 
     /// <summary>
     /// Construct from internal type.
     /// </summary>
-    /// <param name="seasonalMarker"></param>
-    public SeasonalMarkerDto(SeasonalMarker seasonalMarker)
+    /// <param name="seasonalMarkerEvent"></param>
+    public SeasonalMarkerDto(SeasonalMarkerEvent seasonalMarkerEvent)
     {
-        Type = seasonalMarker.Type.GetDescription();
+        Type = seasonalMarkerEvent.SeasonalMarker.GetDescription();
         // Round off to nearest minute.
-        DateTimeUTC = DateTimeExtensions.Round(seasonalMarker.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
+        DateTimeUTC = DateTimeExtensions.Round(seasonalMarkerEvent.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
     }
 }

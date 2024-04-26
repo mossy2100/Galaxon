@@ -35,7 +35,8 @@ public class SeasonalMarkerServiceTests
         var delta = TimeSpan.FromMinutes(1);
 
         // Act
-        double jdtt = seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarkerType.NorthernSolstice);
+        double jdtt =
+            seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarker.NorthernSolstice);
         DateTime dt = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Assert
@@ -51,8 +52,10 @@ public class SeasonalMarkerServiceTests
         // Arrange
         TimeSpan maxDiff = TimeSpan.FromMinutes(2);
         AstroDbContext astroDbContext = ServiceManager.GetService<AstroDbContext>();
-        SeasonalMarkerService seasonalMarkerService = ServiceManager.GetService<SeasonalMarkerService>();
-        List<SeasonalMarkerRecord> seasonalMarkers = astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
+        SeasonalMarkerService seasonalMarkerService =
+            ServiceManager.GetService<SeasonalMarkerService>();
+        List<SeasonalMarkerRecord> seasonalMarkers =
+            astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
 
         // Check each.
         foreach (SeasonalMarkerRecord seasonalMarker in seasonalMarkers)
@@ -61,7 +64,8 @@ public class SeasonalMarkerServiceTests
             DateTime expected = seasonalMarker.DateTimeUtcUsno;
 
             // Act.
-            DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(seasonalMarker.DateTimeUtcUsno.Year, seasonalMarker.Type);
+            DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
+                seasonalMarker.DateTimeUtcUsno.Year, (ESeasonalMarker)seasonalMarker.MarkerNumber);
 
             // Assert.
             DateTimeAssert.AreEqual(expected, actual, maxDiff);

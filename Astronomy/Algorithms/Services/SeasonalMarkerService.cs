@@ -60,9 +60,9 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// Algorithm from AA2 p178.
     /// </summary>
     /// <param name="year">The year (Gregorian) in the range -1000..3000.</param>
-    /// <param name="markerTypeNumber">The marker number (use the enum).</param>
+    /// <param name="marker">The seasonal marker (as enum).</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarkerMean(int year, ESeasonalMarkerType markerTypeNumber)
+    public double GetSeasonalMarkerMean(int year, ESeasonalMarker marker)
     {
         // Check year is in valid range.
         if (year is < -1000 or > 3000)
@@ -72,10 +72,10 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         }
 
         // Check seasonal marker is in valid range.
-        if (markerTypeNumber is < ESeasonalMarkerType.NorthwardEquinox
-            or > ESeasonalMarkerType.SouthernSolstice)
+        if (marker is < ESeasonalMarker.NorthwardEquinox
+            or > ESeasonalMarker.SouthernSolstice)
         {
-            throw new ArgumentOutOfRangeException(nameof(markerTypeNumber), "Invalid value.");
+            throw new ArgumentOutOfRangeException(nameof(marker), "Invalid value.");
         }
 
         // Find instant of mean seasonal marker.
@@ -83,42 +83,42 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         if (year <= 1000)
         {
             Y = year / 1000.0;
-            return markerTypeNumber switch
+            return marker switch
             {
-                ESeasonalMarkerType.NorthwardEquinox => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.NorthwardEquinox => Polynomials.EvaluatePolynomial([
                     1721139.29189, 365242.13740, 0.06134, 0.00111, -0.00071
                 ], Y),
-                ESeasonalMarkerType.NorthernSolstice => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.NorthernSolstice => Polynomials.EvaluatePolynomial([
                     1721233.25401, 365241.72562, -0.05323, 0.00907, 0.00025
                 ], Y),
-                ESeasonalMarkerType.SouthwardEquinox => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.SouthwardEquinox => Polynomials.EvaluatePolynomial([
                     1721325.70455, 365242.49558, -0.11677, -0.00297, 0.00074
                 ], Y),
-                ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber),
+                _ => throw new ArgumentOutOfRangeException(nameof(marker),
                     "Invalid value.")
             };
         }
         else
         {
             Y = (year - 2000) / 1000.0;
-            return markerTypeNumber switch
+            return marker switch
             {
-                ESeasonalMarkerType.NorthwardEquinox => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.NorthwardEquinox => Polynomials.EvaluatePolynomial([
                     2451623.80984, 365242.37404, 0.05169, -0.00411, -0.00057
                 ], Y),
-                ESeasonalMarkerType.NorthernSolstice => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.NorthernSolstice => Polynomials.EvaluatePolynomial([
                     2451716.56767, 365241.62603, 0.00325, 0.00888, -0.0003
                 ], Y),
-                ESeasonalMarkerType.SouthwardEquinox => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.SouthwardEquinox => Polynomials.EvaluatePolynomial([
                     2451810.21715, 365242.01767, -0.11575, 0.00337, 0.00078
                 ], Y),
-                ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
+                ESeasonalMarker.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     2451900.05952, 365242.74049, -0.06223, -0.00823, 0.00032
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerTypeNumber),
+                _ => throw new ArgumentOutOfRangeException(nameof(marker),
                     "Invalid value.")
             };
         }
@@ -128,9 +128,9 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// Expands the range of GetSeasonalMarkerMean() by using the GetTropicalYearLengthInEphemerisDays() method.
     /// </summary>
     /// <param name="year">The year to get the seasonal marker for.</param>
-    /// <param name="markerType">The marker type.</param>
+    /// <param name="marker">The marker type.</param>
     /// <returns>The approximate Julian date (TT) of the event.</returns>
-    private double GetSeasonalMarkerMeanExpanded(int year, ESeasonalMarkerType markerType)
+    private double GetSeasonalMarkerMeanExpanded(int year, ESeasonalMarker marker)
     {
         // Check year is in valid range.
         if (year is < -7999 or > 12000)
@@ -143,7 +143,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         double jdtt;
         if (year < -1000)
         {
-            jdtt = GetSeasonalMarkerMean(-1000, markerType);
+            jdtt = GetSeasonalMarkerMean(-1000, marker);
             for (int i = -1000; i > year; i--)
             {
                 jdtt -= EarthService.GetTropicalYearInEphemerisDaysForYear(year);
@@ -151,7 +151,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         }
         else if (year > 3000)
         {
-            jdtt = GetSeasonalMarkerMean(3000, markerType);
+            jdtt = GetSeasonalMarkerMean(3000, marker);
             for (int i = 3000; i < year; i++)
             {
                 jdtt += EarthService.GetTropicalYearInEphemerisDaysForYear(year);
@@ -159,7 +159,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         }
         else
         {
-            jdtt = GetSeasonalMarkerMean(year, markerType);
+            jdtt = GetSeasonalMarkerMean(year, marker);
         }
 
         return jdtt;
@@ -173,11 +173,11 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// For improved accuracy <see cref="GetSeasonalMarker"/>
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerTypeNumber">The marker number (as enum)</param>
+    /// <param name="marker">The seasonal marker (as enum)</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerTypeNumber)
+    public double GetSeasonalMarkerApprox(int year, ESeasonalMarker marker)
     {
-        double JDE0 = GetSeasonalMarkerMean(year, markerTypeNumber);
+        double JDE0 = GetSeasonalMarkerMean(year, marker);
         double T = TimeScales.JulianCenturiesSinceJ2000(JDE0);
         double W = Angles.DegreesToRadians(35999.373 * T - 2.47);
         double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
@@ -235,15 +235,15 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// "Equinoxes and Solstices" (p180).
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
+    /// <param name="marker">The marker number (use enum)</param>
     /// <returns>The result as a Julian Date (TT).</returns>
-    public double GetSeasonalMarker(int year, ESeasonalMarkerType markerType)
+    public double GetSeasonalMarker(int year, ESeasonalMarker marker)
     {
         // Get an approximate time for the event.
-        double jdtt = GetSeasonalMarkerMean(year, markerType);
+        double jdtt = GetSeasonalMarkerMean(year, marker);
 
         // Find the target Ls in radians (0, π/2, -π, or -π/2).
-        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
+        double targetLs = Angles.WrapRadians((int)marker * Angles.RADIANS_PER_QUADRANT);
 
         // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);
@@ -253,11 +253,11 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// Get a seasonal marker as a DateTime (UT).
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
+    /// <param name="marker">The marker number (use enum)</param>
     /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
+    public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarker marker)
     {
-        double jdtt = GetSeasonalMarker(year, markerType);
+        double jdtt = GetSeasonalMarker(year, marker);
         return TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
     }
 
@@ -266,12 +266,12 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <returns>The result as a collection of SeasonalMarker objects.</returns>
-    public List<SeasonalMarker> GetSeasonalMarkersInYear(int year)
+    public List<SeasonalMarkerEvent> GetSeasonalMarkersInYear(int year)
     {
-        return Enum.GetValues(typeof(ESeasonalMarkerType))
-            .Cast<ESeasonalMarkerType>()
+        return Enum.GetValues(typeof(ESeasonalMarker))
+            .Cast<ESeasonalMarker>()
             .Select(markerType =>
-                new SeasonalMarker(markerType, GetSeasonalMarkerAsDateTime(year, markerType)))
+                new SeasonalMarkerEvent(markerType, GetSeasonalMarkerAsDateTime(year, markerType)))
             .ToList();
     }
 
@@ -282,21 +282,21 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// than a Julian Date (TT) like the others.
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
-    /// <param name="markerType">The marker number (use enum)</param>
+    /// <param name="marker">The marker number (use enum)</param>
     /// <returns>The result as a DateTime (UT).</returns>
-    public DateTime GetSeasonalMarkerAsDateTimeHumble(int year, ESeasonalMarkerType markerType)
+    public DateTime GetSeasonalMarkerAsDateTimeHumble(int year, ESeasonalMarker marker)
     {
         // Look for a matching seasonal marker in the database with a USNO datetime.
         SeasonalMarkerRecord? seasonalMarker =
             astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                sm.Type == markerType && sm.DateTimeUtcUsno.Year == year);
+                sm.MarkerNumber == (int)marker && sm.DateTimeUtcUsno.Year == year);
         if (seasonalMarker != null)
         {
             return seasonalMarker.DateTimeUtcUsno;
         }
 
         // Use my calculation.
-        return GetSeasonalMarkerAsDateTime(year, markerType);
+        return GetSeasonalMarkerAsDateTime(year, marker);
     }
 
     /// <summary>
@@ -310,7 +310,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     {
         // Get the approximate moment of the Southern Solstice (which occurs at Ls=270°) as a
         // Julian Date (TT).
-        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarkerType.SouthernSolstice);
+        double jdtt = GetSeasonalMarkerMean(year, ESeasonalMarker.SouthernSolstice);
 
         // Add 10° (in days) to get the approximate moment when Ls=280°.
         jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;
