@@ -28,9 +28,6 @@ public static class FieldInfoExtensions
     /// <returns>The field's description.</returns>
     public static string GetDescription(this FieldInfo field)
     {
-        return (field.GetCustomAttribute(typeof(DescriptionAttribute), true) is DescriptionAttribute
-            attr)
-            ? attr.Description
-            : "";
+        return (field.GetCustomAttribute(typeof(DescriptionAttribute), true) is DescriptionAttribute attr) ? attr.Description : "";
     }
 }

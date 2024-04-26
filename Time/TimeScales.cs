@@ -518,7 +518,7 @@ public static class TimeScales
     }
 
     /// <summary>
-    /// Convert a DateOnly object to a Julian Date.
+    /// Convert a DateOnly object to a Julian Date, equal to start point of that day.
     /// </summary>
     /// <param name="date">The DateOnly instance.</param>
     /// <returns>The Julian Date.</returns>
@@ -538,6 +538,27 @@ public static class TimeScales
     public static DateOnly JulianDateToDateOnly(double jdut)
     {
         return DateOnly.FromDateTime(JulianDateToDateTime(jdut));
+    }
+
+    /// <summary>
+    /// Convert a DateOnly object to a Julian Day Number, equal to the Julian Date at noon on that
+    /// day.
+    /// </summary>
+    /// <param name="date">The DateOnly instance.</param>
+    /// <returns>The Julian Day Number.</returns>
+    public static int DateOnlyToJulianDay(DateOnly date)
+    {
+        return (int)DateTimeToJulianDate(date.ToDateTime(new TimeOnly(12, 0)));
+    }
+
+    /// <summary>
+    /// Convert a Julian Day Number to a Gregorian Calendar date.
+    /// </summary>
+    /// <param name="jdn">The Julian Day Number.</param>
+    /// <returns>A new DateOnly object.</returns>
+    public static DateOnly JulianDayToDateOnly(int jdn)
+    {
+        return JulianDateToDateOnly(jdn);
     }
 
     /// <summary>

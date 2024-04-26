@@ -1,6 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
-using Galaxon.Core.Types;
 using Galaxon.Time;
+using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
@@ -13,12 +13,12 @@ public record struct SeasonalMarkerDto
     ///   2 = Southward Equinox
     ///   3 = Southern Solstice
     /// </summary>
-    public string Type { get; init; }
+    public string Marker { get; init; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker, as a string.
     /// </summary>
-    public string DateTimeUTC { get; init; }
+    public string DateTimeUtc { get; init; }
 
     /// <summary>
     /// Construct from internal type.
@@ -26,8 +26,8 @@ public record struct SeasonalMarkerDto
     /// <param name="seasonalMarkerEvent"></param>
     public SeasonalMarkerDto(SeasonalMarkerEvent seasonalMarkerEvent)
     {
-        Type = seasonalMarkerEvent.SeasonalMarker.GetDescription();
+        Marker = seasonalMarkerEvent.SeasonalMarker.GetDisplayName();
         // Round off to nearest minute.
-        DateTimeUTC = DateTimeExtensions.Round(seasonalMarkerEvent.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
+        DateTimeUtc = DateTimeExtensions.Round(seasonalMarkerEvent.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
     }
 }

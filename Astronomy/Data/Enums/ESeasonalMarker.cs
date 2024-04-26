@@ -1,18 +1,18 @@
-using System.ComponentModel;
+using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Astronomy.Data.Enums;
 
 public enum ESeasonalMarker
 {
-    [Description("March/northern vernal/southern autumnal equinox")]
+    [Display("Northward equinox, also known as the March, northern vernal, or southern autumnal equinox")]
     NorthwardEquinox = 0,
 
-    [Description("June/northern summer/southern winter solstice")]
+    [Display("Northern solstice, also known as the June, northern summer, or southern winter solstice")]
     NorthernSolstice = 1,
 
-    [Description("September/northern autumnal/southern vernal equinox")]
+    [Display("Southward equinox, also known as the September, northern autumnal, or southern vernal equinox")]
     SouthwardEquinox = 2,
 
-    [Description("December/northern winter/southern summer solstice")]
+    [Display("Southern solstice, also known as the December, northern winter, or southern summer solstice")]
     SouthernSolstice = 3
 }

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Astronomy.Data.Enums;
 
@@ -10,15 +10,15 @@ namespace Galaxon.Astronomy.Data.Enums;
 /// </summary>
 public enum ELunarPhase
 {
-    [Description("New Moon")]
+    [Display("New Moon")]
     NewMoon = 0,
 
-    [Description("First Quarter")]
+    [Display("First Quarter")]
     FirstQuarter = 1,
 
-    [Description("Full Moon")]
+    [Display("Full Moon")]
     FullMoon = 2,
 
-    [Description("Third Quarter")]
+    [Display("Third Quarter")]
     ThirdQuarter = 3
 }

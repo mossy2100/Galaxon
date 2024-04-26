@@ -10,25 +10,25 @@ public class TimeScalesTests
     #region DateOnlyToJulianDate
 
     [TestMethod]
-    public void DateOnlyToJulianDate_ReturnsCorrectValue()
+    public void DateOnlyToJulianDay_ReturnsCorrectValue()
     {
         DateOnly date;
 
         // Test start of range.
         date = new DateOnly(1, 1, 1);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDate(date), 1721425.5);
+        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 1721426);
 
         // Test current date.
         date = new DateOnly(2022, 6, 8);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDate(date), 2459738.5);
+        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 2459739);
 
         // Test middle of range.
         date = new DateOnly(5000, 7, 2);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDate(date), 3547454.5);
+        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 3547455);
 
         // Test end of range.
         date = new DateOnly(9999, 12, 31);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDate(date), 5373483.5);
+        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 5373484);
     }
 
     #endregion DateOnlyToJulianDate

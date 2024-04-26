@@ -1,6 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
-using Galaxon.Core.Types;
 using Galaxon.Time;
+using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
@@ -28,7 +28,7 @@ public record struct LunarPhaseDto
     /// <summary>
     /// The UTC datetime of the lunar phase.
     /// </summary>
-    public string DateTimeUTC { get; init; }
+    public string DateTimeUtc { get; init; }
 
     /// <summary>
     /// Construct from internal type.
@@ -37,8 +37,8 @@ public record struct LunarPhaseDto
     {
         LunationNumber = lunarPhase.LunationNumber;
         PhaseNumber = (int)lunarPhase.Phase;
-        Phase = lunarPhase.Phase.GetDescription();
+        Phase = lunarPhase.Phase.GetDisplayName();
         // Round off to nearest minute.
-        DateTimeUTC = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
+        DateTimeUtc = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
     }
 }
