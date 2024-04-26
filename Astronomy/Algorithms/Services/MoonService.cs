@@ -427,7 +427,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The lunation length in solar days at that point in time.</returns>
-    public static double GetLunationLengthInSolarDays(double year)
+    public static double GetLunationInSolarDaysForYear(double year)
     {
         return GetLunationInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY

@@ -165,7 +165,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// </summary>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The tropical year length in solar days at that point in time.</returns>
-    public static double GetTropicalYearInSolarDays(double year)
+    public static double GetTropicalYearInSolarDaysForYear(double year)
     {
         return GetTropicalYearInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY

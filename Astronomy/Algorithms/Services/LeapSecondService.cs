@@ -123,4 +123,25 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
             }
         }
     }
+
+    /// <summary>
+    /// Checks if a given year has a leap second.
+    /// </summary>
+    /// <param name="year">The year to check.</param>
+    /// <returns>True if the year has a leap second, otherwise false.</returns>
+    public bool YearHasLeapSecond(int year)
+    {
+        return leapSecondRepository.List.Any(ls => ls.LeapSecondDate.Year == year);
+    }
+
+    /// <summary>
+    /// Retrieves the leap second date for a given year.
+    /// </summary>
+    /// <param name="year">The year for which the leap second date is to be retrieved.</param>
+    /// <returns>The leap second date for the specified year, or null if there wasn't one.</returns>
+    public DateOnly? LeapSecondDateForYear(int year)
+    {
+        return leapSecondRepository.List.FirstOrDefault(ls => ls.LeapSecondDate.Year == year)
+            ?.LeapSecondDate;
+    }
 }

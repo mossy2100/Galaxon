@@ -26,6 +26,8 @@ public class Program
         builder.Services.AddSingleton<EarthService>();
         builder.Services.AddSingleton<SunService>();
         builder.Services.AddSingleton<SeasonalMarkerService>();
+        builder.Services.AddSingleton<LeapSecondRepository>();
+        builder.Services.AddSingleton<LeapSecondService>();
 
         // Build.
         WebApplication app = builder.Build();

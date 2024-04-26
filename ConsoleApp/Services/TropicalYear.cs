@@ -21,7 +21,7 @@ public static class TropicalYear
             double tropicalYearLengthInEphemerisDays =
                 EarthService.GetTropicalYearInEphemerisDaysForYear(y);
             double solarDayLengthInSeconds = EarthService.GetSolarDayInSeconds(y);
-            double tropicalYearLengthInSolarDays = EarthService.GetTropicalYearInSolarDays(y);
+            double tropicalYearLengthInSolarDays = EarthService.GetTropicalYearInSolarDaysForYear(y);
 
             if (y < maxYear)
             {
@@ -88,7 +88,7 @@ public static class TropicalYear
         double totalSolarDays = 0;
         for (int y = minYear; y < maxYear; y++)
         {
-            double yearLengthInSolarDays = EarthService.GetTropicalYearInSolarDays(y);
+            double yearLengthInSolarDays = EarthService.GetTropicalYearInSolarDaysForYear(y);
             totalSolarDays += yearLengthInSolarDays;
         }
         return totalSolarDays / (maxYear - minYear);
