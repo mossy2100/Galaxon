@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Core.Types;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
@@ -26,6 +27,7 @@ public record struct SeasonalMarkerDto
     public SeasonalMarkerDto(SeasonalMarker seasonalMarker)
     {
         Type = seasonalMarker.Type.GetDescription();
-        DateTimeUTC = $"{seasonalMarker.DateTimeUtc:s}";
+        // Round off to nearest minute.
+        DateTimeUTC = DateTimeExtensions.Round(seasonalMarker.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
     }
 }

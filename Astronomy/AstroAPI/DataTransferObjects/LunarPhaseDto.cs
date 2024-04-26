@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Core.Types;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
@@ -11,13 +12,18 @@ public record struct LunarPhaseDto
     public int LunationNumber { get; set; }
 
     /// <summary>
-    /// String representing the lunar phase type.
+    /// Number representing the phase.
     ///   0 = New Moon
     ///   1 = First Quarter
     ///   2 = Full Moon
     ///   3 = Third Quarter
     /// </summary>
-    public string Type { get; set; }
+    public int PhaseNumber { get; set; }
+
+    /// <summary>
+    /// String representing the phase.
+    /// </summary>
+    public string Phase { get; set; }
 
     /// <summary>
     /// The UTC datetime of the lunar phase.
@@ -27,10 +33,12 @@ public record struct LunarPhaseDto
     /// <summary>
     /// Construct from internal type.
     /// </summary>
-    public LunarPhaseDto(LunarPhase lunarPhase)
+    public LunarPhaseDto(LunarPhaseEvent lunarPhase)
     {
         LunationNumber = lunarPhase.LunationNumber;
-        Type = lunarPhase.Type.GetDescription();
-        DateTimeUTC = $"{lunarPhase.DateTimeUtc:s}";
+        PhaseNumber = (int)lunarPhase.Phase;
+        Phase = lunarPhase.Phase.GetDescription();
+        // Round off to nearest minute.
+        DateTimeUTC = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
     }
 }

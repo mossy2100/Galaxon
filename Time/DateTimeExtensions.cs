@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Galaxon.Time;
+﻿namespace Galaxon.Time;
 
 /// <summary>
 /// Extension methods for the DateTime class.

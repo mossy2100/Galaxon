@@ -21,6 +21,7 @@ public static class ServiceManager
             .AddScoped<PlanetService>()
             .AddScoped<EarthService>()
             .AddScoped<SunService>()
+            .AddScoped<MoonService>()
             .AddScoped<SeasonalMarkerService>()
             // Build it.
             .BuildServiceProvider();

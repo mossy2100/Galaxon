@@ -1,4 +1,4 @@
-namespace Galaxon.Astronomy.DataImport.Models;
+namespace Galaxon.Astronomy.DataImport.DataTransferObjects;
 
 public record UsnoLunarPhasesForYear
 {

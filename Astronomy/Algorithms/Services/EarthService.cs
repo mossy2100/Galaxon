@@ -137,39 +137,39 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
     /// </summary>
     /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
-    /// <param name="y">The year as a decimal.</param>
+    /// <param name="year">The year as a decimal.</param>
     /// <returns>The day length in seconds at that point in time.</returns>
-    public static double GetSolarDayLength(double y)
+    public static double GetSolarDayLength(double year)
     {
         // The length of the day has been increasing by about 1.7 ms/d/cy.
         // According to the above link at cnmoc.usff.navy.mil, the solar day was equal to exactly
         // 86,400 seconds in approximately 1820.
-        return TimeConstants.SECONDS_PER_DAY + 1.7e-5 * (y - 1820);
+        return TimeConstants.SECONDS_PER_DAY + 1.7e-5 * (year - 1820);
     }
 
     /// <summary>
     /// Get the approximate length of a given day, in seconds.
     /// </summary>
-    /// <param name="d">The date of the day.</param>
-    /// <returns>The length of that day in seconds.</returns>
-    public static double GetSolarDayLength(DateOnly d)
+    /// <param name="date">The date of the day.</param>
+    /// <returns>The approximate length of that day in seconds.</returns>
+    public static double GetSolarDayLength(DateOnly date)
     {
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
-        int daysInYear = gc.GetDaysInYear(d.Year);
-        double frac = (d.Day - 0.5) / daysInYear;
-        return GetSolarDayLength(d.Year + frac);
+        int daysInYear = gc.GetDaysInYear(date.Year);
+        double frac = (date.Day - 0.5) / daysInYear;
+        return GetSolarDayLength(date.Year + frac);
     }
 
     /// <summary>
     /// Calculate the mean tropical year length in solar days for a given calendar year.
     /// </summary>
-    /// <param name="y">The year as a decimal.</param>
+    /// <param name="year">The year as a decimal.</param>
     /// <returns>The tropical year length in solar days at that point in time.</returns>
-    public static double GetTropicalYearLengthInSolarDays(double y)
+    public static double GetTropicalYearLengthInSolarDays(double year)
     {
-        return GetTropicalYearLengthInEphemerisDaysForYear(y)
+        return GetTropicalYearLengthInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY
-            / GetSolarDayLength(y);
+            / GetSolarDayLength(year);
     }
 
     #endregion Static methods

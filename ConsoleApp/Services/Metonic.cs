@@ -24,9 +24,9 @@ public class Metonic
 
         Console.WriteLine();
 
-        double lunationLengthThen = MoonService.GetLengthOfLunationForYear(yearThen);
+        double lunationLengthThen = MoonService.GetLunationLengthInEphemerisDaysForYear(yearThen);
         Console.WriteLine($"The lunation length in {yearThen} was {lunationLengthThen} days.");
-        double lunationLengthNow = MoonService.GetLengthOfLunationForYear(yearNow);
+        double lunationLengthNow = MoonService.GetLunationLengthInEphemerisDaysForYear(yearNow);
         Console.WriteLine($"The lunation length in {yearNow} is {lunationLengthNow} days.");
         double lunationDiff = lunationLengthNow - lunationLengthThen;
         string lunationIncreaseVerb = lunationLengthNow > lunationLengthThen ? "increased" : "decreased";

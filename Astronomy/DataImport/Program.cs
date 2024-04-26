@@ -136,8 +136,8 @@ public class Program
     {
         LunarPhaseDataImportService lunarPhaseDataImportService =
             _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
-        await lunarPhaseDataImportService.ImportAstroPixels();
-        // await lunarPhaseDataImportService.ImportUsno();
+        // await lunarPhaseDataImportService.ImportAstroPixels();
+        await lunarPhaseDataImportService.ImportUsno();
     }
 
     public static async Task ImportSeasonalMarkers()

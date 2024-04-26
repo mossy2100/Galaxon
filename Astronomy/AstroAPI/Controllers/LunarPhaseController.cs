@@ -1,7 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
-using Galaxon.Core.Types;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -11,32 +10,25 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class LunarPhaseController : ControllerBase
+public class LunarPhaseController(ILogger<LunarPhaseController> logger) : ControllerBase
 {
-    private readonly ILogger<LunarPhaseController> _logger;
-
-    public LunarPhaseController(ILogger<LunarPhaseController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpGet("NearDate")]
-    public IActionResult GetLunarPhaseNearDate(string date)
+    public IActionResult GetLunarPhaseNearDate(string isoDateString)
     {
         try
         {
-            DateOnly d = DateOnly.Parse(date);
-            LunarPhase lunarPhase = MoonService.GetPhaseNearDate(d);
+            DateOnly date = DateOnly.Parse(isoDateString);
+            LunarPhaseEvent lunarPhase = MoonService.GetPhaseNearDate(date);
             LunarPhaseDto dto = new (lunarPhase);
 
-            _logger.LogInformation("Lunar phases calculated: {Result}", dto);
+            logger.LogInformation("Lunar phases calculated: {Result}", dto);
 
             // Return the lunar phase as HTTP response in JSON.
             return Ok(dto);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, _logger);
+            return Program.ReturnException(this, ex, logger);
         }
     }
 
@@ -45,23 +37,21 @@ public class LunarPhaseController : ControllerBase
     {
         try
         {
-            List<LunarPhase> lunarPhases = MoonService.GetPhasesInYear(year);
+            List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInYear(year);
 
             // Construct the result.
-            List<LunarPhaseDto> results = [];
-            foreach (LunarPhase lunarPhase in lunarPhases)
-            {
-                results.Add(new LunarPhaseDto(lunarPhase));
-            }
+            List<LunarPhaseDto> phaseEventDtos = phaseEvents
+                .Select(phaseEvent => new LunarPhaseDto(phaseEvent))
+                .ToList();
 
-            _logger.LogInformation("{Count} lunar phases found.", lunarPhases.Count);
+            logger.LogInformation("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
-            return Ok(results);
+            return Ok(phaseEventDtos);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, _logger);
+            return Program.ReturnException(this, ex, logger);
         }
     }
 
@@ -70,23 +60,21 @@ public class LunarPhaseController : ControllerBase
     {
         try
         {
-            List<LunarPhase> lunarPhases = MoonService.GetPhasesInMonth(year, month);
+            List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInMonth(year, month);
 
             // Construct the result.
-            List<LunarPhaseDto> results = [];
-            foreach (LunarPhase lunarPhase in lunarPhases)
-            {
-                results.Add(new LunarPhaseDto(lunarPhase));
-            }
+            List<LunarPhaseDto> phaseEventDtos = phaseEvents
+                .Select(phaseEvent => new LunarPhaseDto(phaseEvent))
+                .ToList();
 
-            _logger.LogInformation("{Count} lunar phases found.", lunarPhases.Count);
+            logger.LogInformation("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
-            return Ok(results);
+            return Ok(phaseEventDtos);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, _logger);
+            return Program.ReturnException(this, ex, logger);
         }
     }
 }

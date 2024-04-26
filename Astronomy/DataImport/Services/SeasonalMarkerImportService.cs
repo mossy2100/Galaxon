@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.DataImport.Models;
+using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Types;
 using Galaxon.Time;
