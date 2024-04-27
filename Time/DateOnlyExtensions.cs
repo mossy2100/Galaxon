@@ -19,11 +19,6 @@ public static class DateOnlyExtensions
     #region Formatting
 
     /// <summary>
-    /// Same as DateTimeFormatInfo.SortableDateTimePattern, but without the time.
-    /// </summary>
-    public const string SORTABLE_DATE_PATTERN = "yyyy-MM-dd";
-
-    /// <summary>
     /// Format the date using ISO 8601 format YYYY-MM-DD.
     /// <see href="https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates"/>
     /// </summary>
@@ -31,7 +26,7 @@ public static class DateOnlyExtensions
     /// <returns>A string representing the date in ISO format.</returns>
     public static string ToIsoString(this DateOnly date)
     {
-        return date.ToString(SORTABLE_DATE_PATTERN);
+        return date.ToString("0");
     }
 
     #endregion Formatting

@@ -18,17 +18,20 @@ public static class DateTimeExtensions
 
     /// <summary>
     /// Format the date using ISO format YYYY-MM-DDThh:mm:ss.
-    /// This format is useful for databases.
-    /// The time zone is not shown. For that, call ToString() with the format specifier "u" for
-    /// UniversalSortableDateTimePattern.
-    /// See
-    /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring?view=net-7.0"/>
+    /// This format is useful for databases and JSON responses.
+    /// See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring?view=net-7.0"/>
     /// </summary>
-    /// <param name="date">The DateTime instance.</param>
+    /// <param name="dt">The DateTime instance.</param>
+    /// <param name="includeTimeZone">Specifies whether to include the time zone in the format.</param>
     /// <returns>A string representing the datetime in ISO format.</returns>
-    public static string ToIsoString(this DateTime date)
+    public static string ToIsoString(this DateTime dt, bool includeTimeZone = false)
     {
-        return $"{date:s}";
+        string result = dt.ToString("s");
+        if (includeTimeZone)
+        {
+            result += dt.ToString("%K");
+        }
+        return result;
     }
 
     #endregion Formatting

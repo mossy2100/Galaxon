@@ -18,7 +18,7 @@ public record struct SeasonalMarkerDto
     /// <summary>
     /// The UTC datetime of the seasonal marker, as a string.
     /// </summary>
-    public string DateTimeUtc { get; init; }
+    public string DateTime { get; init; }
 
     /// <summary>
     /// Construct from internal type.
@@ -28,6 +28,6 @@ public record struct SeasonalMarkerDto
     {
         Marker = seasonalMarkerEvent.SeasonalMarker.GetDisplayName();
         // Round off to nearest minute.
-        DateTimeUtc = DateTimeExtensions.Round(seasonalMarkerEvent.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
+        DateTime = DateTimeExtensions.RoundToNearestMinute(seasonalMarkerEvent.DateTimeUtc).ToIsoString(true);
     }
 }

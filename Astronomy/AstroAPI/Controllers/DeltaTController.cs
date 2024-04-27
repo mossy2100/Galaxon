@@ -1,5 +1,6 @@
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -8,7 +9,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class DeltaTController(ILogger<LunarPhaseController> logger) : ControllerBase
+public class DeltaTController : ControllerBase
 {
     [HttpGet("ForYear")]
     public IActionResult GetDeltaTForYear(double year)
@@ -17,15 +18,15 @@ public class DeltaTController(ILogger<LunarPhaseController> logger) : Controller
         {
             double deltaT = TimeScales.CalcDeltaT(year);
 
-            logger.LogInformation("Delta-T computed for year {Year} is {DeltaT} seconds.", year,
-                deltaT);
+            Log.Information("Delta-T computed for year {Year} is {DeltaT} seconds.", year, deltaT);
 
             // Return the delta-T value as HTTP response in JSON.
             return Ok($"{deltaT:F2} seconds");
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing delta-T for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 }

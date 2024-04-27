@@ -1,5 +1,5 @@
-using System.Globalization;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
@@ -20,7 +20,7 @@ public record struct LeapSecondDto
     /// </summary>
     public LeapSecondDto(LeapSecond leapSecond)
     {
-        Date = leapSecond.LeapSecondDate.ToString("O", CultureInfo.InvariantCulture);
+        Date = leapSecond.LeapSecondDate.ToIsoString();
         Value = leapSecond.Value;
     }
 }

@@ -1,7 +1,9 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
+using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -10,25 +12,30 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class LunarPhaseController(ILogger<LunarPhaseController> logger) : ControllerBase
+public class LunarPhaseController : ControllerBase
 {
     [HttpGet("NearDate")]
     public IActionResult GetLunarPhaseNearDate(string isoDateString)
     {
         try
         {
+            // Get the lunar phase.
             DateOnly date = DateOnly.Parse(isoDateString);
             LunarPhaseEvent lunarPhase = MoonService.GetPhaseNearDate(date);
+
+            // Construct the result.
             LunarPhaseDto dto = new (lunarPhase);
 
-            logger.LogInformation("Lunar phases calculated: {Result}", dto);
+            // Log it.
+            Log.Information("Lunar phases calculated: {Result}", dto);
 
-            // Return the lunar phase as HTTP response in JSON.
+            // Return the lunar phase as JSON.
             return Ok(dto);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing lunar phase near {isoDateString}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 
@@ -37,6 +44,7 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger) : Contro
     {
         try
         {
+            // Get the lunar phase data.
             List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInYear(year);
 
             // Construct the result.
@@ -44,14 +52,16 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger) : Contro
                 .Select(phaseEvent => new LunarPhaseDto(phaseEvent))
                 .ToList();
 
-            logger.LogInformation("{Count} lunar phases found.", phaseEvents.Count);
+            // Log it.
+            Log.Information("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
             return Ok(phaseEventDtos);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = "Error computing lunar phases for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 
@@ -60,6 +70,7 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger) : Contro
     {
         try
         {
+            // Get the lunar phases.
             List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInMonth(year, month);
 
             // Construct the result.
@@ -67,14 +78,17 @@ public class LunarPhaseController(ILogger<LunarPhaseController> logger) : Contro
                 .Select(phaseEvent => new LunarPhaseDto(phaseEvent))
                 .ToList();
 
-            logger.LogInformation("{Count} lunar phases found.", phaseEvents.Count);
+            // Log it.
+            Log.Information("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
             return Ok(phaseEventDtos);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string monthName = GregorianCalendarExtensions.MonthNumberToName(month);
+            string error = $"Error computing lunar phases for {monthName}, {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 }

@@ -28,7 +28,7 @@ public record struct LunarPhaseDto
     /// <summary>
     /// The UTC datetime of the lunar phase.
     /// </summary>
-    public string DateTimeUtc { get; init; }
+    public string DateTime { get; init; }
 
     /// <summary>
     /// Construct from internal type.
@@ -39,6 +39,6 @@ public record struct LunarPhaseDto
         PhaseNumber = (int)lunarPhase.Phase;
         Phase = lunarPhase.Phase.GetDisplayName();
         // Round off to nearest minute.
-        DateTimeUtc = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToString("s");
+        DateTime = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToIsoString(true);
     }
 }

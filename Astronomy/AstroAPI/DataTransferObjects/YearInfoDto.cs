@@ -1,3 +1,4 @@
+using Galaxon.Time;
 using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
@@ -7,8 +8,6 @@ public record struct YearInfoDto
     public int Year { get; init; }
 
     public bool IsLeapYear { get; init; }
-
-    public string YearType { get; init; }
 
     public int NumberOfDays { get; init; }
 
@@ -24,19 +23,21 @@ public record struct YearInfoDto
 
     public int Millennium { get; init; }
 
-    public YearInfoDto(int year, bool isLeapYear, string yearType, int numberOfDays,
-        bool hasLeapSecond, DateOnly? leapSecondDate, DayOfWeek firstDayOfYearDayOfWeek,
-        double startOfYearJulianDate, int century, int millennium)
+    public int SolarCycle { get; init; }
+
+    public YearInfoDto(int year, bool isLeapYear, int numberOfDays, bool hasLeapSecond,
+        DateOnly? leapSecondDate, DayOfWeek firstDayOfYearDayOfWeek, double startOfYearJulianDate,
+        int century, int millennium, int solarCycle)
     {
         Year = year;
         IsLeapYear = isLeapYear;
-        YearType = yearType;
         NumberOfDays = numberOfDays;
         HasLeapSecond = hasLeapSecond;
-        LeapSecondDate = leapSecondDate?.ToString("O");
+        LeapSecondDate = leapSecondDate?.ToIsoString();
         FirstDayOfYearDayOfWeek = firstDayOfYearDayOfWeek.GetDisplayName();
         StartOfYearJulianDate = startOfYearJulianDate;
         Century = century;
         Millennium = millennium;
+        SolarCycle = solarCycle;
     }
 }

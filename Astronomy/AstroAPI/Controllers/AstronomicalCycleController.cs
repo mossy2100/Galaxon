@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
-using Galaxon.Numerics.Extensions.FloatingPoint;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -10,7 +10,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class AstronomicalCycleController(ILogger<AstronomicalCycleController> logger)
+public class AstronomicalCycleController
     : ControllerBase
 {
     [HttpGet("SolarDayLength")]
@@ -22,7 +22,7 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
             double solarDayLength = EarthService.GetSolarDayInSeconds(year);
 
             // Log it.
-            logger.LogInformation(
+            Log.Information(
                 "Length of solar day {Year} computed to be {SolarDayLength} seconds.", year,
                 solarDayLength);
 
@@ -31,7 +31,8 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing solar day length for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 
@@ -48,7 +49,7 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
             TropicalYearDto dto = new (ephemerisDays, solarDays);
 
             // Log it.
-            logger.LogInformation(
+            Log.Information(
                 "Length of tropical year {Year} computed to be {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
 
@@ -57,7 +58,8 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing tropical year length for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 
@@ -73,7 +75,7 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
             LunationDto dto = new (ephemerisDays, solarDays);
 
             // Log it.
-            logger.LogInformation(
+            Log.Information(
                 "Length of lunation in year {Year} computed to be {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
 
@@ -82,7 +84,8 @@ public class AstronomicalCycleController(ILogger<AstronomicalCycleController> lo
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing lunation length for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 }

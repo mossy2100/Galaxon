@@ -1,7 +1,9 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
+using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
+using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -10,9 +12,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class SeasonalMarkerController(
-    ILogger<SeasonalMarkerController> logger,
-    SeasonalMarkerService seasonalMarkerService) : ControllerBase
+public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerService) : ControllerBase
 {
     [HttpGet("InYear")]
     public IActionResult GetSeasonalMarkersInYear(int year)
@@ -20,24 +20,27 @@ public class SeasonalMarkerController(
         try
         {
             // Get the seasonal markers for the specified year.
-            List<SeasonalMarkerEvent> seasonalMarkers =
+            List<SeasonalMarkerEvent> seasonalMarkerEvents =
                 seasonalMarkerService.GetSeasonalMarkersInYear(year);
 
             // Construct the result.
-            List<SeasonalMarkerDto> results = [];
-            foreach (SeasonalMarkerEvent seasonalMarker in seasonalMarkers)
+            Dictionary<string, string> results = new ();
+            foreach (SeasonalMarkerEvent seasonalMarkerEvent in seasonalMarkerEvents)
             {
-                results.Add(new SeasonalMarkerDto(seasonalMarker));
+                results[seasonalMarkerEvent.SeasonalMarker.GetDisplayName()] = DateTimeExtensions
+                    .RoundToNearestMinute(seasonalMarkerEvent.DateTimeUtc).ToString("u");
             }
 
-            logger.LogInformation("{Count} lunar phases found.", results.Count);
+            // Log it.
+            Log.Information("{Count} lunar phases found.", results.Count);
 
             // Return the seasonal markers as HTTP response in JSON.
             return Ok(results);
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error computing seasonal markers for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 }

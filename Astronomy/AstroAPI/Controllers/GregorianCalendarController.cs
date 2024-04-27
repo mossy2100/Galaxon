@@ -3,6 +3,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -11,10 +12,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class GregorianCalendarController(
-    ILogger<GregorianCalendarController> logger,
-    LeapSecondService leapSecondService)
-    : ControllerBase
+public class GregorianCalendarController(LeapSecondService leapSecondService) : ControllerBase
 {
     [HttpGet("YearInfo")]
     public IActionResult GetYearInfo(int year)
@@ -33,13 +31,14 @@ public class GregorianCalendarController(
             DayOfWeek dayOfWeek = gc.GetDayOfWeek(firstDayOfYear.ToDateTime());
             int century = (year - 1) / 100 + 1;
             int millennium = (year - 1) / 1000 + 1;
+            int solarCycle = (year - 1) / 400 + 1;
 
             // Construct result.
-            YearInfoDto dto = new (year, isLeapYear, yearType, nDays, hasLeapSecond, leapSecondDate,
-                dayOfWeek, jdut, century, millennium);
+            YearInfoDto dto = new (year, isLeapYear, nDays, hasLeapSecond, leapSecondDate,
+                dayOfWeek, jdut, century, millennium, solarCycle);
 
             // Log it.
-            logger.LogInformation(
+            Log.Information(
                 "Gregorian calendar year {Year} is a {YearType} year with {Days} days.",
                 year, yearType, nDays);
 
@@ -48,7 +47,8 @@ public class GregorianCalendarController(
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this, ex, logger);
+            string error = $"Error getting information for year {year}.";
+            return Program.ReturnException(this, error, ex);
         }
     }
 }
