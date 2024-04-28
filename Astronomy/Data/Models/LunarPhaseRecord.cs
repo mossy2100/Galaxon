@@ -8,7 +8,7 @@ public class LunarPhaseRecord : DataObject
     public int LunationNumber { get; set; }
 
     /// <summary>
-    /// The phase number:
+    /// The phase as an integer:
     ///   0 = New Moon
     ///   1 = First Quarter
     ///   2 = Full Moon

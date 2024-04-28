@@ -3,7 +3,7 @@
 public class SeasonalMarkerRecord : DataObject
 {
     /// <summary>
-    /// This value is:
+    /// The seasonal marker as an integer:
     ///   0 = Northward (March) equinox
     ///   1 = Northern (June) solstice
     ///   2 = Southward (September) equinox
