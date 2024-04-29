@@ -213,6 +213,23 @@ public static class StringExtensions
     }
 
     /// <summary>
+    /// Return the string with the first letter converted to lower-case.
+    /// The other letters aren't changed.
+    /// </summary>
+    /// <param name="str">The original string.</param>
+    /// <returns>The string with the first letter lower-cased.</returns>
+    public static string ToLowerFirstLetter(this string str)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
+        // Return lower-case first letter concatenated with remaining substring.
+        return char.ToLower(str[0]) + str[1..];
+    }
+
+    /// <summary>
     /// Return the string with the first letter of each word upper-case, and all the other letters
     /// in each word unchanged.
     /// Words are taken to be sequences of letters and apostrophes (two kinds are supported), and

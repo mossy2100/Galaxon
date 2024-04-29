@@ -416,6 +416,14 @@
             <param name="str">The original string.</param>
             <returns>The string with the first letter upper-cased.</returns>
         </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.ToLowerFirstLetter(System.String)">
+            <summary>
+            Return the string with the first letter converted to lower-case.
+            The other letters aren't changed.
+            </summary>
+            <param name="str">The original string.</param>
+            <returns>The string with the first letter lower-cased.</returns>
+        </member>
         <member name="M:Galaxon.Core.Strings.StringExtensions.ToProper(System.String)">
             <summary>
             Return the string with the first letter of each word upper-case, and all the other letters
@@ -517,6 +525,16 @@
             <exception cref="T:System.ArgumentOutOfRangeException">
             If the type param is not an enum.
             </exception>
+        </member>
+        <member name="M:Galaxon.Core.Types.EnumExtensions.GetJsonPropertyName(System.Enum)">
+            <summary>
+            Gets the enum's JSON property name.
+            </summary>
+            <param name="enumValue">The enum value.</param>
+            <returns>
+            The JSON property name if provided, otherwise the value name with the first letter
+            lower-cased.
+            </returns>
         </member>
         <member name="T:Galaxon.Core.Types.FieldInfoExtensions">
             <summary>

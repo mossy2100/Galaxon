@@ -14,20 +14,26 @@ public class AstronomicalCycleController
     : ControllerBase
 {
     [HttpGet("SolarDayLength")]
-    public IActionResult GetSolarDayLength(int year)
+    public IActionResult GetSolarDayLength(double year)
     {
         try
         {
-            // Get the approximate solar day length at the beginning of the given year.
+            // Get the approximate solar day length at specified time of the year.
             double solarDayLength = EarthService.GetSolarDayInSeconds(year);
+
+            // Construct the result.
+            Dictionary<string, double> result = new ()
+            {
+                ["seconds"] = double.Round(solarDayLength, 6)
+            };
 
             // Log it.
             Log.Information(
-                "Length of solar day {Year} computed to be {SolarDayLength} seconds.", year,
+                "Length of solar day at year {Year} computed to be {SolarDayLength} seconds.", year,
                 solarDayLength);
 
             // Return the result as JSON.
-            return Ok($"{solarDayLength:F4} seconds");
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -37,7 +43,7 @@ public class AstronomicalCycleController
     }
 
     [HttpGet("TropicalYearLength")]
-    public IActionResult GetTropicalYearLength(int year)
+    public IActionResult GetTropicalYearLength(double year)
     {
         try
         {
@@ -45,8 +51,8 @@ public class AstronomicalCycleController
             double ephemerisDays = EarthService.GetTropicalYearInEphemerisDaysForYear(year);
             double solarDays = EarthService.GetTropicalYearInSolarDaysForYear(year);
 
-            // Construct result.
-            TropicalYearDto dto = new (ephemerisDays, solarDays);
+            // Construct the result.
+            TropicalYearDto result = new (ephemerisDays, solarDays);
 
             // Log it.
             Log.Information(
@@ -54,7 +60,7 @@ public class AstronomicalCycleController
                 year, ephemerisDays, solarDays);
 
             // Return the result as JSON.
-            return Ok(dto);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -64,15 +70,15 @@ public class AstronomicalCycleController
     }
 
     [HttpGet("LunationLength")]
-    public IActionResult GetLunationLength(int year)
+    public IActionResult GetLunationLength(double year)
     {
         try
         {
             double ephemerisDays = MoonService.GetLunationInEphemerisDaysForYear(year);
             double solarDays = MoonService.GetLunationInSolarDaysForYear(year);
 
-            // Construct result.
-            LunationDto dto = new (ephemerisDays, solarDays);
+            // Construct the result.
+            LunationDto result = new (ephemerisDays, solarDays);
 
             // Log it.
             Log.Information(
@@ -80,7 +86,7 @@ public class AstronomicalCycleController
                 year, ephemerisDays, solarDays);
 
             // Return the result as JSON.
-            return Ok(dto);
+            return Ok(result);
         }
         catch (Exception ex)
         {

@@ -501,6 +501,50 @@ public class StringExtensionsTests
 
     #endregion ToUpperFirstLetter
 
+    #region ToLowerFirstLetter
+
+    [TestMethod]
+    public void ToLowerFirstLetter_EmptyString_ReturnsEmptyString()
+    {
+        // Arrange
+        string input = "";
+
+        // Act
+        string result = input.ToLowerFirstLetter();
+
+        // Assert
+        Assert.AreEqual("", result);
+    }
+
+    [TestMethod]
+    public void ToLowerFirstLetter_StringWithUppercaseFirstLetter_ReturnsStringWithLowercaseFirstLetter()
+    {
+        // Arrange
+        string input = "Hello world";
+        string expected = "hello world";
+
+        // Act
+        string result = input.ToLowerFirstLetter();
+
+        // Assert
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ToLowerFirstLetter_StringWithLowercaseFirstLetter_ReturnsSameString()
+    {
+        // Arrange
+        string input = "hello world";
+
+        // Act
+        string result = input.ToLowerFirstLetter();
+
+        // Assert
+        Assert.AreEqual(input, result);
+    }
+
+    #endregion ToLowerFirstLetter
+
     #region ToProper
 
     [TestMethod]

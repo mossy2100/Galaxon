@@ -11,16 +11,15 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .CreateBootstrapLogger();
-
         try
         {
-            Log.Information("Starting web application");
-            ConstructApp(args);
+            SetupLogger();
+
+            Log.Information("Building web application");
+            WebApplication app = BuildApp(args);
+
+            Log.Information("Running web application");
+            app.Run();
         }
         catch (Exception ex)
         {
@@ -32,16 +31,9 @@ public class Program
         }
     }
 
-    private static void ConstructApp(string[] args)
+    private static WebApplication BuildApp(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-        // Add logger.
-        builder.Services.AddSerilog((services, lc) => lc
-            .ReadFrom.Configuration(builder.Configuration)
-            .ReadFrom.Services(services)
-            .Enrich.FromLogContext()
-            .WriteTo.Console());
 
         // Usual stuff.
         builder.Services.AddAuthorization();
@@ -75,8 +67,20 @@ public class Program
         app.MapControllers();
         app.MapRazorPages();
 
-        // Start the web server, host the website, and wait for requests.
-        app.Run();
+        return app;
+    }
+
+    public static void SetupLogger()
+    {
+        // Build configuration
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        // Set up Serilog
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
     }
 
     private static void ConfigureForProduction(WebApplication app)

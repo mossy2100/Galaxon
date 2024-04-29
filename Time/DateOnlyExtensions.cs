@@ -26,7 +26,7 @@ public static class DateOnlyExtensions
     /// <returns>A string representing the date in ISO format.</returns>
     public static string ToIsoString(this DateOnly date)
     {
-        return date.ToString("0");
+        return date.ToString("O");
     }
 
     #endregion Formatting

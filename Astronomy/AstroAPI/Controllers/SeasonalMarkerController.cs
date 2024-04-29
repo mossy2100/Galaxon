@@ -1,8 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Time;
+using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
 using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -24,15 +23,14 @@ public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerServic
                 seasonalMarkerService.GetSeasonalMarkersInYear(year);
 
             // Construct the result.
-            Dictionary<string, string> results = new ();
+            SeasonalMarkersDto results = new ();
             foreach (SeasonalMarkerEvent seasonalMarkerEvent in seasonalMarkerEvents)
             {
-                results[seasonalMarkerEvent.SeasonalMarker.GetDisplayName()] = DateTimeExtensions
-                    .RoundToNearestMinute(seasonalMarkerEvent.DateTimeUtc).ToString("u");
+                results.Add(seasonalMarkerEvent);
             }
 
             // Log it.
-            Log.Information("{Count} lunar phases found.", results.Count);
+            Log.Information("Seasonal markers found for year {Year}: {Results}", year, results);
 
             // Return the seasonal markers as HTTP response in JSON.
             return Ok(results);

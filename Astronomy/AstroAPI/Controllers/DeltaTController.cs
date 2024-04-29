@@ -16,12 +16,20 @@ public class DeltaTController : ControllerBase
     {
         try
         {
+            // Computer the delta-T for the given time specified as a decimal year.
             double deltaT = TimeScales.CalcDeltaT(year);
 
+            // Construct the result.
+            Dictionary<string, double> result = new ()
+            {
+                ["seconds"] = double.Round(deltaT, 6)
+            };
+
+            // Log it.
             Log.Information("Delta-T computed for year {Year} is {DeltaT} seconds.", year, deltaT);
 
             // Return the delta-T value as HTTP response in JSON.
-            return Ok($"{deltaT:F2} seconds");
+            return Ok(result);
         }
         catch (Exception ex)
         {

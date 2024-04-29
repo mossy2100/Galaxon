@@ -1,4 +1,7 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
+using Galaxon.Core.Strings;
+using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Core.Types;
 
@@ -42,5 +45,20 @@ public static class EnumExtensions
         // parameter if the method returns false).
         value = default(T);
         return false;
+    }
+
+    /// <summary>
+    /// Gets the enum's JSON property name.
+    /// </summary>
+    /// <param name="enumValue">The enum value.</param>
+    /// <returns>
+    /// The JSON property name if provided, otherwise the value name with the first letter
+    /// lower-cased.
+    /// </returns>
+    public static string GetJsonPropertyName(this Enum enumValue)
+    {
+        JsonPropertyNameAttribute? attribute =
+            enumValue.GetAttributeOfType<JsonPropertyNameAttribute>();
+        return attribute == null ? enumValue.ToString().ToLowerFirstLetter() : attribute.Name;
     }
 }
