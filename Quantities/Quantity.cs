@@ -25,12 +25,10 @@ public class Quantity
 
     #region Constructors
 
-    // /// <summary>
-    // /// Default constructor.
-    // /// </summary>
-    public Quantity()
-    {
-    }
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public Quantity() { }
 
     /// <summary>
     /// Construct from a amount and a unit.
@@ -47,23 +45,17 @@ public class Quantity
     /// <summary>
     /// Construct from a unit.
     /// </summary>
-    public Quantity(Unit unit) : this(1, unit)
-    {
-    }
+    public Quantity(Unit unit) : this(1, unit) { }
 
     /// <summary>
     /// Construct from a amount and a unit.
     /// </summary>
-    public Quantity(double amount, BaseUnit baseUnit) : this(amount, new Unit(baseUnit))
-    {
-    }
+    public Quantity(double amount, BaseUnit baseUnit) : this(amount, new Unit(baseUnit)) { }
 
     /// <summary>
     /// Construct from a unit.
     /// </summary>
-    public Quantity(BaseUnit baseUnit) : this(1, baseUnit)
-    {
-    }
+    public Quantity(BaseUnit baseUnit) : this(1, baseUnit) { }
 
     /// <summary>
     /// Construct from a amount as double and units as string.
@@ -97,9 +89,7 @@ public class Quantity
     /// Quantity m = new("1.2 rad");
     /// Quantity m = new("5 ft 10 in");
     /// </summary>
-    public Quantity(string? units) : this(1, units)
-    {
-    }
+    public Quantity(string? units) : this(1, units) { }
 
     #endregion Constructors
 
@@ -237,8 +227,10 @@ public class Quantity
                     // i.e. we wouldn't convert /°C (per degree celsius) to /K using this method.
                     // In those case the default multiplication method should be used.
                     Quantity metricQty;
-                    if (unit.BaseUnit.ToMetric != null && result.Units.Count == 1
-                        && unit.Prefix == null && unit.Exponent == 1)
+                    if (unit.BaseUnit.ToMetric != null
+                        && result.Units.Count == 1
+                        && unit.Prefix == null
+                        && unit.Exponent == 1)
                     {
                         // Calculate the new amount using the method.
                         result.Amount = unit.BaseUnit.ToMetric(unit.Prefix?.Multiplier ?? 1);
@@ -249,8 +241,8 @@ public class Quantity
                     else
                     {
                         // Get the amount of the metric unit.
-                        var amt = (unit.Prefix?.Multiplier ?? 1) *
-                            (unit.BaseUnit.MetricUnitAmount ?? 1);
+                        var amt = (unit.Prefix?.Multiplier ?? 1)
+                            * (unit.BaseUnit.MetricUnitAmount ?? 1);
 
                         // Get the metric unit as a quantity, including the prefix. This could throw.
                         metricQty = new Quantity(amt, unit.BaseUnit.MetricUnitSymbol);

@@ -17,21 +17,27 @@ public static class DateTimeExtensions
     #region Formatting
 
     /// <summary>
-    /// Format the date using ISO format YYYY-MM-DDThh:mm:ss.
-    /// This format is useful for databases and JSON responses.
-    /// See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring?view=net-7.0"/>
+    /// Format the date using ISO format, including time zone.
+    /// Useful for JSON responses and user feedback.
+    ///
+    /// You can also use this method for database records, but since datetime column types in
+    /// databases often don't support time zones, you may prefer to use the "s" standard format
+    /// specifier (i.e. ToString("s")).
+    ///
+    /// As per the link below, the time zone string will depends on the DateTime.Kind:
+    ///     * If the time zone is unspecified (DateTime.Kind = DateTimeKind.Unspecified), nothing.
+    ///     * For a UTC time (DateTime.Kind = DateTimeKind.Utc), a "Z" character.
+    ///     * For the local time zone (DateTime.Kind = DateTimeKind.Local), a string containing the
+    ///       local offset from UTC; e.g. "-07:00"
     /// </summary>
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring?view=net-7.0"/>
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#the-sortable-s-format-specifier"/>
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#KSpecifier"/>
     /// <param name="dt">The DateTime instance.</param>
-    /// <param name="includeTimeZone">Specifies whether to include the time zone in the format.</param>
     /// <returns>A string representing the datetime in ISO format.</returns>
-    public static string ToIsoString(this DateTime dt, bool includeTimeZone = false)
+    public static string ToIsoString(this DateTime dt)
     {
-        string result = dt.ToString("s");
-        if (includeTimeZone)
-        {
-            result += dt.ToString("%K");
-        }
-        return result;
+        return dt.ToString("yyyy-MM-ddThh:mm:ssK");
     }
 
     #endregion Formatting

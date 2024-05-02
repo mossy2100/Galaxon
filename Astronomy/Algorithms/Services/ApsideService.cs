@@ -10,7 +10,6 @@ using Galaxon.Time;
 namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class ApsideService(
-    AstroObjectRepository astroObjectRepository,
     AstroObjectGroupRepository astroObjectGroupRepository,
     PlanetService planetService)
 {
@@ -107,17 +106,19 @@ public class ApsideService(
         // Special handling for Earth.
         if (planet.Name == "Earth")
         {
+            double correction = 0;
             foreach (double[] values in _EarthCorrectionValues)
             {
                 if (apside == EApside.Periapsis)
                 {
-                    jdtt2 += values[2] * Angles.SinDegrees(values[0] + values[1] * k);
+                    correction += values[2] * Angles.SinDegrees(values[0] + values[1] * k);
                 }
                 else
                 {
-                    jdtt2 += values[3] * Angles.SinDegrees(values[0] + values[1] * k);
+                    correction += values[3] * Angles.SinDegrees(values[0] + values[1] * k);
                 }
             }
+            jdtt2 += correction;
         }
 
         return jdtt2;

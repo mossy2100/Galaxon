@@ -2,6 +2,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Quantities;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -23,8 +24,7 @@ public class ApsideController(
         AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
         if (planet == null)
         {
-            string error = $"Invalid planet name '{planetName}'.";
-            return Program.ReturnException(this, error);
+            return Program.ReturnException(this, $"Invalid planet name '{planetName}'.");
         }
 
         // Convert the apside from an integer to an enum value.
@@ -35,8 +35,8 @@ public class ApsideController(
         }
         catch (Exception ex)
         {
-            string error = "The apside number should be 0 for perihelion and 1 for aphelion.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this,
+                "The apside number should be 0 for perihelion and 1 for aphelion.", ex);
         }
 
         // Convert the date string to a DateTime.
@@ -47,32 +47,41 @@ public class ApsideController(
         }
         catch (Exception ex)
         {
-            string error = "The date was in an invalid format. Try using the format YYYY-MM-DD.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this,
+                "The date was in an invalid format. Try using the format YYYY-MM-DD.", ex);
         }
 
         // Calculate the apside.
-        DateTime dtApside;
+        double jdtt1;
+        double rMetres;
+        double rAu;
+        DateTime dt1;
         try
         {
-            dtApside = apsideService.GetClosestApsideApprox(planet, apside, dt);
+            double jdtt = TimeScales.DateTimeToJulianDate(dt);
+            (jdtt1, rMetres) = apsideService.GetClosestApside(planet, apside, jdtt);
+            dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
+            rAu = rMetres / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
         }
         catch (Exception ex)
         {
-            string error = "Error computing the apside event.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this, "Error computing the apside event.", ex);
         }
 
         // Log it.
-        Log.Information("{Apside} for {Planet} nearest {Date} computed to be {EventDateTime}",
-            apside.ToString(), planet.Name, dt.ToString("O"), dtApside.ToIsoString(true));
+        string strApsideDateTime = dt1.ToIsoString();
+        Log.Information(
+            "{Apside} for {Planet} near {Date} computed to be {EventDateTime}, at a distance of {RadiusMetres} metres ({RadiusAU} AU) from the Sun.",
+            apside.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rMetres, rAu);
 
         // Construct the result.
         var result = new
         {
             Planet = planet.Name,
             Apside = apside == EApside.Periapsis ? "perihelion" : "aphelion",
-            DateTime = dtApside.ToIsoString(true)
+            DateTime = strApsideDateTime,
+            RadiusInMetres = rMetres,
+            RadiusInAU = rAu
         };
 
         // Return the result as JSON.

@@ -47,21 +47,9 @@ public static class TimeScales
     /// <summary>
     /// Convert a decimal year to a Julian Date (UT).
     /// </summary>
-    /// <param name="year"></param>
-    /// <returns></returns>
-    public static double DecimalYearToJulianDateUniversal1(double year)
+    public static double DecimalYearToJulianDateUniversalLimitedRange(double year)
     {
         return DateTimeToJulianDate(DecimalYearToDateTime(year));
-    }
-
-    /// <summary>
-    /// Convert a decimal year to a Julian Date (UT).
-    /// </summary>
-    /// <param name="year"></param>
-    /// <returns></returns>
-    public static double JulianDateUniversalToDecimalYear1(double jdut)
-    {
-        return DateTimeToDecimalYear(JulianDateToDateTime(jdut));
     }
 
     /// <summary>
@@ -92,6 +80,14 @@ public static class TimeScales
     }
 
     /// <summary>
+    /// Convert a decimal year to a Julian Date (UT).
+    /// </summary>
+    public static double JulianDateUniversalToDecimalYearLimitedRange(double jdut)
+    {
+        return DateTimeToDecimalYear(JulianDateToDateTime(jdut));
+    }
+
+    /// <summary>
     /// Convert a Julian Date (UT) to a decimal year.
     /// I've re-implemented this to not use DateTime so it isn't limited to the range of years
     /// 1-9999 like the DateTime type.
@@ -101,32 +97,32 @@ public static class TimeScales
     public static double JulianDateUniversalToDecimalYear(double jdut)
     {
         // Start at beginning of year 1.
-        int decimalYear = 1;
+        int year = 1;
         double days = jdut - TimeConstants.START_GREGORIAN_EPOCH_JDUT;
 
         // Add Gregorian solar cycles.
         int solarCycles = (int)Floor(days / TimeConstants.DAYS_PER_GREGORIAN_SOLAR_CYCLE);
-        decimalYear += solarCycles * TimeConstants.YEARS_PER_GREGORIAN_SOLAR_CYCLE;
+        year += solarCycles * TimeConstants.YEARS_PER_GREGORIAN_SOLAR_CYCLE;
         days -= solarCycles * TimeConstants.DAYS_PER_GREGORIAN_SOLAR_CYCLE;
 
         // Add centuries.
         int centuries = (int)Floor(days / 36524);
-        decimalYear += centuries * TimeConstants.YEARS_PER_CENTURY;
+        year += centuries * TimeConstants.YEARS_PER_CENTURY;
         days -= centuries * 36524;
 
         // Add olympiads.
         int olympiads = (int)Floor(days / 1461);
-        decimalYear += olympiads * TimeConstants.YEARS_PER_OLYMPIAD;
+        year += olympiads * TimeConstants.YEARS_PER_OLYMPIAD;
         days -= olympiads * 1461;
 
         // Add remaining years.
-        int years = (int)Floor(days / 365);
-        decimalYear += years;
-        days -= years * 365;
+        int remainingYears = (int)Floor(days / 365);
+        year += remainingYears;
+        days -= remainingYears * 365;
 
         // Add the fraction of a year.
-        int daysInYear = GregorianCalendarExtensions.GetDaysInYear(decimalYear);
-        return decimalYear + days / daysInYear;
+        int daysInYear = GregorianCalendarExtensions.GetDaysInYear(year);
+        return year + days / daysInYear;
     }
 
     #endregion Decimal year methods

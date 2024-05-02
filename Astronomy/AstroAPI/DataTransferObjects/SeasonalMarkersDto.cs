@@ -10,7 +10,7 @@ public class SeasonalMarkersDto : Dictionary<string, string>
     {
         string key = seasonalMarkerEvent.SeasonalMarker.GetJsonPropertyName();
         string value = DateTimeExtensions.RoundToNearestMinute(seasonalMarkerEvent.DateTimeUtc)
-            .ToIsoString(true);
+            .ToIsoString();
         Add(key, value);
     }
 }
