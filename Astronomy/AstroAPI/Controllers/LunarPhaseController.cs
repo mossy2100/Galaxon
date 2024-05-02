@@ -11,17 +11,16 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to lunar phases.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
-public class LunarPhaseController : ControllerBase
+public class LunarPhaseController(MoonService moonService) : ControllerBase
 {
-    [HttpGet("NearDate")]
+    [HttpGet("api/lunar-phase-near-date")]
     public IActionResult GetLunarPhaseNearDate(string isoDateString)
     {
         try
         {
             // Get the lunar phase.
             DateOnly date = DateOnly.Parse(isoDateString);
-            LunarPhaseEvent lunarPhase = MoonService.GetPhaseNearDate(date);
+            LunarPhaseEvent lunarPhase = moonService.GetPhaseNearDate(date);
 
             // Construct the result.
             LunarPhaseDto dto = new (lunarPhase);
@@ -39,13 +38,13 @@ public class LunarPhaseController : ControllerBase
         }
     }
 
-    [HttpGet("InYear")]
+    [HttpGet("api/lunar-phases-in-year")]
     public IActionResult GetLunarPhasesInYear(int year)
     {
         try
         {
             // Get the lunar phase data.
-            List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInYear(year);
+            List<LunarPhaseEvent> phaseEvents = moonService.GetPhasesInYear(year);
 
             // Construct the result.
             List<LunarPhaseDto> phaseEventDtos = phaseEvents
@@ -65,13 +64,13 @@ public class LunarPhaseController : ControllerBase
         }
     }
 
-    [HttpGet("InMonth")]
+    [HttpGet("api/lunar-phases-in-month")]
     public IActionResult GetLunarPhasesInMonth(int year, int month)
     {
         try
         {
             // Get the lunar phases.
-            List<LunarPhaseEvent> phaseEvents = MoonService.GetPhasesInMonth(year, month);
+            List<LunarPhaseEvent> phaseEvents = moonService.GetPhasesInMonth(year, month);
 
             // Construct the result.
             List<LunarPhaseDto> phaseEventDtos = phaseEvents

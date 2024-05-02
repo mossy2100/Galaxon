@@ -10,10 +10,9 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to lunar phases.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
 public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerService) : ControllerBase
 {
-    [HttpGet("InYear")]
+    [HttpGet("api/seasonal-markers-in-year")]
     public IActionResult GetSeasonalMarkersInYear(int year)
     {
         try

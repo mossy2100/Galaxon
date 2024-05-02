@@ -25,6 +25,8 @@ public record struct YearInfoDto
 
     public int SolarCycle { get; init; }
 
+    public SortedDictionary<string, string> Events { get; init; }
+
     public YearInfoDto(int year, bool isLeapYear, int numberOfDays, bool hasLeapSecond,
         DateOnly? leapSecondDate, DayOfWeek firstDayOfYearDayOfWeek, double startOfYearJulianDate,
         int century, int millennium, int solarCycle)
@@ -39,5 +41,6 @@ public record struct YearInfoDto
         Century = century;
         Millennium = millennium;
         SolarCycle = solarCycle;
+        Events = new SortedDictionary<string, string>();
     }
 }

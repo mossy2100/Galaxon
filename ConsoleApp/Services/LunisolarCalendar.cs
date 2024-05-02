@@ -539,7 +539,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     /// <summary>
     /// Find a date when a New Moon occurs and a year begins.
     /// </summary>
-    public static void FindEpoch()
+    public void FindEpoch()
     {
         // Construct a SunService.
         AstroDbContext astroDbContext = new ();
@@ -554,8 +554,7 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<LunarPhaseEvent> newMoons =
-            MoonService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
+        List<LunarPhaseEvent> newMoons = moonService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
         foreach (LunarPhaseEvent newMoon in newMoons)
         {
             // Get Ls.

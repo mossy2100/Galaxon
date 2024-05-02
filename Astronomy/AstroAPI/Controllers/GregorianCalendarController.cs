@@ -1,8 +1,14 @@
 using System.Globalization;
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
+using Galaxon.Astronomy.Data.Enums;
+using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Core.Exceptions;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -11,10 +17,14 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to lunar phases.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
-public class GregorianCalendarController(LeapSecondService leapSecondService) : ControllerBase
+public class GregorianCalendarController(
+    AstroObjectRepository astroObjectRepository,
+    LeapSecondService leapSecondService,
+    MoonService moonService,
+    SeasonalMarkerService seasonalMarkerService,
+    ApsideService apsideService) : ControllerBase
 {
-    [HttpGet("YearInfo")]
+    [HttpGet("api/year-info")]
     public IActionResult GetYearInfo(int year)
     {
         try
@@ -36,6 +46,34 @@ public class GregorianCalendarController(LeapSecondService leapSecondService) : 
             // Construct result.
             YearInfoDto dto = new (year, isLeapYear, nDays, hasLeapSecond, leapSecondDate,
                 dayOfWeek, jdut, century, millennium, solarCycle);
+
+            // Add the events.
+            // Apsides.
+            AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
+            if (earth == null)
+            {
+                throw new DataNotFoundException("Could not load Earth from the database.");
+            }
+            (double jdtt, _) = apsideService.GetClosestApside(earth, EApside.Periapsis, TimeScales.DecimalYearToJulianDate(year));
+            dto.Events.Add(TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt).ToIsoString(), "Perihelion");
+            (jdtt, _) = apsideService.GetClosestApside(earth, EApside.Apoapsis, TimeScales.DecimalYearToJulianDate(year + 0.5));
+            dto.Events.Add(TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt).ToIsoString(), "Aphelion");
+
+            // Seasonal markers.
+            List<SeasonalMarkerEvent> seasonalMarkerEvents =
+                seasonalMarkerService.GetSeasonalMarkersInYear(year);
+            foreach (SeasonalMarkerEvent seasonalMarkerEvent in seasonalMarkerEvents)
+            {
+                dto.Events.Add(seasonalMarkerEvent.DateTimeUtc.ToIsoString(),
+                    seasonalMarkerEvent.SeasonalMarker.GetDisplayName());
+            }
+
+            // Lunar phases.
+            List<LunarPhaseEvent> phases = moonService.GetPhasesInYear(year);
+            foreach (LunarPhaseEvent phase in phases)
+            {
+                dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.Phase.GetDisplayName());
+            }
 
             // Log it.
             Log.Information(

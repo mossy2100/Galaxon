@@ -19,31 +19,6 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
-    /// Cached reference to the AstroObject representing Luna.
-    /// </summary>
-    private AstroObject? _luna;
-
-    #region Instance methods
-
-    /// <summary>
-    /// Get the AstroObject representing Luna.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="DataNotFoundException"></exception>
-    public AstroObject GetPlanet()
-    {
-        if (_luna == null)
-        {
-            AstroObject? luna = astroObjectRepository.LoadByName("Luna", "Satellite");
-            _luna = luna
-                ?? throw new DataNotFoundException(
-                    "Could not find the Moon (Luna) in the database.");
-        }
-
-        return _luna;
-    }
-
-    /// <summary>
     /// Get the lunar phase closest to the given DateTime, deferring first to other calculations
     /// likely to be better than mine, i.e. USNO and AstroPixels.
     /// </summary>
@@ -79,10 +54,6 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         return GetPhaseNearDateTime(dt);
     }
 
-    #endregion Instance methods
-
-    #region Static methods
-
     /// <summary>
     /// Find the DateTime (UTC) of the next specified lunar phase closest to the given DateTime.
     /// Algorithm taken from Chapter 49 "Phases of the Moon", Astronomical Algorithms 2nd ed. by
@@ -93,7 +64,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// An object containing information about what type of phase it is, and the approximate
     /// datetime of the event in UTC.
     /// </returns>
-    public static LunarPhaseEvent GetPhaseNearDateTime(DateTime dt)
+    public LunarPhaseEvent GetPhaseNearDateTime(DateTime dt)
     {
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
@@ -290,7 +261,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// An object containing information about what type of phase it is, and the approximate
     /// datetime of the event in UTC.
     /// </returns>
-    public static LunarPhaseEvent GetPhaseNearDate(DateOnly d)
+    public LunarPhaseEvent GetPhaseNearDate(DateOnly d)
     {
         return GetPhaseNearDateTime(d.ToDateTime());
     }
@@ -302,8 +273,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <param name="end">The end of the period.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns></returns>
-    public static List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end,
-        ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end, ELunarPhase? phase = null)
     {
         List<LunarPhaseEvent> result = [];
 
@@ -351,8 +321,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <param name="month">The month number.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhaseEvent> GetPhasesInMonth(int year, int month,
-        ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInMonth(int year, int month, ELunarPhase? phase = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -380,7 +349,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     /// <param name="year">The year number.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public static List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhase? phase = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -392,6 +361,8 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
         return GetPhasesInPeriod(GregorianCalendarExtensions.GetYearStart(year, DateTimeKind.Utc),
             GregorianCalendarExtensions.GetYearEnd(year, DateTimeKind.Utc), phase);
     }
+
+    #region Static methods
 
     /// <summary>
     /// Calculate the approximate average length of a lunation in ephemeris days at a point in time.

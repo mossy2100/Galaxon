@@ -8,10 +8,9 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to Delta-T.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
 public class DeltaTController : ControllerBase
 {
-    [HttpGet("ForYear")]
+    [HttpGet("api/delta-t")]
     public IActionResult GetDeltaTForYear(double year)
     {
         try

@@ -109,6 +109,7 @@ public class Program
         builder.Services.AddScoped<AstroObjectRepository>();
         builder.Services.AddScoped<PlanetService>();
         builder.Services.AddScoped<EarthService>();
+        builder.Services.AddScoped<MoonService>();
         builder.Services.AddScoped<SunService>();
         builder.Services.AddScoped<SeasonalMarkerService>();
         builder.Services.AddScoped<LeapSecondRepository>();

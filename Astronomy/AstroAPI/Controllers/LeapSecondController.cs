@@ -10,10 +10,9 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to lunar phases.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
 public class LeapSecondController(AstroDbContext astroDbContext) : ControllerBase
 {
-    [HttpGet("All")]
+    [HttpGet("api/leap-seconds")]
     public IActionResult GetLeapSeconds()
     {
         try
