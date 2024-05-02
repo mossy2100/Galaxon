@@ -34,7 +34,7 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     {
         if (_luna == null)
         {
-            AstroObject? luna = astroObjectRepository.Load("Luna", "Satellite");
+            AstroObject? luna = astroObjectRepository.LoadByName("Luna", "Satellite");
             _luna = luna
                 ?? throw new DataNotFoundException(
                     "Could not find the Moon (Luna) in the database.");

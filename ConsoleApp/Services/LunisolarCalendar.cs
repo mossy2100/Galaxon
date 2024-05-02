@@ -543,7 +543,9 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     {
         // Construct a SunService.
         AstroDbContext astroDbContext = new ();
-        AstroObjectRepository astroObjectRepository = new (astroDbContext);
+        AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
+        AstroObjectRepository astroObjectRepository =
+            new (astroDbContext, astroObjectGroupRepository);
         PlanetService planetService = new (astroDbContext);
         EarthService earthService = new (astroObjectRepository, planetService);
         var sunService = new SunService(earthService);

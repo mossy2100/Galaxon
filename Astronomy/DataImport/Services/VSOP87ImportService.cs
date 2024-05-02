@@ -36,7 +36,7 @@ public class VSOP87ImportService(
             }
 
             // Attach the record to the right planet AstroObject.
-            AstroObject? planet = astroObjectRepository.Load(planetNum, "Planet");
+            AstroObject? planet = astroObjectRepository.LoadByNumber(planetNum, "Planet");
             if (planet == null)
             {
                 throw new InvalidOperationException($"Could not find planet number {planetNum}.");

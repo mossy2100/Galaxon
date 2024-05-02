@@ -51,9 +51,8 @@ public class PlanetService(AstroDbContext astroDbContext)
         // Get the VSOP87D data for the planet from the database.
         // These aren't included in Load() so I may need to get them separately
         // rather than via the VSOP87DRecords property.
-        var records = astroDbContext.VSOP87DRecords
-            .Where(r => r.AstroObjectId == planet.Id)
-            .ToList();
+        List<VSOP87DRecord> records = astroDbContext.VSOP87DRecords
+            .Where(r => r.AstroObjectId == planet.Id).ToList();
 
         // Check there are records.
         if (records.IsEmpty())

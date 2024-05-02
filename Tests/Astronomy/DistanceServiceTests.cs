@@ -34,8 +34,7 @@ public class DistanceServiceTests
         // Calculate distance in metres.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
-
+        AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
         if (earth == null)
         {
             Assert.Fail("Earth could not be found in the database.");
@@ -69,7 +68,7 @@ public class DistanceServiceTests
         // Calculate distance in metres.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
+        AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
         if (earth == null)
         {
@@ -97,7 +96,7 @@ public class DistanceServiceTests
         // Calculate distance in metres.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
+        AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
         if (earth == null)
         {

@@ -1,6 +1,6 @@
 namespace Galaxon.Astronomy.Data.Models;
 
-public class ApsideEvent : DataObject
+public class ApsideRecord : DataObject
 {
     /// <summary>
     /// This value is:

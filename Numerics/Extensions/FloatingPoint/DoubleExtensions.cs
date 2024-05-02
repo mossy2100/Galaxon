@@ -16,6 +16,11 @@ public static class DoubleExtensions
     /// <summary>The number of bits in the fraction.</summary>
     public const byte NUM_FRAC_BITS = 52;
 
+    /// <summary>
+    /// The golden ratio.
+    /// </summary>
+    public const double GOLDEN_RATIO = 1.61803398874989484820458683436;
+
     #endregion Constants
 
     #region Miscellaneous methods

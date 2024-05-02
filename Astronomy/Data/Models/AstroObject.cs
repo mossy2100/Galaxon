@@ -67,34 +67,6 @@ public class AstroObject : DataObject
     public virtual List<VSOP87DRecord>? VSOP87DRecords { get; set; }
 
     /// <summary>
-    /// Check for case-sensitive match on name or number.
-    /// Only matches on full string (although with whitespace trimmed).
-    /// </summary>
-    /// <param name="searchString">The search string.</param>
-    /// <returns>If there's a match.</returns>
-    /// TODO Test.
-    public bool IsMatch(string searchString)
-    {
-        // Guard.
-        searchString = searchString.Trim();
-        if (string.IsNullOrEmpty(searchString))
-        {
-            throw new ArgumentOutOfRangeException(nameof(searchString),
-                "Cannot be null, empty, or whitespace.");
-        }
-
-        // Match on name, number, both together, readable designation, or packed designation.
-        return searchString == Name
-            || searchString == Number.ToString()
-            || searchString == $"{Name} {Number}"
-            || searchString == $"{Number} {Name}"
-            || searchString == $"{Name} ({Number})"
-            || searchString == $"({Number}) {Name}";
-        // || searchString == (MinorPlanet?.ReadableDesignation ?? "")
-        // || searchString == (MinorPlanet?.PackedDesignation ?? "");
-    }
-
-    /// <summary>
     /// Specify the object's orbital parameters.
     /// </summary>
     /// <param name="parent">The object it orbits.</param>

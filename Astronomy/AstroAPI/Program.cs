@@ -113,6 +113,7 @@ public class Program
         builder.Services.AddScoped<SeasonalMarkerService>();
         builder.Services.AddScoped<LeapSecondRepository>();
         builder.Services.AddScoped<LeapSecondService>();
+        builder.Services.AddScoped<ApsideService>();
     }
 
     /// <summary>
@@ -122,7 +123,8 @@ public class Program
     /// <param name="error">The error message.</param>
     /// <param name="ex">The exception that occured.</param>
     /// <returns></returns>
-    public static ObjectResult ReturnException(ControllerBase controller, string error, Exception? ex)
+    public static ObjectResult ReturnException(ControllerBase controller, string error,
+        Exception? ex = null)
     {
         // Log the error and exception details.
         Log.Error("Error: {Error}", error);

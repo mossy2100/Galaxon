@@ -31,7 +31,7 @@ public class PlanetImportService(
     public void Import()
     {
         // Get the Sun.
-        AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
+        AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         // Open the CSV file for parsing.
         var csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
@@ -53,7 +53,7 @@ public class PlanetImportService(
                 continue;
             }
 
-            AstroObject? planet = astroObjectRepository.Load(name, "Planet");
+            AstroObject? planet = astroObjectRepository.LoadByName(name, "Planet");
 
             if (planet == null)
             {

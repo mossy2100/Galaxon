@@ -20,7 +20,10 @@ public static class AstroObjectExtensions
     public static double CalculateShortestDistanceBetween(this AstroObject astroObj,
         GeoCoordinate location1, GeoCoordinate location2)
     {
-        if (astroObj.Physical == null)
+        if (astroObj.Physical == null
+            || astroObj.Physical.RadiusA == null
+            || astroObj.Physical.RadiusB == null
+            || astroObj.Physical.RadiusC == null)
         {
             throw new InvalidOperationException(
                 "Cannot calculate the shortest distance between two points on a world without known both the equatorial and the polar radii.");

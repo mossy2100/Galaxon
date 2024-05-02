@@ -1,4 +1,4 @@
-@page
+@page "/delta-t"
 @model Galaxon.Astronomy.AstroAPI.Pages.DeltaTChart
 
 @{
@@ -7,13 +7,33 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
-    <title></title>
+    <title>Delta-T Chart</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/victory@@^35"></script>
 </head>
 <body>
 <div>
-    This is my Delta-T chart page.
+    <h1>Delta-T Chart</h1>
+    <div id="victory-chart"></div>
 </div>
+
+<script>
+    const data = [
+      { x: 1, y: 2 },
+      { x: 2, y: 3 },
+      { x: 3, y: 5 },
+      { x: 4, y: 7 },
+      { x: 5, y: 11 },
+    ];
+
+    ReactDOM.render(
+      React.createElement(Victory.VictoryLine, { data: data }),
+      document.getElementById('victory-chart')
+    );
+</script>
+
 </body>
 </html>

@@ -119,7 +119,7 @@ public class SeasonalMarkerImportService
                             else
                             {
                                 // Construct the Apside record.
-                                ApsideEvent newApsideEvent = new ()
+                                ApsideRecord newApsideRecord = new ()
                                 {
                                     ApsideNumber = (int)apside,
                                     DateTimeUtcUsno = dt
@@ -128,13 +128,13 @@ public class SeasonalMarkerImportService
                                 Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
-                                ApsideEvent? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
+                                ApsideRecord? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
                                     a.ApsideNumber == (int)apside
                                     && a.DateTimeUtcUsno.Year == year
                                     && a.DateTimeUtcUsno.Month == usm.month);
                                 if (existingApside == null)
                                 {
-                                    astroDbContext.Apsides.Add(newApsideEvent);
+                                    astroDbContext.Apsides.Add(newApsideRecord);
                                     await astroDbContext.SaveChangesAsync();
                                 }
                                 else if (existingApside.DateTimeUtcUsno != dt)

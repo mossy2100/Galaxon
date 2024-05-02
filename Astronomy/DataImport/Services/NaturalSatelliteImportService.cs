@@ -12,7 +12,8 @@ public class NaturalSatelliteImportService
     {
         AstroDbContext astroDbContext = new ();
         AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository = new (astroDbContext);
+        AstroObjectRepository astroObjectRepository =
+            new (astroDbContext, astroObjectGroupRepository);
 
         try
         {
@@ -46,7 +47,7 @@ public class NaturalSatelliteImportService
 
                             // Load the satellite record from the database, if present.
                             AstroObject? satellite =
-                                astroObjectRepository.Load(satelliteName, "Satellite");
+                                astroObjectRepository.LoadByName(satelliteName, "Satellite");
 
                             // Create or update the satellite record as required.
                             if (satellite == null)
@@ -66,27 +67,30 @@ public class NaturalSatelliteImportService
                             // Planet or dwarf planet the satellite orbits.
                             string parentName = cells[2 + offset].InnerText.Trim();
                             Console.WriteLine($"Parent name: {parentName}");
-                            AstroObject? parent = astroObjectRepository.Load(parentName, "Planet");
+                            AstroObject? parent = astroObjectRepository.LoadByName(parentName, "Planet");
                             if (parent == null)
                             {
                                 // Try dwarf planet.
-                                parent = astroObjectRepository.Load(parentName, "Dwarf planet");
+                                parent = astroObjectRepository.LoadByName(parentName, "Dwarf planet");
                                 if (parent == null)
                                 {
-                                    Console.WriteLine($"No parent object '{parentName}' found; skipping this item.");
+                                    Console.WriteLine(
+                                        $"No parent object '{parentName}' found; skipping this item.");
                                     continue;
                                 }
                             }
                             satellite.Parent = parent;
 
                             // Number.
-                            uint? number = ParseUtility.ExtractNumber(cells[3 + offset].InnerText.Trim());
+                            uint? number =
+                                ParseUtility.ExtractNumber(cells[3 + offset].InnerText.Trim());
                             Console.WriteLine($"Number: {number}");
                             satellite.Number = number;
 
                             // Sidereal period and if the satellite is retrograde or not.
                             string siderealPeriodText = cells[6 + offset].InnerText.Trim();
-                            int rPos = siderealPeriodText.IndexOf("(r)", StringComparison.InvariantCulture);
+                            int rPos = siderealPeriodText.IndexOf("(r)",
+                                StringComparison.InvariantCulture);
                             bool isRetrograde = false;
                             if (rPos != -1)
                             {

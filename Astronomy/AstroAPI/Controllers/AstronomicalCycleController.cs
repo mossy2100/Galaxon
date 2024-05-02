@@ -9,11 +9,9 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to Delta-T.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
-public class AstronomicalCycleController
-    : ControllerBase
+public class AstronomicalCycleController : ControllerBase
 {
-    [HttpGet("SolarDayLength")]
+    [HttpGet("api/solar-day-length")]
     public IActionResult GetSolarDayLength(double year)
     {
         try
@@ -42,7 +40,7 @@ public class AstronomicalCycleController
         }
     }
 
-    [HttpGet("TropicalYearLength")]
+    [HttpGet("api/tropical-year-length")]
     public IActionResult GetTropicalYearLength(double year)
     {
         try
@@ -69,7 +67,7 @@ public class AstronomicalCycleController
         }
     }
 
-    [HttpGet("LunationLength")]
+    [HttpGet("api/lunation-length")]
     public IActionResult GetLunationLength(double year)
     {
         try

@@ -12,10 +12,11 @@ public class DwarfPlanetImportService
     {
         AstroDbContext astroDbContext = new ();
         AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository = new (astroDbContext);
+        AstroObjectRepository astroObjectRepository =
+            new (astroDbContext, astroObjectGroupRepository);
 
         // Get the Sun.
-        AstroObject? sun = astroObjectRepository.Load("Sun", "Star");
+        AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
         if (sun == null)
         {
             throw new Exception("Could not load Sun from database.");
@@ -52,7 +53,8 @@ public class DwarfPlanetImportService
                             (uint number, string name) = ParseDwarfPlanetName(numberAndName);
 
                             // Check if an official dwarf planet according to the IAU.
-                            string[] validDwarfPlants = ["Ceres", "Pluto", "Eris", "Haumea", "Makemake", "Quaoar"];
+                            string[] validDwarfPlants =
+                                ["Ceres", "Pluto", "Eris", "Haumea", "Makemake", "Quaoar"];
                             if (!validDwarfPlants.Contains(name))
                             {
                                 continue;
@@ -60,7 +62,8 @@ public class DwarfPlanetImportService
 
                             // Load the dwarf planet record from the database, if present.
                             Console.WriteLine($"Dwarf planet: {name}");
-                            AstroObject? dwarfPlanet = astroObjectRepository.Load(name, "Dwarf planet");
+                            AstroObject? dwarfPlanet =
+                                astroObjectRepository.LoadByName(name, "Dwarf planet");
 
                             // Create or update the dwarf planet record as required.
                             if (dwarfPlanet == null)

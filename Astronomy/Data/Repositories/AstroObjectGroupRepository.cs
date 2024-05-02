@@ -51,7 +51,7 @@ public class AstroObjectGroupRepository(AstroDbContext astroDbContext)
     /// <param name="astroObject">The AstroObject to look for.</param>
     /// <param name="group">The AstroObjectGroup to look in.</param>
     /// <returns>If the object is in the specified group.</returns>
-    public static bool IsInGroup(AstroObject astroObject, AstroObjectGroup group)
+    public bool IsInGroup(AstroObject astroObject, AstroObjectGroup group)
     {
         return astroObject.Groups?.Contains(group) ?? false;
     }
@@ -62,7 +62,7 @@ public class AstroObjectGroupRepository(AstroDbContext astroDbContext)
     /// <param name="astroObject">The AstroObject to look for.</param>
     /// <param name="groupName">The name of the group to check (case sensitive).</param>
     /// <returns>If the object is in the specified group.</returns>
-    public static bool IsInGroup(AstroObject astroObject, string groupName)
+    public bool IsInGroup(AstroObject astroObject, string groupName)
     {
         return astroObject.Groups != null
             && astroObject.Groups.Any(group => groupName.EqualsIgnoreCase(group.Name));

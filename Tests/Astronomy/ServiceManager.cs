@@ -23,6 +23,7 @@ public static class ServiceManager
             .AddScoped<SunService>()
             .AddScoped<MoonService>()
             .AddScoped<SeasonalMarkerService>()
+            .AddScoped<ApsideService>()
             // Build it.
             .BuildServiceProvider();
     }

@@ -31,7 +31,7 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
     {
         if (_earth == null)
         {
-            AstroObject? earth = astroObjectRepository.Load("Earth", "Planet");
+            AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
             _earth = earth
                 ?? throw new DataNotFoundException("Could not find planet Earth in the database.");
         }
