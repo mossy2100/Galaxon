@@ -200,37 +200,51 @@ class Program
         {
             double y = rnd.Next(1, 9999) + rnd.NextDouble();
 
-            double jdut1 = TimeScales.DecimalYearToJulianDateUniversalLimitedRange(y);
-            double jdut2 = TimeScales.DecimalYearToJulianDateUniversal(y);
-            if (!jdut1.FuzzyEquals(jdut2))
-            {
-                Console.WriteLine("Error in DecimalYearToJulianDateUniversal():");
-                Console.WriteLine($"    Original value for decimal year: {y}");
-                Console.WriteLine($"    JDUT, limited range method:      {jdut1}");
-                Console.WriteLine($"    JDUT, unlimited range method:    {jdut2}");
-                Console.WriteLine();
-                break;
-            }
+            // double jdut1 = TimeScales.DecimalYearToJulianDateLimitedRange(y);
+            double jdut2 = TimeScales.DecimalYearToJulianDate(y);
+            // if (!jdut2.FuzzyEquals(jdut1))
+            // {
+            //     Console.WriteLine("Error in DecimalYearToJulianDate():");
+            //     Console.WriteLine($"    Original value for decimal year: {y}");
+            //     Console.WriteLine($"    JDUT, limited range method:      {jdut1}");
+            //     Console.WriteLine($"    JDUT, unlimited range method:    {jdut2}");
+            //     Console.WriteLine($"    Difference:                      {Math.Abs(jdut2 - jdut1)}");
+            //     Console.WriteLine();
+            //     break;
+            // }
 
-            double y1 = TimeScales.JulianDateUniversalToDecimalYearLimitedRange(jdut1);
-            if (!y1.FuzzyEquals(y))
-            {
-                Console.WriteLine("Error in JulianDateUniversalToDecimalYearLimitedRange().");
-                Console.WriteLine($"    Original value for decimal year:    {y}");
-                Console.WriteLine($"    Decimal year, limited range method: {y1}");
-                Console.WriteLine();
-                break;
-            }
+            // double y1 = TimeScales.JulianDateToDecimalYearLimitedRange(jdut1);
+            // if (!y1.FuzzyEquals(y))
+            // {
+            //     Console.WriteLine("Error in JulianDateUniversalToDecimalYearLimitedRange().");
+            //     Console.WriteLine($"    Original value for decimal year:    {y}");
+            //     Console.WriteLine($"    Decimal year, limited range method: {y1}");
+            //     Console.WriteLine($"    Difference:                         {Math.Abs(y1 - y)}");
+            //     Console.WriteLine();
+            //     break;
+            // }
 
-            double y2 = TimeScales.JulianDateUniversalToDecimalYear(jdut2);
+            double y2 = TimeScales.JulianDateToDecimalYear(jdut2);
             if (!y2.FuzzyEquals(y))
             {
                 Console.WriteLine("Error in JulianDateUniversalToDecimalYear().");
                 Console.WriteLine($"    Original value for decimal year:      {y}");
                 Console.WriteLine($"    Decimal year, unlimited range method: {y2}");
+                Console.WriteLine($"    Difference:                           {Math.Abs(y2 - y)}");
                 Console.WriteLine();
                 break;
             }
+
+            // if (!y2.FuzzyEquals(y1))
+            // {
+            //     Console.WriteLine("Different values for decimal year.");
+            //     Console.WriteLine($"    Original value for decimal year:      {y}");
+            //     Console.WriteLine($"    Decimal year, limited range method:   {y1}");
+            //     Console.WriteLine($"    Decimal year, unlimited range method: {y2}");
+            //     Console.WriteLine($"    Difference:                           {Math.Abs(y2 - y1)}");
+            //     Console.WriteLine();
+            //     break;
+            // }
         }
     }
 }

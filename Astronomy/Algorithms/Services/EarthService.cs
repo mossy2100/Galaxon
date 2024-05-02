@@ -119,9 +119,8 @@ public class EarthService(AstroObjectRepository astroObjectRepository, PlanetSer
         }
 
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdut = TimeScales.DecimalYearToJulianDateUniversal(year);
-        double jdtt = TimeScales.JulianDateUniversalToTerrestrial(jdut);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double jd = TimeScales.DecimalYearToJulianDate(year);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jd);
 
         // Call the method that takes T as a parameter.
         return GetTropicalYearInEphemerisDays(T);

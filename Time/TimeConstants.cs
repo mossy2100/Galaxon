@@ -318,8 +318,8 @@ public static class TimeConstants
     #region Time scales
 
     /// <summary>
-    /// Julian Date (UT) at the start of the Gregorian epoch, the epoch used by .NET, which began at
-    /// 0001-01-01 00:00:00 UTC.
+    /// Julian Date (UT) at the start of the Gregorian epoch, equal to 0001-01-01T00:00:00Z
+    /// This is the epoch used by .NET.
     /// </summary>
     public const double START_GREGORIAN_EPOCH_JDUT = 1_721_425.5;
 

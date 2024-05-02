@@ -414,10 +414,8 @@ public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository as
     public static double GetLunationInEphemerisDaysForYear(double year)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdut = TimeScales.DecimalYearToJulianDateUniversal(year);
-        double deltaT = TimeScales.CalcDeltaT(year);
-        double jdtt = jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double jd = TimeScales.DecimalYearToJulianDate(year);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jd);
         // Evaluate the polynomial.
         return GetLunationInEphemerisDays(T);
     }
