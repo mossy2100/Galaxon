@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg2817"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="Jupiter-icon-white.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2819"
+     pagecolor="#0000ff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2807079"
+     inkscape:cx="188.97642"
+     inkscape:cy="188.97642"
+     inkscape:window-width="1920"
+     inkscape:window-height="1082"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2814" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.343172"
+       d="m 71.597822,0 c -3.246249,0 -5.87602,2.8999306 -5.87602,6.478384 v 51.120273 c -6.610182,0 -13.216164,0 -19.977631,0 -2.973052,0 -4.762205,0 -6.699848,0 L 45.76236,28.355554 C 54.366234,-2.5446633 28.711544,-6.2808526 4.8305804,8.806271 1.4708471,10.684007 -0.85071522,13.354359 0.29674107,16.131159 1.4484309,18.909244 5.9640134,20.695888 8.9986846,18.86308 32.151117,4.7507047 39.506649,8.3099178 34.722063,28.447892 32.294047,43.042495 28.557423,48.95268 24.492975,68.358322 h 12.079897 v -0.0037 h 29.14893 v 25.145212 c 0.07564,3.523289 2.797913,6.39886 5.871821,6.500186 3.246249,0 5.874618,-2.89865 5.874618,-6.474544 0.0041,-7.305639 0,-14.449676 0,-21.598831 0,-1.181283 0,-2.389493 0,-3.572023 h 15.433998 c 3.844517,-0.06925 6.987073,-2.561344 7.097761,-5.377906 0,-2.967927 -3.163581,-5.375346 -7.068318,-5.377905 -5.232956,0 -10.334168,0 -15.459242,0 0,-2.426695 0,-4.807187 0,-7.267164 0,-7.308238 0,-14.617731 0,-21.925931 0,-7.309494 0,-14.617694 0,-21.9233441 0,-3.5797322 -2.632568,-6.47838303 -5.874618,-6.48222418113"
+       id="path765" />
+  </g>
+</svg>

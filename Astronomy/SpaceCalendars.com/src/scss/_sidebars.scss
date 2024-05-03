@@ -1,0 +1,43 @@
+.sidebar {
+    width: 100%;
+}
+
+#sidebar-left {
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    @include media-breakpoint-up(sm)
+    {
+        width: 15rem;
+    }
+
+    .list-group,
+    .list-group-item {
+        background-color: transparent;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+    }
+    
+    .btn-menu-item {
+        margin-bottom: 0.2rem;
+    }
+}
+
+#sidebar-right {
+    flex-grow: 0;
+    
+    @include media-breakpoint-up(xl)
+    {
+        width: 15rem;
+    }
+}
+
+.social-icons {
+    margin-bottom: 1rem;
+    
+    img {
+        width: 2.2rem;
+        margin-right: 0.1rem;
+    }
+}

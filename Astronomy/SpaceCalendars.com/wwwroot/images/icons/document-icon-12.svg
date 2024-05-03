@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg2126"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="Earth-icon-white.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2128"
+     pagecolor="#0000ff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2780563"
+     inkscape:cx="188.7574"
+     inkscape:cy="188.97689"
+     inkscape:window-width="1920"
+     inkscape:window-height="1081"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2123" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.328601"
+       d="m 55.382137,55.378331 h 33.66493 c -2.42471,17.48907 -16.1772,31.24025 -33.66493,33.66497 0,-5.80955 0,-11.58321 0,-17.30675 0,-5.41168 0,-10.87724 0,-16.35822 z m -44.43045,0 h 33.66621 v 33.66497 c -17.489045,-2.42728 -31.240212,-16.1759 -33.66621,-33.66497 z m 44.43045,-44.42666 c 17.49161,2.424716 31.24022,16.17338 33.66493,33.6624 -5.47069,0 -10.19949,0 -16.07451,0 -5.81983,0 -11.682,0 -17.59042,0 0,-5.47841 0,-10.95551 0,-16.43648 0,-5.84938 0,-11.47924 0,-17.22592 z m -10.76424,0 v 33.6624 c -5.06766,0 -10.137873,0 -15.205533,0 -6.150985,0 -12.305845,0 -18.45683,0 2.424713,-17.48902 16.173318,-31.237684 33.662363,-33.6624 z M 50.000017,4.5856812e-7 C 22.387233,-0.00369954 0,22.383421 0,49.996201 c 0,0.004 0,0.004 0,0.004 0,27.61281 22.387233,50.000069 50.000017,50.000069 27.61531,0 49.99998,-22.387259 49.99998,-50.000069 0,-27.61535 -22.38467,-49.99876654 -49.99998,-49.99876654"
+       id="path761" />
+  </g>
+</svg>

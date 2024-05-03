@@ -1,0 +1,24 @@
+@inject SignInManager<IdentityUser> SignInManager
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Galaxon.Astronomy.SpaceCalendars.com.Models.Document
+
+<article>@Html.Raw(Model.Content)</article>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="border-top pt-3 text-end" id="document-actions">
+        <a asp-action="Details" asp-controller="Document" asp-route-id="@Model.Id"
+            class="btn btn-info">
+            <i class="bi bi-info-square"></i> Details
+        </a>
+        <a asp-action="Edit" asp-controller="Document" asp-route-id="@Model.Id"
+            class="btn btn-primary">
+            <i class="bi bi-pencil-square"></i> Update
+        </a>
+        <a asp-action="Delete" asp-controller="Document" asp-route-id="@Model.Id"
+            class="btn btn-danger">
+            <i class="bi bi-trash3"></i> Delete
+        </a>
+    </div>
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg2667"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="Mars-icon-white.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2669"
+     pagecolor="#0000ff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2807083"
+     inkscape:cx="188.97638"
+     inkscape:cy="188.97638"
+     inkscape:window-width="1920"
+     inkscape:window-height="1082"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2664" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.329392"
+       d="m 33.472485,43.533069 c 12.78038,0 23.139972,10.33297 23.143834,23.080504 0,12.747535 -10.363454,23.080476 -23.143834,23.080476 -12.780378,0 -23.139938,-10.332941 -23.139938,-23.080476 0,-12.747534 10.35956,-23.080504 23.139938,-23.080504 z M 56.635643,0 c -3.308485,0 -5.989533,2.4119972 -5.989533,5.3894234 0,2.9761505 2.681048,5.3881516 5.989533,5.3881516 H 81.418227 L 52.806673,39.406818 C 47.159861,35.400076 40.405089,33.238659 33.472485,33.225828 14.986024,33.222098 0,48.170775 0,66.613573 0,85.051215 14.986024,100 33.472485,100 51.958951,100 66.946256,85.051215 66.946256,66.613573 66.932046,59.54973 64.676196,52.674814 60.500654,46.973097 l 28.68501,-28.70251 v 25.838176 c 0,3.298669 2.416925,5.974141 5.402027,5.974141 2.9851,0 5.402025,-2.675472 5.402025,-5.974141 V 10.777575 h 0.0037 L 100,0 H 56.635596"
+       id="path763" />
+  </g>
+</svg>

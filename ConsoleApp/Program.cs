@@ -1,4 +1,5 @@
-﻿using Galaxon.Astronomy.Algorithms.Services;
+﻿using System.Globalization;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
@@ -30,7 +31,8 @@ class Program
             // TotalDrift();
             // LunisolarSynch();
             // CalcTicksInLongPeriod();
-            TestDecimalYearToJulianDateUniversal();
+            // TestDecimalYearToJulianDateUniversal();
+            Eras();
         }
         catch (Exception ex)
         {
@@ -246,5 +248,12 @@ class Program
             //     break;
             // }
         }
+    }
+
+    public static void Eras()
+    {
+        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        for (int i = 0; i < gc.Eras.Length; i++)
+            Console.WriteLine($"Eras[{i}] = {gc.Eras[i]}");
     }
 }

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Galaxon.Astronomy.Calendars</RootNamespace>
+        <Company>Astro Multimedia</Company>
+        <AssemblyName>Galaxon.Astronomy.Calendars</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Time\Time.csproj" />
+      <ProjectReference Include="..\Data\Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Time\Time.csproj" />
+      <ProjectReference Include="..\Data\Data.csproj" />
+    </ItemGroup>
+
+</Project>

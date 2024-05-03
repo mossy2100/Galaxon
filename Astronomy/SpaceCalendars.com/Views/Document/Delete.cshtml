@@ -1,0 +1,12 @@
+@model Galaxon.Astronomy.SpaceCalendars.com.Models.Document
+
+<h2>Are you sure you want to delete this document?</h2>
+
+<partial model="Model" name="_Details"/>
+
+<form asp-action="DeleteConfirmed" asp-controller="Document" method="post" class="field">
+    <a asp-action="Index" asp-controller="Document"
+        class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to Index</a>
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit"><i class="bi bi-trash3"></i> Delete</button>
+</form>

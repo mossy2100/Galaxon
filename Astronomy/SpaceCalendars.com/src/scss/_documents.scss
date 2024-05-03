@@ -1,0 +1,26 @@
+.bi-folder-fill {
+    color: $yellow-500;
+}
+
+#document-index-table {
+    td {
+        vertical-align: middle;
+    }
+    
+    .published-icon {
+        color: $black;
+    }
+    
+    .unpublished-icon {
+        color: $gray-500;
+    }
+}
+
+#document-details {
+    #content-field {
+        .card-body {
+            max-height: 40rem;
+            overflow-y: scroll;
+        }
+    }
+}

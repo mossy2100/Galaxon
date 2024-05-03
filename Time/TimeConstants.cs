@@ -318,6 +318,16 @@ public static class TimeConstants
     #region Time scales
 
     /// <summary>
+    /// Number of milliseconds difference between TAI and TT.
+    /// TT = TAI + 32,184 ms
+    /// </summary>
+    public const int TT_MINUS_TAI_MILLISECONDS = 32_184;
+
+    #endregion Time scales
+
+    #region Julian Dates
+
+    /// <summary>
     /// Julian Date (UT) at the start of the Gregorian epoch, equal to 0001-01-01T00:00:00Z
     /// This is the epoch used by .NET.
     /// </summary>
@@ -408,13 +418,7 @@ public static class TimeConstants
     /// </summary>
     public const long TICKS_PER_JULIAN_MILLENNIUM = 315_576_000_000_000_000;
 
-    /// <summary>
-    /// Number of milliseconds difference between TAI and TT.
-    /// TT = TAI + 32,184 ms
-    /// </summary>
-    public const int TT_MINUS_TAI_MILLISECONDS = 32_184;
-
-    #endregion Time scales
+    #endregion Julian Dates
 
     #region Moon
 

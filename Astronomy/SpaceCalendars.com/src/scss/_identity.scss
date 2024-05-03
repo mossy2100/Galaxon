@@ -1,0 +1,18 @@
+.area-identity {
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+    
+    .alert {
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.page-account-manage-personaldata {
+    #download-data, 
+    p:last-child {
+        display: inline;    
+    }
+}

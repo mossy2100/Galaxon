@@ -1,0 +1,61 @@
+@model Galaxon.Astronomy.SpaceCalendars.com.Models.Document
+
+<div class="bg-light card mb-3" id="document-details">
+    <div class="card-body">
+
+        <div class="field">
+            <div class="field-name">Id</div>
+            <div class="field-value">@Model.Id</div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Title</div>
+            <div class="field-value">@Model.Title</div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Document type</div>
+            <div class="field-value">@(Model.IsFolder ? "Folder" : "File")</div>
+        </div>
+
+        <div class="field" id="content-field">
+            <div class="field-name">Content</div>
+            <div class="card field-value">
+                <div class="card-body">@Html.Raw(Model.Content)</div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Folder</div>
+            <div class="field-value">@Model.Folder?.Title</div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Order</div>
+            <div class="field-value">@Model.Order</div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Published</div>
+            <div class="field-value">@(Model.Published ? "Yes" : "No")</div>
+        </div>
+
+        <div class="field">
+            <div class="field-name">Icon</div>
+            <div class="field-value">
+                @if (Model.IconPath != null)
+                {
+                    <div id="current-icon">
+                        <img alt="icon for @Model.Title" asp-append-version="true"
+                            src="@Model.IconPath"/>
+                    </div>
+                }
+                else
+                {
+                    <span>None</span>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

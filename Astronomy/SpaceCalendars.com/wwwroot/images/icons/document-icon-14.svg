@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg4722"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="Moon-icon-white.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4724"
+     pagecolor="#0000ff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2807085"
+     inkscape:cx="138.77267"
+     inkscape:cy="188.97636"
+     inkscape:window-width="1920"
+     inkscape:window-height="1082"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs4719" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.328546"
+       d="M 62.971209,10.547012 C 50.800893,20.01196 43.678109,34.564253 43.670407,49.982826 43.702537,65.427047 50.871477,79.98831 63.090565,89.434009 41.383421,89.318489 23.844709,71.692521 23.840859,49.985387 23.848589,28.328285 41.31412,10.724129 62.971209,10.547012 Z M 63.284353,1.9557546e-4 C 35.678784,0.00671476 13.303,22.387513 13.303,49.991795 c 0.01541,27.374556 22.042105,49.646393 49.4141,49.962098 v 0.023 h 0.449181 c 0.03856,0 0.07832,0 0.118072,0 l 17.52845,0.023 c 3.714108,0.01676 5.847091,-2.079069 5.838104,-6.360421 C 86.765133,89.893267 83.669611,88.490534 80.812803,87.28158 65.328787,81.952987 54.209559,67.260809 54.206988,49.97491 54.22757,32.789127 65.269751,18.057193 80.812803,12.711911 87.677613,9.9385207 86.71893,6.0126228 86.566204,4.1209239 86.622642,1.9353402 85.477902,0.16427407 80.812803,0 h -17.52845"
+       id="path833" />
+  </g>
+</svg>

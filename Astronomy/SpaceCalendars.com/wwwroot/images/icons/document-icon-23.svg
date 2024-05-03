@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg2767"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="Venus-icon-white.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2769"
+     pagecolor="#0000ff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.2807083"
+     inkscape:cx="188.97638"
+     inkscape:cy="188.97638"
+     inkscape:window-width="1920"
+     inkscape:window-height="1082"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2764" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.336832"
+       d="m 50.000681,10.307935 c 13.363353,0 24.195496,10.3336 24.198184,23.08195 0,12.748337 -10.834831,23.081965 -24.198184,23.081965 -13.363356,0 -24.195499,-10.333628 -24.195499,-23.081965 0,-12.74835 10.832143,-23.08195 24.195499,-23.08195 z M 50.000681,0 C 30.670957,0 15,14.94975 15,33.389885 c 0.0068,16.356959 12.432513,30.29918 29.350892,32.938788 v 9.829854 H 31.966876 c -3.758427,0 -6.802894,2.414747 -6.802894,5.388485 0,2.977618 3.044467,5.388486 6.802894,5.388486 h 12.384016 v 6.550248 c 0.07273,3.53022 2.69019,6.412725 5.649789,6.514254 3.117227,0 5.6444,-2.901791 5.648437,-6.487285 v -6.577217 h 12.36381 c 3.696459,-0.06808 6.716673,-2.565068 6.824449,-5.384606 0,-2.977618 -3.041779,-5.3898 -6.800206,-5.3898 H 55.649118 V 66.305546 C 72.560771,63.663364 84.982482,49.736548 85,33.389885 85,14.94975 69.330392,0 50.000681,0"
+       id="path759" />
+  </g>
+</svg>

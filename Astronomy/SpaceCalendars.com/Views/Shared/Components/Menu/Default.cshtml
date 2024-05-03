@@ -1,0 +1,49 @@
+@using Galaxon.Astronomy.SpaceCalendars.com.Models
+@model List<Galaxon.Astronomy.SpaceCalendars.com.Models.Document>
+
+<ul class="list-group" id="menu-@ViewBag.FolderId">
+    @foreach (Document doc in Model)
+    {
+        string menuWrapperId = $"menu-wrapper-{doc.Id}";
+        <li class="list-group-item">
+            @if (doc.IsFolder)
+            {
+                string collapsedClass = doc.Expand == true ? "" : "collapsed";
+                string showClass = doc.Expand == true ? "show" : "";
+
+                <button aria-controls="@menuWrapperId" aria-expanded="false"
+                    class="btn btn-menu-item btn-sm menu-level-@ViewBag.Level @collapsedClass"
+                    data-bs-target="#@menuWrapperId" data-bs-toggle="collapse"
+                    type="button">
+                    @if (doc.IconPath != null)
+                    {
+                        <img alt="Icon for @doc.Title" asp-append-version="true"
+                            class="menu-item-icon" src="@doc.IconPath"/>
+                    }
+                    <span class="menu-item-title">@doc.Title</span>
+                    <i class="bi bi-triangle-fill menu-item-expand"></i>
+                </button>
+                <div class="collapse @showClass" id="@menuWrapperId">
+                    @await Component.InvokeAsync("Menu", new
+                    {
+                        folderId = doc.Id,
+                        level = ViewBag.Level + 1
+                    })
+                </div>
+            }
+            else
+            {
+                string currentClass = doc.Id == ViewBag.CurrentDocumentId ? "current" : "";
+                <a class="btn btn-menu-item btn-sm menu-level-@ViewBag.Level @currentClass"
+                    href="@doc.PathAlias">
+                    @if (doc.IconPath != null)
+                    {
+                        <img alt="Icon for @doc.Title" asp-append-version="true"
+                            class="menu-item-icon" src="@doc.IconPath"/>
+                    }
+                    <span class="menu-item-title">@doc.Title</span>
+                </a>
+            }
+        </li>
+    }
+</ul>
