@@ -2,7 +2,7 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Tests.Astronomy;
@@ -67,7 +67,7 @@ public class PlanetServiceTests
         // thereby producing a more accurate result.
         Assert.AreEqual(expectedL, actualL, 1e-5);
         Assert.AreEqual(expectedB, actualB, 1e-5);
-        Assert.AreEqual(expectedR, actualR / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT, 1e-5);
+        Assert.AreEqual(expectedR, actualR / Length.METRES_PER_ASTRONOMICAL_UNIT, 1e-5);
     }
 
     /// <summary>

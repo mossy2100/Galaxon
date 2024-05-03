@@ -2,7 +2,7 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.DataImport.Services;
@@ -96,7 +96,7 @@ public class SunImportService(
         // Orbital parameters.
         sun.Orbit ??= new OrbitalRecord();
         // 29,000 light years in metres.
-        sun.Orbit.SemiMajorAxis = 29_000 * LengthConstants.METRES_PER_LIGHT_YEAR;
+        sun.Orbit.SemiMajorAxis = 29_000 * Length.METRES_PER_LIGHT_YEAR;
         // 230 million years in seconds.
         sun.Orbit.SiderealOrbitPeriod = 230_000_000.0 * TimeConstants.SECONDS_PER_YEAR;
         // Orbital speed in m/s.

@@ -1,9 +1,10 @@
+using System.Text.Json;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Quantities;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using Serilog.Events;
 
 namespace Galaxon.Astronomy.AstroAPI;
 
@@ -37,7 +38,11 @@ public class Program
 
         // Usual stuff.
         builder.Services.AddAuthorization();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.Converters.Add(new QuantityJsonConverter());
+        });
         builder.Services.AddRazorPages();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

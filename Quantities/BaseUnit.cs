@@ -1,37 +1,23 @@
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
+using Galaxon.Numerics.Geometry;
+using Galaxon.Quantities.Kinds;
+using Galaxon.Time;
 
 namespace Galaxon.Quantities;
 
 public class BaseUnit
 {
-    #region Constructors
-
-    public BaseUnit(string symbol = "", string name = "", List<UnitPrefix>? validPrefixes = null,
-        double metricUnitAmount = 1, string? metricUnitSymbol = null,
-        Func<double, double>? toMetric = null, Func<double, double>? fromMetric = null)
-    {
-        Symbol = symbol;
-        Name = name;
-        ValidPrefixes = validPrefixes;
-        MetricUnitAmount = metricUnitAmount;
-        MetricUnitSymbol = metricUnitSymbol;
-        ToMetric = toMetric;
-        FromMetric = fromMetric;
-    }
-
-    public BaseUnit(string symbol, string name, List<UnitPrefix>? validPrefixes,
-        string metricUnitSymbol)
-        : this(symbol, name, validPrefixes, 1, metricUnitSymbol)
-    {
-    }
-
-    #endregion Constructors
-
     #region Properties
 
+    /// <summary>
+    /// The unit's symbol, e.g. "m", "s", "rad", "°F", etc.
+    /// </summary>
     public string Symbol { get; set; }
 
+    /// <summary>
+    /// The unit's name, e.g. "metre", "second", "radian", "degree Fahrenheit", etc.
+    /// </summary>
     public string Name { get; set; }
 
     // The physical amount this unit measures, e.g. length, area, mass, temperature, etc.
@@ -40,22 +26,20 @@ public class BaseUnit
     // public EUnitKind Kind { get; set; }
 
     /// <summary>
-    /// Set of multiplier prefixes considered valid for this unit.
+    /// Set of multiplier prefixes that are valid for this unit.
     /// </summary>
     public List<UnitPrefix>? ValidPrefixes { get; set; }
 
     /// <summary>
-    /// The next two properties define this unit expressed in equivalent metric units.
+    /// This unit expressed in equivalent metric units.
     /// For example:
-    /// * 1 mile = 1609.34 meters
-    /// * 1 hour = 3600 seconds
-    /// * 1 kcal = 4184 joules
+    ///     1 mile = 1609.34 meters
+    ///     1 hour = 3600 seconds
+    ///     1 kcal = 4184 joules
     /// etc.
-    /// Both will be null for SI base units.
+    /// Must be null for SI base units.
     /// </summary>
-    public double? MetricUnitAmount { get; set; }
-
-    public string? MetricUnitSymbol { get; set; }
+    public Quantity? MetricEquivalent { get; set; }
 
     /// <summary>
     /// Method for non-standard conversion to metric, such as converting from Celsius to Kelvin.
@@ -74,12 +58,30 @@ public class BaseUnit
 
     #endregion Properties
 
+    #region Constructors
+
+    public BaseUnit(string symbol = "", string name = "", List<UnitPrefix>? validPrefixes = null,
+        double? metricAmount = null, string? metricUnitsString = null,
+        Func<double, double>? toMetric = null, Func<double, double>? fromMetric = null)
+    {
+        Symbol = symbol;
+        Name = name;
+        ValidPrefixes = validPrefixes;
+        MetricEquivalent = metricAmount != null && metricUnitsString != null
+            ? new Quantity(metricAmount.Value, metricUnitsString)
+            : null;
+        ToMetric = toMetric;
+        FromMetric = fromMetric;
+    }
+
+    #endregion Constructors
+
     #region Known units
 
     /// <summary>
     /// Internal collection of all known units.
     /// </summary>
-    private static readonly List<BaseUnit> s_allKnown = new ();
+    private static readonly List<BaseUnit> _AllKnown = new ();
 
     /// <summary>
     /// Get all the known units.
@@ -89,11 +91,11 @@ public class BaseUnit
     {
         get
         {
-            if (s_allKnown.Count == 0)
+            if (_AllKnown.Count == 0)
             {
                 InitializeKnown();
             }
-            return s_allKnown;
+            return _AllKnown;
         }
     }
 
@@ -111,19 +113,19 @@ public class BaseUnit
         }
 
         // Get the next order number and add the new unit to the collection.
-        var maxOrder = s_allKnown.IsEmpty() ? 0 : s_allKnown.Select(bu => bu.Order).Max();
+        int maxOrder = _AllKnown.IsEmpty() ? 0 : _AllKnown.Select(bu => bu.Order).Max();
         baseUnit.Order = maxOrder + 1;
-        s_allKnown.Add(baseUnit);
+        _AllKnown.Add(baseUnit);
     }
 
     /// <summary>
     /// Add the SI base units to the internal collection.
     /// Even though kilograms are the SI base unit, grams are used here instead of "kg" because of
     /// how prefixes are handled. Grams are converted back to kg in Quantity.ToMetric().
-    /// <see href="https://en.wikipedia.org/wiki/International_System_of_Units" />
-    /// <see href="https://en.wikipedia.org/wiki/SI_base_unit" />
+    /// <see href="https://en.wikipedia.org/wiki/International_System_of_Units"/>
+    /// <see href="https://en.wikipedia.org/wiki/SI_base_unit"/>
     /// These have to be in a specific order.
-    /// <see href="https://en.wikipedia.org/wiki/International_System_of_Quantities#Derived_quantities" />
+    /// <see href="https://en.wikipedia.org/wiki/International_System_of_Quantities#Derived_quantities"/>
     /// </summary>
     private static void AddSiBaseUnits()
     {
@@ -138,56 +140,56 @@ public class BaseUnit
 
     /// <summary>
     /// Add SI derived units to the internal collection.
-    /// <see href="https://en.wikipedia.org/wiki/SI_derived_unit" />
+    /// <see href="https://en.wikipedia.org/wiki/SI_derived_unit"/>
     /// </summary>
     public static void AddSiDerivedUnits()
     {
-        Add(new BaseUnit("Hz", "hertz", UnitPrefix.Metric, "/s"));
+        Add(new BaseUnit("Hz", "hertz", UnitPrefix.Metric, 1, "/s"));
         Add(new BaseUnit("rad", "radian"));
         Add(new BaseUnit("sr", "steradian"));
-        Add(new BaseUnit("N", "newton", UnitPrefix.Metric, "kg*m/s2"));
-        Add(new BaseUnit("Pa", "pascal", UnitPrefix.Metric, "kg/m/s2"));
-        Add(new BaseUnit("J", "joule", UnitPrefix.Metric, "kg*m2/s2"));
-        Add(new BaseUnit("W", "watt", UnitPrefix.Metric, "kg*m2/s3"));
-        Add(new BaseUnit("C", "coulomb", UnitPrefix.Metric, "s*A"));
-        Add(new BaseUnit("V", "volt", UnitPrefix.Metric, "kg*m2/s3/A"));
-        Add(new BaseUnit("F", "farad", UnitPrefix.Metric, "s4*A2/kg/m2"));
-        Add(new BaseUnit("Ω", "ohm", UnitPrefix.Metric, "kg*m2/s3/A2"));
-        Add(new BaseUnit("S", "siemens", UnitPrefix.Metric, "s3*A2/kg/m2"));
-        Add(new BaseUnit("Wb", "weber", UnitPrefix.Metric, "kg*m2/s2/A"));
-        Add(new BaseUnit("T", "tesla", UnitPrefix.Metric, "kg/s2/A"));
-        Add(new BaseUnit("H", "henry", UnitPrefix.Metric, "kg*m2/s2/A2"));
+        Add(new BaseUnit("N", "newton", UnitPrefix.Metric, 1, "kg.m/s2"));
+        Add(new BaseUnit("Pa", "pascal", UnitPrefix.Metric, 1, "kg/m/s2"));
+        Add(new BaseUnit("J", "joule", UnitPrefix.Metric, 1, "kg.m2/s2"));
+        Add(new BaseUnit("W", "watt", UnitPrefix.Metric, 1, "kg.m2/s3"));
+        Add(new BaseUnit("C", "coulomb", UnitPrefix.Metric, 1, "s.A"));
+        Add(new BaseUnit("V", "volt", UnitPrefix.Metric, 1, "kg.m2/s3/A"));
+        Add(new BaseUnit("F", "farad", UnitPrefix.Metric, 1, "s4.A2/kg/m2"));
+        Add(new BaseUnit("Ω", "ohm", UnitPrefix.Metric, 1, "kg.m2/s3/A2"));
+        Add(new BaseUnit("S", "siemens", UnitPrefix.Metric, 1, "s3.A2/kg/m2"));
+        Add(new BaseUnit("Wb", "weber", UnitPrefix.Metric, 1, "kg.m2/s2/A"));
+        Add(new BaseUnit("T", "tesla", UnitPrefix.Metric, 1, "kg/s2/A"));
+        Add(new BaseUnit("H", "henry", UnitPrefix.Metric, 1, "kg.m2/s2/A2"));
         Add(new BaseUnit("°C", "Celsius", null, 1, "K", Temperature.CelsiusToKelvin,
             Temperature.KelvinToCelsius));
-        Add(new BaseUnit("lm", "lumen", UnitPrefix.Metric, "cd"));
-        Add(new BaseUnit("lx", "lux", UnitPrefix.Metric, "cd/m2"));
-        Add(new BaseUnit("Bq", "becquerel", UnitPrefix.Metric, "/s"));
-        Add(new BaseUnit("Gy", "gray", UnitPrefix.Metric, "m2/s2"));
-        Add(new BaseUnit("Sv", "sievert", UnitPrefix.Metric, "m2/s2"));
-        Add(new BaseUnit("kat", "katal", UnitPrefix.Metric, "mol/s"));
+        Add(new BaseUnit("lm", "lumen", UnitPrefix.Metric, 1, "cd"));
+        Add(new BaseUnit("lx", "lux", UnitPrefix.Metric, 1, "cd/m2"));
+        Add(new BaseUnit("Bq", "becquerel", UnitPrefix.Metric, 1, "s-1"));
+        Add(new BaseUnit("Gy", "gray", UnitPrefix.Metric, 1, "m2/s2"));
+        Add(new BaseUnit("Sv", "sievert", UnitPrefix.Metric, 1, "m2/s2"));
+        Add(new BaseUnit("kat", "katal", UnitPrefix.Metric, 1, "mol/s"));
     }
 
     /// <summary>
     /// Add support for non-SI units accepted for use with SI (plus a few more).
     /// Most come from the Wikipedia article but a few extra have been added.
-    /// <see
-    ///     href="https://en.wikipedia.org/wiki/International_System_of_Units#Non-SI_units_accepted_for_use_with_SI" />
-    /// <see href="https://en.wikipedia.org/wiki/Unit_of_time" />
+    /// <see href="https://en.wikipedia.org/wiki/International_System_of_Units#Non-SI_units_accepted_for_use_with_SI"/>
+    /// <see href="https://en.wikipedia.org/wiki/Unit_of_time"/>
     /// </summary>
     public static void AddSiAcceptedUnits()
     {
         // Time.
-        Add(new BaseUnit("min", "minute", null, 60, "s"));
-        Add(new BaseUnit("h", "hour", null, 3600, "s"));
-        Add(new BaseUnit("d", "day", null, 86_400, "s"));
+        Add(new BaseUnit("min", "minute", null, TimeConstants.SECONDS_PER_MINUTE, "s"));
+        Add(new BaseUnit("h", "hour", null, TimeConstants.SECONDS_PER_HOUR, "s"));
+        Add(new BaseUnit("d", "day", null, TimeConstants.SECONDS_PER_DAY, "s"));
 
         // Length.
-        Add(new BaseUnit("AU", "astronomical unit", null, 149_597_870_700, "m"));
+        Add(new BaseUnit("AU", "astronomical unit", null, Length.METRES_PER_ASTRONOMICAL_UNIT,
+            "m"));
 
         // Angles.
-        Add(new BaseUnit("°", "degree", null, PI / 180, "rad"));
-        Add(new BaseUnit("′", "arcminute", null, PI / 10_800, "rad"));
-        Add(new BaseUnit("″", "arcsecond", null, PI / 648_000, "rad"));
+        Add(new BaseUnit("°", "degree", null, Angles.RADIANS_PER_DEGREE, "rad"));
+        Add(new BaseUnit("′", "arcminute", null, Angles.RADIANS_PER_ARCMINUTE, "rad"));
+        Add(new BaseUnit("″", "arcsecond", null, Angles.RADIANS_PER_ARCSECOND, "rad"));
 
         // Area.
         Add(new BaseUnit("ha", "hectare", null, 10_000, "m2"));
@@ -207,10 +209,10 @@ public class BaseUnit
     /// <summary>
     /// Some common units that don't fit into the other groups.
     /// Re metric prefixes and years:
-    /// <see href="https://en.wikipedia.org/wiki/Kyr" />
-    /// <see href="https://en.wikipedia.org/wiki/Myr" />
-    /// <see href="https://en.wikipedia.org/wiki/Billion_years" />
-    /// <see href="https://en.wikipedia.org/wiki/Year#Abbreviations_yr_and_ya" />
+    /// <see href="https://en.wikipedia.org/wiki/Kyr"/>
+    /// <see href="https://en.wikipedia.org/wiki/Myr"/>
+    /// <see href="https://en.wikipedia.org/wiki/Billion_years"/>
+    /// <see href="https://en.wikipedia.org/wiki/Year#Abbreviations_yr_and_ya"/>
     /// </summary>
     public static void AddCommonUnits()
     {
@@ -241,7 +243,7 @@ public class BaseUnit
 
     /// <summary>
     /// Add support for most common imperial units.
-    /// <see href="https://en.wikipedia.org/wiki/Imperial_units" />
+    /// <see href="https://en.wikipedia.org/wiki/Imperial_units"/>
     /// </summary>
     public static void AddImperialUnits()
     {
@@ -275,7 +277,7 @@ public class BaseUnit
 
     /// <summary>
     /// Add support for some of the most common US Customary units.
-    /// <see href="https://en.wikipedia.org/wiki/United_States_customary_units" />
+    /// <see href="https://en.wikipedia.org/wiki/United_States_customary_units"/>
     /// </summary>
     public static void AddUsCustomaryUnits()
     {
@@ -297,7 +299,7 @@ public class BaseUnit
     /// </summary>
     public static void AddBinaryUnits()
     {
-        var prefixes = UnitPrefix.Combine(UnitPrefix.Binary, UnitPrefix.LargeMetric);
+        List<UnitPrefix> prefixes = UnitPrefix.Combine(UnitPrefix.Binary, UnitPrefix.LargeMetric);
         Add(new BaseUnit("b", "bit", prefixes, 0.125, "B"));
         Add(new BaseUnit("B", "byte", prefixes));
     }
@@ -309,7 +311,7 @@ public class BaseUnit
     /// </summary>
     public static void AddCurrencyUnits()
     {
-        var prefixes = UnitPrefix.GetMultiple("k,K,M,B,T");
+        List<UnitPrefix> prefixes = UnitPrefix.GetMultiple("k,K,M,B,T");
         Add(new BaseUnit("$", "dollar", prefixes));
         Add(new BaseUnit("€", "euro", prefixes));
         Add(new BaseUnit("£", "pound", prefixes));
@@ -327,9 +329,9 @@ public class BaseUnit
     /// </summary>
     private static void InitializeKnown()
     {
-        if (s_allKnown.Count > 0)
+        if (_AllKnown.Count > 0)
         {
-            s_allKnown.Clear();
+            _AllKnown.Clear();
         }
         AddSiBaseUnits();
         AddSiDerivedUnits();
@@ -352,7 +354,7 @@ public class BaseUnit
         List<string> clashes = new ();
 
         // Useful function.
-        void AddWithCheck(string prefixPlusSymbol)
+        void addWithCheck(string prefixPlusSymbol)
         {
             if (symbols.Contains(prefixPlusSymbol))
             {
@@ -365,16 +367,16 @@ public class BaseUnit
         }
 
         // Check all possible symbols for each unit.
-        foreach (var baseUnit in AllKnown)
+        foreach (BaseUnit baseUnit in AllKnown)
         {
-            AddWithCheck(baseUnit.Symbol);
+            addWithCheck(baseUnit.Symbol);
             if (baseUnit.ValidPrefixes == null)
             {
                 continue;
             }
-            foreach (var prefix in baseUnit.ValidPrefixes)
+            foreach (UnitPrefix prefix in baseUnit.ValidPrefixes)
             {
-                AddWithCheck($"{prefix.Symbol}{baseUnit.Symbol}");
+                addWithCheck($"{prefix.Symbol}{baseUnit.Symbol}");
             }
         }
 
@@ -383,12 +385,17 @@ public class BaseUnit
 
     #endregion Known units
 
-    #region Miscellaneous methods
+    #region String methods
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return Symbol;
     }
+
+    #endregion String methods.
+
+    #region Miscellaneous methods
 
     /// <summary>
     /// Return the base unit corresponding to the given symbol.

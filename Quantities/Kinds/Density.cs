@@ -1,4 +1,4 @@
-﻿namespace Galaxon.Quantities;
+﻿namespace Galaxon.Quantities.Kinds;
 
 public static class Density
 {

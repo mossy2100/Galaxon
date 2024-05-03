@@ -1,7 +1,7 @@
 namespace Galaxon.Quantities;
 
 /// <summary>
-///     <see href="https://en.wikipedia.org/wiki/Physical_constant#Table_of_physical_constants" />
+///     <see href="https://en.wikipedia.org/wiki/Physical_constant#Table_of_physical_constants"/>
 /// </summary>
 public static class Constants
 {

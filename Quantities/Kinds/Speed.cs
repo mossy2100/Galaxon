@@ -1,6 +1,6 @@
 ﻿using Galaxon.Time;
 
-namespace Galaxon.Quantities;
+namespace Galaxon.Quantities.Kinds;
 
 public static class Speed
 {

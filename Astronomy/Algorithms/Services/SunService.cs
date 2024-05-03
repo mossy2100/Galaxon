@@ -1,6 +1,6 @@
 ﻿using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using static Galaxon.Numerics.Geometry.Angles;
 
@@ -80,7 +80,7 @@ public class SunService(EarthService earthService)
 
         // Calculate and add the aberration.
         double deltaLambdaInRadians = CalcVariationInSunLongitude(jdtt);
-        double RsInAU = Rs / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
+        double RsInAU = Rs / Length.METRES_PER_ASTRONOMICAL_UNIT;
         double aberration = -0.005_775_518 * RsInAU * deltaLambdaInRadians;
         Ls += aberration;
 

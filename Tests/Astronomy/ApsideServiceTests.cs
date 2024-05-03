@@ -2,7 +2,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
 
@@ -172,7 +172,7 @@ public class ApsideServiceTests
             apsideService.GetClosestApside(planet, apside, jdtt0);
         DateTime dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
         double actualRadiusInAu =
-            actualRadiusInMetres / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
+            actualRadiusInMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
 
         // Output result.
         Console.WriteLine($"Event time = {dt1.ToIsoString()} = {jdtt1:F6} Julian Date (TT)");
@@ -265,7 +265,7 @@ public class ApsideServiceTests
 
         // Get the radius in AU.
         double actualRadiusInAu =
-            actualRadiusInMetres / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
+            actualRadiusInMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
 
         // Output.
         Console.WriteLine($"Expected event datetime = {dtttExpected.ToIsoString()} (TT)");

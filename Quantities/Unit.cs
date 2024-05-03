@@ -16,9 +16,7 @@ public class Unit
         Exponent = exponent;
     }
 
-    public Unit(BaseUnit baseUnit, int exponent) : this(baseUnit, null, exponent)
-    {
-    }
+    public Unit(BaseUnit baseUnit, int exponent) : this(baseUnit, null, exponent) { }
 
     public BaseUnit BaseUnit { get; set; }
 
@@ -61,14 +59,34 @@ public class Unit
 
     #region String methods
 
+    /// <summary>
+    /// Convert the unit to a string.
+    /// Two format codes are supportedL
+    ///     A = ASCII. This will use ^ to indicate an exponent.
+    ///     U = Unicode. This will use superscript characters to indicate an exponent.
+    /// </summary>
+    /// <param name="format">The format code.</param>
+    /// <returns>The Unit as a string.</returns>
     public string ToString(string format)
     {
-        var strExp = Exponent == 1
+        // Guard.
+        if (format != "A" && format != "U")
+        {
+            throw new ArgumentOutOfRangeException(nameof(format),
+                "Must be 'A' for ASCII or 'U' for Unicode.");
+        }
+
+        // Convert the exponent to a string.
+        string strExp = Exponent == 1
             ? ""
-            : (format == "U" ? Exponent.ToSuperscript() : Exponent.ToString());
+            : format == "U"
+                ? Exponent.ToSuperscript()
+                : '^' + Exponent.ToString();
+
         return $"{Prefix?.Symbol}{BaseUnit.Symbol}{strExp}";
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return ToString("U");
@@ -82,19 +100,19 @@ public class Unit
     /// <returns></returns>
     public static Unit Parse(string symbol)
     {
-        var match = Regex.Match(symbol, $"^{Quantity.RxsPrefixBase}{Quantity.RxsUnitExp}$");
+        Match match = Regex.Match(symbol, $"^{Quantity.RxsPrefixBase}{Quantity.RxsUnitExp}$");
         if (!match.Success)
         {
             throw new ArgumentFormatException(nameof(symbol),
                 "Incorrect format or invalid or unknown unit.");
         }
 
-        var prefixBase = match.Groups["prefixBase"].Value;
-        var strExp = match.Groups["exp"].Value;
-        var exp = strExp == "" ? 1 : int.Parse(strExp);
+        string prefixBase = match.Groups["prefixBase"].Value;
+        string strExp = match.Groups["exp"].Value;
+        int exp = strExp == "" ? 1 : int.Parse(strExp);
 
         // Look for a valid match of prefix and base unit.
-        foreach (var baseUnit in BaseUnit.AllKnown)
+        foreach (BaseUnit baseUnit in BaseUnit.AllKnown)
         {
             // Check base symbol with no prefix.
             if (baseUnit.Symbol == prefixBase)
@@ -103,7 +121,7 @@ public class Unit
             }
 
             // Look for a match with a prefix.
-            var prefix = baseUnit.ValidPrefixes?
+            UnitPrefix? prefix = baseUnit.ValidPrefixes?
                 .FirstOrDefault(prefix => $"{prefix.Symbol}{baseUnit.Symbol}" == prefixBase);
             if (prefix != null)
             {

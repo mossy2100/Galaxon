@@ -1,5 +1,5 @@
 using Galaxon.Numerics.Extensions.FloatingPoint;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 
 namespace Galaxon.Tests.Quantities;
 

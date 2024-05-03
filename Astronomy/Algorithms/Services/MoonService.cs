@@ -2,8 +2,6 @@ using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Numerics.Geometry;
@@ -15,8 +13,7 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 /// <summary>
 /// Stuff relating to the Moon.
 /// </summary>
-/// <param name="astroObjectRepository"></param>
-public class MoonService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
+public class MoonService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Get the lunar phase closest to the given DateTime, deferring first to other calculations

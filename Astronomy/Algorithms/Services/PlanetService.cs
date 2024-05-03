@@ -5,7 +5,7 @@ using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -81,7 +81,7 @@ public class PlanetService(AstroDbContext astroDbContext)
         double L = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['L'], T));
         double B = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['B'], T));
         double R = Polynomials.EvaluatePolynomial(coeffs['R'], T)
-            * LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
+            * Length.METRES_PER_ASTRONOMICAL_UNIT;
         return new Coordinates(L, B, R);
     }
 }

@@ -41,7 +41,7 @@ public class UnitPrefix
 
     /// <summary>
     /// Metric prefixes.
-    /// <see href="https://en.wikipedia.org/wiki/Metric_prefix" />
+    /// <see href="https://en.wikipedia.org/wiki/Metric_prefix"/>
     /// </summary>
     public static List<UnitPrefix> Metric =>
         _metric ??= new List<UnitPrefix>
@@ -86,7 +86,7 @@ public class UnitPrefix
 
     /// <summary>
     /// Binary prefixes.
-    /// <see href="https://en.wikipedia.org/wiki/Binary_prefix" />
+    /// <see href="https://en.wikipedia.org/wiki/Binary_prefix"/>
     /// </summary>
     public static List<UnitPrefix> Binary =>
         _binary ??= new List<UnitPrefix>
@@ -148,7 +148,7 @@ public class UnitPrefix
     /// <exception cref="ArgumentInvalidException"></exception>
     public static double GetMultiplier(string symbol)
     {
-        var prefix = Get(symbol);
+        UnitPrefix? prefix = Get(symbol);
         if (prefix == null)
         {
             throw new ArgumentInvalidException(nameof(symbol),
@@ -159,11 +159,11 @@ public class UnitPrefix
 
     public static List<UnitPrefix> GetMultiple(string csl)
     {
-        var prefixes = csl.Split(',');
+        string[] prefixes = csl.Split(',');
         List<UnitPrefix> result = new ();
-        foreach (var prefix in prefixes)
+        foreach (string prefix in prefixes)
         {
-            var match = Get(prefix);
+            UnitPrefix? match = Get(prefix);
             if (match is null)
             {
                 throw new ArgumentFormatException(nameof(csl),
@@ -187,7 +187,7 @@ public class UnitPrefix
     public static List<UnitPrefix> Combine(params List<UnitPrefix>[] groups)
     {
         List<UnitPrefix> result = new ();
-        foreach (var group in groups)
+        foreach (List<UnitPrefix> group in groups)
         {
             result.AddRange(group);
         }

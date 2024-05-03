@@ -9,31 +9,45 @@ public static class Angles
 {
     #region Constants
 
+    /// <summary>
+    /// Degrees per...
+    /// </summary>
     public const long DEGREES_PER_CIRCLE = 360L;
 
     public const long DEGREES_PER_SEMICIRCLE = 180L;
 
-    public const long DEGREES_PER_QUADRANT = 90L;
+    public const double DEGREES_PER_RADIAN = 180 / PI;
 
+    /// <summary>
+    /// Arcminutes per...
+    /// </summary>
     public const long ARCMINUTES_PER_DEGREE = 60L;
 
+    public const double ARCMINUTES_PER_RADIAN = ARCMINUTES_PER_DEGREE / RADIANS_PER_DEGREE;
+
+    /// <summary>
+    /// Arcseconds per...
+    /// </summary>
     public const long ARCSECONDS_PER_ARCMINUTE = 60L;
 
     public const long ARCSECONDS_PER_DEGREE = 3600L;
 
-    public const long ARCSECONDS_PER_CIRCLE = 1_296_000L;
+    public const double ARCSECONDS_PER_RADIAN = ARCSECONDS_PER_DEGREE / RADIANS_PER_DEGREE;
 
+    /// <summary>
+    /// Radians per...
+    /// </summary>
     public const double RADIANS_PER_CIRCLE = Tau;
 
     public const double RADIANS_PER_SEMICIRCLE = PI;
 
     public const double RADIANS_PER_QUADRANT = PI / 2;
 
-    public const double RADIANS_PER_DEGREE = RADIANS_PER_CIRCLE / DEGREES_PER_CIRCLE;
+    public const double RADIANS_PER_DEGREE = PI / 180;
 
-    public const double DEGREES_PER_RADIAN = DEGREES_PER_CIRCLE / RADIANS_PER_CIRCLE;
+    public const double RADIANS_PER_ARCMINUTE = RADIANS_PER_DEGREE / ARCMINUTES_PER_DEGREE;
 
-    public const double ARCSECONDS_PER_RADIAN = ARCSECONDS_PER_CIRCLE / RADIANS_PER_CIRCLE;
+    public const double RADIANS_PER_ARCSECOND = RADIANS_PER_DEGREE / ARCSECONDS_PER_DEGREE;
 
     #endregion Constants
 

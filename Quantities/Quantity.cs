@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using Galaxon.Core.Exceptions;
-using Galaxon.Core.Strings;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Numerics.Extensions.Integers;
 
@@ -22,6 +21,20 @@ public class Quantity
     }
 
     #endregion Cast operators
+    #region Properties
+
+    /// <summary>
+    /// The amount.
+    /// </summary>
+    public double Amount { get; set; } = 1;
+
+    /// <summary>
+    /// Collection of units, each with a prefix multiplier and exponent (both defaulting to 1).
+    /// The units are multiplied to form a compound unit.
+    /// </summary>
+    public CompoundUnit Units { get; set; } = new ();
+
+    #endregion Properties
 
     #region Constructors
 
@@ -29,6 +42,15 @@ public class Quantity
     /// Default constructor.
     /// </summary>
     public Quantity() { }
+
+    /// <summary>
+    /// Construct from a amount and a unit.
+    /// </summary>
+    public Quantity(double amount, CompoundUnit units)
+    {
+        Amount = amount;
+        Units = units;
+    }
 
     /// <summary>
     /// Construct from a amount and a unit.
@@ -53,7 +75,7 @@ public class Quantity
     public Quantity(double amount, BaseUnit baseUnit) : this(amount, new Unit(baseUnit)) { }
 
     /// <summary>
-    /// Construct from a unit.
+    /// Construct from a base unit.
     /// </summary>
     public Quantity(BaseUnit baseUnit) : this(1, baseUnit) { }
 
@@ -74,7 +96,7 @@ public class Quantity
         else
         {
             // Parse the units string. Note, this could throw.
-            var m = Parse(units);
+            Quantity m = Parse(units);
 
             // So far so good, construct.
             Amount = amount * m.Amount;
@@ -93,21 +115,12 @@ public class Quantity
 
     #endregion Constructors
 
-    #region Properties
-
-    public double Amount { get; set; } = 1;
-
-    // Collection of units, each with a prefix multiplier and exponent (both defaulting to 1).
-    public List<Unit> Units { get; set; } = new ();
-
-    #endregion Properties
-
     #region Constants
 
     // Regular expression strings.
     internal const string RxsUnitExp = @"(?<unitExp>(-?\d+)?)";
 
-    internal const string RxsPrefixBase = @"(?<prefixBase>[a-zΩ°""'″′]{1,6})";
+    internal const string RxsPrefixBase = @"(?<prefixBase>[a-zΩ°′″'""]{1,6})";
 
     internal const string RxsUnit = $"(?<unit>{RxsPrefixBase}{RxsUnitExp})";
 
@@ -143,7 +156,7 @@ public class Quantity
     public Quantity Clone()
     {
         Quantity clone = new (Amount);
-        foreach (var unit in Units)
+        foreach (Unit unit in Units)
         {
             clone.Units.Add(unit.Clone());
         }
@@ -157,7 +170,7 @@ public class Quantity
     /// <returns></returns>
     public bool HasSameUnits(Quantity m)
     {
-        var nUnits = Units.Count;
+        int nUnits = Units.Count;
 
         // Check they have the same number of units.
         if (nUnits != m.Units.Count)
@@ -171,8 +184,8 @@ public class Quantity
 
     public bool HasCompatibleUnits(Quantity m)
     {
-        var m1 = Reduce();
-        var m2 = m.Reduce();
+        Quantity m1 = Reduce();
+        Quantity m2 = m.Reduce();
         return m1.HasSameUnits(m2);
     }
 
@@ -184,10 +197,10 @@ public class Quantity
     /// </summary>
     private void Tidy()
     {
-        Units = Units
+        Units = (CompoundUnit)Units
             .Where(unit => unit.Exponent != 0)
             .OrderBy(unit => unit.Exponent > 0)
-            .ThenBy(unit => +unit.BaseUnit.Order)
+            .ThenBy(unit => unit.BaseUnit.Order)
             .ToList();
     }
 
@@ -197,30 +210,30 @@ public class Quantity
     /// <returns></returns>
     private bool CanBeReduced()
     {
-        return Units.Any(unit => unit.BaseUnit.MetricUnitSymbol != null || unit.Prefix != null);
+        return Units.Any(unit => unit.BaseUnit.MetricEquivalent != null || unit.Prefix != null);
     }
 
     /// <summary>
     /// Reduce a quantity to the most basic units possible.
-    /// These will either be SI base units or some other irreducible units like rad or p.
-    /// This method removes all prefixes except for "k" (kilo) with "g" (grams), because kg is the
-    /// SI base unit.
+    /// These will either be SI base units (with the exception of grams instead of kilograms) or
+    /// other irreducible units like rad or p.
+    /// All metric prefixes will be removed.
     /// </summary>
     public Quantity Reduce()
     {
         // Start with a copy.
-        var result = Clone();
+        Quantity result = Clone();
 
         // Continue until we have the most basic units.
         while (result.CanBeReduced())
         {
             // Construct a new set of units.
-            List<Unit> newUnits = new ();
+            CompoundUnit newUnits = new ();
 
             // Convert to metric any units that can be.
-            foreach (var unit in result.Units)
+            foreach (Unit unit in result.Units)
             {
-                if (unit.BaseUnit.MetricUnitSymbol != null)
+                if (unit.BaseUnit.MetricEquivalent != null)
                 {
                     // Use the ToMetric method if present.
                     // It's only valid if there are no other units and no exponents or prefixes.
@@ -236,16 +249,17 @@ public class Quantity
                         result.Amount = unit.BaseUnit.ToMetric(unit.Prefix?.Multiplier ?? 1);
 
                         // Get the metric unit as a Quantity. This could throw.
-                        metricQty = new Quantity(1, unit.BaseUnit.MetricUnitSymbol);
+                        metricQty = unit.BaseUnit.MetricEquivalent;
                     }
                     else
                     {
                         // Get the amount of the metric unit.
-                        var amt = (unit.Prefix?.Multiplier ?? 1)
-                            * (unit.BaseUnit.MetricUnitAmount ?? 1);
+                        double amt = (unit.Prefix?.Multiplier ?? 1)
+                            * (unit.BaseUnit.MetricEquivalent?.Amount ?? 1);
 
                         // Get the metric unit as a quantity, including the prefix. This could throw.
-                        metricQty = new Quantity(amt, unit.BaseUnit.MetricUnitSymbol);
+                        metricQty = new Quantity
+                            { Amount = amt, Units = unit.BaseUnit.MetricEquivalent!.Units };
 
                         // Exponentiate if needed.
                         if (unit.Exponent != 1)
@@ -277,14 +291,6 @@ public class Quantity
             result.Tidy();
         } // while
 
-        // Convert grams to kilograms to be consistent with SI.
-        var grams = result.Units.FirstOrDefault(unit => unit.BaseUnit.Symbol == "g");
-        if (grams != null)
-        {
-            result.Amount /= Math.Pow(1000, grams.Exponent);
-            grams.Prefix = UnitPrefix.Get("k");
-        }
-
         return result;
     }
 
@@ -299,7 +305,7 @@ public class Quantity
 
     public override int GetHashCode()
     {
-        return ToAsciiString().GetHashCode();
+        return ToString().GetHashCode();
     }
 
     public Quantity Convert(string? toUnit)
@@ -319,14 +325,14 @@ public class Quantity
 
     public static double? ConvertAmount(double? amount, string fromUnit, string toUnit)
     {
-        // Convert null to null and 0 to 0.
-        if (amount is null or 0)
+        // Convert null to null.
+        if (amount is null)
         {
-            return amount;
+            return null;
         }
 
         Quantity m1 = new (amount.Value, fromUnit);
-        var m2 = m1.Convert(toUnit);
+        Quantity m2 = m1.Convert(toUnit);
         return m2.Amount;
     }
 
@@ -359,9 +365,9 @@ public class Quantity
         // units can come before quantities, and the prefix can be by itself after the amount.
         // Any numbers following a currency symbol are treated as part of the amount, not an
         // exponent, as with other units.
-        var match = Regex.Match(strQuantity, $"^{RxsMoney}$", RegexOptions.IgnoreCase);
-        var currencyMatch = match.Success;
-        var physicalMatch = false;
+        Match match = Regex.Match(strQuantity, $"^{RxsMoney}$", RegexOptions.IgnoreCase);
+        bool currencyMatch = match.Success;
+        bool physicalMatch = false;
         if (!currencyMatch)
         {
             // Check for valid physical amount string.
@@ -377,13 +383,13 @@ public class Quantity
         }
 
         // Get the amount.
-        var strAmt = match.Groups["amt"].Value;
-        var amt = strAmt == "" ? 1 : double.Parse(strAmt);
+        string strAmt = match.Groups["amt"].Value;
+        double amt = strAmt == "" ? 1 : double.Parse(strAmt);
 
         if (currencyMatch)
         {
             // Get the sign, which in money values comes before the symbol.
-            var strSign = match.Groups["sign"].Value;
+            string strSign = match.Groups["sign"].Value;
             if (strSign == "-")
             {
                 amt = -amt;
@@ -396,7 +402,7 @@ public class Quantity
         if (currencyMatch)
         {
             // Get the currency symbol.
-            var strCurrencySymbol = match.Groups["currencySymbol"].Value;
+            string strCurrencySymbol = match.Groups["currencySymbol"].Value;
             unit = Unit.Parse(strCurrencySymbol);
             if (unit == null)
             {
@@ -405,10 +411,10 @@ public class Quantity
             }
 
             // Get the currency prefix.
-            var strCurrencyPrefix = match.Groups["currencyPrefix"].Value;
+            string strCurrencyPrefix = match.Groups["currencyPrefix"].Value;
             if (strCurrencyPrefix != "")
             {
-                var prefix = UnitPrefix.Get(strCurrencyPrefix);
+                UnitPrefix? prefix = UnitPrefix.Get(strCurrencyPrefix);
                 if (prefix == null)
                 {
                     throw new ArgumentFormatException(nameof(strQuantity),
@@ -422,11 +428,11 @@ public class Quantity
         }
 
         // Process other units.
-        var nUnits = match.Groups["unit"].Captures.Count;
-        for (var i = 0; i < nUnits; i++)
+        int nUnits = match.Groups["unit"].Captures.Count;
+        for (int i = 0; i < nUnits; i++)
         {
             // Look up the base unit.
-            var strBaseUnit = match.Groups["prefixBase"].Captures[i].Value;
+            string strBaseUnit = match.Groups["prefixBase"].Captures[i].Value;
             unit = Unit.Parse(strBaseUnit);
             if (unit == null)
             {
@@ -436,9 +442,9 @@ public class Quantity
 
             // Get the unit exponent. If the unit was preceded by a division operator, negate the
             // exponent.
-            var strOp = match.Groups["op"].Captures[i].Value;
-            var strUnitExp = match.Groups["unitExp"].Captures[i].Value;
-            var unitExp = strUnitExp == "" ? 1 : int.Parse(strUnitExp);
+            string strOp = match.Groups["op"].Captures[i].Value;
+            string strUnitExp = match.Groups["unitExp"].Captures[i].Value;
+            int unitExp = strUnitExp == "" ? 1 : int.Parse(strUnitExp);
             unit.Exponent = strOp == "/" ? -unitExp : unitExp;
 
             // Add the unit to the result.
@@ -448,132 +454,64 @@ public class Quantity
         return result;
     }
 
-    public string ToString(bool includeAmount, bool includeUnits, bool niceFormat = true)
+    /// <summary>
+    /// Convert the quantity to a string.
+    /// Two format codes are supportedL
+    ///     A = ASCII. Uses 'e' for the exponent.
+    ///     U = Unicode. Uses "×10" and superscript characters for the exponent.
+    /// </summary>
+    /// <param name="format">The format code.</param>
+    /// <returns>The Quantity as a string.</returns>
+    public string ToString(string format)
     {
-        if (!includeAmount && !includeUnits)
+        // Guard.
+        if (format != "A" && format != "U")
         {
-            throw new ArgumentInvalidException(nameof(includeAmount),
-                "Either the amount or the units or both must be included in the output string.");
+            throw new ArgumentOutOfRangeException(nameof(format),
+                "Must be 'A' for ASCII or 'U' for Unicode.");
         }
 
         StringBuilder sbResult = new ();
 
-        if (includeAmount)
+        // Convert the amount to a string.
+        // <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings" />
+        // Format "g" will be the more compact of "e" (exponential) or "f" (fixed point).
+        string strAmount = Amount.ToString("g");
+
+        if (format == "U")
         {
-            // Convert the amount to a string.
-            // TODO Use built-in support for formatting currency values (format specifier "C").
-            // <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings" />
-            // Format "g" will be the more compact of "e" (exponential) or "f" (fixed point).
-            var strAmount = Amount.ToString("g");
+            // Parse the amount string so we can extract the exponent and reformat using
+            // superscript characters.
+            const string rx = @"(?<num>-?\d+(\.\d+)?)(e(?<exp>[-+]?\d+))?";
+            Match match = Regex.Match(strAmount, rx, RegexOptions.IgnoreCase);
 
-            if (niceFormat)
+            // Format the number (without the exponent) in a nice way.
+            string strNum = match.Groups["num"].Value;
+            strNum = double.Parse(strNum).ToString("N");
+
+            // Format the exponent in a nice way.
+            string strExp = match.Groups["exp"].Value;
+            if (strExp != "")
             {
-                // Parse the amount string so we can extract the exponent and reformat using
-                // superscript characters.
-                const string rx = @"(?<num>-?\d+(\.\d+)?)(e(?<exp>[-+]?\d+))?";
-                var match = Regex.Match(strAmount, rx, RegexOptions.IgnoreCase);
-
-                // Format the number (without the exponent) in a nice way.
-                var strNum = match.Groups["num"].Value;
-                strNum = double.Parse(strNum).ToString("N");
-
-                // Format the exponent in a nice way.
-                var strExp = match.Groups["exp"].Value;
-                if (strExp != "")
-                {
-                    strExp = $"×10{int.Parse(strExp).ToSuperscript()}";
-                }
-
-                strAmount = $"{strNum}{strExp}";
+                strExp = $"×10{int.Parse(strExp).ToSuperscript()}";
             }
 
-            sbResult.Append(strAmount);
+            strAmount = $"{strNum}{strExp}";
         }
 
-        // Check if we just want to return the amount.
-        if (!includeUnits || Units.Count == 0)
-        {
-            return sbResult.ToString();
-        }
+        // Append the amount.
+        sbResult.Append(strAmount);
 
-        StringBuilder sbUnits = new ();
+        // Append the units.
+        sbResult.Append(Units.ToString(format));
 
-        // Append the units. They should already be tidy.
-        for (var i = 0; i < Units.Count; i++)
-        {
-            var unit = Units[i];
-            string strOperator;
-            string strUnit;
-            var strSymbol = unit.BaseUnit.Symbol;
-            if (unit.Exponent < 0)
-            {
-                strOperator = "/";
-                strUnit =
-                    new Unit(unit.BaseUnit, unit.Prefix, -unit.Exponent).ToString(niceFormat
-                        ? "U"
-                        : "A");
-                sbUnits.Append($"{strOperator}{strUnit}");
-            }
-            else
-            {
-                // Check for a currency unit with exponent of 1.
-                if (BaseUnit.CurrencySymbols.Contains(strSymbol) && unit.Exponent == 1)
-                {
-                    // Put the currency symbol before the amount and the prefix (if any) after.
-                    // e.g.
-                    // TODO Use "c" format specifier to do this.
-                    sbResult.Prepend(strSymbol);
-                    sbResult.Append(unit.Prefix);
-                }
-                else
-                {
-                    // For units with positive exponents, put a space before the first one, a dot
-                    // before the others.
-                    // The exception is we don't want spaces before degree, arcminute, or arcsecond
-                    // symbols.
-                    strOperator = i == 0
-                        ? strSymbol is "°" or "′" or "″" ? "" : " "
-                        : "⋅";
-                    strUnit = unit.ToString(niceFormat ? "U" : "A");
-                    sbUnits.Append($"{strOperator}{strUnit}");
-                }
-            }
-        }
-
-        sbResult.Append(sbUnits);
         return sbResult.ToString();
     }
 
-    /// <summary>
-    /// Convert to string with special characters, suitable for documents.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
     {
-        return ToString(true, true);
-    }
-
-    /// <summary>
-    /// Convert to string with only boring old ASCII characters.
-    /// </summary>
-    public string ToAsciiString()
-    {
-        return ToString(true, true, false);
-    }
-
-    /// <summary>
-    /// Get just the amount as a string.
-    /// </summary>
-    public string ToAmountString()
-    {
-        return ToString(true, false);
-    }
-
-    /// <summary>
-    /// Get just the units as a string.
-    /// </summary>
-    public string ToUnitsString()
-    {
-        return ToString(false, true);
+        return ToString("U");
     }
 
     #endregion String methods
@@ -589,16 +527,16 @@ public class Quantity
     public static Quantity Multiply(Quantity qty1, Quantity qty2)
     {
         // Normalize the two operands. Reduce() will create a new Quantity object.
-        var result = qty1.Reduce();
-        var qty2Metric = qty2.Reduce();
+        Quantity result = qty1.Reduce();
+        Quantity qty2Metric = qty2.Reduce();
 
         // Get the result amount.
         result.Amount *= qty2Metric.Amount;
 
         // Multiply m1 by each unit in m2.
-        foreach (var unit2 in qty2Metric.Units)
+        foreach (Unit unit2 in qty2Metric.Units)
         {
-            var unit1 = result.Units.FirstOrDefault(unit => unit.BaseUnit == unit2.BaseUnit);
+            Unit? unit1 = result.Units.FirstOrDefault(unit => unit.BaseUnit == unit2.BaseUnit);
             if (unit1 == null)
             {
                 result.Units.Add(unit2);
@@ -618,13 +556,13 @@ public class Quantity
     /// </summary>
     public static Quantity Inverse(Quantity qty)
     {
-        var result = qty.Clone();
+        Quantity result = qty.Clone();
 
         // Inverse the amount.
         result.Amount = 1 / result.Amount;
 
         // Negate the exponents.
-        foreach (var unit in result.Units)
+        foreach (Unit unit in result.Units)
         {
             unit.Exponent = -unit.Exponent;
         }
@@ -650,8 +588,8 @@ public class Quantity
     /// <returns></returns>
     public static Quantity Add(Quantity qty1, Quantity qty2)
     {
-        var result = qty1.Reduce();
-        var qty2Metric = qty2.Reduce();
+        Quantity result = qty1.Reduce();
+        Quantity qty2Metric = qty2.Reduce();
 
         if (!result.HasSameUnits(qty2Metric))
         {
@@ -669,7 +607,7 @@ public class Quantity
     /// <returns></returns>
     public static Quantity Negate(Quantity qty)
     {
-        var result = qty.Clone();
+        Quantity result = qty.Clone();
         result.Amount = -result.Amount;
         return result;
     }
@@ -699,7 +637,7 @@ public class Quantity
             return 1;
         }
 
-        var result = qty.Clone();
+        Quantity result = qty.Clone();
 
         // Anything to the power of 1 is itself.
         if (exp == 1)
@@ -711,7 +649,7 @@ public class Quantity
         result.Amount = Math.Pow(result.Amount, exp);
 
         // Multiply the unit exponents.
-        foreach (var unit in result.Units)
+        foreach (Unit unit in result.Units)
         {
             unit.Exponent *= exp;
         }

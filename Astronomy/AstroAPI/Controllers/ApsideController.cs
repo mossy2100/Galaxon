@@ -2,7 +2,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Quantities;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -18,7 +18,7 @@ public class ApsideController(
     ApsideService apsideService) : ControllerBase
 {
     [HttpGet("api/closest-apside")]
-    public IActionResult GetClosestApside(string planetName, int apsideNumber, string dateString)
+    public IActionResult GetClosestApside(string planetName, char apsideCode, string isoDateString)
     {
         // Load the planet.
         AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
@@ -29,26 +29,30 @@ public class ApsideController(
 
         // Convert the apside from an integer to an enum value.
         EApside apside;
-        try
+        if (apsideCode is 'p' or 'P')
         {
-            apside = (EApside)apsideNumber;
+            apside = EApside.Periapsis;
         }
-        catch (Exception ex)
+        else if (apsideCode is 'a' or 'A')
+        {
+            apside = EApside.Apoapsis;
+        }
+        else
         {
             return Program.ReturnException(this,
-                "The apside number should be 0 for perihelion and 1 for aphelion.", ex);
+                "The apside code should be 'p' or 'P' for perihelion, or 'a' or 'A' for aphelion.");
         }
 
         // Convert the date string to a DateTime.
         DateTime dt;
         try
         {
-            dt = DateTime.Parse(dateString);
+            dt = DateTime.Parse(isoDateString);
         }
         catch (Exception ex)
         {
             return Program.ReturnException(this,
-                "The date was in an invalid format. Try using the format YYYY-MM-DD.", ex);
+                "The date was in an invalid format. Try formatting it as YYYY-MM-DD.", ex);
         }
 
         // Calculate the apside.
@@ -61,7 +65,7 @@ public class ApsideController(
             double jdtt = TimeScales.DateTimeToJulianDate(dt);
             (jdtt1, rMetres) = apsideService.GetClosestApside(planet, apside, jdtt);
             dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
-            rAu = rMetres / LengthConstants.METRES_PER_ASTRONOMICAL_UNIT;
+            rAu = rMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
         }
         catch (Exception ex)
         {
@@ -80,7 +84,7 @@ public class ApsideController(
             Planet = planet.Name,
             Apside = apside == EApside.Periapsis ? "perihelion" : "aphelion",
             DateTime = strApsideDateTime,
-            RadiusInMetres = rMetres,
+            Radius = rMetres,
             RadiusInAU = rAu
         };
 

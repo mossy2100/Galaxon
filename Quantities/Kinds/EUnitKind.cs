@@ -1,4 +1,4 @@
-namespace Galaxon.Quantities;
+namespace Galaxon.Quantities.Kinds;
 
 /// <summary>
 /// Unit kind.
