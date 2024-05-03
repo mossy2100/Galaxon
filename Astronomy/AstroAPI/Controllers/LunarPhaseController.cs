@@ -13,6 +13,13 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 [ApiController]
 public class LunarPhaseController(MoonService moonService) : ControllerBase
 {
+    /// <summary>
+    /// Get the lunar phase closest to a specific date.
+    /// </summary>
+    /// <param name="isoDateString">The date in ISO 8601 format (yyyy-mm-dd).</param>
+    /// <returns>
+    /// Information about the lunar phase closest to the specified date.
+    /// </returns>
     [HttpGet("api/lunar-phase-near-date")]
     public IActionResult GetLunarPhaseNearDate(string isoDateString)
     {
@@ -38,6 +45,13 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get the lunar phases that occur in a specific year.
+    /// </summary>
+    /// <param name="year">The year for which to retrieve the lunar phases.</param>
+    /// <returns>
+    /// An array of objects with details about each lunar phase in the specified year.
+    /// </returns>
     [HttpGet("api/lunar-phases-in-year")]
     public IActionResult GetLunarPhasesInYear(int year)
     {
@@ -64,6 +78,14 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Retrieves the lunar phases for a specific month.
+    /// </summary>
+    /// <param name="year">The year of the desired month.</param>
+    /// <param name="month">The month for which to retrieve lunar phases.</param>
+    /// <returns>
+    /// An array of objects with details of all the lunar phases in the given month.
+    /// </returns>
     [HttpGet("api/lunar-phases-in-month")]
     public IActionResult GetLunarPhasesInMonth(int year, int month)
     {

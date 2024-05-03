@@ -4,6 +4,9 @@ using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
+/// <summary>
+/// Encapsulate a lunar phase for encoding as JSON.
+/// </summary>
 public record struct LunarPhaseDto
 {
     /// <summary>

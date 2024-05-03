@@ -12,6 +12,13 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 [ApiController]
 public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerService) : ControllerBase
 {
+    /// <summary>
+    /// Retrieves the seasonal markers for the specified year.
+    /// </summary>
+    /// <param name="year">The year for which to retrieve the seasonal markers.</param>
+    /// <returns>
+    /// Data on the seasonal markers occurring in the specified year.
+    /// </returns>
     [HttpGet("api/seasonal-markers-in-year")]
     public IActionResult GetSeasonalMarkersInYear(int year)
     {

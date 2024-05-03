@@ -1,5 +1,4 @@
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -11,6 +10,14 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 [ApiController]
 public class AstronomicalCycleController : ControllerBase
 {
+    /// <summary>
+    /// Calculate the approximate solar day length in SI seconds for a given year.
+    /// </summary>
+    /// <param name="year">
+    /// The year. A decimal value is supported (e.g. 2025.0 for the start of the year, 2025.5 for
+    /// the middle of the year, etc.).
+    /// </param>
+    /// <returns>The approximate solar day length in SI seconds at the specified time.</returns>
     [HttpGet("api/solar-day-length")]
     public IActionResult GetSolarDayLength(double year)
     {
@@ -40,6 +47,17 @@ public class AstronomicalCycleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculate the approximate tropical year length in ephemeris days and solar days for a given
+    /// year.
+    /// </summary>
+    /// <param name="year">
+    /// The year. A decimal value is supported (e.g. 2025.0 for the start of the year, 2025.5 for
+    /// the middle of the year, etc.).
+    /// </param>
+    /// <returns>
+    /// The approximate tropical day length in ephemeris and solar days at the specified time.
+    /// </returns>
     [HttpGet("api/tropical-year-length")]
     public IActionResult GetTropicalYearLength(double year)
     {
@@ -50,7 +68,11 @@ public class AstronomicalCycleController : ControllerBase
             double solarDays = EarthService.GetTropicalYearInSolarDaysForYear(year);
 
             // Construct the result.
-            TropicalYearDto result = new (ephemerisDays, solarDays);
+            Dictionary<string, double> result = new ()
+            {
+                { "ephemerisDays", Math.Round(ephemerisDays, 6) },
+                { "solarDays", Math.Round(solarDays, 6) }
+            };
 
             // Log it.
             Log.Information(
@@ -67,6 +89,16 @@ public class AstronomicalCycleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Calculate the approximate lunation length in ephemeris days and solar days for a given year.
+    /// </summary>
+    /// <param name="year">
+    /// The year. A decimal value is supported (e.g. 2025.0 for the start of the year, 2025.5 for
+    /// the middle of the year, etc.).
+    /// </param>
+    /// <returns>
+    /// The approximate lunation length in ephemeris and solar days at the specified time.
+    /// </returns>
     [HttpGet("api/lunation-length")]
     public IActionResult GetLunationLength(double year)
     {
@@ -76,7 +108,11 @@ public class AstronomicalCycleController : ControllerBase
             double solarDays = MoonService.GetLunationInSolarDaysForYear(year);
 
             // Construct the result.
-            LunationDto result = new (ephemerisDays, solarDays);
+            Dictionary<string, double> result = new ()
+            {
+                { "ephemerisDays", Math.Round(ephemerisDays, 6) },
+                { "solarDays", Math.Round(solarDays, 6) }
+            };
 
             // Log it.
             Log.Information(

@@ -17,30 +17,43 @@ public class ApsideController(
     AstroObjectRepository astroObjectRepository,
     ApsideService apsideService) : ControllerBase
 {
+    /// <summary>
+    /// Calculate the apside of a planet that occurs closest to a given date.
+    /// </summary>
+    /// <param name="planetName">The planet name. Defaults to "Earth".</param>
+    /// <param name="apsideCode">Either 'p' for perihelion or 'a' for aphelion.</param>
+    /// <param name="isoDateString">The date in the format YYYY-MM-DD.</param>
+    /// <returns></returns>
     [HttpGet("api/closest-apside")]
-    public IActionResult GetClosestApside(string planetName, char apsideCode, string isoDateString)
+    public IActionResult GetClosestApside(string? planetName, char apsideCode, string isoDateString)
     {
         // Load the planet.
+        // Default to Earth.
+        if (string.IsNullOrEmpty(planetName))
+        {
+            planetName = "Earth";
+        }
         AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
         if (planet == null)
         {
             return Program.ReturnException(this, $"Invalid planet name '{planetName}'.");
         }
 
-        // Convert the apside from an integer to an enum value.
+        // Convert the apside from a character to an enum value.
         EApside apside;
-        if (apsideCode is 'p' or 'P')
+        switch (apsideCode)
         {
-            apside = EApside.Periapsis;
-        }
-        else if (apsideCode is 'a' or 'A')
-        {
-            apside = EApside.Apoapsis;
-        }
-        else
-        {
-            return Program.ReturnException(this,
-                "The apside code should be 'p' or 'P' for perihelion, or 'a' or 'A' for aphelion.");
+            case 'p' or 'P':
+                apside = EApside.Periapsis;
+                break;
+
+            case 'a' or 'A':
+                apside = EApside.Apoapsis;
+                break;
+
+            default:
+                return Program.ReturnException(this,
+                    "The apside code should be 'p' or 'P' for perihelion, or 'a' or 'A' for aphelion.");
         }
 
         // Convert the date string to a DateTime.
@@ -79,13 +92,16 @@ public class ApsideController(
             apside.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rMetres, rAu);
 
         // Construct the result.
-        var result = new
+        object result = new
         {
             Planet = planet.Name,
             Apside = apside == EApside.Periapsis ? "perihelion" : "aphelion",
             DateTime = strApsideDateTime,
-            Radius = rMetres,
-            RadiusInAU = rAu
+            Radius = new Dictionary<string, double>
+            {
+                { "metres", Math.Round(rMetres) },
+                { "AU", Math.Round(rAu, 9) }
+            }
         };
 
         // Return the result as JSON.

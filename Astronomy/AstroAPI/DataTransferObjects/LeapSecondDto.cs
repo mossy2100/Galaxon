@@ -3,6 +3,9 @@ using Galaxon.Time;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 
+/// <summary>
+/// Encapsulate a leap second for encoding as JSON.
+/// </summary>
 public record struct LeapSecondDto
 {
     /// <summary>

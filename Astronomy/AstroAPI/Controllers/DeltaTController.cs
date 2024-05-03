@@ -10,6 +10,16 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 [ApiController]
 public class DeltaTController : ControllerBase
 {
+    /// <summary>
+    /// Calculate the approximate value of dalta-T in SI seconds for a given year.
+    /// </summary>
+    /// <param name="year">
+    /// The year. A decimal value is supported (e.g. 2025.0 for the start of the year, 2025.5 for
+    /// the middle of the year, etc.).
+    /// </param>
+    /// <returns>
+    /// The approximate value of delta-T in SI seconds at the specified time.
+    /// </returns>
     [HttpGet("api/delta-t")]
     public IActionResult GetDeltaTForYear(double year)
     {
@@ -21,7 +31,7 @@ public class DeltaTController : ControllerBase
             // Construct the result.
             Dictionary<string, double> result = new ()
             {
-                ["seconds"] = double.Round(deltaT, 6)
+                { "seconds", Math.Round(deltaT, 6) }
             };
 
             // Log it.

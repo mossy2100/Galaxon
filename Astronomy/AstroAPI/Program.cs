@@ -45,12 +45,17 @@ public class Program
         });
         builder.Services.AddRazorPages();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+
+        // Configure Swagger to use XML documentation.
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "AstroAPI.xml"));
+        });
 
         // Add services to the container.
         AddServices(builder);
 
-        // Build.
+        // Build the app.
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -63,12 +68,14 @@ public class Program
             ConfigureForProduction(app);
         }
 
+        // Use things.
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // Map things.
         app.MapControllers();
         app.MapRazorPages();
 
@@ -88,21 +95,6 @@ public class Program
             .CreateLogger();
     }
 
-    private static void ConfigureForProduction(WebApplication app)
-    {
-        app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production
-        // scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
-    }
-
-    private static void ConfigureForDevelopment(WebApplication app)
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseDeveloperExceptionPage();
-    }
-
     /// <summary>
     /// Add services to the container.
     /// </summary>
@@ -120,6 +112,21 @@ public class Program
         builder.Services.AddScoped<LeapSecondRepository>();
         builder.Services.AddScoped<LeapSecondService>();
         builder.Services.AddScoped<ApsideService>();
+    }
+
+    private static void ConfigureForDevelopment(WebApplication app)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
+    }
+
+    private static void ConfigureForProduction(WebApplication app)
+    {
+        app.UseExceptionHandler("/Error");
+        // The default HSTS value is 30 days. You may want to change this for production
+        // scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
     }
 
     /// <summary>

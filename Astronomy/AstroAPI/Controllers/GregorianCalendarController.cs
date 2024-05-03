@@ -24,6 +24,11 @@ public class GregorianCalendarController(
     SeasonalMarkerService seasonalMarkerService,
     ApsideService apsideService) : ControllerBase
 {
+    /// <summary>
+    /// Get a bunch of interesting information about the specified year.
+    /// </summary>
+    /// <param name="year">The year. Must be in the range 1..9999.</param>
+    /// <returns>A variety of information about the year.</returns>
     [HttpGet("api/year-info")]
     public IActionResult GetYearInfo(int year)
     {

@@ -12,6 +12,13 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 [ApiController]
 public class LeapSecondController(AstroDbContext astroDbContext) : ControllerBase
 {
+    /// <summary>
+    /// Get data on the leap seconds to date.
+    /// </summary>
+    /// <returns>
+    /// All leap seconds so far, with the value (1 for an inserted second, -1 for a deleted second)
+    /// and the date it was was inserted or deleted.
+    /// </returns>
     [HttpGet("api/leap-seconds")]
     public IActionResult GetLeapSeconds()
     {
