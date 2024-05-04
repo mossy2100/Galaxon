@@ -5,38 +5,25 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Models;
 public class MessageBox
 {
     /// <summary>
-    /// These classes correspond to bootstrap alerts.
-    /// <see href="https://getbootstrap.com/docs/5.2/components/alerts/"/>
-    /// </summary>
-    public static readonly string[] ValidLevels = { "danger", "warning", "success", "info" };
-
-    /// <summary>
     /// Constructor.
     /// </summary>
     public MessageBox() { }
 
-    public Dictionary<string, List<string>> Messages { get; set; } = new ();
+    public Dictionary<EMessageSeverity, List<string>> Messages { get; set; } = new ();
 
-    public void Add(string level, string message, bool repeatsOk = false)
+    public void Add(EMessageSeverity severity, string message, bool repeatsOk = false)
     {
-        // Guards.
-        if (!ValidLevels.Contains(level))
-        {
-            throw new ArgumentException(
-                "Invalid level. Valid levels are \"danger\", \"warning\", \"success\", and \"info\".",
-                nameof(level)
-            );
-        }
+        // Check there's a message.
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Empty message.", nameof(message));
         }
 
         // Check if a list of messages for this level already exists.
-        bool containsKey = Messages.ContainsKey(level);
+        bool containsKey = Messages.ContainsKey(severity);
 
         // Check for a repeat.
-        if (containsKey && !repeatsOk && Messages[level].Contains(message))
+        if (containsKey && !repeatsOk && Messages[severity].Contains(message))
         {
             return;
         }
@@ -44,11 +31,11 @@ public class MessageBox
         // Check the collection exists for the specified level.
         if (!containsKey)
         {
-            Messages[level] = new List<string>();
+            Messages[severity] = [];
         }
 
         // Add the message to the collection.
-        Messages[level].Add(message);
+        Messages[severity].Add(message);
     }
 
     /// <summary>
@@ -64,8 +51,7 @@ public class MessageBox
     /// </summary>
     public static MessageBox Deserialize(string json)
     {
-        Dictionary<string, List<string>>? messages =
-            JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+        Dictionary<EMessageSeverity, List<string>>? messages = JsonSerializer.Deserialize<Dictionary<EMessageSeverity, List<string>>>(json);
         if (messages == null)
         {
             throw new ArgumentException("Invalid JSON. Could not be deserialized to MessageBox.",

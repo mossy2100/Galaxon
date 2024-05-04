@@ -5,11 +5,9 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
 public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepository
 {
-    private ApplicationDbContext _DbContext { get; } = dbContext;
-
     public IEnumerable<Document> GetPublished(bool published = true)
     {
-        return _DbContext.Documents
+        return dbContext.Documents
             .Where(doc => doc.Published == published)
             .OrderBy(doc => doc.Order);
     }
@@ -37,7 +35,7 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
 
     public int Reorder(int? folderId = null, int order = 0)
     {
-        List<Document> docs = _DbContext.Documents
+        List<Document> docs = dbContext.Documents
             .Where(doc => doc.FolderId == folderId)
             .OrderBy(doc => doc.Order).ToList();
 
@@ -45,7 +43,7 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
         {
             order += 2;
             doc.Order = order;
-            _DbContext.SaveChanges();
+            dbContext.SaveChanges();
 
             // Reorder children, if any.
             order = Reorder(doc.Id, order);
@@ -58,31 +56,31 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
 
     public IEnumerable<Document> GetAll()
     {
-        return _DbContext.Documents.OrderBy(doc => doc.Order);
+        return dbContext.Documents.OrderBy(doc => doc.Order);
     }
 
     public Document? GetById(int id)
     {
-        return GetAll().FirstOrDefault(doc => doc.Id == id);
+        return dbContext.Documents.FirstOrDefault(doc => doc.Id == id);
     }
 
     public void Create(Document doc)
     {
-        _DbContext.Documents.Add(doc);
-        _DbContext.SaveChanges();
+        dbContext.Documents.Add(doc);
+        dbContext.SaveChanges();
     }
 
     public void Update(Document doc)
     {
-        _DbContext.Documents.Update(doc);
-        _DbContext.SaveChanges();
+        dbContext.Documents.Update(doc);
+        dbContext.SaveChanges();
     }
 
     public void Delete(int id)
     {
         Document doc = new () { Id = id };
-        _DbContext.Entry(doc).State = EntityState.Deleted;
-        _DbContext.SaveChanges();
+        dbContext.Entry(doc).State = EntityState.Deleted;
+        dbContext.SaveChanges();
     }
 
     #endregion IRepository methods

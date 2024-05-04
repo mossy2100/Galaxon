@@ -4,20 +4,13 @@ using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Services;
 
-public class DocumentService
+public class DocumentService(
+    IDocumentRepository documentRepo,
+    BufferedFileUploadService fileUploadService)
 {
-    private IDocumentRepository _documentRepo { get; }
-    private BufferedFileUploadService _fileUploadService { get; }
-
     public const string DocumentIconDirUri = "images/icons";
-    public const string DocumentIconDirApp = $"wwwroot/{DocumentIconDirUri}";
 
-    public DocumentService(IDocumentRepository documentRepo,
-        BufferedFileUploadService fileUploadService)
-    {
-        _documentRepo = documentRepo;
-        _fileUploadService = fileUploadService;
-    }
+    public const string DocumentIconDirApp = $"wwwroot/{DocumentIconDirUri}";
 
     public Document? GetFolder(Document doc)
     {
@@ -29,7 +22,7 @@ public class DocumentService
         {
             return null;
         }
-        doc.Folder = _documentRepo.GetById(doc.FolderId.Value);
+        doc.Folder = documentRepo.GetById(doc.FolderId.Value);
         return doc.Folder;
     }
 
@@ -40,7 +33,7 @@ public class DocumentService
     /// <param name="name"></param>
     /// <returns></returns>
     public static string ProcessUrlPart(string name) =>
-        Regex.Replace(name, @"[^a-zA-Z]+", "-").ToLower();
+        Regex.Replace(name, "[^a-zA-Z]+", "-").Trim('-').ToLower();
 
     public string GetPathAlias(Document doc)
     {
@@ -54,14 +47,14 @@ public class DocumentService
         return (folder == null ? "" : GetBreadcrumb(folder) + " / ") + doc.Title;
     }
 
-    public static string? GetIconPath(int docId, bool absolute = false)
+    public static string? GetIconPath(Document doc, bool absolute = false)
     {
-        string iconBaseName = $"document-icon-{docId}";
+        string iconBaseName = $"document-icon-{ProcessUrlPart(doc.Title)}";
 
         string[] files = Directory.GetFiles(DocumentIconDirApp);
         foreach (string path in files)
         {
-            FileInfo fi = new(path);
+            FileInfo fi = new (path);
             string fileBaseName = fi.Name[..^fi.Extension.Length];
             if (fileBaseName == iconBaseName)
             {
@@ -76,8 +69,13 @@ public class DocumentService
 
     public bool DeleteIcon(int docId)
     {
-        string? iconPath = GetIconPath(docId, true);
+        Document? doc = documentRepo.GetById(docId);
+        if (doc == null)
+        {
+            return false;
+        }
 
+        string? iconPath = GetIconPath(doc, true);
         if (iconPath == null || !File.Exists(iconPath))
         {
             return false;
@@ -91,14 +89,14 @@ public class DocumentService
     {
         FileInfo fi = new FileInfo(icon.FileName);
         string iconFileName = $"document-icon-{docId}{fi.Extension.ToLower()}";
-        await BufferedFileUploadService.UploadFile(icon, DocumentIconDirApp, iconFileName);
+        await fileUploadService.UploadFile(icon, DocumentIconDirApp, iconFileName);
     }
 
     public bool FolderContainsCurrentDocument(int folderId, HttpRequest request)
     {
-        IEnumerable<Document> docs = _documentRepo.GetByFolder(folderId);
+        IEnumerable<Document> docs = documentRepo.GetByFolder(folderId);
         return docs.Any(doc =>
-                doc.IsFolder && FolderContainsCurrentDocument(doc.Id, request)
-                || !doc.IsFolder && request.Path == GetPathAlias(doc));
+            doc.IsFolder && FolderContainsCurrentDocument(doc.Id, request)
+            || !doc.IsFolder && request.Path == GetPathAlias(doc));
     }
 }

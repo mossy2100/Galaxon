@@ -8,7 +8,7 @@ public class MessageBoxViewComponent : ViewComponent
     public IViewComponentResult Invoke()
     {
         MessageBox? messageBox = TempData["MessageBox"] is string json
-            ? MessageBox.Deserialize(json) 
+            ? MessageBox.Deserialize(json)
             : null;
         return View(messageBox);
     }

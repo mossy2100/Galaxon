@@ -5,7 +5,7 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Services;
 
 public class MessageBoxService
 {
-    public static void AddMessage(ITempDataDictionary tempData, string level, string message,
+    public void AddMessage(ITempDataDictionary tempData, EMessageSeverity severity, string message,
         bool repeatsOk = false)
     {
         // Get the MessageBox from the TempDataDictionary, or create a new one if needed.
@@ -14,7 +14,7 @@ public class MessageBoxService
             : new MessageBox();
 
         // Add the message to the MessageBox.
-        messageBox.Add(level, message, repeatsOk);
+        messageBox.Add(severity, message, repeatsOk);
 
         // Store the updated MessageBox in the TempDataDictionary.
         tempData["MessageBox"] = messageBox.Serialize();

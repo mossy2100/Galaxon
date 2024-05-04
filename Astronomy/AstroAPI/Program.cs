@@ -32,8 +32,10 @@ public class Program
             Log.Information("Configuring services...");
             ConfigureServices(builder);
 
-            Log.Information("Building and configuring web application...");
+            Log.Information("Building web application...");
             WebApplication app = builder.Build();
+
+            Log.Information("Configuring web application...");
             ConfigureApp(app);
 
             Log.Information("Running web application...");
@@ -41,7 +43,7 @@ public class Program
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Application terminated unexpectedly");
+            Log.Fatal(ex, "Application terminated unexpectedly.");
         }
         finally
         {
@@ -71,20 +73,26 @@ public class Program
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorization();
+        builder.Services.AddRazorPages();
+        builder.Services.AddEndpointsApiExplorer();
+
+        // JsonConverters.
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.Converters.Add(new QuantityJsonConverter());
         });
-        builder.Services.AddRazorPages();
-        builder.Services.AddEndpointsApiExplorer();
+
+        // Swagger.
         builder.Services.AddSwaggerGen(c =>
         {
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "AstroAPI.xml"));
         });
 
-        // Dependency injection for DbContext and repositories.
+        // Configure DbContext.
         builder.Services.AddScoped<AstroDbContext>();
+
+        // Dependency injection for repositories and services.
         builder.Services.AddScoped<AstroObjectGroupRepository>();
         builder.Services.AddScoped<AstroObjectRepository>();
         builder.Services.AddScoped<PlanetService>();
@@ -103,6 +111,7 @@ public class Program
     /// <param name="app">The configured web application.</param>
     private static void ConfigureApp(WebApplication app)
     {
+        // Configure the HTTP request pipeline for different environments.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -115,12 +124,14 @@ public class Program
             app.UseHsts();
         }
 
+        // Use things.
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // Map things.
         app.MapControllers();
         app.MapRazorPages();
     }

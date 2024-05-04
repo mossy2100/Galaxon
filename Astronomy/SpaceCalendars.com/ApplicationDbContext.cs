@@ -4,14 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext(options)
 {
     public DbSet<Document> Documents => Set<Document>();
-
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

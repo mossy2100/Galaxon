@@ -1,8 +1,6 @@
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -27,8 +25,10 @@ public class Program
             Log.Information("Configuring services...");
             ConfigureServices(builder);
 
-            Log.Information("Building and configuring web application...");
+            Log.Information("Building web application...");
             WebApplication app = builder.Build();
+
+            Log.Information("Configuring web application...");
             ConfigureApp(app);
 
             Log.Information("Running web application...");
@@ -36,7 +36,7 @@ public class Program
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Application terminated unexpectedly");
+            Log.Fatal(ex, "Application terminated unexpectedly.");
         }
         finally
         {
@@ -67,27 +67,30 @@ public class Program
     /// <param name="builder">The application builder to which services are added.</param>
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
+        // builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        //     {
+        //         options.SignIn.RequireConfirmedAccount = true;
+        //     })
+        //     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        // builder.Services.AddControllersWithViews(options =>
+        //     options.Filters.Add(new AuthorizeFilter()));
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+        // Configure database.
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            string? connString = builder.Configuration.GetConnectionString("SpaceCalendars");
+            options.UseMySql(connString, ServerVersion.AutoDetect(connString));
+            // options.UseMySql(connString, new MySqlServerVersion("8.3.0"));
+        });
+
+        // Dependency injection for repositories and services.
         builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
         builder.Services.AddScoped<DocumentService>();
         builder.Services.AddScoped<BufferedFileUploadService>();
         builder.Services.AddScoped<MessageBoxService>();
-
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("SpaceCalendars"));
-        });
-
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = true;
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        builder.Services.AddControllersWithViews(options =>
-            options.Filters.Add(new AuthorizeFilter()));
     }
 
     /// <summary>
@@ -96,7 +99,7 @@ public class Program
     /// <param name="app">The configured web application.</param>
     private static void ConfigureApp(WebApplication app)
     {
-        // Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline for different environments.
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -110,12 +113,14 @@ public class Program
             app.UseHsts();
         }
 
+        // Use things.
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // Map things.
         app.MapControllerRoute(
             "default",
             "{controller=Home}/{action=Index}/{id?}");

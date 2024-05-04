@@ -13,12 +13,6 @@ public class DocumentController(
     MessageBoxService messageBoxService)
     : Controller
 {
-    private IDocumentRepository _DocumentRepo { get; } = documentRepo;
-
-    private DocumentService _DocumentService { get; } = documentService;
-
-    private MessageBoxService _MessageBoxService { get; } = messageBoxService;
-
     public ViewResult Index()
     {
         ViewBag.PageTitle = "Document Index";
@@ -26,11 +20,11 @@ public class DocumentController(
         // Remember the levels to save time.
         Dictionary<int, int> levels = new ();
 
-        List<Document> docs = _DocumentRepo.GetAll().ToList();
+        List<Document> docs = documentRepo.GetAll().ToList();
         foreach (Document doc in docs)
         {
-            doc.PathAlias = _DocumentService.GetPathAlias(doc);
-            doc.IconPath = DocumentService.GetIconPath(doc.Id);
+            doc.PathAlias = documentService.GetPathAlias(doc);
+            doc.IconPath = DocumentService.GetIconPath(doc);
 
             // Get the level.
             doc.Level = doc.FolderId == null ? 0 : levels[doc.FolderId.Value] + 1;
@@ -42,14 +36,14 @@ public class DocumentController(
 
     public IActionResult Details(int id)
     {
-        Document? doc = _DocumentRepo.GetById(id);
+        Document? doc = documentRepo.GetById(id);
 
         if (doc == null)
         {
             return NotFound();
         }
 
-        doc.IconPath = DocumentService.GetIconPath(id);
+        doc.IconPath = DocumentService.GetIconPath(doc);
 
         ViewBag.PageTitle = "Document Details";
         return View(doc);
@@ -58,15 +52,15 @@ public class DocumentController(
     private ViewResult ViewEditForm(Document doc)
     {
         ViewBag.PageTitle = doc.Id == 0 ? "Create Document" : "Update Document";
-        ViewBag.Folders = new SelectList(_DocumentRepo.GetFolders(), "Id", "Name");
+        ViewBag.Folders = new SelectList(documentRepo.GetFolders(), "Id", "Name");
 
         // Get "breadcrumbs" (titles with hierarchy) for folders.
-        IEnumerable<Document> folders = _DocumentRepo.GetFolders();
+        IEnumerable<Document> folders = documentRepo.GetFolders();
         ViewBag.Folders = new List<SelectListItem>();
         foreach (Document folder in folders)
         {
             SelectListItem option =
-                new (_DocumentService.GetBreadcrumb(folder), folder.Id.ToString());
+                new (documentService.GetBreadcrumb(folder), folder.Id.ToString());
             ViewBag.Folders.Add(option);
         }
 
@@ -75,13 +69,13 @@ public class DocumentController(
 
     public ViewResult Edit(int? id)
     {
-        Document doc = (id != null ? _DocumentRepo.GetById(id.Value) : null) ?? new Document();
+        Document doc = (id != null ? documentRepo.GetById(id.Value) : null) ?? new Document();
 
         if (doc.Id != 0)
         {
             ViewBag.PageTitle = "Update Document";
             // Get the document icon if there is one.
-            doc.IconPath = DocumentService.GetIconPath(doc.Id);
+            doc.IconPath = DocumentService.GetIconPath(doc);
         }
         else
         {
@@ -107,7 +101,7 @@ public class DocumentController(
             string extension = fi.Extension.ToLower();
             if (extension != ".svg" && extension != ".png")
             {
-                MessageBoxService.AddMessage(TempData, "danger",
+                messageBoxService.AddMessage(TempData, EMessageSeverity.Danger,
                     "Only SVG or PNG files are valid for document icons.");
                 return ViewEditForm(doc);
             }
@@ -116,13 +110,13 @@ public class DocumentController(
         // Create or update the document in the repository.
         if (doc.Id == 0)
         {
-            _DocumentRepo.Create(doc);
-            MessageBoxService.AddMessage(TempData, "success", "Document created.");
+            documentRepo.Create(doc);
+            messageBoxService.AddMessage(TempData, EMessageSeverity.Success, "Document created.");
         }
         else
         {
-            _DocumentRepo.Update(doc);
-            MessageBoxService.AddMessage(TempData, "success", "Document updated.");
+            documentRepo.Update(doc);
+            messageBoxService.AddMessage(TempData, EMessageSeverity.Success, "Document updated.");
         }
 
         // Delete existing icon file if requested.
@@ -130,15 +124,17 @@ public class DocumentController(
         {
             try
             {
-                bool iconDeleted = _DocumentService.DeleteIcon(doc.Id);
+                bool iconDeleted = documentService.DeleteIcon(doc.Id);
                 if (iconDeleted)
                 {
-                    MessageBoxService.AddMessage(TempData, "success", "Icon deleted.");
+                    messageBoxService.AddMessage(TempData, EMessageSeverity.Success,
+                        "Icon deleted.");
                 }
             }
             catch (Exception)
             {
-                MessageBoxService.AddMessage(TempData, "danger", "Error deleting icon file.");
+                messageBoxService.AddMessage(TempData, EMessageSeverity.Danger,
+                    "Error deleting icon file.");
                 return ViewEditForm(doc);
             }
         }
@@ -148,25 +144,26 @@ public class DocumentController(
         {
             try
             {
-                await _DocumentService.UploadIcon(doc.Id, icon);
-                MessageBoxService.AddMessage(TempData, "success", "Icon uploaded.");
+                await documentService.UploadIcon(doc.Id, icon);
+                messageBoxService.AddMessage(TempData, EMessageSeverity.Success, "Icon uploaded.");
             }
             catch (Exception)
             {
-                MessageBoxService.AddMessage(TempData, "danger", "Error uploading icon file.");
+                messageBoxService.AddMessage(TempData, EMessageSeverity.Danger,
+                    "Error uploading icon file.");
                 return ViewEditForm(doc);
             }
         }
 
         // Reorder the documents.
-        _DocumentRepo.Reorder();
+        documentRepo.Reorder();
 
         return RedirectToAction("Index");
     }
 
     public IActionResult Delete(int id)
     {
-        Document? doc = _DocumentRepo.GetById(id);
+        Document? doc = documentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -182,20 +179,21 @@ public class DocumentController(
         // Try to delete the icon.
         try
         {
-            _DocumentService.DeleteIcon(id);
-            MessageBoxService.AddMessage(TempData, "success", "Icon deleted.");
+            documentService.DeleteIcon(id);
+            messageBoxService.AddMessage(TempData, EMessageSeverity.Success, "Icon deleted.");
         }
         catch (Exception)
         {
-            MessageBoxService.AddMessage(TempData, "danger", "Error deleting icon file.");
+            messageBoxService.AddMessage(TempData, EMessageSeverity.Danger,
+                "Error deleting icon file.");
             return Delete(id);
         }
 
         // Delete the document from the repository.
-        _DocumentRepo.Delete(id);
-        MessageBoxService.AddMessage(TempData, "success", "Document deleted.");
+        documentRepo.Delete(id);
+        messageBoxService.AddMessage(TempData, EMessageSeverity.Success, "Document deleted.");
 
-        _DocumentRepo.Reorder();
+        documentRepo.Reorder();
 
         return RedirectToAction("Index");
     }
@@ -203,7 +201,7 @@ public class DocumentController(
     [AllowAnonymous]
     public IActionResult Display(int id)
     {
-        Document? doc = _DocumentRepo.GetById(id);
+        Document? doc = documentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -216,9 +214,9 @@ public class DocumentController(
     [AllowAnonymous]
     public IActionResult DisplayFromPathAlias(string alias)
     {
-        Document? doc = _DocumentRepo
+        Document? doc = documentRepo
             .GetAll()
-            .FirstOrDefault(doc => _DocumentService.GetPathAlias(doc) == $"/{alias}");
+            .FirstOrDefault(doc => documentService.GetPathAlias(doc) == $"/{alias}");
 
         if (doc == null)
         {

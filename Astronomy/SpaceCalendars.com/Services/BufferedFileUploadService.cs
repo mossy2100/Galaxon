@@ -2,7 +2,7 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Services;
 
 public class BufferedFileUploadService
 {
-    public static async Task UploadFile(IFormFile file, string dir, string newFileName)
+    public async Task UploadFile(IFormFile file, string dir, string newFileName)
     {
         if (file.Length == 0)
         {

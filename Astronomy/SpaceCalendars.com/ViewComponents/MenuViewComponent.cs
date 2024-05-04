@@ -43,7 +43,7 @@ public class MenuViewComponent : ViewComponent
             }
 
             // Get the path to the icon if there is one.
-            doc.IconPath = DocumentService.GetIconPath(doc.Id);
+            doc.IconPath = DocumentService.GetIconPath(doc);
         }
 
         return View(docs);
