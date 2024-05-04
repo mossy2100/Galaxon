@@ -7,31 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Controllers;
 
-public class DocumentController : Controller
+public class DocumentController(
+    IDocumentRepository documentRepo,
+    DocumentService documentService,
+    MessageBoxService messageBoxService)
+    : Controller
 {
-    private IDocumentRepository _documentRepo { get; }
-    private DocumentService _documentService { get; }
-    private MessageBoxService _messageBoxService { get; }
+    private IDocumentRepository _DocumentRepo { get; } = documentRepo;
 
-    public DocumentController(IDocumentRepository documentRepo, DocumentService documentService,
-        MessageBoxService messageBoxService)
-    {
-        _documentRepo = documentRepo;
-        _documentService = documentService;
-        _messageBoxService = messageBoxService;
-    }
+    private DocumentService _DocumentService { get; } = documentService;
+
+    private MessageBoxService _MessageBoxService { get; } = messageBoxService;
 
     public ViewResult Index()
     {
         ViewBag.PageTitle = "Document Index";
 
         // Remember the levels to save time.
-        Dictionary<int, int> levels = new();
+        Dictionary<int, int> levels = new ();
 
-        List<Document> docs = _documentRepo.GetAll().ToList();
+        List<Document> docs = _DocumentRepo.GetAll().ToList();
         foreach (Document doc in docs)
         {
-            doc.PathAlias = _documentService.GetPathAlias(doc);
+            doc.PathAlias = _DocumentService.GetPathAlias(doc);
             doc.IconPath = DocumentService.GetIconPath(doc.Id);
 
             // Get the level.
@@ -44,7 +42,7 @@ public class DocumentController : Controller
 
     public IActionResult Details(int id)
     {
-        Document? doc = _documentRepo.GetById(id);
+        Document? doc = _DocumentRepo.GetById(id);
 
         if (doc == null)
         {
@@ -60,15 +58,15 @@ public class DocumentController : Controller
     private ViewResult ViewEditForm(Document doc)
     {
         ViewBag.PageTitle = doc.Id == 0 ? "Create Document" : "Update Document";
-        ViewBag.Folders = new SelectList(_documentRepo.GetFolders(), "Id", "Name");
+        ViewBag.Folders = new SelectList(_DocumentRepo.GetFolders(), "Id", "Name");
 
         // Get "breadcrumbs" (titles with hierarchy) for folders.
-        IEnumerable<Document> folders = _documentRepo.GetFolders();
+        IEnumerable<Document> folders = _DocumentRepo.GetFolders();
         ViewBag.Folders = new List<SelectListItem>();
         foreach (Document folder in folders)
         {
             SelectListItem option =
-                new(_documentService.GetBreadcrumb(folder), folder.Id.ToString());
+                new (_DocumentService.GetBreadcrumb(folder), folder.Id.ToString());
             ViewBag.Folders.Add(option);
         }
 
@@ -77,7 +75,7 @@ public class DocumentController : Controller
 
     public ViewResult Edit(int? id)
     {
-        Document doc = (id != null ? _documentRepo.GetById(id.Value) : null) ?? new Document();
+        Document doc = (id != null ? _DocumentRepo.GetById(id.Value) : null) ?? new Document();
 
         if (doc.Id != 0)
         {
@@ -105,11 +103,12 @@ public class DocumentController : Controller
         // If an icon file is provided, check it's valid.
         if (icon != null)
         {
-            FileInfo fi = new FileInfo(icon.FileName);
+            FileInfo fi = new (icon.FileName);
             string extension = fi.Extension.ToLower();
             if (extension != ".svg" && extension != ".png")
             {
-                MessageBoxService.AddMessage(TempData, "danger", "Only SVG or PNG files are valid for document icons.");
+                MessageBoxService.AddMessage(TempData, "danger",
+                    "Only SVG or PNG files are valid for document icons.");
                 return ViewEditForm(doc);
             }
         }
@@ -117,12 +116,12 @@ public class DocumentController : Controller
         // Create or update the document in the repository.
         if (doc.Id == 0)
         {
-            _documentRepo.Create(doc);
+            _DocumentRepo.Create(doc);
             MessageBoxService.AddMessage(TempData, "success", "Document created.");
         }
         else
         {
-            _documentRepo.Update(doc);
+            _DocumentRepo.Update(doc);
             MessageBoxService.AddMessage(TempData, "success", "Document updated.");
         }
 
@@ -131,7 +130,7 @@ public class DocumentController : Controller
         {
             try
             {
-                bool iconDeleted = _documentService.DeleteIcon(doc.Id);
+                bool iconDeleted = _DocumentService.DeleteIcon(doc.Id);
                 if (iconDeleted)
                 {
                     MessageBoxService.AddMessage(TempData, "success", "Icon deleted.");
@@ -149,7 +148,7 @@ public class DocumentController : Controller
         {
             try
             {
-                await _documentService.UploadIcon(doc.Id, icon);
+                await _DocumentService.UploadIcon(doc.Id, icon);
                 MessageBoxService.AddMessage(TempData, "success", "Icon uploaded.");
             }
             catch (Exception)
@@ -160,14 +159,14 @@ public class DocumentController : Controller
         }
 
         // Reorder the documents.
-        _documentRepo.Reorder();
+        _DocumentRepo.Reorder();
 
         return RedirectToAction("Index");
     }
 
     public IActionResult Delete(int id)
     {
-        Document? doc = _documentRepo.GetById(id);
+        Document? doc = _DocumentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -183,7 +182,7 @@ public class DocumentController : Controller
         // Try to delete the icon.
         try
         {
-            _documentService.DeleteIcon(id);
+            _DocumentService.DeleteIcon(id);
             MessageBoxService.AddMessage(TempData, "success", "Icon deleted.");
         }
         catch (Exception)
@@ -193,10 +192,10 @@ public class DocumentController : Controller
         }
 
         // Delete the document from the repository.
-        _documentRepo.Delete(id);
+        _DocumentRepo.Delete(id);
         MessageBoxService.AddMessage(TempData, "success", "Document deleted.");
 
-        _documentRepo.Reorder();
+        _DocumentRepo.Reorder();
 
         return RedirectToAction("Index");
     }
@@ -204,7 +203,7 @@ public class DocumentController : Controller
     [AllowAnonymous]
     public IActionResult Display(int id)
     {
-        Document? doc = _documentRepo.GetById(id);
+        Document? doc = _DocumentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -217,9 +216,9 @@ public class DocumentController : Controller
     [AllowAnonymous]
     public IActionResult DisplayFromPathAlias(string alias)
     {
-        Document? doc = _documentRepo
+        Document? doc = _DocumentRepo
             .GetAll()
-            .FirstOrDefault(doc => _documentService.GetPathAlias(doc) == $"/{alias}");
+            .FirstOrDefault(doc => _DocumentService.GetPathAlias(doc) == $"/{alias}");
 
         if (doc == null)
         {

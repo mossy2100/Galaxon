@@ -1,75 +1,151 @@
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com;
 
+/// <summary>
+/// The main entry point class for the SpaceCalendars.com website.
+/// This class sets up the logging, services, web application configurations and starts the
+/// application.
+/// </summary>
 public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        ConfigureServices(builder);
-        WebApplication app = builder.Build();
-        ConfigureApp(app);
-        app.Run();
+        try
+        {
+            SetupLogger();
+
+            Log.Information("Creating wep application builder...");
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            Log.Information("Configuring services...");
+            ConfigureServices(builder);
+
+            Log.Information("Building and configuring web application...");
+            WebApplication app = builder.Build();
+            ConfigureApp(app);
+
+            Log.Information("Running web application...");
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application terminated unexpectedly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 
-    private static void ConfigureServices(WebApplicationBuilder webAppBuilder)
+    /// <summary>
+    /// Configures the Serilog logging service.
+    /// </summary>
+    public static void SetupLogger()
     {
-        webAppBuilder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-        webAppBuilder.Services.AddScoped<DocumentService>();
-        webAppBuilder.Services.AddScoped<BufferedFileUploadService>();
-        webAppBuilder.Services.AddScoped<MessageBoxService>();
+        // Build configuration
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-        webAppBuilder.Services.AddDbContext<ApplicationDbContext>(options =>
+        // Set up Serilog
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+    }
+
+    /// <summary>
+    /// Adds and configures services for the application.
+    /// Includes controllers, Razor pages, API explorers, and custom services.
+    /// </summary>
+    /// <param name="builder">The application builder to which services are added.</param>
+    private static void ConfigureServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+        builder.Services.AddScoped<DocumentService>();
+        builder.Services.AddScoped<BufferedFileUploadService>();
+        builder.Services.AddScoped<MessageBoxService>();
+
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
-                webAppBuilder.Configuration.GetConnectionString("SpaceCalendars"));
+                builder.Configuration.GetConnectionString("SpaceCalendars"));
         });
 
-        webAppBuilder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        webAppBuilder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        webAppBuilder.Services.AddControllersWithViews(options =>
+        builder.Services.AddControllersWithViews(options =>
             options.Filters.Add(new AuthorizeFilter()));
     }
 
-    private static void ConfigureApp(WebApplication webApp)
+    /// <summary>
+    /// Configures the web application's request pipeline based on environment settings.
+    /// </summary>
+    /// <param name="app">The configured web application.</param>
+    private static void ConfigureApp(WebApplication app)
     {
         // Configure the HTTP request pipeline.
-        if (webApp.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
-            webApp.UseDeveloperExceptionPage();
-            webApp.UseMigrationsEndPoint();
+            app.UseDeveloperExceptionPage();
+            app.UseMigrationsEndPoint();
         }
         else
         {
-            webApp.UseExceptionHandler("/Home/Error");
+            app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios,
             // see https://aka.ms/aspnetcore-hsts.
-            webApp.UseHsts();
+            app.UseHsts();
         }
 
-        webApp.UseHttpsRedirection();
-        webApp.UseStaticFiles();
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-        webApp.UseRouting();
+        app.MapControllerRoute(
+            "default",
+            "{controller=Home}/{action=Index}/{id?}");
+        app.MapRazorPages();
+        app.MapFallbackToController(@"{**alias}", "DisplayFromPathAlias", "Document");
+    }
 
-        webApp.UseAuthentication();
-        webApp.UseAuthorization();
+    /// <summary>
+    /// Provides a method to handle exceptions and log them appropriately.
+    /// Returns a standardized error response in the event of an exception.
+    /// </summary>
+    /// <param name="controller">The controller instance handling the request.</param>
+    /// <param name="error">The error message to be logged and returned.</param>
+    /// <param name="ex">The exception object, if any, associated with the error.</param>
+    /// <returns>A standardized error response with a status code of 500.</returns>
+    public static ObjectResult ReturnException(ControllerBase controller, string error,
+        Exception? ex = null)
+    {
+        // Log the error and exception details.
+        Log.Error("Error: {Error}", error);
+        if (ex != null)
+        {
+            Log.Error("Exception: {Exception}", ex.Message);
+            if (ex.InnerException != null)
+            {
+                Log.Error("Inner exception: {InnerException}", ex.InnerException.Message);
+            }
+        }
 
-        webApp.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
-        webApp.MapRazorPages();
-        webApp.MapFallbackToController(@"{**alias}", "DisplayFromPathAlias", "Document");
+        // Send response.
+        return controller.StatusCode(500, error);
     }
 }

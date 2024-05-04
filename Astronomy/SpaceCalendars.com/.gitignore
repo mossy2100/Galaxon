@@ -1,0 +1,5 @@
+# Exclude the entire wwwroot/lib directory, which contains files copied from node_modules.
+wwwroot/lib/
+
+# Exclude the entire wwwroot/css directory, which contains CSS files compiled from SCSS.
+wwwroot/css/

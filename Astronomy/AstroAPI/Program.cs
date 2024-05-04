@@ -8,18 +8,35 @@ using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI;
 
+/// <summary>
+/// The main entry point class for the AstroAPI web application.
+/// This class sets up the logging, services, web application configurations and starts the
+/// application.
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main entry point for the application.
+    /// Sets up logging, builds and configures the web application, and runs it.
+    /// </summary>
+    /// <param name="args">Command line arguments passed to the application.</param>
     public static void Main(string[] args)
     {
         try
         {
             SetupLogger();
 
-            Log.Information("Building web application");
-            WebApplication app = BuildApp(args);
+            Log.Information("Creating web application builder...");
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            Log.Information("Running web application");
+            Log.Information("Configuring services...");
+            ConfigureServices(builder);
+
+            Log.Information("Building and configuring web application...");
+            WebApplication app = builder.Build();
+            ConfigureApp(app);
+
+            Log.Information("Running web application...");
             app.Run();
         }
         catch (Exception ex)
@@ -32,11 +49,27 @@ public class Program
         }
     }
 
-    private static WebApplication BuildApp(string[] args)
+    /// <summary>
+    /// Configures the Serilog logging service.
+    /// </summary>
+    private static void SetupLogger()
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-        // Usual stuff.
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+    }
+
+    /// <summary>
+    /// Adds and configures services for the application.
+    /// Includes controllers, Razor pages, API explorers, and custom services.
+    /// </summary>
+    /// <param name="builder">The application builder to which services are added.</param>
+    private static void ConfigureServices(WebApplicationBuilder builder)
+    {
         builder.Services.AddAuthorization();
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
@@ -45,62 +78,12 @@ public class Program
         });
         builder.Services.AddRazorPages();
         builder.Services.AddEndpointsApiExplorer();
-
-        // Configure Swagger to use XML documentation.
         builder.Services.AddSwaggerGen(c =>
         {
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "AstroAPI.xml"));
         });
 
-        // Add services to the container.
-        AddServices(builder);
-
-        // Build the app.
-        WebApplication app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            ConfigureForDevelopment(app);
-        }
-        else
-        {
-            ConfigureForProduction(app);
-        }
-
-        // Use things.
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        // Map things.
-        app.MapControllers();
-        app.MapRazorPages();
-
-        return app;
-    }
-
-    public static void SetupLogger()
-    {
-        // Build configuration
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        // Set up Serilog
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
-    }
-
-    /// <summary>
-    /// Add services to the container.
-    /// </summary>
-    /// <param name="builder">The WebApplicationBuilder instance.</param>
-    private static void AddServices(WebApplicationBuilder builder)
-    {
+        // Dependency injection for DbContext and repositories.
         builder.Services.AddScoped<AstroDbContext>();
         builder.Services.AddScoped<AstroObjectGroupRepository>();
         builder.Services.AddScoped<AstroObjectRepository>();
@@ -114,32 +97,44 @@ public class Program
         builder.Services.AddScoped<ApsideService>();
     }
 
-    private static void ConfigureForDevelopment(WebApplication app)
+    /// <summary>
+    /// Configures the web application's request pipeline based on environment settings.
+    /// </summary>
+    /// <param name="app">The configured web application.</param>
+    private static void ConfigureApp(WebApplication app)
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseDeveloperExceptionPage();
-    }
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
 
-    private static void ConfigureForProduction(WebApplication app)
-    {
-        app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production
-        // scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+        app.MapRazorPages();
     }
 
     /// <summary>
-    /// Return exception details in JSON format.
+    /// Provides a method to handle exceptions and log them appropriately.
+    /// Returns a standardized error response in the event of an exception.
     /// </summary>
-    /// <param name="controller">The controller where the error occurred.</param>
-    /// <param name="error">The error message.</param>
-    /// <param name="ex">The exception that occured.</param>
-    /// <returns></returns>
-    public static ObjectResult ReturnException(ControllerBase controller, string error,
-        Exception? ex = null)
+    /// <param name="controller">The controller instance handling the request.</param>
+    /// <param name="error">The error message to be logged and returned.</param>
+    /// <param name="ex">The exception object, if any, associated with the error.</param>
+    /// <returns>A standardized error response with a status code of 500.</returns>
+    public static ObjectResult ReturnException(ControllerBase controller, string error, Exception? ex = null)
     {
-        // Log the error and exception details.
         Log.Error("Error: {Error}", error);
         if (ex != null)
         {
@@ -150,7 +145,6 @@ public class Program
             }
         }
 
-        // Send response.
         return controller.StatusCode(500, error);
     }
 }

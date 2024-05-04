@@ -4,8 +4,6 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Models;
 
 public class MessageBox
 {
-    public Dictionary<string, List<string>> Messages { get; set; } = new();
-
     /// <summary>
     /// These classes correspond to bootstrap alerts.
     /// <see href="https://getbootstrap.com/docs/5.2/components/alerts/"/>
@@ -15,9 +13,9 @@ public class MessageBox
     /// <summary>
     /// Constructor.
     /// </summary>
-    public MessageBox()
-    {
-    }
+    public MessageBox() { }
+
+    public Dictionary<string, List<string>> Messages { get; set; } = new ();
 
     public void Add(string level, string message, bool repeatsOk = false)
     {

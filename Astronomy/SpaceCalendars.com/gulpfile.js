@@ -2,97 +2,79 @@
 
 const gulp = require('gulp');
 const fs = require('fs');
-// const concat = require('gulp-concat');
-const gulpSass = require('gulp-sass');
-const nodeSass = require('node-sass');
-const minify = require('gulp-minify');
+const sass = require('gulp-sass')(require('sass'));
 
-function copyLibFiles(cb) {
+/**
+ * Make sure all the destination directories exist.
+ */
+function copyLibFiles(done) {
     const nodeDir = './node_modules';
     const libDir = './wwwroot/lib';
-    
-    // Make sure all the destination directories exist.
-    const subdirs = [
-        '',
-        '/bootstrap',
-        '/jquery',
-        '/jquery-validation',
-        '/jquery-validation-unobtrusive',
-        '/tinymce'
+
+    // Directories with library files to make available on the client.
+    const srcDirs = [
+        'bootstrap/dist',
+        'jquery/dist',
+        'jquery-validation/dist',
+        'jquery-validation-unobtrusive/dist',
+        'tinymce'
     ];
-    subdirs.forEach(dir => {
-        dir = `${libDir}${dir}`;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
+
+    for (let srcDir of srcDirs)
+    {
+        const libName = srcDir.split('/')[0];
+        const srcGlob = `${nodeDir}/${srcDir}/**/*`;
+        const destDir = `${libDir}/${libName}`;
+
+        // Make sure the destination directory exist.
+        if (!fs.existsSync(destDir)) {
+            fs.mkdirSync(destDir, { recursive: true });
         }
-    });
 
-    // Copy the distribution files.
-    gulp.src(`${nodeDir}/bootstrap/dist/**/*`)
-        .pipe(gulp.dest(`${libDir}/bootstrap`));
-    gulp.src(`${nodeDir}/jquery/dist/**/*`)
-        .pipe(gulp.dest(`${libDir}/jquery`));
-    gulp.src(`${nodeDir}/jquery-validation/dist/**/*`)
-        .pipe(gulp.dest(`${libDir}/jquery-validation`));
-    gulp.src(`${nodeDir}/jquery-validation-unobtrusive/dist/**/*`)
-        .pipe(gulp.dest(`${libDir}/jquery-validation-unobtrusive`));
-    gulp.src(`${nodeDir}/tinymce/**/*`)
-        .pipe(gulp.dest(`${libDir}/tinymce`));
+        // Copy the files over.
+        gulp.src(srcGlob).pipe(gulp.dest(destDir));
+    }
 
-    cb();
+    // Signal async completion.
+    done();
 }
 
-function compileCss(cb) {
-    // Ensure the output directory exists. 
+/**
+ * Compile SCSS code to CSS and copy to wwwroot/css.
+ * @param done
+ */
+function compileCss(done) {
+    // Ensure the output directory exists.
     const cssDir = './wwwroot/css';
     if (!fs.existsSync(cssDir)) {
         fs.mkdirSync(cssDir);
     }
 
-    // Compile the SCSS files.
-    const sass = gulpSass(nodeSass);
-    gulp.src('./src/scss/site.scss')
-        .pipe(sass.sync().on('error', sass.logError))
+    // Compile the SCSS files and return the stream.
+    gulp.src('./Sass/site.scss')
+        .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(cssDir));
 
-    cb();
+    // Signal async completion.
+    done();
 }
 
-function minifyJs(cb) {
-    // Ensure the output directory exists. 
-    const jsDir = './wwwroot/js';
-    if (!fs.existsSync(jsDir)) {
-        fs.mkdirSync(jsDir);
-    }
-
-    // Minify the JS files.
-    gulp.src(['src/js/*.js', 'src/js/*.mjs'])
-        .pipe(minify({
-            ext: {
-                min: '.min.js'
-            },
-            noSource: true,
-        }))
-        .pipe(gulp.dest(jsDir))
-
-    cb();
+/**
+ * Watch for changes and reprocess JS or SCSS as needed.
+ */
+function sassWatch() {
+    gulp.watch('./Sass/**/*.scss', compileCss);
 }
 
-function scssWatch(cb) {
-    gulp.watch('./src/scss/**/*.scss', compileCss);
-    gulp.watch('./src/js/**/*.js', minifyJs());
-    cb();
-}
-
-function defaultTask(cb) {
-    // copyLibFiles(cb);
-    compileCss(cb);
-    minifyJs(cb);
-    cb();
+/**
+ * Do all setup tasks.
+ */
+function defaultTask(done) {
+    // Execute tasks in parallel and signal when all are complete
+    return gulp.parallel(copyLibFiles, compileCss)(done);
 }
 
 exports.copyLibFiles = copyLibFiles;
 exports.compileCss = compileCss;
-exports.minifyJs = minifyJs;
-exports.scssWatch = scssWatch;
-exports.default = defaultTask; 
+exports.watch = sassWatch;
+exports.default = defaultTask;

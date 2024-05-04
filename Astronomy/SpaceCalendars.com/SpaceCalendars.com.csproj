@@ -18,14 +18,13 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0" />
+      <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Migrations" />
       <Folder Include="src" />
-      <Folder Include="wwwroot\css" />
       <Folder Include="wwwroot\images\icons" />
-      <Folder Include="wwwroot\js" />
     </ItemGroup>
 
     <ItemGroup>
@@ -325,13 +324,9 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.min.js.map" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="src\js\document-edit.js" />
-    </ItemGroup>
-
     <!-- Run the gulp task. -->
-<!--    <Target Name="Gulp" BeforeTargets="BeforeBuild">-->
-<!--        <Exec WorkingDirectory="$(ProjectDir)" Command="gulp" ContinueOnError="false" />-->
-<!--    </Target>-->
+    <Target Name="Gulp" BeforeTargets="BeforeBuild">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="gulp" ContinueOnError="false" />
+    </Target>
 
 </Project>

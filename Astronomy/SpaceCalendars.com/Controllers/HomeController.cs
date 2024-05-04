@@ -5,17 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Controllers;
 
-public class HomeController : Controller
+public class HomeController(ILogger<HomeController> logger) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<HomeController> _logger = logger;
 
     [AllowAnonymous]
-    public RedirectResult Index() => Redirect("/welcome");
+    public RedirectResult Index()
+    {
+        return Redirect("/welcome");
+    }
 
     [AllowAnonymous]
     public ViewResult Privacy()
@@ -25,9 +23,11 @@ public class HomeController : Controller
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public ViewResult Error() =>
-        View(new ErrorViewModel
+    public ViewResult Error()
+    {
+        return View(new ErrorViewModel
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
         });
+    }
 }
