@@ -1,13 +1,11 @@
 using System.Globalization;
 using CsvHelper;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class PlanetImportService(
     AstroDbContext astroDbContext,
@@ -34,7 +32,7 @@ public class PlanetImportService(
         AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         // Open the CSV file for parsing.
-        var csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
+        string csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
         using StreamReader stream = new (csvPath);
         using CsvReader csv = new (stream, CultureInfo.InvariantCulture);
 

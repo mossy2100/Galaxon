@@ -81,12 +81,13 @@ public class AstroDbContext : DbContext
     {
         // Load the configuration.
         string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? Environment.GetEnvironmentVariable("CONSOLEAPP_ENVIRONMENT")
             ?? "Production";
         IConfigurationRoot configuration = new ConfigurationBuilder()
             // Ensure this path is correct, particularly when running from a different context like
             // a class library.
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile("appsettings.json", false, true)
             .AddJsonFile($"appsettings.{environment}.json", true, true)
             .Build();
 

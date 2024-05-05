@@ -1,11 +1,11 @@
-﻿using Galaxon.Astronomy.Data;
+﻿using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Astronomy.DataImport.Services;
+using Galaxon.Astronomy.Data.Services;
 using Galaxon.Core.Files;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Galaxon.Astronomy.DataImport;
+namespace Galaxon.Astronomy.Data;
 
 public class Program
 {
@@ -23,8 +23,9 @@ public class Program
         {
             // await ImportDwarfPlanets();
             // await ImportNaturalSatellites();
-            await ImportLunarPhases();
+            // await ImportLunarPhases();
             // await ImportLeapSeconds();
+            TestDbContext();
         }
         catch (Exception ex)
         {
@@ -163,5 +164,16 @@ public class Program
             _serviceProvider!.GetRequiredService<EasterDateImportService>();
         easterDateImportService.ImportEasterDates1600_2099();
         easterDateImportService.ImportEasterDates1700_2299();
+    }
+
+    public static void TestDbContext()
+    {
+        AstroObjectRepository astroObjectRepository =
+            _serviceProvider!.GetRequiredService<AstroObjectRepository>();
+        List<AstroObject> planets = astroObjectRepository.LoadByGroup("Planet");
+        foreach (AstroObject planet in planets)
+        {
+            Console.WriteLine($"{planet.Number}: {planet.Name}");
+        }
     }
 }

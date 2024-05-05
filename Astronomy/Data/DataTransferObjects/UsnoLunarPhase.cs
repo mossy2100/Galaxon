@@ -1,4 +1,4 @@
-namespace Galaxon.Astronomy.DataImport.DataTransferObjects;
+namespace Galaxon.Astronomy.Data.DataTransferObjects;
 
 public class UsnoLunarPhase
 {

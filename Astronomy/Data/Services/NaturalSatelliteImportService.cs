@@ -1,10 +1,9 @@
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Time;
 using HtmlAgilityPack;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class NaturalSatelliteImportService
 {
@@ -21,21 +20,21 @@ public class NaturalSatelliteImportService
             string tableClass = "sortable";
 
             string htmlContent = await GetHtmlContentAsync(url);
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new ();
             doc.LoadHtml(htmlContent);
 
-            var table =
+            HtmlNode? table =
                 doc.DocumentNode.SelectSingleNode($"//table[contains(@class,'{tableClass}')]");
             if (table != null)
             {
-                var rows = table.SelectNodes(".//tbody/tr");
+                HtmlNodeCollection? rows = table.SelectNodes(".//tbody/tr");
                 if (rows != null)
                 {
-                    foreach (var row in rows)
+                    foreach (HtmlNode? row in rows)
                     {
                         Console.WriteLine();
 
-                        var cells = row.SelectNodes(".//td");
+                        HtmlNodeCollection? cells = row.SelectNodes(".//td");
                         if (cells != null)
                         {
                             // Get the satellite's name.
@@ -67,11 +66,13 @@ public class NaturalSatelliteImportService
                             // Planet or dwarf planet the satellite orbits.
                             string parentName = cells[2 + offset].InnerText.Trim();
                             Console.WriteLine($"Parent name: {parentName}");
-                            AstroObject? parent = astroObjectRepository.LoadByName(parentName, "Planet");
+                            AstroObject? parent =
+                                astroObjectRepository.LoadByName(parentName, "Planet");
                             if (parent == null)
                             {
                                 // Try dwarf planet.
-                                parent = astroObjectRepository.LoadByName(parentName, "Dwarf planet");
+                                parent = astroObjectRepository.LoadByName(parentName,
+                                    "Dwarf planet");
                                 if (parent == null)
                                 {
                                     Console.WriteLine(
@@ -153,9 +154,9 @@ public class NaturalSatelliteImportService
         }
     }
 
-    static async Task<string> GetHtmlContentAsync(string url)
+    private static async Task<string> GetHtmlContentAsync(string url)
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new ();
         HttpResponseMessage response = await client.GetAsync(url);
         if (response.IsSuccessStatusCode)
         {

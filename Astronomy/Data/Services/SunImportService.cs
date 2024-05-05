@@ -1,11 +1,9 @@
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class SunImportService(
     AstroDbContext astroDbContext,

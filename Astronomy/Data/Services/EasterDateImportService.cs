@@ -1,10 +1,9 @@
 using System.Text.RegularExpressions;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using Microsoft.Extensions.Logging;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class EasterDateImportService(
     ILogger<EasterDateImportService> logger,
@@ -19,7 +18,7 @@ public class EasterDateImportService(
         logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.census.gov/data/software/x13as/genhol/easter-dates.html");
 
-        var csvFile =
+        string csvFile =
             $"{AstroDbContext.DataDirectory()}/Easter/Easter Sunday Dates 1600-2099.csv";
         using StreamReader reader = new (csvFile);
 
@@ -39,9 +38,9 @@ public class EasterDateImportService(
 
             try
             {
-                var year = int.Parse(values[0]);
-                var month = int.Parse(values[1]);
-                var day = int.Parse(values[2]);
+                int year = int.Parse(values[0]);
+                int month = int.Parse(values[1]);
+                int day = int.Parse(values[2]);
                 DateOnly newEasterDate = new (year, month, day);
 
                 // See if we already have one for this year.
@@ -91,7 +90,7 @@ public class EasterDateImportService(
         logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.assa.org.au/edm");
 
-        var htmlFile =
+        string htmlFile =
             $"{AstroDbContext.DataDirectory()}/Easter/Easter Sunday Dates 1700-2299.html";
         Regex rx = new (@"(\d{1,2})(st|nd|rd|th) (March|April) (\d{4})");
 
@@ -112,9 +111,9 @@ public class EasterDateImportService(
             }
             foreach (Match match in matches)
             {
-                var year = int.Parse(match.Groups[4].Value);
+                int year = int.Parse(match.Groups[4].Value);
                 int month = match.Groups[3].Value == "March" ? 3 : 4;
-                var day = int.Parse(match.Groups[1].Value);
+                int day = int.Parse(match.Groups[1].Value);
                 DateOnly newEasterDate = new (year, month, day);
                 // See if we already have one for this year.
                 EasterDate? existingEasterDate = astroDbContext.EasterDates

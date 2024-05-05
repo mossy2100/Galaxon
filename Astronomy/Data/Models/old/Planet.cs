@@ -1,6 +1,4 @@
-﻿using Galaxon.Astronomy.Database;
-
-namespace Galaxon.Astronomy.Data.Models;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
 public class Planet : AstroObject
 {

@@ -1,10 +1,9 @@
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Quantities.Kinds;
 using HtmlAgilityPack;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class DwarfPlanetImportService(
     AstroDbContext astroDbContext,
@@ -26,17 +25,17 @@ public class DwarfPlanetImportService(
             string tableClass = "sortable";
 
             string htmlContent = await GetHtmlContentAsync(url);
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new ();
             doc.LoadHtml(htmlContent);
 
-            var table =
+            HtmlNode? table =
                 doc.DocumentNode.SelectSingleNode($"//table[contains(@class,'{tableClass}')]");
             if (table != null)
             {
-                var rows = table.SelectNodes(".//tbody/tr");
+                HtmlNodeCollection? rows = table.SelectNodes(".//tbody/tr");
                 if (rows != null)
                 {
-                    foreach (var row in rows)
+                    foreach (HtmlNode? row in rows)
                     {
                         HtmlNodeCollection? cells = row.SelectNodes(".//td | .//th");
                         if (cells != null)
@@ -129,9 +128,9 @@ public class DwarfPlanetImportService(
         }
     }
 
-    static async Task<string> GetHtmlContentAsync(string url)
+    private static async Task<string> GetHtmlContentAsync(string url)
     {
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new ();
         HttpResponseMessage response = await client.GetAsync(url);
         if (response.IsSuccessStatusCode)
         {
@@ -141,7 +140,7 @@ public class DwarfPlanetImportService(
         throw new Exception($"Failed to retrieve data. Status code: {response.StatusCode}");
     }
 
-    static (uint, string) ParseDwarfPlanetName(string name)
+    private static (uint, string) ParseDwarfPlanetName(string name)
     {
         // Find the first space character
         int spaceIndex = name.IndexOf(' ');

@@ -1,13 +1,12 @@
-using Galaxon.Astronomy.Data;
+using Galaxon.Astronomy.Data.DataTransferObjects;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Time;
 using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class SeasonalMarkerImportService
 {
@@ -23,7 +22,7 @@ public class SeasonalMarkerImportService
             {
                 string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
 
-                using HttpClient client = new HttpClient();
+                using HttpClient client = new ();
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
 
                 if (response.IsSuccessStatusCode)
@@ -91,7 +90,7 @@ public class SeasonalMarkerImportService
                             {
                                 // Construct the SeasonalMarker record.
                                 SeasonalMarkerRecord newSeasonalMarkerRecord =
-                                    new SeasonalMarkerRecord
+                                    new()
                                     {
                                         MarkerNumber = (int)seasonalMarker,
                                         DateTimeUtcUsno = dt
@@ -128,10 +127,11 @@ public class SeasonalMarkerImportService
                                 Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
-                                ApsideRecord? existingApside = astroDbContext.Apsides.FirstOrDefault(a =>
-                                    a.ApsideNumber == (int)apside
-                                    && a.DateTimeUtcUsno.Year == year
-                                    && a.DateTimeUtcUsno.Month == usm.month);
+                                ApsideRecord? existingApside =
+                                    astroDbContext.Apsides.FirstOrDefault(a =>
+                                        a.ApsideNumber == (int)apside
+                                        && a.DateTimeUtcUsno.Year == year
+                                        && a.DateTimeUtcUsno.Month == usm.month);
                                 if (existingApside == null)
                                 {
                                     astroDbContext.Apsides.Add(newApsideRecord);

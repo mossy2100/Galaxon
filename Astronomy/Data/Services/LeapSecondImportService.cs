@@ -1,12 +1,11 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class LeapSecondImportService(
     ILogger<LeapSecondImportService> logger,
@@ -35,14 +34,14 @@ public class LeapSecondImportService(
     {
         logger.LogInformation("Parsing NIST web page.");
 
-        using var httpClient = new HttpClient();
+        using HttpClient httpClient = new HttpClient();
 
         // Load the HTML table as a string.
         // Fetch HTML content from the bulletins URL
         string htmlContent = await httpClient.GetStringAsync(_NIST_LEAP_SECONDS_URL);
 
         // Parse HTML content using HtmlAgilityPack.
-        var htmlDocument = new HtmlDocument();
+        HtmlDocument htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
 
         // Get the tables.
@@ -68,9 +67,9 @@ public class LeapSecondImportService(
             MatchCollection matches = rxDate.Matches(cell.InnerText.Trim());
             if (matches.Count == 1)
             {
-                var year = int.Parse(matches[0].Groups["year"].Value);
-                var month = int.Parse(matches[0].Groups["month"].Value);
-                var day = int.Parse(matches[0].Groups["day"].Value);
+                int year = int.Parse(matches[0].Groups["year"].Value);
+                int month = int.Parse(matches[0].Groups["month"].Value);
+                int day = int.Parse(matches[0].Groups["day"].Value);
                 DateOnly date = new (year, month, day);
                 dates.Add(date);
             }
@@ -112,7 +111,7 @@ public class LeapSecondImportService(
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         logger.LogInformation("Importing IERS Bulletin Cs.");
 
-        using var httpClient = new HttpClient();
+        using HttpClient httpClient = new HttpClient();
 
         try
         {
@@ -120,11 +119,11 @@ public class LeapSecondImportService(
             string htmlContent = await httpClient.GetStringAsync(_BULLETIN_INDEX_URL);
 
             // Parse HTML content using HtmlAgilityPack.
-            var htmlDocument = new HtmlDocument();
+            HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(htmlContent);
 
             // Extract individual bulletin URLs
-            var bulletinUrls = new List<string>();
+            List<string> bulletinUrls = new List<string>();
             HtmlNodeCollection? bulletinNodes =
                 htmlDocument.DocumentNode.SelectNodes("//a[contains(@href, 'bulletinc-')]");
             if (bulletinNodes != null)
@@ -138,9 +137,10 @@ public class LeapSecondImportService(
             }
 
             // Regular expression to match any of the "no leap second" phrases.
-            var rxNoLeapSecond = new Regex("(NO|No) ((posi|nega)tive )?leap second will be introduced");
-            var months = string.Join('|', GregorianCalendarExtensions.GetMonthNames().Values);
-            var rxLeapSecond = new Regex(
+            Regex rxNoLeapSecond =
+                new Regex("(NO|No) ((posi|nega)tive )?leap second will be introduced");
+            string months = string.Join('|', GregorianCalendarExtensions.GetMonthNames().Values);
+            Regex rxLeapSecond = new Regex(
                 $@"A (?<sign>positive|negative) leap second will be introduced at the end of (?<month>{months}) (?<year>\d{{4}}).");
 
             // Loop through individual bulletin URLs and process them
@@ -150,7 +150,7 @@ public class LeapSecondImportService(
 
                 // Get the bulletin number.
                 int bulletinNumber;
-                var pattern = @"bulletinc-(\d+)\.txt$";
+                string pattern = @"bulletinc-(\d+)\.txt$";
                 Match match = Regex.Match(bulletinUrl, pattern);
                 if (match.Success)
                 {
@@ -160,7 +160,7 @@ public class LeapSecondImportService(
                 }
                 else
                 {
-                    var error = "PARSE ERROR: Could not get bulletin number.";
+                    string error = "PARSE ERROR: Could not get bulletin number.";
                     logger.LogError("{Error}", error);
                     throw new InvalidOperationException(error);
                 }
@@ -209,16 +209,18 @@ public class LeapSecondImportService(
                     MatchCollection matches = rxLeapSecond.Matches(bulletinText);
                     if (matches.Count == 0)
                     {
-                        var error = "PARSE ERROR: Could not detect leap second value.";
+                        string error = "PARSE ERROR: Could not detect leap second value.";
                         logger.LogInformation("{Error}", error);
                         throw new InvalidOperationException(error);
                     }
 
                     GroupCollection groups = matches[0].Groups;
                     iersBulletinC.Value = (sbyte)(groups["sign"].Value == "positive" ? 1 : -1);
-                    int month = GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
-                    var year = int.Parse(groups["year"].Value);
-                    iersBulletinC.LeapSecondDate = GregorianCalendarExtensions.GetMonthLastDay(year, month);
+                    int month =
+                        GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
+                    int year = int.Parse(groups["year"].Value);
+                    iersBulletinC.LeapSecondDate =
+                        GregorianCalendarExtensions.GetMonthLastDay(year, month);
 
                     // Update or insert the leap second record.
                     LeapSecond? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>

@@ -1,7 +1,4 @@
-﻿using Galaxon.Astronomy.Database;
-using Galaxon.Core.Strings;
-
-namespace Galaxon.Astronomy.Data.Models;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
 /// <summary>
 /// This class is for all dwarf planets and small Solar System bodies (i.e. minor planets and

@@ -1,9 +1,8 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Galaxon.Astronomy.Data;
+using Galaxon.Astronomy.Data.DataTransferObjects;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
@@ -12,7 +11,7 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
 {
@@ -24,12 +23,12 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
     {
-        var result = new List<string>();
+        List<string> result = new List<string>();
         string indexUrl = "http://astropixels.com/ephemeris/phasescat/phasescat.html";
         string tableTitle = "Moon Phases in Common Era (CE)";
 
         // Use HttpClient to fetch the content.
-        using var httpClient = new HttpClient();
+        using HttpClient httpClient = new HttpClient();
         string html = await httpClient.GetStringAsync(indexUrl);
 
         // Load HTML into the HtmlDocument.
@@ -74,7 +73,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
         JulianCalendar jc = new ();
 
         // Use HttpClient to fetch the content.
-        using var httpClient = new HttpClient();
+        using HttpClient httpClient = new HttpClient();
         string html = await httpClient.GetStringAsync(url);
 
         // Load HTML into the HtmlDocument.
@@ -224,7 +223,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
         for (int year = 1700; year <= 2100; year++)
         {
             string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
-            using HttpClient client = new HttpClient();
+            using HttpClient client = new ();
             HttpResponseMessage response = await client.GetAsync(apiUrl);
             if (response.IsSuccessStatusCode)
             {

@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class AstroObjectGroupImportService(
     AstroObjectGroupRepository astroObjectGroupRepository)

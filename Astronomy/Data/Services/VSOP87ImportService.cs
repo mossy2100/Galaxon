@@ -1,15 +1,30 @@
-using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Data;
+// using Galaxon.Astronomy.Algorithms.Services;
+
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 
-namespace Galaxon.Astronomy.DataImport.Services;
+namespace Galaxon.Astronomy.Data.Services;
 
 public class VSOP87ImportService(
     AstroDbContext astroDbContext,
     AstroObjectRepository astroObjectRepository)
 {
+    /// <summary>
+    /// Dictionary mapping planet numbers to English names.
+    /// </summary>
+    public static readonly Dictionary<int, string> PLANET_NAMES = new ()
+    {
+        { 1, "Mercury" },
+        { 2, "Venus" },
+        { 3, "Earth" },
+        { 4, "Mars" },
+        { 5, "Jupiter" },
+        { 6, "Saturn" },
+        { 7, "Uranus" },
+        { 8, "Neptune" }
+    };
+
     /// <summary>
     /// Parse a VSOP87 data file downloaded from the VSOP87 ftp site.
     /// <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
@@ -21,7 +36,7 @@ public class VSOP87ImportService(
     public void ImportVsop87DataFile(string fileName)
     {
         // Get the data from the data file as an array of strings.
-        var dataFilePath = $"{AstroDbContext.DataDirectory()}/VSOP87/{fileName}";
+        string dataFilePath = $"{AstroDbContext.DataDirectory()}/VSOP87/{fileName}";
         using StreamReader sr = new (dataFilePath);
         while (sr.ReadLine() is { } line)
         {
@@ -138,7 +153,7 @@ public class VSOP87ImportService(
     {
         for (byte planetNum = 1; planetNum <= 8; planetNum++)
         {
-            string name = PlanetService.PLANET_NAMES[planetNum];
+            string name = PLANET_NAMES[planetNum];
             string abbrev = name[..3].ToLower();
             ImportVsop87DataFile($"VSOP87D.{abbrev}");
         }
