@@ -5,6 +5,7 @@ using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
 using Galaxon.Numerics.Extensions.FloatingPoint;
+using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -32,7 +33,8 @@ class Program
             // LunisolarSynch();
             // CalcTicksInLongPeriod();
             // TestDecimalYearToJulianDateUniversal();
-            Eras();
+            // Eras();
+            MyBirthMinutes();
         }
         catch (Exception ex)
         {
@@ -88,7 +90,8 @@ class Program
             .AddSingleton<RuleFinder>()
             .AddSingleton<SolarCalendar>()
             .AddSingleton<LeapWeekCalendar>()
-            .AddSingleton<LunisolarCalendar>();
+            .AddSingleton<LunisolarCalendar>()
+            .AddSingleton<BirthdayService>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>
@@ -255,5 +258,40 @@ class Program
         GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
         for (int i = 0; i < gc.Eras.Length; i++)
             Console.WriteLine($"Eras[{i}] = {gc.Eras[i]}");
+    }
+
+    public static void MyBirthMinutes()
+    {
+        BirthdayService birthdayService = _serviceProvider!.GetRequiredService<BirthdayService>();
+
+        // Get the time zone for Melbourne.
+        TimeZoneInfo melbourneTimeZone = TimeZoneInfo.FindSystemTimeZoneById("AUS Eastern Standard Time");
+
+        // Create a DateTime in unspecified kind (assumed local time in context).
+        DateTime localDateTime = new (1971, 10, 29, 23, 30, 0);
+
+        // Convert it to DateTimeOffset considering the Melbourne time zone.
+        DateTimeOffset dtoBirth = TimeZoneInfo.ConvertTimeToUtc(localDateTime, melbourneTimeZone);
+
+        // Convert to UTC DateTime. Automatically adjusts for DST if applicable.
+        DateTime dtBirthUtc = dtoBirth.UtcDateTime;
+        Console.WriteLine($"I was born at {dtBirthUtc:yyyy-MM-dd HH:mm (zzz)}");
+        DateTime dtBirthLocal = TimeZoneInfo.ConvertTimeFromUtc(dtBirthUtc, melbourneTimeZone);
+        Console.WriteLine($"equal to {dtBirthLocal:yyyy-MM-dd HH:mm (zzz)}");
+
+        // Get the Ls at birth.
+        double LsInRadians = birthdayService.CalcLongitudeOfSunAtBirth(dtBirthUtc);
+        double LsInDegrees = Angles.RadiansToDegreesWithWrap(LsInRadians, false);
+        Console.WriteLine($"The longitude of the Sun at my birth was {LsInDegrees:F3}°");
+
+        for (int y = 2024; y <= 2030; y++)
+        {
+            Console.WriteLine();
+            DateTime dtBirthMinuteUtc = birthdayService.CalcBirthMinute(dtBirthUtc, y);
+            DateTime dtBirthMinuteLocal =
+                TimeZoneInfo.ConvertTimeFromUtc(dtBirthMinuteUtc, melbourneTimeZone);
+            Console.WriteLine($"My birth minute in the year {y} was/will be {dtBirthMinuteUtc:yyyy-MM-dd HH:mm (zzz)}");
+            Console.WriteLine($"equal to {dtBirthMinuteLocal:yyyy-MM-dd HH:mm (zzz)}");
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 /// Provides methods for calculating distances between geographical coordinates
 /// on the surface of an oblate spheroid world using Andoyer's method.
 /// </summary>
-public class DistanceService
+public static class DistanceService
 {
     /// <summary>
     /// Calculates the shortest distance between two points along the surface of an

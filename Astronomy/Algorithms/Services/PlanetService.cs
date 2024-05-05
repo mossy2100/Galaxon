@@ -1,6 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
@@ -10,7 +11,7 @@ using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class PlanetService(AstroDbContext astroDbContext)
+public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
     /// Dictionary mapping planet numbers to English names.
@@ -83,5 +84,30 @@ public class PlanetService(AstroDbContext astroDbContext)
         double R = Polynomials.EvaluatePolynomial(coeffs['R'], T)
             * Length.METRES_PER_ASTRONOMICAL_UNIT;
         return new Coordinates(L, B, R);
+    }
+
+    /// <summary>
+    /// Calculate the position of a planet in heliocentric ecliptic coordinates.
+    /// </summary>
+    /// <param name="planetName">The planet's name.</param>
+    /// <param name="jdtt">The Julian Ephemeris Day.</param>
+    /// <returns>
+    /// The planet's position in heliocentric ecliptic coordinates (radians).
+    /// </returns>
+    /// <exception cref="DataNotFoundException">
+    /// If the planet couldn't be found in the database or no VSOP87D data could be found for the
+    /// planet.
+    /// </exception>
+    public Coordinates CalcPlanetPosition(string planetName, double jdtt)
+    {
+        // Load the planet.
+        AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        if (planet == null)
+        {
+            throw new DataNotFoundException($"Planet '{planetName}' not found in the database.");
+        }
+
+        // Call the other method.
+        return CalcPlanetPosition(planet, jdtt);
     }
 }

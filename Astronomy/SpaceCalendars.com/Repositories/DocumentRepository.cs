@@ -5,6 +5,11 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
 public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepository
 {
+    public Document? GetByTitle(string title)
+    {
+        return dbContext.Documents.FirstOrDefault(doc => doc.Title == title);
+    }
+
     public IEnumerable<Document> GetPublished(bool published = true)
     {
         return dbContext.Documents

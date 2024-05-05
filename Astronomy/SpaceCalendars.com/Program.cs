@@ -1,6 +1,8 @@
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -34,7 +36,9 @@ public class Program
             Log.Information("Running web application...");
             app.Run();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not HostAbortedException
+            && ex.Source
+            != "Microsoft.EntityFrameworkCore.Design") // see https://github.com/dotnet/efcore/issues/29923
         {
             Log.Fatal(ex, "Application terminated unexpectedly.");
         }
@@ -67,15 +71,17 @@ public class Program
     /// <param name="builder">The application builder to which services are added.</param>
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
-        // builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-        //     {
-        //         options.SignIn.RequireConfirmedAccount = true;
-        //     })
-        //     .AddEntityFrameworkStores<ApplicationDbContext>();
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        // builder.Services.AddControllersWithViews(options =>
-        //     options.Filters.Add(new AuthorizeFilter()));
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews(options =>
+            options.Filters.Add(new AuthorizeFilter()));
+        // builder.Services.AddControllersWithViews();
+        // builder.Services.AddRazorPages();
+
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         // Configure database.

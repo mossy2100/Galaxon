@@ -20,7 +20,7 @@
         max-width: 100%;
         width: auto;
     }
-    
+
     #Order {
         max-width: 100%;
         width: 6rem;
@@ -38,4 +38,8 @@
             height: 4rem;
         }
     }
+}
+
+.field-validation-error {
+    font-size: 0.8rem;
 }

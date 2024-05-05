@@ -1,18 +1,27 @@
 ﻿using System.Diagnostics;
+using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Controllers;
 
-public class HomeController(ILogger<HomeController> logger) : Controller
+public class HomeController(ILogger<HomeController> logger, IDocumentRepository documentRepo) : Controller
 {
     private readonly ILogger<HomeController> _logger = logger;
 
     [AllowAnonymous]
-    public RedirectResult Index()
+    public ViewResult Index()
     {
-        return Redirect("/welcome");
+        // // Check we have a welcome page.
+        // Document? doc = documentRepo.GetByTitle("Welcome");
+        // if (doc != null)
+        // {
+        //     return Redirect("/welcome");
+        // }
+
+        ViewBag.PageTitle = "Placeholder for Welcome page.";
+        return View();
     }
 
     [AllowAnonymous]

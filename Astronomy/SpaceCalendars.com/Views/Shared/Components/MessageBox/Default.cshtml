@@ -1,10 +1,11 @@
+@using Galaxon.Astronomy.SpaceCalendars.com.Models
 @model Galaxon.Astronomy.SpaceCalendars.com.Models.MessageBox?
 
 @if (Model != null)
 {
-    foreach ((string level, List<string> messages) in Model.Messages)
+    foreach ((EMessageSeverity severity, List<string> messages) in Model.Messages)
     {
-        <div class="alert alert-@level" role="alert">
+        <div class="alert alert-@severity" role="alert">
             @foreach (string message in messages)
             {
                 if (messages.Count > 1)

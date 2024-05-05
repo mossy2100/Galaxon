@@ -1,8 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
-using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
 using Galaxon.Numerics.Extensions.FloatingPoint;
@@ -13,7 +11,10 @@ using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.ConsoleApp.Services;
 
-public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, MoonService moonService)
+public class LunisolarCalendar(
+    SeasonalMarkerService seasonalMarkerService,
+    MoonService moonService,
+    SunService sunService)
 {
     public static bool IsFullMonth(int m)
     {
@@ -541,20 +542,11 @@ public class LunisolarCalendar(SeasonalMarkerService seasonalMarkerService, Moon
     /// </summary>
     public void FindEpoch()
     {
-        // Construct a SunService.
-        AstroDbContext astroDbContext = new ();
-        AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository =
-            new (astroDbContext, astroObjectGroupRepository);
-        PlanetService planetService = new (astroDbContext);
-        EarthService earthService = new (astroObjectRepository, planetService);
-        var sunService = new SunService(earthService);
-        var seasonalMarkerService = new SeasonalMarkerService(astroDbContext, sunService);
-
         // Find all the New Moons in a 25-year period.
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        List<LunarPhaseEvent> newMoons = moonService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
+        List<LunarPhaseEvent> newMoons =
+            moonService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
         foreach (LunarPhaseEvent newMoon in newMoons)
         {
             // Get Ls.

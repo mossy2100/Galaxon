@@ -1,0 +1,2 @@
+For MS SQL:
+"SpaceCalendars": "Server=localhost,1433; Database=SpaceCalendars; User Id=SA; Password=HappyDays2023"

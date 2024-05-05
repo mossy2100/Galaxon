@@ -19,7 +19,7 @@ public class Document
     [Required]
     [MaxLength(255)]
     [StringLength(255)]
-    [Column(TypeName = "varchar(255)")]
+    [Column(TypeName = "TINYTEXT")]
     public string Title { get; set; } = "";
 
     /// <summary>
@@ -34,9 +34,9 @@ public class Document
     public bool Published { get; set; }
 
     /// <summary>
-    /// The content of the document. Stored as TEXT in MySQL.
+    /// The content of the document.
     /// </summary>
-    [Column(TypeName = "text")]
+    [Column(TypeName = "LONGTEXT")]
     public string? Content { get; set; } = "";
 
     /// <summary>

@@ -6,7 +6,7 @@ using static Galaxon.Numerics.Geometry.Angles;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class SunService(EarthService earthService)
+public class SunService(PlanetService planetService)
 {
     /// <summary>
     /// Calculation the variation in the Sun's longitude in radians.
@@ -55,7 +55,7 @@ public class SunService(EarthService earthService)
     public Coordinates CalcPosition(double jdtt)
     {
         // Get the Earth's heliocentric position.
-        (double Le, double Be, double Re) = earthService.CalcPosition(jdtt);
+        (double Le, double Be, double Re) = planetService.CalcPlanetPosition("Earth", jdtt);
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
         double Ls = WrapRadians(Le + PI);

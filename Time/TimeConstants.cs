@@ -156,7 +156,17 @@ public static class TimeConstants
     /// <summary>
     /// The number of minutes in a week.
     /// </summary>
-    public const int MINUTES_PER_WEEK = 10080;
+    public const int MINUTES_PER_WEEK = 10_080;
+
+    /// <summary>
+    /// The number of minutes in the average Gregorian calendar month.
+    /// </summary>
+    public const double MINUTES_PER_MONTH = 43_829.1;
+
+    /// <summary>
+    /// The number of minutes in the average Gregorian calendar year.
+    /// </summary>
+    public const double MINUTES_PER_YEAR = 525_949.2;
 
     #endregion Minutes per unit of time
 
@@ -376,7 +386,7 @@ public static class TimeConstants
     /// <summary>
     /// The number of ephemeris days in a Julian Calendar decade.
     /// </summary>
-    public const double DAYS_PER_JULIAN_DECADE = 3_652.5;
+    public const double DAYS_PER_JULIAN_DECADE = 3652.5;
 
     /// <summary>
     /// The number of SI seconds in a Julian Calendar decade.

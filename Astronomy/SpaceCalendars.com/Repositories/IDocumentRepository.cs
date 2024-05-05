@@ -4,6 +4,8 @@ namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
 public interface IDocumentRepository : IRepository<Document>
 {
+    public Document? GetByTitle(string title);
+
     public IEnumerable<Document> GetPublished(bool published = true);
 
     public IEnumerable<Document> GetByFolder(int? folderId);
