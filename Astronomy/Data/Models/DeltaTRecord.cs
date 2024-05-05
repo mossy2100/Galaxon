@@ -2,7 +2,7 @@
 
 public class DeltaTRecord : DataObject
 {
-    [Column(TypeName = "smallint")]
+    [Column(TypeName = "SMALLINT")]
     public int Year { get; set; }
 
     public double DeltaT { get; set; }

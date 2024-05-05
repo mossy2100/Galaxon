@@ -22,7 +22,6 @@ public class AstroObject : DataObject
 
     // Object number, e.g. 2 (Venus), 301 (Luna), 1 (Ceres).
     // These numbers also aren't unique, and in some cases (stars, major planets) can be null.
-    [Column(TypeName = "int")]
     public uint? Number { get; set; }
 
     // ---------------------------------------------------------------------------------------------

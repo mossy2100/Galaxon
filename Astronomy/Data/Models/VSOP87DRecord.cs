@@ -18,19 +18,19 @@ public class VSOP87DRecord : DataObject
     /// <summary>
     /// Gets or sets the variable used in the record.
     /// </summary>
-    [Column(TypeName = "char(1)")]
+    [Column(TypeName = "CHAR(1)")]
     public char Variable { get; set; }
 
     /// <summary>
     /// Gets or sets the exponent used in the record.
     /// </summary>
-    [Column(TypeName = "tinyint")]
+    [Column(TypeName = "TINYINT")]
     public byte Exponent { get; set; }
 
     /// <summary>
     /// Gets or sets the index used in the record.
     /// </summary>
-    [Column(TypeName = "smallint")]
+    [Column(TypeName = "SMALLINT")]
     public ushort Index { get; set; }
 
     /// <summary>

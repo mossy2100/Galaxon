@@ -33,6 +33,6 @@ public class IersBulletinC : DataObject
     /// <summary>
     /// The date the leap second will be inserted (or skipped), if there is one.
     /// </summary>
-    [Column(TypeName = "date")]
+    [Column(TypeName = "DATE")]
     public DateOnly? LeapSecondDate { get; set; }
 }

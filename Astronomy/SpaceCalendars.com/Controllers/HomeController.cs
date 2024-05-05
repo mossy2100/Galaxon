@@ -1,15 +1,12 @@
 ﻿using System.Diagnostics;
-using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Controllers;
 
-public class HomeController(ILogger<HomeController> logger, IDocumentRepository documentRepo) : Controller
+public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
-
     [AllowAnonymous]
     public ViewResult Index()
     {

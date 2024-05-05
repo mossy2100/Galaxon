@@ -1,9 +1,9 @@
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com;
@@ -84,16 +84,13 @@ public class Program
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        // Configure database.
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            string? connString = builder.Configuration.GetConnectionString("SpaceCalendars");
-            options.UseMySql(connString, ServerVersion.AutoDetect(connString));
-            // options.UseMySql(connString, new MySqlServerVersion("8.3.0"));
-        });
+        // Add database.
+        builder.Services.AddDbContext<AstroDbContext>();
 
-        // Dependency injection for repositories and services.
+        // Add repositories.
         builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+
+        // Add services.
         builder.Services.AddScoped<DocumentService>();
         builder.Services.AddScoped<BufferedFileUploadService>();
         builder.Services.AddScoped<MessageBoxService>();

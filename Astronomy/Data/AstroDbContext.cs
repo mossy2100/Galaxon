@@ -2,6 +2,7 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Files;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Galaxon.Astronomy.Data;
@@ -71,18 +72,41 @@ public class AstroDbContext : DbContext
 
     #endregion Database tables
 
-    public const string ConnectionString =
-        "Server=localhost,1433; Database=Astro; User Id=SA; Password=HappyHealthyRichFree!; Encrypt=False";
-
+    /// <summary>
+    /// Set the DbContext options.
+    /// </summary>
+    /// <param name="optionsBuilder"></param>
+    /// <exception cref="InvalidOperationException"></exception>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // Load the configuration.
+        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? "Production";
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            // Ensure this path is correct, particularly when running from a different context like
+            // a class library.
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{environment}.json", true, true)
+            .Build();
+
+        // Get the database connection string.
+        string? connectionString = configuration.GetConnectionString("Galaxon");
+        if (connectionString == null)
+        {
+            throw new InvalidOperationException(
+                "Connection string for Galaxon database not found.");
+        }
+
+        // Old connection strings For MS SQL:
+        // "SpaceCalendars": "Server=localhost,1433; Database=SpaceCalendars; User Id=SA; Password=HappyDays2023"
+
+        // Configure the DbContext.
         optionsBuilder
             .UseLazyLoadingProxies()
-            .UseSqlServer(ConnectionString, options => options.EnableRetryOnFailure())
-            .LogTo(Console.WriteLine, new[]
-            {
-                DbLoggerCategory.Database.Command.Name
-            }, LogLevel.Warning)
+            .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Warning)
             .EnableSensitiveDataLogging();
     }
 

@@ -2,6 +2,6 @@
 
 public class EasterDate : DataObject
 {
-    [Column(TypeName = "date")]
+    [Column(TypeName = "DATE")]
     public DateOnly Date { get; set; }
 }

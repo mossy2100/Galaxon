@@ -90,7 +90,7 @@ public class Program
         });
 
         // Configure DbContext.
-        builder.Services.AddScoped<AstroDbContext>();
+        builder.Services.AddDbContext<AstroDbContext>();
 
         // Dependency injection for repositories and services.
         builder.Services.AddScoped<AstroObjectGroupRepository>();

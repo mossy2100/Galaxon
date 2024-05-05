@@ -57,27 +57,29 @@ public class Program
     public static void SetupServices()
     {
         // Setup DI container.
-        IServiceCollection serviceCollection = new ServiceCollection()
-            .AddDbContext<AstroDbContext>();
+        IServiceCollection serviceCollection = new ServiceCollection();
+
+        // Add database.
+        serviceCollection.AddDbContext<AstroDbContext>();
 
         // Add repositories.
         serviceCollection
-            .AddSingleton<AstroObjectRepository>()
-            .AddSingleton<AstroObjectGroupRepository>()
-            .AddSingleton<LeapSecondRepository>();
+            .AddScoped<AstroObjectRepository>()
+            .AddScoped<AstroObjectGroupRepository>()
+            .AddScoped<LeapSecondRepository>();
 
-        // Add import services.
+        // Add services.
         serviceCollection
-            .AddSingleton<AstroObjectGroupImportService>()
-            .AddSingleton<DwarfPlanetImportService>()
-            .AddSingleton<EasterDateImportService>()
-            .AddSingleton<LeapSecondImportService>()
-            .AddSingleton<LunarPhaseDataImportService>()
-            .AddSingleton<NaturalSatelliteImportService>()
-            .AddSingleton<PlanetImportService>()
-            .AddSingleton<SeasonalMarkerImportService>()
-            .AddSingleton<SunImportService>()
-            .AddSingleton<VSOP87ImportService>();
+            .AddScoped<AstroObjectGroupImportService>()
+            .AddScoped<DwarfPlanetImportService>()
+            .AddScoped<EasterDateImportService>()
+            .AddScoped<LeapSecondImportService>()
+            .AddScoped<LunarPhaseDataImportService>()
+            .AddScoped<NaturalSatelliteImportService>()
+            .AddScoped<PlanetImportService>()
+            .AddScoped<SeasonalMarkerImportService>()
+            .AddScoped<SunImportService>()
+            .AddScoped<VSOP87ImportService>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>

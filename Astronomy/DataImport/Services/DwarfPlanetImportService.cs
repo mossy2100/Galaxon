@@ -6,15 +6,13 @@ using HtmlAgilityPack;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class DwarfPlanetImportService
+public class DwarfPlanetImportService(
+    AstroDbContext astroDbContext,
+    AstroObjectGroupRepository astroObjectGroupRepository,
+    AstroObjectRepository astroObjectRepository)
 {
     public async Task Import()
     {
-        AstroDbContext astroDbContext = new ();
-        AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository =
-            new (astroDbContext, astroObjectGroupRepository);
-
         // Get the Sun.
         AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
         if (sun == null)
