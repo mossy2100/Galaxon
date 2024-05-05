@@ -99,7 +99,8 @@ public class AstroDbContext : DbContext
         }
 
         // Old connection strings For MS SQL:
-        // "SpaceCalendars": "Server=localhost,1433; Database=SpaceCalendars; User Id=SA; Password=HappyDays2023"
+        // AstroAPI: "Server=localhost,1433; Database=Astro; User Id=SA; Password=HappyHealthyRichFree!; Encrypt=False";
+        // SpaceCalendars: "Server=localhost,1433; Database=SpaceCalendars; User Id=SA; Password=HappyDays2023"
 
         // Configure the DbContext.
         optionsBuilder
