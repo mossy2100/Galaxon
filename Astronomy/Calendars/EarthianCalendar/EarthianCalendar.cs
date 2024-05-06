@@ -2,10 +2,6 @@
 
 public class EarthianCalendar : Calendar
 {
-    public EarthianCalendar()
-    {
-    }
-
     public override int[] Eras => throw new NotImplementedException();
 
     public override DateTime AddMonths(DateTime time, int months)

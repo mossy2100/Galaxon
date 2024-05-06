@@ -24,12 +24,12 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
     {
-        List<string> result = new List<string>();
+        List<string> result = new ();
         string indexUrl = "https://astropixels.com/ephemeris/phasescat/phasescat.html";
         string tableTitle = "Moon Phases in Common Era (CE)";
 
         // Use HttpClient to fetch the content.
-        using HttpClient httpClient = new HttpClient();
+        using HttpClient httpClient = new ();
         string html = await httpClient.GetStringAsync(indexUrl);
 
         // Load HTML into the HtmlDocument.
@@ -74,7 +74,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
         JulianCalendar jc = new ();
 
         // Use HttpClient to fetch the content.
-        using HttpClient httpClient = new HttpClient();
+        using HttpClient httpClient = new ();
         string html = await httpClient.GetStringAsync(url);
 
         // Load HTML into the HtmlDocument.

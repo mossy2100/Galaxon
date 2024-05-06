@@ -32,8 +32,10 @@ public class DocumentService(
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static string ProcessUrlPart(string name) =>
-        Regex.Replace(name, "[^a-zA-Z]+", "-").Trim('-').ToLower();
+    public static string ProcessUrlPart(string name)
+    {
+        return Regex.Replace(name, "[^a-zA-Z]+", "-").Trim('-').ToLower();
+    }
 
     public string GetPathAlias(Document doc)
     {
@@ -87,7 +89,7 @@ public class DocumentService(
 
     public async Task UploadIcon(int docId, IFormFile icon)
     {
-        FileInfo fi = new FileInfo(icon.FileName);
+        FileInfo fi = new (icon.FileName);
         string iconFileName = $"document-icon-{docId}{fi.Extension.ToLower()}";
         await fileUploadService.UploadFile(icon, DocumentIconDirApp, iconFileName);
     }
@@ -96,7 +98,7 @@ public class DocumentService(
     {
         IEnumerable<Document> docs = documentRepo.GetByFolder(folderId);
         return docs.Any(doc =>
-            doc.IsFolder && FolderContainsCurrentDocument(doc.Id, request)
-            || !doc.IsFolder && request.Path == GetPathAlias(doc));
+            (doc.IsFolder && FolderContainsCurrentDocument(doc.Id, request))
+            || (!doc.IsFolder && request.Path == GetPathAlias(doc)));
     }
 }

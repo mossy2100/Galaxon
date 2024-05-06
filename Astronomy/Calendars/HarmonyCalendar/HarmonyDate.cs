@@ -26,7 +26,7 @@ public class HarmonyDate : IEarthDate
 
     public HarmonyDate(long ticks)
     {
-        DateTime dt = new DateTime(ticks);
+        DateTime dt = new (ticks);
         (int year, int dayOfYear) = CalcYearAndDayOfYear(dt);
         CalcFields(year, dayOfYear);
     }
@@ -50,7 +50,7 @@ public class HarmonyDate : IEarthDate
 
     public HarmonyDate(DateOnly date)
     {
-        DateTime dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+        DateTime dt = new (date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
         (int year, int dayOfYear) = CalcYearAndDayOfYear(dt);
         CalcFields(year, dayOfYear);
     }
@@ -92,8 +92,8 @@ public class HarmonyDate : IEarthDate
     {
         Year = year;
         // Note, these next 2 lines use integer division.
-        MonthOfYear = ((dayOfYear - 1) / HarmonyCalendar.DaysInRegularMonth) + 1;
-        WeekOfYear = ((dayOfYear - 1) / HarmonyCalendar.DaysInRegularWeek) + 1;
+        MonthOfYear = (dayOfYear - 1) / HarmonyCalendar.DaysInRegularMonth + 1;
+        WeekOfYear = (dayOfYear - 1) / HarmonyCalendar.DaysInRegularWeek + 1;
         WeekOfMonth = WeekOfYear - (MonthOfYear - 1) * HarmonyCalendar.WeeksInRegularMonth;
         DayOfYear = dayOfYear;
         DayOfMonth = dayOfYear - (MonthOfYear - 1) * HarmonyCalendar.DaysInRegularMonth;
@@ -107,13 +107,20 @@ public class HarmonyDate : IEarthDate
         return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
     }
 
-    public DateOnly ToDateOnly() => DateOnly.FromDateTime(ToDateTime());
+    public DateOnly ToDateOnly()
+    {
+        return DateOnly.FromDateTime(ToDateTime());
+    }
 
-    public TimeSpan Subtract(HarmonyDate hd) => ToDateTime().Subtract(hd.ToDateTime());
+    public TimeSpan Subtract(HarmonyDate hd)
+    {
+        return ToDateTime().Subtract(hd.ToDateTime());
+    }
 
-    public static string[] GetDayOfWeekNames() =>
-        new[]
-        {
+    public static string[] GetDayOfWeekNames()
+    {
+        return
+        [
             "",
             "SolDay",
             "MercuryDay",
@@ -121,7 +128,8 @@ public class HarmonyDate : IEarthDate
             "EarthDay",
             "LunaDay",
             "MarsDay"
-        };
+        ];
+    }
 
     public static string GetDayOfWeekName(int dayOfWeek)
     {

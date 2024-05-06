@@ -75,7 +75,7 @@ public class ApsideImportService(
                 if (apsideRecord == null)
                 {
                     // Create a new record.
-                    apsideRecord = new ()
+                    apsideRecord = new ApsideRecord
                     {
                         AstroObjectId = planet.Id,
                         OrbitNumber = apsideEvent.OrbitNumber,

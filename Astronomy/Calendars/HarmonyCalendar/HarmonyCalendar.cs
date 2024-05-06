@@ -6,6 +6,12 @@ namespace Galaxon.Astronomy.Calendars;
 
 public class HarmonyCalendar : Calendar
 {
+    #region Properties
+
+    public override int[] Eras => [1];
+
+    #endregion Properties
+
     #region Constants
 
     public const int MinSupportedYear = 2002;
@@ -28,22 +34,16 @@ public class HarmonyCalendar : Calendar
 
     #endregion Constants
 
-    #region Properties
-
-    public override int[] Eras
-    {
-        get => new[] { 1 };
-    }
-
-    #endregion Properties
-
     #region Methods
 
     #region OverriddenMethods
 
     public override CalendarAlgorithmType AlgorithmType => CalendarAlgorithmType.SolarCalendar;
 
-    public override DateTime AddMonths(DateTime dt, int months) => dt.AddDays(DaysInRegularMonth);
+    public override DateTime AddMonths(DateTime dt, int months)
+    {
+        return dt.AddDays(DaysInRegularMonth);
+    }
 
     public override DateTime AddYears(DateTime dt, int years)
     {
@@ -60,17 +60,27 @@ public class HarmonyCalendar : Calendar
         return new HarmonyDate(year, dayOfYear).ToDateTime();
     }
 
-    public override DateTime AddDays(DateTime dt, int days) => dt.AddDays(days);
+    public override DateTime AddDays(DateTime dt, int days)
+    {
+        return dt.AddDays(days);
+    }
 
-    public override int GetDayOfMonth(DateTime dt) => new HarmonyDate(dt).DayOfMonth;
+    public override int GetDayOfMonth(DateTime dt)
+    {
+        return new HarmonyDate(dt).DayOfMonth;
+    }
 
     public override DayOfWeek GetDayOfWeek(DateTime dt)
+    {
         // This isn't quite right because the day names are different, but it kind of works. It's
         // like we used the normal days of the week, except for Saturday.
-        =>
-            (DayOfWeek)(new HarmonyDate(dt).DayOfWeek - 1);
+        return (DayOfWeek)(new HarmonyDate(dt).DayOfWeek - 1);
+    }
 
-    public override int GetDayOfYear(DateTime dt) => new HarmonyDate(dt).DayOfYear;
+    public override int GetDayOfYear(DateTime dt)
+    {
+        return new HarmonyDate(dt).DayOfYear;
+    }
 
     public override int GetDaysInMonth(int year, int month)
     {
@@ -86,10 +96,13 @@ public class HarmonyCalendar : Calendar
         }
         return month < MonthsPerYear
             ? DaysInRegularMonth
-            : (DaysInRegularWeek - (IsLeapYear(year) ? 0 : 1));
+            : DaysInRegularWeek - (IsLeapYear(year) ? 0 : 1);
     }
 
-    public override int GetDaysInMonth(int year, int month, int era) => GetDaysInMonth(year, month);
+    public override int GetDaysInMonth(int year, int month, int era)
+    {
+        return GetDaysInMonth(year, month);
+    }
 
     public override int GetDaysInYear(int year)
     {
@@ -100,28 +113,46 @@ public class HarmonyCalendar : Calendar
         }
 
         // Get first day of year.
-        HarmonyDate hd1 = new HarmonyDate(year, 1);
+        HarmonyDate hd1 = new (year, 1);
         DateTime dt1 = hd1.ToDateTime();
 
         // Get first day of next year.
-        HarmonyDate hd2 = new HarmonyDate(year + 1, 1);
+        HarmonyDate hd2 = new (year + 1, 1);
         DateTime dt2 = hd2.ToDateTime();
 
         // Get difference in days.
         return dt2.Subtract(dt1).Days;
     }
 
-    public override int GetDaysInYear(int year, int era) => GetDaysInYear(year);
+    public override int GetDaysInYear(int year, int era)
+    {
+        return GetDaysInYear(year);
+    }
 
-    public override int GetEra(DateTime dt) => 1;
+    public override int GetEra(DateTime dt)
+    {
+        return 1;
+    }
 
-    public override int GetMonth(DateTime dt) => new HarmonyDate(dt).MonthOfYear;
+    public override int GetMonth(DateTime dt)
+    {
+        return new HarmonyDate(dt).MonthOfYear;
+    }
 
-    public override int GetMonthsInYear(int year) => MonthsPerYear;
+    public override int GetMonthsInYear(int year)
+    {
+        return MonthsPerYear;
+    }
 
-    public override int GetMonthsInYear(int year, int era) => GetMonthsInYear(year);
+    public override int GetMonthsInYear(int year, int era)
+    {
+        return GetMonthsInYear(year);
+    }
 
-    public override int GetYear(DateTime dt) => new HarmonyDate(dt).Year;
+    public override int GetYear(DateTime dt)
+    {
+        return new HarmonyDate(dt).Year;
+    }
 
     public override bool IsLeapDay(int year, int month, int dayOfMonth)
     {
@@ -134,12 +165,20 @@ public class HarmonyCalendar : Calendar
         return month == MonthsPerYear && dayOfMonth == DaysInRegularWeek;
     }
 
-    public override bool IsLeapDay(int year, int month, int dayOfMonth, int era) =>
-        IsLeapDay(year, month, dayOfMonth);
+    public override bool IsLeapDay(int year, int month, int dayOfMonth, int era)
+    {
+        return IsLeapDay(year, month, dayOfMonth);
+    }
 
-    public override bool IsLeapMonth(int year, int month) => false;
+    public override bool IsLeapMonth(int year, int month)
+    {
+        return false;
+    }
 
-    public override bool IsLeapMonth(int year, int month, int era) => IsLeapMonth(year, month);
+    public override bool IsLeapMonth(int year, int month, int era)
+    {
+        return IsLeapMonth(year, month);
+    }
 
     public override bool IsLeapYear(int year)
     {
@@ -152,7 +191,10 @@ public class HarmonyCalendar : Calendar
         return GetDaysInYear(year) == DaysInLeapYear;
     }
 
-    public override bool IsLeapYear(int year, int era) => IsLeapYear(year);
+    public override bool IsLeapYear(int year, int era)
+    {
+        return IsLeapYear(year);
+    }
 
     public override DateTime ToDateTime(int year, int month, int dayOfMonth, int hour, int minute,
         int second, int millisecond)
@@ -168,26 +210,40 @@ public class HarmonyCalendar : Calendar
     }
 
     public override DateTime ToDateTime(int year, int month, int dayOfMonth, int hour, int minute,
-        int second, int millisecond, int era) =>
-        ToDateTime(year, month, dayOfMonth, hour, minute, second, millisecond);
+        int second, int millisecond, int era)
+    {
+        return ToDateTime(year, month, dayOfMonth, hour, minute, second, millisecond);
+    }
 
-    public static bool IsValidYear(int year) => year is >= MinSupportedYear and <= MaxSupportedYear;
+    public static bool IsValidYear(int year)
+    {
+        return year is >= MinSupportedYear and <= MaxSupportedYear;
+    }
 
-    public static bool IsValidMonth(int month) => month is >= 1 and <= MonthsPerYear;
+    public static bool IsValidMonth(int month)
+    {
+        return month is >= 1 and <= MonthsPerYear;
+    }
 
-    public static bool IsValidDate(int year, int month, int dayOfMonth) =>
-        IsValidYear(year)
-        && IsValidMonth(month)
-        && dayOfMonth >= 1
-        && dayOfMonth <= (new HarmonyCalendar()).GetDaysInMonth(year, month);
+    public static bool IsValidDate(int year, int month, int dayOfMonth)
+    {
+        return IsValidYear(year)
+            && IsValidMonth(month)
+            && dayOfMonth >= 1
+            && dayOfMonth <= new HarmonyCalendar().GetDaysInMonth(year, month);
+    }
 
-    public static bool IsValidDate(int year, int dayOfYear) =>
-        IsValidYear(year)
-        && dayOfYear >= 1
-        && dayOfYear <= (new HarmonyCalendar()).GetDaysInYear(year);
+    public static bool IsValidDate(int year, int dayOfYear)
+    {
+        return IsValidYear(year)
+            && dayOfYear >= 1
+            && dayOfYear <= new HarmonyCalendar().GetDaysInYear(year);
+    }
 
-    public static bool IsValidDayOfWeek(int dayOfWeek) =>
-        dayOfWeek is >= 1 and <= DaysInRegularWeek;
+    public static bool IsValidDayOfWeek(int dayOfWeek)
+    {
+        return dayOfWeek is >= 1 and <= DaysInRegularWeek;
+    }
 
     #endregion OverriddenMethods
 
@@ -212,13 +268,20 @@ public class HarmonyCalendar : Calendar
         return seasonalMarkers.Select(sm => sm.DateTimeUtcUsno!.Value).ToArray();
     }
 
-    public static DateTime GetSeasonalMarker(int year, ESeasonalMarker seasonalMarkerNumber) =>
-        GetSeasonalMarkers(year)[(int)seasonalMarkerNumber];
+    public static DateTime GetSeasonalMarker(int year, ESeasonalMarker seasonalMarkerNumber)
+    {
+        return GetSeasonalMarkers(year)[(int)seasonalMarkerNumber];
+    }
 
-    public int GetWeeksInYear(int year, int month) => WeeksInYear;
+    public static int GetWeeksInYear(int year, int month)
+    {
+        return WeeksInYear;
+    }
 
-    public int GetWeeksInMonth(int year, int month) =>
-        month == MonthsPerYear ? 1 : WeeksInRegularMonth;
+    public static int GetWeeksInMonth(int year, int month)
+    {
+        return month == MonthsPerYear ? 1 : WeeksInRegularMonth;
+    }
 
     /// <summary>
     /// Get the date of the first day of the given Harmony Year.
@@ -229,7 +292,7 @@ public class HarmonyCalendar : Calendar
     {
         // Find the March equinox date for the given Gregorian year.
         DateTime nve = GetSeasonalMarker(year, 0);
-        DateOnly date = new DateOnly(year, nve.Month, nve.Day);
+        DateOnly date = new (year, nve.Month, nve.Day);
         // If the vernal equinox is in the afternoon, it's New Year's Eve. Start the new year the
         // next day.
         if (nve.Hour >= 12)

@@ -32,14 +32,14 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
     {
         Log.Information("Parsing NIST web page.");
 
-        using HttpClient httpClient = new HttpClient();
+        using HttpClient httpClient = new ();
 
         // Load the HTML table as a string.
         // Fetch HTML content from the bulletins URL
         string htmlContent = await httpClient.GetStringAsync(_NIST_LEAP_SECONDS_URL);
 
         // Parse HTML content using HtmlAgilityPack.
-        HtmlDocument htmlDocument = new HtmlDocument();
+        HtmlDocument htmlDocument = new ();
         htmlDocument.LoadHtml(htmlContent);
 
         // Get the tables.
@@ -108,7 +108,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
     {
         Log.Information("Importing IERS Bulletin Cs.");
 
-        using HttpClient httpClient = new HttpClient();
+        using HttpClient httpClient = new ();
 
         try
         {
@@ -116,11 +116,11 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
             string htmlContent = await httpClient.GetStringAsync(_BULLETIN_INDEX_URL);
 
             // Parse HTML content using HtmlAgilityPack.
-            HtmlDocument htmlDocument = new HtmlDocument();
+            HtmlDocument htmlDocument = new ();
             htmlDocument.LoadHtml(htmlContent);
 
             // Extract individual bulletin URLs
-            List<string> bulletinUrls = new List<string>();
+            List<string> bulletinUrls = new ();
             HtmlNodeCollection? bulletinNodes =
                 htmlDocument.DocumentNode.SelectNodes("//a[contains(@href, 'bulletinc-')]");
             if (bulletinNodes != null)
@@ -135,9 +135,9 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
 
             // Regular expression to match any of the "no leap second" phrases.
             Regex rxNoLeapSecond =
-                new Regex("(NO|No) ((posi|nega)tive )?leap second will be introduced");
+                new ("(NO|No) ((posi|nega)tive )?leap second will be introduced");
             string months = string.Join('|', GregorianCalendarExtensions.GetMonthNames().Values);
-            Regex rxLeapSecond = new Regex(
+            Regex rxLeapSecond = new (
                 $@"A (?<sign>positive|negative) leap second will be introduced at the end of (?<month>{months}) (?<year>\d{{4}}).");
 
             // Loop through individual bulletin URLs and process them

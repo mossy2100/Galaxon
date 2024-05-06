@@ -2,6 +2,34 @@
 
 public class SerenityDate : IEarthDate
 {
+    /// <summary>
+    /// Empty constructor.
+    /// Sets a default date of day 1 in month 0.
+    /// </summary>
+    public SerenityDate() : this(0, 1) { }
+
+    /// <summary>
+    /// Creates a new SerenityDate from a number of ticks.
+    /// </summary>
+    /// <param name="ticks"></param>
+    public SerenityDate(long ticks)
+    {
+        Ticks = ticks;
+    }
+
+    /// <summary>
+    /// Construct a new SerenityDate from the month (i.e. the Serenity Lunation
+    /// Number) and day of the month (1..30).
+    /// </summary>
+    /// <param name="month">The month (i.e. the Serenity Lunation Number)</param>
+    /// <param name="dayOfMonth">The day of the month (1..30)</param>
+    public SerenityDate(int month, int dayOfMonth)
+    {
+        // todo argument checking
+
+        // Ticks = CalculateTicks(month, dayOfMonth);
+    }
+
     // The number of 100-nanosecond intervals that have elapsed since January 1,
     // 0001 at 00:00:00.000 in the Gregorian calendar.
     // This is the core property represents a point in time, and is useful for
@@ -29,37 +57,7 @@ public class SerenityDate : IEarthDate
     public int DayOfMonth { get; set; }
 
     // The single instance of the calendar.
-    protected static SerenityCalendar TheCalendar { get; } = new();
-
-    /// <summary>
-    /// Empty constructor.
-    /// Sets a default date of day 1 in month 0.
-    /// </summary>
-    public SerenityDate() : this(0, 1)
-    {
-    }
-
-    /// <summary>
-    /// Creates a new SerenityDate from a number of ticks.
-    /// </summary>
-    /// <param name="ticks"></param>
-    public SerenityDate(long ticks)
-    {
-        Ticks = ticks;
-    }
-
-    /// <summary>
-    /// Construct a new SerenityDate from the month (i.e. the Serenity Lunation
-    /// Number) and day of the month (1..30).
-    /// </summary>
-    /// <param name="month">The month (i.e. the Serenity Lunation Number)</param>
-    /// <param name="dayOfMonth">The day of the month (1..30)</param>
-    public SerenityDate(int month, int dayOfMonth)
-    {
-        // todo argument checking
-
-        // Ticks = CalculateTicks(month, dayOfMonth);
-    }
+    protected static SerenityCalendar TheCalendar { get; } = new ();
 
     //==========================================================================
 
@@ -70,23 +68,29 @@ public class SerenityDate : IEarthDate
     /// </summary>
     /// <param name="dt">A Gregorian date time as a .NET DateTime object.</param>
     /// <returns>The equivalent Serenity date.</returns>
-    public static SerenityDate FromDateTime(DateTime dt) =>
-        new SerenityDate(dt.Ticks);
+    public static SerenityDate FromDateTime(DateTime dt)
+    {
+        return new SerenityDate(dt.Ticks);
+    }
 
     /// <summary>
     /// Convert a SerenityDate to a DateTime.
     /// </summary>
     /// <returns>The equivalent Gregorian date time as a .NET DateTime object.</returns>
-    public DateTime ToDateTime() =>
-        new DateTime(Ticks);
+    public DateTime ToDateTime()
+    {
+        return new DateTime(Ticks);
+    }
 
     /// <summary>
     /// Convert a Gregorian date to a Serenity date.
     /// </summary>
     /// <param name="date">A Gregorian date as a .NET DateOnly object.</param>
     /// <returns>The equivalent Serenity date.</returns>
-    public SerenityDate FromDateOnly(DateOnly date) =>
-        FromDateTime(date.ToDateTime(new TimeOnly(0)));
+    public static SerenityDate FromDateOnly(DateOnly date)
+    {
+        return FromDateTime(date.ToDateTime(new TimeOnly(0)));
+    }
 
     /// <summary>
     /// Convert a Serenity date to a Gregorian date.
