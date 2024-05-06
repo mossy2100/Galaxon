@@ -46,7 +46,7 @@ public class SeasonalMarkerImportService(
                         {
                             bool isSeasonalMarker;
                             ESeasonalMarker seasonalMarker = default;
-                            EApside apside = default;
+                            // EApside apside = default;
 
                             // Get the seasonal marker or apside type.
                             if (usm is { month: 3, phenom: "Equinox" })
@@ -72,12 +72,12 @@ public class SeasonalMarkerImportService(
                             else if (usm.phenom == "Perihelion")
                             {
                                 isSeasonalMarker = false;
-                                apside = EApside.Periapsis;
+                                // apside = EApside.Periapsis;
                             }
                             else if (usm.phenom == "Aphelion")
                             {
                                 isSeasonalMarker = false;
-                                apside = EApside.Apoapsis;
+                                // apside = EApside.Apoapsis;
                             }
                             else
                             {

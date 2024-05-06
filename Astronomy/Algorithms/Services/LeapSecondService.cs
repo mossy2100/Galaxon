@@ -14,7 +14,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     /// <returns>The total value of leap seconds inserted.</returns>
     public int TotalLeapSeconds(DateOnly d)
     {
-        var total = 0;
+        int total = 0;
         foreach (LeapSecond ls in leapSecondRepository.List)
         {
             // If the leap second date is earlier than or equal to the date argument, add the value
@@ -43,13 +43,13 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
         dt ??= DateTimeExtensions.NowUtc;
 
         // Count leap seconds.
-        var total = 0;
+        int total = 0;
         foreach (LeapSecond ls in leapSecondRepository.List)
         {
             // Get the datetime of the leap second.
             // When creating the new DateTime we use the same DateTimeKind as the argument so the
             // comparison works correctly. The time of day will be set to 00:00:00.
-            var dtLeapSecond = ls.LeapSecondDate.ToDateTime(dt.Value.Kind);
+            DateTime dtLeapSecond = ls.LeapSecondDate.ToDateTime(dt.Value.Kind);
             // The actual time of day for the leap second is 23:59:60, which can't be represented
             // using DateTime. So we'll use the time 00:00:00 of the next day.
             dtLeapSecond = dtLeapSecond.AddDays(1);
@@ -110,9 +110,9 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
     public void TestCalcDUT1()
     {
-        for (var y = 1972; y <= 2022; y++)
+        for (int y = 1972; y <= 2022; y++)
         {
-            var dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             int LSC = TotalLeapSeconds(dt);
             double deltaT = TimeScales.CalcDeltaT(dt);
             double DUT1 = CalcDUT1(dt);

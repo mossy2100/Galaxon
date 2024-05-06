@@ -28,7 +28,7 @@ public class ApsideService(
         { 5, [2_455_636.936, 4_332.897_065, 0.000_136_7] },
         { 6, [2_452_830.12, 10_764.216_76, 0.000_827] },
         { 7, [2_470_213.5, 30_694.876_7, -0.005_41] },
-        { 8, [2_468_895.1, 60_190.33, 0.034_29] },
+        { 8, [2_468_895.1, 60_190.33, 0.034_29] }
     };
 
     /// <summary>
@@ -40,7 +40,7 @@ public class ApsideService(
         [316.13, 584.903_153, -0.055, 0.061],
         [346.2, 450.380_738, -0.091, 0.062],
         [136.95, 659.306_737, -0.056, 0.029],
-        [249.52, 329.653_368, -0.045, 0.031],
+        [249.52, 329.653_368, -0.045, 0.031]
     ];
 
     /// <summary>
@@ -62,7 +62,7 @@ public class ApsideService(
         }
 
         // Check the planet number. If there's an exception here, the issue is with the data.
-        if (planet.Number == null || planet.Number < 1 || planet.Number > 8)
+        if (planet.Number is null or < 1 or > 8)
         {
             throw new DataException("Planet number must be in the range 1-8.");
         }
@@ -114,7 +114,7 @@ public class ApsideService(
         }
 
         // Get the orbit number.
-        int orbitNumber = (int)Math.Floor(k);
+        int orbitNumber = (int)Floor(k);
 
         // Get the datetime rounded off to the nearest minute.
         DateTime dt2 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
@@ -154,7 +154,7 @@ public class ApsideService(
         Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius;
 
         // If we are looking for a minimum or a maximum radius.
-        Boolean findMax = approxApsideEvent.Apside == EApside.Apoapsis;
+        bool findMax = approxApsideEvent.Apside == EApside.Apoapsis;
 
         // Result variables.
         double jdttResult;
