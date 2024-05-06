@@ -1,12 +1,13 @@
 // using Galaxon.Astronomy.Algorithms.Services;
 
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
-public class VSOP87ImportService(
+public class Vsop87ImportService(
     AstroDbContext astroDbContext,
     AstroObjectRepository astroObjectRepository)
 {
@@ -69,7 +70,7 @@ public class VSOP87ImportService(
                 1 => 'L',
                 2 => 'B',
                 3 => 'R',
-                _ => ' '
+                var _ => ' '
             };
             Console.WriteLine($"Variable = {variable}");
 

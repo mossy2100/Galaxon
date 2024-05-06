@@ -1,10 +1,12 @@
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
+using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public class SunImportService(
     AstroDbContext astroDbContext,
@@ -107,7 +109,7 @@ public class SunImportService(
         sun.Rotation ??= new RotationalRecord();
         // Obliquity in radians.
         sun.Rotation.Obliquity = Angles.DegreesToRadians(7.25);
-        // North pole location in radians.
+        // North Pole location in radians.
         sun.Rotation.NorthPoleRightAscension = Angles.DegreesToRadians(286.13);
         sun.Rotation.NorthPoleDeclination = Angles.DegreesToRadians(63.87);
         // Sidereal rotation period in seconds.

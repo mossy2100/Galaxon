@@ -1,12 +1,12 @@
-﻿using Galaxon.Astronomy.Data.Models;
+﻿using DataImport.Services;
+using Galaxon.Astronomy.Data;
+using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Astronomy.Data.Services;
 using Galaxon.Core.Files;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Galaxon.Astronomy.Data;
+namespace DataImport;
 
 public class Program
 {
@@ -17,11 +17,6 @@ public class Program
 
     public static async Task Main(string[] args)
     {
-        if (EF.IsDesignTime)
-        {
-            return;
-        }
-
         SetupLogging();
         SetupServices();
 
@@ -87,7 +82,7 @@ public class Program
             .AddScoped<PlanetImportService>()
             .AddScoped<SeasonalMarkerImportService>()
             .AddScoped<SunImportService>()
-            .AddScoped<VSOP87ImportService>();
+            .AddScoped<Vsop87ImportService>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>
@@ -137,8 +132,8 @@ public class Program
 
     public static void ImportVsop87Data()
     {
-        VSOP87ImportService vsop87ImportService =
-            _serviceProvider!.GetRequiredService<VSOP87ImportService>();
+        Vsop87ImportService vsop87ImportService =
+            _serviceProvider!.GetRequiredService<Vsop87ImportService>();
         vsop87ImportService.Import();
     }
 

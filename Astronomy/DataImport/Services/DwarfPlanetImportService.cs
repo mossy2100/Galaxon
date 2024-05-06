@@ -1,10 +1,11 @@
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Quantities.Kinds;
 using HtmlAgilityPack;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public class DwarfPlanetImportService(
     AstroDbContext astroDbContext,
@@ -81,7 +82,7 @@ public class DwarfPlanetImportService(
                             // Groups. (Just do the main one for now.)
                             astroObjectGroupRepository.AddToGroup(dwarfPlanet, "Dwarf planet");
 
-                            // Save the dwarf planet object now to ensure it has an Id before
+                            // Save the dwarf planet object now to ensure it has an id before
                             // attaching composition objects to it.
                             await astroDbContext.SaveChangesAsync();
 

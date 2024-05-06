@@ -1,13 +1,12 @@
 using System.Text.RegularExpressions;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
-public class EasterDateImportService(
-    ILogger<EasterDateImportService> logger,
-    AstroDbContext astroDbContext)
+public class EasterDateImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Parse the data file from the US Census Bureau.
@@ -15,7 +14,7 @@ public class EasterDateImportService(
     /// <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
     internal void ImportEasterDates1600_2099()
     {
-        logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
+        Log.Information("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.census.gov/data/software/x13as/genhol/easter-dates.html");
 
         string csvFile =
@@ -52,7 +51,7 @@ public class EasterDateImportService(
                 {
                     // Add a record.
                     // Console.WriteLine($"Adding new Easter date {newEasterDate}");
-                    logger.LogInformation("Adding new Easter date {NewEasterDate}",
+                    Log.Information("Adding new Easter date {NewEasterDate}",
                         newEasterDate.ToIsoString());
                     astroDbContext.EasterDates.Add(new EasterDate { Date = newEasterDate });
                 }
@@ -61,7 +60,7 @@ public class EasterDateImportService(
                     // Update the record.
                     // Console.WriteLine(
                     //     $"Dates for {year} are not the same! Existing = {existingEasterDate.Date}, new = {newEasterDate}");
-                    logger.LogWarning(
+                    Log.Warning(
                         "Dates for {Year} are not the same. Not updating record. Existing = {ExistingEasterDate}, new = {NewEasterDate}",
                         year, existingEasterDate.Date.ToIsoString(),
                         newEasterDate.ToIsoString());
@@ -69,13 +68,13 @@ public class EasterDateImportService(
                 else
                 {
                     // Console.WriteLine($"Dates for {year} are the same, nothing to do.");
-                    logger.LogInformation("Dates for {Year} are the same, nothing to do.", year);
+                    Log.Information("Dates for {Year} are the same, nothing to do.", year);
                 }
             }
             catch
             {
                 // Console.WriteLine($"Invalid line in CSV: {line}");
-                logger.LogError("Invalid line in CSV: {Line}", line);
+                Log.Error("Invalid line in CSV: {Line}", line);
             }
         }
 
@@ -88,7 +87,7 @@ public class EasterDateImportService(
     /// <see href="https://www.assa.org.au/edm"/>
     internal void ImportEasterDates1700_2299()
     {
-        logger.LogInformation("Parsing easter dates 1600-2999 from {Url}.",
+        Log.Information("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.assa.org.au/edm");
 
         string htmlFile =
@@ -128,7 +127,7 @@ public class EasterDateImportService(
                     // Check if they are different.
                     if (existingEasterDate.Date != newEasterDate)
                     {
-                        logger.LogWarning(
+                        Log.Warning(
                             "Dates for {Year} are not the same. Not updating record. Existing = {ExistingEasterDate}, new = {NewEasterDate}",
                             year, existingEasterDate.Date.ToIsoString(),
                             newEasterDate.ToIsoString());
@@ -136,7 +135,7 @@ public class EasterDateImportService(
                     else
                     {
                         // Console.WriteLine($"Dates for {year} are the same, nothing to do.");
-                        logger.LogInformation("Dates for {Year} are the same, nothing to do.",
+                        Log.Information("Dates for {Year} are the same, nothing to do.",
                             year);
                     }
                 }

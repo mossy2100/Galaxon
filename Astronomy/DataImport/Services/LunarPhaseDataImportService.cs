@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Galaxon.Astronomy.Data.DataTransferObjects;
+using DataImport.DataTransferObjects;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Collections;
@@ -11,7 +12,7 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
 {
@@ -24,7 +25,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
     public async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
     {
         List<string> result = new List<string>();
-        string indexUrl = "http://astropixels.com/ephemeris/phasescat/phasescat.html";
+        string indexUrl = "https://astropixels.com/ephemeris/phasescat/phasescat.html";
         string tableTitle = "Moon Phases in Common Era (CE)";
 
         // Use HttpClient to fetch the content.

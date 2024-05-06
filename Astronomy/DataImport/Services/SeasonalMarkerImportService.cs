@@ -1,4 +1,5 @@
-using Galaxon.Astronomy.Data.DataTransferObjects;
+using DataImport.DataTransferObjects;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -7,7 +8,7 @@ using Galaxon.Time;
 using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public class SeasonalMarkerImportService(
     AstroDbContext astroDbContext,
@@ -48,22 +49,22 @@ public class SeasonalMarkerImportService(
                             EApside apside = default;
 
                             // Get the seasonal marker or apside type.
-                            if (usm.month == 3 && usm.phenom == "Equinox")
+                            if (usm is { month: 3, phenom: "Equinox" })
                             {
                                 isSeasonalMarker = true;
                                 seasonalMarker = ESeasonalMarker.NorthwardEquinox;
                             }
-                            else if (usm.month == 6 && usm.phenom == "Solstice")
+                            else if (usm is { month: 6, phenom: "Solstice" })
                             {
                                 isSeasonalMarker = true;
                                 seasonalMarker = ESeasonalMarker.NorthernSolstice;
                             }
-                            else if (usm.month == 9 && usm.phenom == "Equinox")
+                            else if (usm is { month: 9, phenom: "Equinox" })
                             {
                                 isSeasonalMarker = true;
                                 seasonalMarker = ESeasonalMarker.SouthwardEquinox;
                             }
-                            else if (usm.month == 12 && usm.phenom == "Solstice")
+                            else if (usm is { month: 12, phenom: "Solstice" })
                             {
                                 isSeasonalMarker = true;
                                 seasonalMarker = ESeasonalMarker.SouthernSolstice;

@@ -1,10 +1,11 @@
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Time;
 using HtmlAgilityPack;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public class NaturalSatelliteImportService
 {
@@ -112,7 +113,7 @@ public class NaturalSatelliteImportService
                             astroObjectGroupRepository.AddToGroup(satellite,
                                 isRetrograde ? "Retrograde satellite" : "Prograde satellite");
 
-                            // Save the satellite object now to ensure it has an Id before attaching
+                            // Save the satellite object now to ensure it has an id before attaching
                             // composition objects to it.
                             await astroDbContext.SaveChangesAsync();
 

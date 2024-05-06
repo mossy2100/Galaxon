@@ -1,19 +1,17 @@
-using System.Globalization;
 using System.Text.RegularExpressions;
+using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using HtmlAgilityPack;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
-public class LeapSecondImportService(
-    ILogger<LeapSecondImportService> logger,
-    AstroDbContext astroDbContext)
+public class LeapSecondImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// NIST web page showing a table of leap seconds.
-    /// An alternate source could be <see href="https://en.wikipedia.org/wiki/Leap_second"/> but I
+    /// An alternate source could be <see href="https://en.wikipedia.org/wiki/Leap_second"/>, but I
     /// expect NIST is more likely to be correct and maintained up to date (but I could be wrong).
     /// As yet I haven't found a more authoritative source of leap seconds online. The IERS
     /// bulletins don't cover the entire period from 1972.
@@ -32,7 +30,7 @@ public class LeapSecondImportService(
     /// </summary>
     public async Task ImportNistWebPage()
     {
-        logger.LogInformation("Parsing NIST web page.");
+        Log.Information("Parsing NIST web page.");
 
         using HttpClient httpClient = new HttpClient();
 
@@ -108,8 +106,7 @@ public class LeapSecondImportService(
     /// </remarks>
     public async Task ImportIersBulletins()
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
-        logger.LogInformation("Importing IERS Bulletin Cs.");
+        Log.Information("Importing IERS Bulletin Cs.");
 
         using HttpClient httpClient = new HttpClient();
 
@@ -146,7 +143,7 @@ public class LeapSecondImportService(
             // Loop through individual bulletin URLs and process them
             foreach (string bulletinUrl in bulletinUrls)
             {
-                logger.LogInformation("Bulletin URL: {BulletinUrl}", bulletinUrl);
+                Log.Information("Bulletin URL: {BulletinUrl}", bulletinUrl);
 
                 // Get the bulletin number.
                 int bulletinNumber;
@@ -156,12 +153,12 @@ public class LeapSecondImportService(
                 {
                     bulletinNumber = int.Parse(match.Groups[1].Value);
                     // Console.WriteLine($"Bulletin C number: {bulletinNumber}");
-                    logger.LogInformation("Bulletin number: {BulletinNumber}", bulletinNumber);
+                    Log.Information("Bulletin number: {BulletinNumber}", bulletinNumber);
                 }
                 else
                 {
                     string error = "PARSE ERROR: Could not get bulletin number.";
-                    logger.LogError("{Error}", error);
+                    Log.Error("{Error}", error);
                     throw new InvalidOperationException(error);
                 }
 
@@ -169,7 +166,7 @@ public class LeapSecondImportService(
                 if (bulletinNumber == 10)
                 {
                     // Console.WriteLine($"Ignoring bulletin {bulletinNumber}.");
-                    logger.LogInformation("Ignoring bulletin {BulletinNumber}.", bulletinNumber);
+                    Log.Information("Ignoring bulletin {BulletinNumber}.", bulletinNumber);
                     continue;
                 }
 
@@ -179,14 +176,14 @@ public class LeapSecondImportService(
                 if (iersBulletinC == null)
                 {
                     // Console.WriteLine("Existing leap second record not found.");
-                    logger.LogInformation("Existing leap second record not found.");
+                    Log.Information("Existing leap second record not found.");
                     iersBulletinC = new IersBulletinC();
                     astroDbContext.IersBulletinCs.Add(iersBulletinC);
                 }
                 else
                 {
                     // Console.WriteLine("Existing leap second record found.");
-                    logger.LogInformation("Existing leap second record found.");
+                    Log.Information("Existing leap second record found.");
                     continue;
                 }
 
@@ -202,7 +199,7 @@ public class LeapSecondImportService(
                     iersBulletinC.Value = 0;
                     iersBulletinC.LeapSecondDate = null;
                     // Console.WriteLine("No leap second.");
-                    logger.LogInformation("No leap second.");
+                    Log.Information("No leap second.");
                 }
                 else
                 {
@@ -210,7 +207,7 @@ public class LeapSecondImportService(
                     if (matches.Count == 0)
                     {
                         string error = "PARSE ERROR: Could not detect leap second value.";
-                        logger.LogInformation("{Error}", error);
+                        Log.Information("{Error}", error);
                         throw new InvalidOperationException(error);
                     }
 
@@ -235,9 +232,9 @@ public class LeapSecondImportService(
                     }
                 }
                 // Console.WriteLine($"Value = {iersBulletinC.Value}");
-                logger.LogInformation("Value = {Value}", iersBulletinC.Value);
+                Log.Information("Value = {Value}", iersBulletinC.Value);
                 // Console.WriteLine($"Leap second date = {iersBulletinC.LeapSecondDate}");
-                logger.LogInformation("Leap second date = {Date}",
+                Log.Information("Leap second date = {Date}",
                     iersBulletinC.LeapSecondDate.ToString());
 
                 // Update or insert the record.
@@ -246,7 +243,7 @@ public class LeapSecondImportService(
         }
         catch (Exception ex)
         {
-            logger.LogInformation("Error occurred: {Message}", ex.Message);
+            Log.Information("Error occurred: {Message}", ex.Message);
             // Console.WriteLine($"Error occurred: {ex.Message}");
         }
     }

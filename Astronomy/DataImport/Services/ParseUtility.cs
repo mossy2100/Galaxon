@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Galaxon.Astronomy.Data.Services;
+namespace DataImport.Services;
 
 public static class ParseUtility
 {
