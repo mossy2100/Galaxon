@@ -3,7 +3,7 @@
 public class RotationalRecord : DataObject
 {
     // Link to owner.
-    public virtual int AstroObjectId { get; set; }
+    public int AstroObjectId { get; set; }
 
     public virtual AstroObject? AstroObject { get; set; }
 

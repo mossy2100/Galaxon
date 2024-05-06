@@ -30,12 +30,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? venus = astroObjectRepository.LoadByName("Venus", "Planet");
-        if (venus == null)
-        {
-            Assert.Fail("Venus could not be found in the database.");
-            return;
-        }
+        AstroObject venus = astroObjectRepository.LoadByName("Venus", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -60,12 +55,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? mars = astroObjectRepository.LoadByName("Mars", "Planet");
-        if (mars == null)
-        {
-            Assert.Fail("Mars could not be found in the database.");
-            return;
-        }
+        AstroObject mars = astroObjectRepository.LoadByName("Mars", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -93,12 +83,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? planet = astroObjectRepository.LoadByName("Earth", "Planet");
-        if (planet == null)
-        {
-            Assert.Fail("Earth could not be found in the database.");
-            return;
-        }
+        AstroObject planet = astroObjectRepository.LoadByName("Earth", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -157,12 +142,7 @@ public class ApsideServiceTests
         // Arrange.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
-        if (planet == null)
-        {
-            Assert.Fail($"{planetName} could not be found in the database.");
-            return;
-        }
+        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -239,12 +219,7 @@ public class ApsideServiceTests
         // Arrange.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject? planet = astroObjectRepository.LoadByName("Earth", "Planet");
-        if (planet == null)
-        {
-            Assert.Fail("Earth could not be found in the database.");
-            return;
-        }
+        AstroObject planet = astroObjectRepository.LoadByName("Earth", "Planet");
 
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
 

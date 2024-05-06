@@ -9,11 +9,10 @@ public class SeasonalMarkerRecord : DataObject
     ///   2 = Southward (September) equinox
     ///   3 = Southern (December) solstice
     /// </summary>
-    [Column(TypeName = "TINYINT")]
-    public int MarkerNumber { get; set; }
+    public byte MarkerNumber { get; set; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker.
     /// </summary>
-    public DateTime DateTimeUtcUsno { get; set; }
+    public DateTime? DateTimeUtcUsno { get; set; }
 }

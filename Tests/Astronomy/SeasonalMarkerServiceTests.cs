@@ -55,17 +55,19 @@ public class SeasonalMarkerServiceTests
         SeasonalMarkerService seasonalMarkerService =
             ServiceManager.GetService<SeasonalMarkerService>();
         List<SeasonalMarkerRecord> seasonalMarkers =
-            astroDbContext.SeasonalMarkers.OrderBy(sm => sm.DateTimeUtcUsno).ToList();
+            astroDbContext.SeasonalMarkers.Where(sm => sm.DateTimeUtcUsno != null)
+                .OrderBy(sm => sm.DateTimeUtcUsno!.Value).ToList();
 
         // Check each.
         foreach (SeasonalMarkerRecord seasonalMarker in seasonalMarkers)
         {
             // Arrange.
-            DateTime expected = seasonalMarker.DateTimeUtcUsno;
+            DateTime expected = seasonalMarker.DateTimeUtcUsno!.Value;
 
             // Act.
             DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
-                seasonalMarker.DateTimeUtcUsno.Year, (ESeasonalMarker)seasonalMarker.MarkerNumber);
+                seasonalMarker.DateTimeUtcUsno.Value.Year,
+                (ESeasonalMarker)seasonalMarker.MarkerNumber);
 
             // Assert.
             DateTimeAssert.AreEqual(expected, actual, maxDiff);

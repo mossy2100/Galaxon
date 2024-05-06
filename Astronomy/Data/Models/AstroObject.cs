@@ -28,7 +28,7 @@ public class AstroObject : DataObject
     // Relationships
 
     // Link to parent object (i.e. the object being orbited).
-    public virtual int? ParentId { get; set; }
+    public int? ParentId { get; set; }
 
     public virtual AstroObject? Parent { get; set; }
 
@@ -118,7 +118,7 @@ public class AstroObject : DataObject
             return Name;
         }
 
-        // If there's no name, but there is a number, use that. (What cases?)
+        // If there's no name, but there is a number, use that.
         if (Number != null)
         {
             return $"{Number}";

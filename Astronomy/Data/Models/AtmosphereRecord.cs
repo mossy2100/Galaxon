@@ -4,37 +4,40 @@ namespace Galaxon.Astronomy.Data.Models;
 
 public class AtmosphereRecord : DataObject
 {
-    #region Constructor
-
     /// <summary>
     /// Default constructor.
     /// </summary>
     public AtmosphereRecord() { }
 
-    #endregion Constructor
+    /// <summary>
+    /// Foreign key of containing Atmosphere object.
+    /// </summary>
+    public int AstroObjectId { get; set; }
 
-    #region Properties
-
-    // Link to owner.
-    public virtual int AstroObjectId { get; set; }
-
+    /// <summary>
+    /// Reference to containing Atmosphere object.
+    /// </summary>
     public virtual AstroObject? AstroObject { get; set; }
 
-    // Surface pressure (Pa).
+    /// <summary>
+    /// Surface pressure (Pa).
+    /// </summary>
     public double? SurfacePressure { get; set; }
 
-    // Scale height (km).
+    /// <summary>
+    /// Scale height (km).
+    /// </summary>
     public double? ScaleHeight { get; set; }
 
-    // Atmosphere constituents.
+    /// <summary>
+    /// Atmosphere constituents.
+    /// </summary>
     public virtual List<AtmosphereConstituent> Constituents { get; set; } = [];
 
-    // Is it a surface-bounded exosphere?
+    /// <summary>
+    /// Is it a surface-bounded exosphere?
+    /// </summary>
     public bool? IsSurfaceBoundedExosphere { get; set; }
-
-    #endregion Properties
-
-    #region Methods
 
     /// <summary>
     /// Add a constituent to the atmosphere.
@@ -73,6 +76,4 @@ public class AtmosphereRecord : DataObject
             constituent.Percentage = percentage;
         }
     }
-
-    #endregion Methods
 }

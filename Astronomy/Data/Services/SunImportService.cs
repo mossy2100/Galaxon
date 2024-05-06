@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Core.Exceptions;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
@@ -15,18 +16,19 @@ public class SunImportService(
     /// </summary>
     public void Import()
     {
-        AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
-        if (sun == null)
+        AstroObject sun;
+        try
+        {
+            sun = astroObjectRepository.LoadByName("Sun", "Star");
+            Console.WriteLine("Updating the Sun in the database.");
+        }
+        catch (DataNotFoundException)
         {
             Console.WriteLine("Adding the Sun to the database.");
-            // Create tne new object.
+            // Create new object.
             sun = new AstroObject("Sun");
             astroDbContext.AstroObjects.Add(sun);
             astroDbContext.SaveChanges();
-        }
-        else
-        {
-            Console.WriteLine("Updating the Sun in the database.");
         }
 
         // Add the Sun to the right groups.

@@ -86,11 +86,7 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
     public Coordinates CalcPlanetPosition(string planetName, double jdtt)
     {
         // Load the planet.
-        AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
-        if (planet == null)
-        {
-            throw new DataNotFoundException($"Planet '{planetName}' not found in the database.");
-        }
+        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Call the other method.
         return CalcPlanetPosition(planet, jdtt);

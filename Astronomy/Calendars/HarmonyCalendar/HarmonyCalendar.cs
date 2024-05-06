@@ -197,9 +197,10 @@ public class HarmonyCalendar : Calendar
     {
         using AstroDbContext db = new ();
         List<SeasonalMarkerRecord> seasonalMarkers = db.SeasonalMarkers
-            .Where(sm => sm.DateTimeUtcUsno.Year == year)
+            .Where(sm => sm.DateTimeUtcUsno != null && sm.DateTimeUtcUsno.Value.Year == year)
             .OrderBy(sm => sm.DateTimeUtcUsno)
             .ToList();
+
         if (seasonalMarkers.Count == 0)
         {
             // I'm not using IsValidYear() here because internal methods need access to the full
@@ -207,7 +208,8 @@ public class HarmonyCalendar : Calendar
             // implement the actual astronomical calculations.
             throw new ArgumentOutOfRangeException(nameof(year), "Year outside valid range.");
         }
-        return seasonalMarkers.Select(sm => sm.DateTimeUtcUsno).ToArray();
+
+        return seasonalMarkers.Select(sm => sm.DateTimeUtcUsno!.Value).ToArray();
     }
 
     public static DateTime GetSeasonalMarker(int year, ESeasonalMarker seasonalMarkerNumber) =>

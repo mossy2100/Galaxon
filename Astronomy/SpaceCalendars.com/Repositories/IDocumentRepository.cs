@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.SpaceCalendars.com.Models;
+using Galaxon.Astronomy.Data.Models;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 

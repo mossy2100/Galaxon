@@ -1,4 +1,4 @@
-﻿using Galaxon.Astronomy.SpaceCalendars.com.Models;
+﻿using Galaxon.Astronomy.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

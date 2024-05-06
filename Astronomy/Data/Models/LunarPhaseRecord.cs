@@ -14,8 +14,7 @@ public class LunarPhaseRecord : DataObject
     ///   2 = Full Moon
     ///   3 = Third Quarter
     /// </summary>
-    [Column(TypeName = "TINYINT")]
-    public int PhaseNumber { get; set; }
+    public byte PhaseNumber { get; set; }
 
     /// <summary>
     /// The UTC datetime of the lunar phase event according to AstroPixels.

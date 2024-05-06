@@ -44,8 +44,8 @@ public class EasterDateImportService(
                 DateOnly newEasterDate = new (year, month, day);
 
                 // See if we already have one for this year.
-                EasterDate? existingEasterDate = astroDbContext.EasterDates
-                    .FirstOrDefault(ed => ed.Date.Year == year);
+                EasterDate? existingEasterDate =
+                    astroDbContext.EasterDates.FirstOrDefault(ed => ed.Date.Year == year);
 
                 // Add or update the record as needed.
                 if (existingEasterDate == null)
@@ -63,7 +63,8 @@ public class EasterDateImportService(
                     //     $"Dates for {year} are not the same! Existing = {existingEasterDate.Date}, new = {newEasterDate}");
                     logger.LogWarning(
                         "Dates for {Year} are not the same. Not updating record. Existing = {ExistingEasterDate}, new = {NewEasterDate}",
-                        year, existingEasterDate.Date.ToIsoString(), newEasterDate.ToIsoString());
+                        year, existingEasterDate.Date.ToIsoString(),
+                        newEasterDate.ToIsoString());
                 }
                 else
                 {

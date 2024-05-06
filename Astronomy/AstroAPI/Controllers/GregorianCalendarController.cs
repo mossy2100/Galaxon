@@ -54,11 +54,7 @@ public class GregorianCalendarController(
 
             // Add the events.
             // Apsides.
-            AstroObject? earth = astroObjectRepository.LoadByName("Earth", "Planet");
-            if (earth == null)
-            {
-                throw new DataNotFoundException("Could not load Earth from the database.");
-            }
+            AstroObject earth = astroObjectRepository.LoadByName("Earth", "Planet");
             (double jdtt, _) = apsideService.GetClosestApside(earth, EApside.Periapsis, TimeScales.DecimalYearToJulianDate(year));
             dto.Events.Add(TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt).ToIsoString(), "Perihelion");
             (jdtt, _) = apsideService.GetClosestApside(earth, EApside.Apoapsis, TimeScales.DecimalYearToJulianDate(year + 0.5));

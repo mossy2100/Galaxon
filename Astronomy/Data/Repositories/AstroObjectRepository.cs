@@ -1,4 +1,5 @@
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Core.Exceptions;
 
 namespace Galaxon.Astronomy.Data.Repositories;
 
@@ -85,15 +86,23 @@ public class AstroObjectRepository(
     /// Examples:
     ///     Load("Earth");
     ///     Load("Ceres", "Dwarf planet");
-    /// If there's more than one matching result, an exception will be thrown.
+    /// If there's not exactly one matching result, an exception will be thrown.
     /// </summary>
     /// <param name="astroObjectName">The object's name.</param>
     /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
     /// "Plutoid", etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObject? LoadByName(string astroObjectName, string? groupName = null)
+    public AstroObject LoadByName(string astroObjectName, string? groupName = null)
     {
-        return Load(astroObjectName, null, groupName);
+        AstroObject? obj = Load(astroObjectName, null, groupName);
+
+        if (obj == null)
+        {
+            string groupName2 = groupName == null ? "object" : groupName.ToLower();
+            throw new DataNotFoundException($"Could not find {groupName2} {astroObjectName} in the database.");
+        }
+
+        return obj;
     }
 
     /// <summary>
@@ -108,9 +117,17 @@ public class AstroObjectRepository(
     /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
     /// etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObject? LoadByNumber(int astroObjectNumber, string? groupName = null)
+    public AstroObject LoadByNumber(int astroObjectNumber, string? groupName = null)
     {
-        return Load(null, astroObjectNumber, groupName);
+        AstroObject? obj = Load(null, astroObjectNumber, groupName);
+
+        if (obj == null)
+        {
+            string groupName2 = groupName == null ? "object" : groupName.ToLower();
+            throw new DataNotFoundException($"Could not find {groupName2} {astroObjectNumber} in the database.");
+        }
+
+        return obj;
     }
 
     /// <summary>

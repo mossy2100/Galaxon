@@ -70,6 +70,11 @@ public class AstroDbContext : DbContext
 
     public DbSet<VSOP87DRecord> VSOP87DRecords => Set<VSOP87DRecord>();
 
+    // ---------------------------------------------------------------------------------------------
+    // Website documents.
+
+    public DbSet<Document> Documents => Set<Document>();
+
     #endregion Database tables
 
     /// <summary>

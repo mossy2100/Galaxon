@@ -6,35 +6,30 @@
 public class AtmosphereConstituent : DataObject
 {
     /// <summary>
-    /// Gets or sets the foreign key referencing the parent AtmosphereRecord object.
+    /// Foreign key referencing the parent AtmosphereRecord object.
     /// </summary>
-    public virtual int AtmosphereId { get; set; }
+    public int AtmosphereId { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference to the parent AtmosphereRecord object.
+    /// Reference to the parent AtmosphereRecord object.
     /// </summary>
     public virtual AtmosphereRecord Atmosphere { get; set; } = new ();
 
     /// <summary>
-    /// Gets or sets the link to the gas molecule.
+    /// Foreign key of the gas molecule.
     /// </summary>
-    public virtual int MoleculeId { get; set; }
+    public int MoleculeId { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference to the gas molecule.
+    /// Reference to the gas molecule.
     /// </summary>
     public virtual Molecule Molecule { get; set; } = new ();
 
     /// <summary>
-    /// Gets or sets the percentage of the gas in the atmosphere by volume.
+    /// Percentage of the gas in the atmosphere by volume.
     /// </summary>
     /// <remarks>
     /// This property is nullable as the exact percentage is not always known.
     /// </remarks>
     public double? Percentage { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AtmosphereConstituent"/> class.
-    /// </summary>
-    public AtmosphereConstituent() { }
 }

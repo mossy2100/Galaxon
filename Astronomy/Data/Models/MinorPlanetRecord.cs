@@ -5,7 +5,7 @@ namespace Galaxon.Astronomy.Data.Models;
 public class MinorPlanetRecord : DataObject
 {
     // Link to owner.
-    public virtual int AstroObjectId { get; set; }
+    public int AstroObjectId { get; set; }
 
     public virtual AstroObject? AstroObject { get; set; }
 
@@ -30,7 +30,7 @@ public class MinorPlanetRecord : DataObject
     public bool? IsCriticalListNumberedObject { get; set; }
 
     // The object a trojan or quasi-satellite is co-orbital with.
-    public virtual int? CoOrbitalObjectId { get; set; }
+    public int? CoOrbitalObjectId { get; set; }
 
     public virtual AstroObject? CoOrbitalObject { get; set; }
 

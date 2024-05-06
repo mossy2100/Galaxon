@@ -33,11 +33,7 @@ public class ApsideController(
         {
             planetName = "Earth";
         }
-        AstroObject? planet = astroObjectRepository.LoadByName(planetName, "Planet");
-        if (planet == null)
-        {
-            return Program.ReturnException(this, $"Invalid planet name '{planetName}'.");
-        }
+        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Convert the apside from a character to an enum value.
         EApside apside;

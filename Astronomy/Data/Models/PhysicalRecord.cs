@@ -7,7 +7,7 @@ public class PhysicalRecord : DataObject
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>
-    public virtual int AstroObjectId { get; set; }
+    public int AstroObjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.

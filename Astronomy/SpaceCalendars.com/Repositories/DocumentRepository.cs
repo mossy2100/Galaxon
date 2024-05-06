@@ -1,18 +1,18 @@
-using Galaxon.Astronomy.SpaceCalendars.com.Models;
+using Galaxon.Astronomy.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
-public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepository
+public class DocumentRepository(ApplicationDbContext astroDbContext) : IDocumentRepository
 {
     public Document? GetByTitle(string title)
     {
-        return dbContext.Documents.FirstOrDefault(doc => doc.Title == title);
+        return astroDbContext.Documents.FirstOrDefault(doc => doc.Title == title);
     }
 
     public IEnumerable<Document> GetPublished(bool published = true)
     {
-        return dbContext.Documents
+        return astroDbContext.Documents
             .Where(doc => doc.Published == published)
             .OrderBy(doc => doc.Order);
     }
@@ -40,7 +40,7 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
 
     public int Reorder(int? folderId = null, int order = 0)
     {
-        List<Document> docs = dbContext.Documents
+        List<Document> docs = astroDbContext.Documents
             .Where(doc => doc.FolderId == folderId)
             .OrderBy(doc => doc.Order).ToList();
 
@@ -48,7 +48,7 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
         {
             order += 2;
             doc.Order = order;
-            dbContext.SaveChanges();
+            astroDbContext.SaveChanges();
 
             // Reorder children, if any.
             order = Reorder(doc.Id, order);
@@ -61,31 +61,31 @@ public class DocumentRepository(ApplicationDbContext dbContext) : IDocumentRepos
 
     public IEnumerable<Document> GetAll()
     {
-        return dbContext.Documents.OrderBy(doc => doc.Order);
+        return astroDbContext.Documents.OrderBy(doc => doc.Order);
     }
 
     public Document? GetById(int id)
     {
-        return dbContext.Documents.FirstOrDefault(doc => doc.Id == id);
+        return astroDbContext.Documents.FirstOrDefault(doc => doc.Id == id);
     }
 
     public void Create(Document doc)
     {
-        dbContext.Documents.Add(doc);
-        dbContext.SaveChanges();
+        astroDbContext.Documents.Add(doc);
+        astroDbContext.SaveChanges();
     }
 
     public void Update(Document doc)
     {
-        dbContext.Documents.Update(doc);
-        dbContext.SaveChanges();
+        astroDbContext.Documents.Update(doc);
+        astroDbContext.SaveChanges();
     }
 
     public void Delete(int id)
     {
         Document doc = new () { Id = id };
-        dbContext.Entry(doc).State = EntityState.Deleted;
-        dbContext.SaveChanges();
+        astroDbContext.Entry(doc).State = EntityState.Deleted;
+        astroDbContext.SaveChanges();
     }
 
     #endregion IRepository methods

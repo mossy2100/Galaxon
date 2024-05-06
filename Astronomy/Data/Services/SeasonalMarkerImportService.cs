@@ -1,6 +1,7 @@
 using Galaxon.Astronomy.Data.DataTransferObjects;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Collections;
 using Galaxon.Time;
 using Microsoft.OpenApi.Extensions;
@@ -8,11 +9,13 @@ using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.Data.Services;
 
-public class SeasonalMarkerImportService
+public class SeasonalMarkerImportService(
+    AstroDbContext astroDbContext,
+    AstroObjectRepository astroObjectRepository)
 {
     public async Task Import()
     {
-        using AstroDbContext astroDbContext = new ();
+        AstroObject earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
         for (int year = 1700; year <= 2100; year++)
         {
@@ -90,9 +93,9 @@ public class SeasonalMarkerImportService
                             {
                                 // Construct the SeasonalMarker record.
                                 SeasonalMarkerRecord newSeasonalMarkerRecord =
-                                    new()
+                                    new ()
                                     {
-                                        MarkerNumber = (int)seasonalMarker,
+                                        MarkerNumber = (byte)seasonalMarker,
                                         DateTimeUtcUsno = dt
                                     };
                                 string seasonalMarkerTypeName = seasonalMarker.GetDisplayName();
@@ -102,8 +105,9 @@ public class SeasonalMarkerImportService
                                 // Update or insert the record.
                                 SeasonalMarkerRecord? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                                        sm.MarkerNumber == (int)seasonalMarker
-                                        && sm.DateTimeUtcUsno.Year == year);
+                                        sm.MarkerNumber == (byte)seasonalMarker
+                                        && sm.DateTimeUtcUsno != null
+                                        && sm.DateTimeUtcUsno.Value.Year == year);
                                 if (existingSeasonalMarker == null)
                                 {
                                     astroDbContext.SeasonalMarkers.Add(newSeasonalMarkerRecord);
@@ -118,9 +122,12 @@ public class SeasonalMarkerImportService
                             else
                             {
                                 // Construct the Apside record.
+                                int k = dt.Year - 2000;
                                 ApsideRecord newApsideRecord = new ()
                                 {
-                                    ApsideNumber = (int)apside,
+                                    AstroObjectId = earth.Id,
+                                    CycleNumber = k,
+                                    ApsideNumber = (byte)apside,
                                     DateTimeUtcUsno = dt
                                 };
                                 string apsideTypeName = apside.GetDisplayName();
@@ -129,9 +136,11 @@ public class SeasonalMarkerImportService
                                 // Update or insert the record.
                                 ApsideRecord? existingApside =
                                     astroDbContext.Apsides.FirstOrDefault(a =>
-                                        a.ApsideNumber == (int)apside
-                                        && a.DateTimeUtcUsno.Year == year
-                                        && a.DateTimeUtcUsno.Month == usm.month);
+                                        a.AstroObjectId == earth.Id
+                                        && a.ApsideNumber == (byte)apside
+                                        && a.DateTimeUtcUsno != null
+                                        && a.DateTimeUtcUsno.Value.Year == year
+                                        && a.DateTimeUtcUsno.Value.Month == usm.month);
                                 if (existingApside == null)
                                 {
                                     astroDbContext.Apsides.Add(newApsideRecord);

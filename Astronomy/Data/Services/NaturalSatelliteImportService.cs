@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Core.Exceptions;
 using Galaxon.Time;
 using HtmlAgilityPack;
 
@@ -45,35 +46,40 @@ public class NaturalSatelliteImportService
                             int offset = satelliteName == "Namaka" ? -1 : 0;
 
                             // Load the satellite record from the database, if present.
-                            AstroObject? satellite =
-                                astroObjectRepository.LoadByName(satelliteName, "Satellite");
-
-                            // Create or update the satellite record as required.
-                            if (satellite == null)
+                            AstroObject satellite;
+                            try
+                            {
+                                // Update satellite in the database.
+                                satellite =
+                                    astroObjectRepository.LoadByName(satelliteName, "Satellite");
+                                Console.WriteLine($"Updating satellite {satelliteName}.");
+                                astroDbContext.AstroObjects.Attach(satellite);
+                            }
+                            catch (DataNotFoundException)
                             {
                                 // Create a new satellite in the database.
                                 Console.WriteLine($"Adding new satellite {satelliteName}.");
                                 satellite = new AstroObject(satelliteName);
                                 astroDbContext.AstroObjects.Add(satellite);
                             }
-                            else
-                            {
-                                // Update satellite in the database.
-                                Console.WriteLine($"Updating satellite {satelliteName}.");
-                                astroDbContext.AstroObjects.Attach(satellite);
-                            }
 
                             // Planet or dwarf planet the satellite orbits.
                             string parentName = cells[2 + offset].InnerText.Trim();
                             Console.WriteLine($"Parent name: {parentName}");
-                            AstroObject? parent =
-                                astroObjectRepository.LoadByName(parentName, "Planet");
-                            if (parent == null)
+                            AstroObject parent;
+                            try
+                            {
+                                parent = astroObjectRepository.LoadByName(parentName, "Planet");
+                            }
+                            catch (DataNotFoundException)
                             {
                                 // Try dwarf planet.
-                                parent = astroObjectRepository.LoadByName(parentName,
-                                    "Dwarf planet");
-                                if (parent == null)
+                                try
+                                {
+                                    parent = astroObjectRepository.LoadByName(parentName,
+                                        "Dwarf planet");
+                                }
+                                catch (DataNotFoundException)
                                 {
                                     Console.WriteLine(
                                         $"No parent object '{parentName}' found; skipping this item.");

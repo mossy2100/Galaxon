@@ -83,7 +83,7 @@ public class VSOP87ImportService(
 
             // Get the index (rank) of the term within a series (n).
             string strIndex = line.Substring(6, 5).Trim();
-            if (!ushort.TryParse(strIndex, out ushort index))
+            if (!byte.TryParse(strIndex, out byte index))
             {
                 throw new InvalidOperationException("Could not read index.");
             }

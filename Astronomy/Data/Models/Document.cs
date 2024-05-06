@@ -1,25 +1,19 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Galaxon.Astronomy.SpaceCalendars.com.Models;
+namespace Galaxon.Astronomy.Data.Models;
 
 /// <summary>
 /// Represents a document or a folder within the application.
 /// </summary>
-public class Document
+public class Document : DataObject
 {
-    /// <summary>
-    /// Unique identifier for the Document.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// The title of the document. Required and limited to 255 characters.
     /// </summary>
     [Required]
     [MaxLength(255)]
     [StringLength(255)]
-    [Column(TypeName = "TINYTEXT")]
+    [Column(TypeName = "tinytext")]
     public string Title { get; set; } = "";
 
     /// <summary>
@@ -36,7 +30,7 @@ public class Document
     /// <summary>
     /// The content of the document.
     /// </summary>
-    [Column(TypeName = "LONGTEXT")]
+    [Column(TypeName = "longtext")]
     public string? Content { get; set; } = "";
 
     /// <summary>
@@ -48,12 +42,12 @@ public class Document
     /// <summary>
     /// Navigation property for the folder containing this document.
     /// </summary>
-    public Document? Folder { get; set; }
+    public virtual Document? Folder { get; set; }
 
     /// <summary>
     /// If this document is a folder, contains the documents within it.
     /// </summary>
-    public List<Document>? Documents { get; set; }
+    public virtual List<Document>? Documents { get; set; }
 
     /// <summary>
     /// The order of the document within its folder.

@@ -2,6 +2,7 @@
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Astronomy.Data.Services;
 using Galaxon.Core.Files;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -14,8 +15,13 @@ public class Program
     /// </summary>
     private static ServiceProvider? _serviceProvider;
 
-    public static async Task Main()
+    public static async Task Main(string[] args)
     {
+        if (EF.IsDesignTime)
+        {
+            return;
+        }
+
         SetupLogging();
         SetupServices();
 
@@ -25,7 +31,8 @@ public class Program
             // await ImportNaturalSatellites();
             // await ImportLunarPhases();
             // await ImportLeapSeconds();
-            TestDbContext();
+            // TestDbContext();
+            await ImportSeasonalMarkers();
         }
         catch (Exception ex)
         {

@@ -130,7 +130,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                 }
 
                 // Get the dates and times of the phases, if present.
-                for (int phaseNumber = 0; phaseNumber < 4; phaseNumber++)
+                for (byte phaseNumber = 0; phaseNumber < 4; phaseNumber++)
                 {
                     string dateStr = line.Substring(8 + phaseNumber * 18, 13);
                     MatchCollection dateTimeMatches = rxDateTime.Matches(dateStr);
@@ -258,7 +258,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                         {
                             throw new InvalidOperationException("Error parsing lunar phase.");
                         }
-                        int phaseNumber = (int)phase;
+                        byte phaseNumber = (byte)phase;
 
                         // Construct the datetime.
                         DateOnly date = new (year, ulp.month, ulp.day);

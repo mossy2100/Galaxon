@@ -2,6 +2,7 @@ using System.Globalization;
 using CsvHelper;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Core.Exceptions;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
@@ -29,7 +30,7 @@ public class PlanetImportService(
     public void Import()
     {
         // Get the Sun.
-        AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
+        AstroObject sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         // Open the CSV file for parsing.
         string csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
@@ -51,20 +52,20 @@ public class PlanetImportService(
                 continue;
             }
 
-            AstroObject? planet = astroObjectRepository.LoadByName(name, "Planet");
-
-            if (planet == null)
+            AstroObject planet;
+            try
+            {
+                planet = astroObjectRepository.LoadByName(name, "Planet");
+                // Update planet in the database.
+                Console.WriteLine($"Updating planet {name}.");
+                astroDbContext.AstroObjects.Attach(planet);
+            }
+            catch (DataNotFoundException)
             {
                 // Create a new planet in the database.
                 Console.WriteLine($"Adding new planet {name}.");
                 planet = new AstroObject(name);
                 astroDbContext.AstroObjects.Add(planet);
-            }
-            else
-            {
-                // Update planet in the database.
-                Console.WriteLine($"Updating planet {name}.");
-                astroDbContext.AstroObjects.Attach(planet);
             }
 
             // Set the planet's basic parameters.

@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using Galaxon.Astronomy.SpaceCalendars.com.Models;
+using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Services;

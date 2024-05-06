@@ -8,7 +8,7 @@ public class VSOP87DRecord : DataObject
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
     /// </summary>
-    public virtual int AstroObjectId { get; set; }
+    public int AstroObjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
@@ -18,19 +18,16 @@ public class VSOP87DRecord : DataObject
     /// <summary>
     /// Gets or sets the variable used in the record.
     /// </summary>
-    [Column(TypeName = "CHAR(1)")]
     public char Variable { get; set; }
 
     /// <summary>
     /// Gets or sets the exponent used in the record.
     /// </summary>
-    [Column(TypeName = "TINYINT")]
     public byte Exponent { get; set; }
 
     /// <summary>
     /// Gets or sets the index used in the record.
     /// </summary>
-    [Column(TypeName = "SMALLINT")]
     public ushort Index { get; set; }
 
     /// <summary>

@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Core.Exceptions;
 using Galaxon.Quantities.Kinds;
 using HtmlAgilityPack;
 
@@ -13,11 +14,7 @@ public class DwarfPlanetImportService(
     public async Task Import()
     {
         // Get the Sun.
-        AstroObject? sun = astroObjectRepository.LoadByName("Sun", "Star");
-        if (sun == null)
-        {
-            throw new Exception("Could not load Sun from database.");
-        }
+        AstroObject sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         try
         {
@@ -59,22 +56,19 @@ public class DwarfPlanetImportService(
 
                             // Load the dwarf planet record from the database, if present.
                             Console.WriteLine($"Dwarf planet: {name}");
-                            AstroObject? dwarfPlanet =
-                                astroObjectRepository.LoadByName(name, "Dwarf planet");
-
-                            // Create or update the dwarf planet record as required.
-                            if (dwarfPlanet == null)
+                            AstroObject dwarfPlanet;
+                            try
+                            {
+                                dwarfPlanet = astroObjectRepository.LoadByName(name, "Dwarf planet");
+                                Console.WriteLine($"Updating dwarf planet {name}.");
+                                astroDbContext.AstroObjects.Attach(dwarfPlanet);
+                            }
+                            catch (DataNotFoundException)
                             {
                                 // Create a new dwarf planet in the database.
                                 Console.WriteLine($"Adding new dwarf planet {name}.");
                                 dwarfPlanet = new AstroObject(name);
                                 astroDbContext.AstroObjects.Add(dwarfPlanet);
-                            }
-                            else
-                            {
-                                // Update dwarf planet in the database.
-                                Console.WriteLine($"Updating dwarf planet {name}.");
-                                astroDbContext.AstroObjects.Attach(dwarfPlanet);
                             }
 
                             // Parent object.
