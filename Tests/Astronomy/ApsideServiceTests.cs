@@ -1,8 +1,8 @@
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
 
@@ -36,9 +36,10 @@ public class ApsideServiceTests
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
         DateTime dt0 = new (1978, 10, 15);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        double jdtt1 = apsideService.GetClosestApsideApprox(venus, EApside.Periapsis, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(venus, jdtt0);
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
         Console.WriteLine(jdtt1);
-        DateTime dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
+        DateTime dt1 = apsideEvent.DateTimeUtc;
         Console.WriteLine(dt1.ToIsoString());
 
         // Assert.
@@ -61,9 +62,10 @@ public class ApsideServiceTests
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
         DateTime dt0 = new (2032, 1, 1);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        double jdtt1 = apsideService.GetClosestApsideApprox(mars, EApside.Apoapsis, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(mars, jdtt0);
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
         Console.WriteLine(jdtt1);
-        DateTime dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
+        DateTime dt1 = apsideEvent.DateTimeUtc;
         Console.WriteLine(dt1.ToIsoString());
 
         // Assert.
@@ -89,8 +91,9 @@ public class ApsideServiceTests
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
         DateTime dt0 = new (1990, 1, 4);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        double jdtt1 = apsideService.GetClosestApsideApprox(planet, EApside.Periapsis, jdtt0);
-        DateTime dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
+        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(planet, jdtt0);
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
+        DateTime dt1 = apsideEvent.DateTimeUtc;
 
         // Output.
         Console.WriteLine(jdtt1);
@@ -148,11 +151,11 @@ public class ApsideServiceTests
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
         DateOnly dt0 = new (year, month, day);
         double jdtt0 = TimeScales.DateOnlyToJulianDate(dt0);
-        (double jdtt1, double actualRadiusInMetres) =
-            apsideService.GetClosestApside(planet, apside, jdtt0);
-        DateTime dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
-        double actualRadiusInAu =
-            actualRadiusInMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
+        ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
+        DateTime dt1 = apsideEvent.DateTimeUtc;
+        double actualRadiusInMetres = apsideEvent.RadiusInMetres!.Value;
+        double actualRadiusInAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
 
         // Output result.
         Console.WriteLine($"Event time = {dt1.ToIsoString()} = {jdtt1:F6} Julian Date (TT)");
@@ -231,16 +234,16 @@ public class ApsideServiceTests
         DateTime dtttExpected = dt0 + TimeSpan.FromHours(hours);
 
         // Act.
-        (double jdtt1, double actualRadiusInMetres) =
-            apsideService.GetClosestApside(planet, apside, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
+        double actualRadiusInMetres = apsideEvent.RadiusInMetres!.Value;
 
         // Get the computed event DateTime in Terrestrial (Dynamical) Time, matching the results in
         // the table in the book.
         DateTime dtttActual = TimeScales.JulianDateToDateTime(jdtt1);
 
         // Get the radius in AU.
-        double actualRadiusInAu =
-            actualRadiusInMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
+        double actualRadiusInAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
 
         // Output.
         Console.WriteLine($"Expected event datetime = {dtttExpected.ToIsoString()} (TT)");

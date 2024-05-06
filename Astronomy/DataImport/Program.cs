@@ -1,4 +1,5 @@
 ﻿using DataImport.Services;
+using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
@@ -27,7 +28,8 @@ public class Program
             // await ImportLunarPhases();
             // await ImportLeapSeconds();
             // TestDbContext();
-            await ImportSeasonalMarkers();
+            // await ImportSeasonalMarkers();
+            PrepopulateApsides();
         }
         catch (Exception ex)
         {
@@ -71,8 +73,14 @@ public class Program
             .AddScoped<AstroObjectGroupRepository>()
             .AddScoped<LeapSecondRepository>();
 
-        // Add services.
+        // Add astronomical algorithms services.
         serviceCollection
+            .AddScoped<ApsideService>()
+            .AddScoped<PlanetService>();
+
+        // Add import services.
+        serviceCollection
+            .AddScoped<ApsideImportService>()
             .AddScoped<AstroObjectGroupImportService>()
             .AddScoped<DwarfPlanetImportService>()
             .AddScoped<EasterDateImportService>()
@@ -177,5 +185,11 @@ public class Program
         {
             Console.WriteLine($"{planet.Number}: {planet.Name}");
         }
+    }
+
+    private static void PrepopulateApsides()
+    {
+        ApsideImportService apsideImportService = _serviceProvider!.GetRequiredService<ApsideImportService>();
+        apsideImportService.CacheCalculations();
     }
 }

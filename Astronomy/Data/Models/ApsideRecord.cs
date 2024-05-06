@@ -12,7 +12,7 @@ public class ApsideRecord : DataObject
     /// As per Chapter 38, Astronomical Algorithms (2nd ed.) by Jeen Meeus, this value (called 'k'
     /// in the book) is 0 or positive for dates after the beginning of 2000, negative for earlier.
     /// </summary>
-    public int CycleNumber { get; set; }
+    public int OrbitNumber { get; set; }
 
     /// <summary>
     /// This value is:

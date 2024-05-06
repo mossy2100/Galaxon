@@ -122,36 +122,34 @@ public class SeasonalMarkerImportService(
                             }
                             else
                             {
-                                // Construct the Apside record.
-                                int k = dt.Year - 2000;
-                                ApsideRecord newApsideRecord = new ()
-                                {
-                                    AstroObjectId = earth.Id,
-                                    CycleNumber = k,
-                                    ApsideNumber = (byte)apside,
-                                    DateTimeUtcUsno = dt
-                                };
-                                string apsideTypeName = apside.GetDisplayName();
-                                Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
-
-                                // Update or insert the record.
-                                ApsideRecord? existingApside =
-                                    astroDbContext.Apsides.FirstOrDefault(a =>
-                                        a.AstroObjectId == earth.Id
-                                        && a.ApsideNumber == (byte)apside
-                                        && a.DateTimeUtcUsno != null
-                                        && a.DateTimeUtcUsno.Value.Year == year
-                                        && a.DateTimeUtcUsno.Value.Month == usm.month);
-                                if (existingApside == null)
-                                {
-                                    astroDbContext.Apsides.Add(newApsideRecord);
-                                    await astroDbContext.SaveChangesAsync();
-                                }
-                                else if (existingApside.DateTimeUtcUsno != dt)
-                                {
-                                    existingApside.DateTimeUtcUsno = dt;
-                                    await astroDbContext.SaveChangesAsync();
-                                }
+                                // // Construct the Apside record.
+                                // double k = Math.Round((TimeScales.DateTimeToDecimalYear(dt) - 2000) * 2) / 2;
+                                // int orbitNumber = (int)Math.Floor(k);
+                                // ApsideRecord newApsideRecord = new ()
+                                // {
+                                //     AstroObjectId = earth.Id,
+                                //     OrbitNumber = orbitNumber,
+                                //     ApsideNumber = (byte)apside,
+                                //     DateTimeUtcUsno = dt
+                                // };
+                                // string apsideTypeName = apside.GetDisplayName();
+                                // Console.WriteLine($"{apsideTypeName,60}: {dt.ToIsoString()}");
+                                //
+                                // // Update or insert the record.
+                                // ApsideRecord? existingApside =
+                                //     astroDbContext.Apsides.FirstOrDefault(a =>
+                                //         a.AstroObjectId == earth.Id
+                                //         && a.OrbitNumber == orbitNumber
+                                //         && a.ApsideNumber == (byte)apside);
+                                // if (existingApside == null)
+                                // {
+                                //     astroDbContext.Apsides.Add(newApsideRecord);
+                                // }
+                                // else if (existingApside.DateTimeUtcUsno != dt)
+                                // {
+                                //     existingApside.DateTimeUtcUsno = dt;
+                                // }
+                                // await astroDbContext.SaveChangesAsync();
                             }
                         }
                     }

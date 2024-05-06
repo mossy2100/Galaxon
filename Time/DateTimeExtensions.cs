@@ -166,7 +166,7 @@ public static class DateTimeExtensions
     /// <param name="dt">The original DateTime</param>
     /// <param name="ts">The time unit duration.</param>
     /// <returns>The rounded-off DateTime.</returns>
-    public static DateTime Round(DateTime dt, TimeSpan ts)
+    public static DateTime Round(this DateTime dt, TimeSpan ts)
     {
         long ticks = (long)Math.Round((double)dt.Ticks / ts.Ticks) * ts.Ticks;
         return new DateTime(ticks, dt.Kind);
@@ -177,7 +177,7 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="dt"></param>
     /// <returns>A new DateTime equal to the parameter rounded off to the nearest second.</returns>
-    public static DateTime RoundToNearestSecond(DateTime dt)
+    public static DateTime RoundToNearestSecond(this DateTime dt)
     {
         return Round(dt, TimeSpan.FromSeconds(1));
     }
@@ -187,9 +187,19 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="dt"></param>
     /// <returns>A new DateTime equal to the parameter rounded off to the nearest minute.</returns>
-    public static DateTime RoundToNearestMinute(DateTime dt)
+    public static DateTime RoundToNearestMinute(this DateTime dt)
     {
         return Round(dt, TimeSpan.FromMinutes(1));
+    }
+
+    /// <summary>
+    /// Round off a datetime to the nearest hour.
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns>A new DateTime equal to the parameter rounded off to the nearest hour.</returns>
+    public static DateTime RoundToNearestHour(this DateTime dt)
+    {
+        return Round(dt, TimeSpan.FromHours(1));
     }
 
     /// <summary>
@@ -197,7 +207,7 @@ public static class DateTimeExtensions
     /// </summary>
     /// <param name="dt"></param>
     /// <returns>A new DateTime equal to the parameter rounded off to the nearest midnight.</returns>
-    public static DateTime RoundToNearestMidnight(DateTime dt)
+    public static DateTime RoundToNearestDay(this DateTime dt)
     {
         return Round(dt, TimeSpan.FromDays(1));
     }

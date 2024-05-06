@@ -99,7 +99,8 @@ public class AstroObjectRepository(
         if (obj == null)
         {
             string groupName2 = groupName == null ? "object" : groupName.ToLower();
-            throw new DataNotFoundException($"Could not find {groupName2} {astroObjectName} in the database.");
+            throw new DataNotFoundException(
+                $"Could not find {groupName2} {astroObjectName} in the database.");
         }
 
         return obj;
@@ -124,7 +125,8 @@ public class AstroObjectRepository(
         if (obj == null)
         {
             string groupName2 = groupName == null ? "object" : groupName.ToLower();
-            throw new DataNotFoundException($"Could not find {groupName2} {astroObjectNumber} in the database.");
+            throw new DataNotFoundException(
+                $"Could not find {groupName2} {astroObjectNumber} in the database.");
         }
 
         return obj;

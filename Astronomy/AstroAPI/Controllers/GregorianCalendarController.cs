@@ -52,13 +52,27 @@ public class GregorianCalendarController(
             YearInfoDto dto = new (year, isLeapYear, nDays, hasLeapSecond, leapSecondDate,
                 dayOfWeek, jdut, century, millennium, solarCycle);
 
-            // Add the events.
-            // Apsides.
+            // Load planet Earth.
             AstroObject earth = astroObjectRepository.LoadByName("Earth", "Planet");
-            (double jdtt, _) = apsideService.GetClosestApside(earth, EApside.Periapsis, TimeScales.DecimalYearToJulianDate(year));
-            dto.Events.Add(TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt).ToIsoString(), "Perihelion");
-            (jdtt, _) = apsideService.GetClosestApside(earth, EApside.Apoapsis, TimeScales.DecimalYearToJulianDate(year + 0.5));
-            dto.Events.Add(TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt).ToIsoString(), "Aphelion");
+
+            // Add the events.
+
+            // Apsides.
+            // Perihelion.
+            ApsideEvent perihelion =
+                apsideService.GetClosestApside(earth, TimeScales.DecimalYearToJulianDate(year));
+            dto.Events.Add(
+                TimeScales
+                    .JulianDateTerrestrialToDateTimeUniversal(perihelion.JulianDateTerrestrial)
+                    .ToIsoString(), "Perihelion");
+
+            // Aphelion.
+            ApsideEvent aphelion = apsideService.GetClosestApside(earth,
+                TimeScales.DecimalYearToJulianDate(year + 0.5));
+            dto.Events.Add(
+                TimeScales
+                    .JulianDateTerrestrialToDateTimeUniversal(aphelion.JulianDateTerrestrial)
+                    .ToIsoString(), "Aphelion");
 
             // Seasonal markers.
             List<SeasonalMarkerEvent> seasonalMarkerEvents =

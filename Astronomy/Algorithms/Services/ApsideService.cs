@@ -1,10 +1,12 @@
 using System.Data;
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -48,13 +50,9 @@ public class ApsideService(
     /// Algorithm is from Chapter 38 in Astronomical Algorithms (2nd ed.) by Jeen Meeus (p. 269).
     /// </summary>
     /// <param name="planet">The planet.</param>
-    /// <param name="apside">Perihelion or aphelion.</param>
     /// <param name="jdtt">The approximate moment of the apside.</param>
-    /// <returns>
-    /// The moment of the apside as a Julian Date (TT), and the radius (distance to Sun) at this
-    /// moment.
-    /// </returns>
-    public double GetClosestApsideApprox(AstroObject planet, EApside apside, double jdtt)
+    /// <returns>The apside event information, excluding the radius (distance to the Sun).</returns>
+    public ApsideEvent GetClosestApsideApprox(AstroObject planet, double jdtt)
     {
         // Check the object is a major planet.
         if (!astroObjectGroupRepository.IsInGroup(planet, "Planet"))
@@ -71,7 +69,7 @@ public class ApsideService(
 
         // Convert the DateTime to a decimal year without doing any delta-T calculation, as the
         // input JD(TT) is only approximate.
-        double year = TimeScales.DateTimeToDecimalYear(TimeScales.JulianDateToDateTime(jdtt));
+        double year = TimeScales.JulianDateToDecimalYear(jdtt);
 
         // Get approximate value for k.
         double k = planet.Number switch
@@ -87,15 +85,9 @@ public class ApsideService(
             _ => 0
         };
 
-        // Round off k to nearest integer value for perihelion, or integer + 0.5 for aphelion.
-        if (apside == EApside.Periapsis)
-        {
-            k = double.Round(k);
-        }
-        else
-        {
-            k = double.Round(k - 0.5) + 0.5;
-        }
+        // Round off k to nearest 0.5.
+        k = Round(k * 2) / 2;
+        EApside apside = double.IsInteger(k) ? EApside.Periapsis : EApside.Apoapsis;
 
         // Get the coefficients for the given planet.
         double[] coeffs = _Coefficients[planet.Number.Value];
@@ -121,7 +113,14 @@ public class ApsideService(
             jdtt2 += correction;
         }
 
-        return jdtt2;
+        // Get the orbit number.
+        int orbitNumber = (int)Math.Floor(k);
+
+        // Get the datetime rounded off to the nearest minute.
+        DateTime dt2 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
+            .RoundToNearestMinute();
+
+        return new ApsideEvent(planet, orbitNumber, apside, jdtt2, dt2);
     }
 
     /// <summary>
@@ -131,13 +130,9 @@ public class ApsideService(
     /// Algorithm is from Chapter 38 in Astronomical Algorithms (2nd ed.) by Jeen Meeus (p. 269).
     /// </summary>
     /// <param name="planet">The planet.</param>
-    /// <param name="apside">Perihelion or aphelion.</param>
     /// <param name="jdtt">The approximate moment of the apside as a Julian Date (TT).</param>
-    /// <returns>
-    /// The moment of the apside as a Julian Date (TT), and the radius (distance to Sun) at this
-    /// moment.
-    /// </returns>
-    public (double, double) GetClosestApside(AstroObject planet, EApside apside, double jdtt)
+    /// <returns>The apside event information.</returns>
+    public ApsideEvent GetClosestApside(AstroObject planet, double jdtt)
     {
         // Get the orbital period in days.
         double? orbitalPeriodInSeconds = planet.Orbit?.SiderealOrbitPeriod;
@@ -148,7 +143,8 @@ public class ApsideService(
         double orbitalPeriodInDays = orbitalPeriodInSeconds.Value / TimeConstants.SECONDS_PER_DAY;
 
         // Get the approximate moment of the apside.
-        double jdtt1 = GetClosestApsideApprox(planet, apside, jdtt);
+        ApsideEvent approxApsideEvent = GetClosestApsideApprox(planet, jdtt);
+        double jdtt1 = approxApsideEvent.JulianDateTerrestrial;
 
         // Set the tolerance for the search. Ideally we want a result within one second of the
         // actual apside event.
@@ -158,7 +154,11 @@ public class ApsideService(
         Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius;
 
         // If we are looking for a minimum or a maximum radius.
-        Boolean findMax = apside == EApside.Apoapsis;
+        Boolean findMax = approxApsideEvent.Apside == EApside.Apoapsis;
+
+        // Result variables.
+        double jdttResult;
+        double radiusInMetresResult;
 
         // Use a golden-section search to find a more accurate result.
         // Handle Neptune differently because of the potential for a double minimum or maximum.
@@ -179,11 +179,13 @@ public class ApsideService(
             if ((!findMax && radiusInMetres3 < radiusInMetres4)
                 || (findMax && radiusInMetres3 > radiusInMetres4))
             {
-                return (jdtt3, radiusInMetres3);
+                jdttResult = jdtt3;
+                radiusInMetresResult = radiusInMetres3;
             }
             else
             {
-                return (jdtt4, radiusInMetres4);
+                jdttResult = jdtt4;
+                radiusInMetresResult = radiusInMetres4;
             }
         }
         else
@@ -192,7 +194,18 @@ public class ApsideService(
             double fracOfOrbit = orbitalPeriodInDays / 100;
             double a = jdtt1 - fracOfOrbit;
             double b = jdtt1 + fracOfOrbit;
-            return GoldenSectionSearch.FindExtremum(func, a, b, findMax, tolerance);
+            (jdttResult, radiusInMetresResult) =
+                GoldenSectionSearch.FindExtremum(func, a, b, findMax, tolerance);
         }
+
+        // Get the datetime of the event rounded off to the nearest minute.
+        DateTime dtResult = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
+            .RoundToNearestMinute();
+
+        // Compute the distance in AU.
+        double radiusInAu = radiusInMetresResult / Length.METRES_PER_ASTRONOMICAL_UNIT;
+
+        return new ApsideEvent(planet, approxApsideEvent.OrbitNumber, approxApsideEvent.Apside,
+            jdttResult, dtResult, radiusInMetresResult, radiusInAu);
     }
 }

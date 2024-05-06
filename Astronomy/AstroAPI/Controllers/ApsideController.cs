@@ -1,3 +1,4 @@
+using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -65,16 +66,17 @@ public class ApsideController(
         }
 
         // Calculate the apside.
-        double jdtt1;
         double rMetres;
         double rAu;
         DateTime dt1;
+        ApsideEvent apsideEvent;
         try
         {
             double jdtt = TimeScales.DateTimeToJulianDate(dt);
-            (jdtt1, rMetres) = apsideService.GetClosestApside(planet, apside, jdtt);
-            dt1 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt1);
-            rAu = rMetres / Length.METRES_PER_ASTRONOMICAL_UNIT;
+            apsideEvent = apsideService.GetClosestApside(planet, jdtt);
+            dt1 = apsideEvent.DateTimeUtc;
+            rMetres = apsideEvent.RadiusInMetres!.Value;
+            rAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
         }
         catch (Exception ex)
         {
