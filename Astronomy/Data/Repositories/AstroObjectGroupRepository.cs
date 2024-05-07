@@ -11,7 +11,7 @@ public class AstroObjectGroupRepository(AstroDbContext astroDbContext)
     /// </summary>
     /// <param name="name">The group name.</param>
     /// <returns>The found object or null.</returns>
-    public AstroObjectGroup? Load(string name)
+    public AstroObjectGroupRecord? Load(string name)
     {
         return astroDbContext.AstroObjectGroups.FirstOrDefault(g => g.Name == name);
     }
@@ -22,13 +22,13 @@ public class AstroObjectGroupRepository(AstroDbContext astroDbContext)
     /// <param name="name">The group name.</param>
     /// <param name="parent">The group's parent.</param>
     /// <returns>The updated group.</returns>
-    public AstroObjectGroup CreateOrUpdate(string name, AstroObjectGroup? parent = null)
+    public AstroObjectGroupRecord CreateOrUpdate(string name, AstroObjectGroupRecord? parent = null)
     {
-        AstroObjectGroup? group = Load(name);
+        AstroObjectGroupRecord? group = Load(name);
         if (group == null)
         {
             // The group was not found in the database. Create a new one.
-            group = new AstroObjectGroup
+            group = new AstroObjectGroupRecord
             {
                 Name = name,
                 Parent = parent
@@ -48,50 +48,50 @@ public class AstroObjectGroupRepository(AstroDbContext astroDbContext)
     /// <summary>
     /// Check if the object is in a certain group.
     /// </summary>
-    /// <param name="astroObject">The AstroObject to look for.</param>
-    /// <param name="group">The AstroObjectGroup to look in.</param>
+    /// <param name="astroObjectRecord">The AstroObject to look for.</param>
+    /// <param name="groupRecord">The AstroObjectGroup to look in.</param>
     /// <returns>If the object is in the specified group.</returns>
-    public bool IsInGroup(AstroObject astroObject, AstroObjectGroup group)
+    public bool IsInGroup(AstroObjectRecord astroObjectRecord, AstroObjectGroupRecord groupRecord)
     {
-        return astroObject.Groups?.Contains(group) ?? false;
+        return astroObjectRecord.Groups?.Contains(groupRecord) ?? false;
     }
 
     /// <summary>
     /// Check if the object is in a certain group.
     /// </summary>
-    /// <param name="astroObject">The AstroObject to look for.</param>
+    /// <param name="astroObjectRecord">The AstroObject to look for.</param>
     /// <param name="groupName">The name of the group to check (case sensitive).</param>
     /// <returns>If the object is in the specified group.</returns>
-    public bool IsInGroup(AstroObject astroObject, string groupName)
+    public bool IsInGroup(AstroObjectRecord astroObjectRecord, string groupName)
     {
-        return astroObject.Groups != null
-            && astroObject.Groups.Any(group => groupName.EqualsIgnoreCase(group.Name));
+        return astroObjectRecord.Groups != null
+            && astroObjectRecord.Groups.Any(group => groupName.EqualsIgnoreCase(group.Name));
     }
 
     /// <summary>
     /// Add the object to a group, if it's not already a member.
     /// </summary>
-    public void AddToGroup(AstroObject astroObject, AstroObjectGroup group)
+    public void AddToGroup(AstroObjectRecord astroObjectRecord, AstroObjectGroupRecord groupRecord)
     {
-        if (!IsInGroup(astroObject, group))
+        if (!IsInGroup(astroObjectRecord, groupRecord))
         {
-            astroObject.Groups ??= [];
-            astroObject.Groups.Add(group);
+            astroObjectRecord.Groups ??= [];
+            astroObjectRecord.Groups.Add(groupRecord);
         }
     }
 
     /// <summary>
     /// Add the object to a group, if it's not already a member.
     /// </summary>
-    /// <param name="astroObject">The AstroObject to add to the group.</param>
+    /// <param name="astroObjectRecord">The AstroObject to add to the group.</param>
     /// <param name="groupName">The group name.</param>
-    public void AddToGroup(AstroObject astroObject, string groupName)
+    public void AddToGroup(AstroObjectRecord astroObjectRecord, string groupName)
     {
-        AstroObjectGroup? group = Load(groupName);
+        AstroObjectGroupRecord? group = Load(groupName);
         if (group == null)
         {
             throw new DataNotFoundException($"Group '{groupName}' not found.");
         }
-        AddToGroup(astroObject, group);
+        AddToGroup(astroObjectRecord, group);
     }
 }

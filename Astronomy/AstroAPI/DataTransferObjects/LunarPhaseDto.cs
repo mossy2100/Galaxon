@@ -39,8 +39,8 @@ public record struct LunarPhaseDto
     public LunarPhaseDto(LunarPhaseEvent lunarPhase)
     {
         LunationNumber = lunarPhase.LunationNumber;
-        PhaseNumber = (int)lunarPhase.Phase;
-        Phase = lunarPhase.Phase.GetDisplayName();
+        PhaseNumber = (int)lunarPhase.Type;
+        Phase = lunarPhase.Type.GetDisplayName();
         // Round off to nearest minute.
         DateTime = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToIsoString();
     }

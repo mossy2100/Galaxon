@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class LeapSecond : DataObject
+public class LeapSecondRecord : DatabaseRecord
 {
     /// <summary>
     /// This will be:
@@ -12,6 +12,6 @@ public class LeapSecond : DataObject
     /// <summary>
     /// The date the leap second will be inserted (or skipped), if there is one.
     /// </summary>
-    [Column(TypeName = "DATE")]
-    public DateOnly LeapSecondDate { get; set; }
+    [Column(TypeName = "date")]
+    public DateOnly Date { get; set; }
 }

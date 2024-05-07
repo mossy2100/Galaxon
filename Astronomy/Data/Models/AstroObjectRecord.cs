@@ -4,9 +4,9 @@ namespace Galaxon.Astronomy.Data.Models;
 
 // Main class for astronomical objects.
 // All physical quantities are in SI units.
-public class AstroObject : DataObject
+public class AstroObjectRecord : DatabaseRecord
 {
-    public AstroObject(string? name = null, uint? number = null)
+    public AstroObjectRecord(string? name = null, uint? number = null)
     {
         Name = name;
         Number = number;
@@ -30,13 +30,13 @@ public class AstroObject : DataObject
     // Link to parent object (i.e. the object being orbited).
     public int? ParentId { get; set; }
 
-    public virtual AstroObject? Parent { get; set; }
+    public virtual AstroObjectRecord? Parent { get; set; }
 
     // Link to child objects (i.e. the objects orbiting this object).
-    public virtual List<AstroObject>? Children { get; set; }
+    public virtual List<AstroObjectRecord>? Children { get; set; }
 
     // The groups (populations/categories) this object belongs to.
-    public virtual List<AstroObjectGroup>? Groups { get; set; }
+    public virtual List<AstroObjectGroupRecord>? Groups { get; set; }
 
     // ---------------------------------------------------------------------------------------------
     // Additional properties records
@@ -73,7 +73,7 @@ public class AstroObject : DataObject
     /// <param name="apoapsis">The apoapsis in km.</param>
     /// <param name="semiMajorAxis">The semi-major axis in km.</param>
     /// <param name="eccentricity">The orbital eccentricity.</param>
-    public void SetOrbit(AstroObject parent, ulong? periapsis, ulong? apoapsis,
+    public void SetOrbit(AstroObjectRecord parent, ulong? periapsis, ulong? apoapsis,
         ulong? semiMajorAxis, double? eccentricity)
     {
         // Guard clauses.

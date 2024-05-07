@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents temperature range information.
 /// </summary>
-public class TempRange : DataObject
+public class TempRangeRecord : DatabaseRecord
 {
     /// <summary>
     /// Gets or sets the minimum temperature in the range.

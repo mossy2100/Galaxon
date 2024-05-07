@@ -18,7 +18,7 @@ public class SunImportService(
     /// </summary>
     public void Import()
     {
-        AstroObject sun;
+        AstroObjectRecord sun;
         try
         {
             sun = astroObjectRepository.LoadByName("Sun", "Star");
@@ -28,7 +28,7 @@ public class SunImportService(
         {
             Console.WriteLine("Adding the Sun to the database.");
             // Create new object.
-            sun = new AstroObject("Sun");
+            sun = new AstroObjectRecord("Sun");
             astroDbContext.AstroObjects.Add(sun);
             astroDbContext.SaveChanges();
         }
@@ -124,16 +124,16 @@ public class SunImportService(
         sun.Atmosphere.ScaleHeight = 140e3;
 
         // Make sure all the molecules are in the database.
-        Molecule.CreateOrUpdate(astroDbContext, "Hydrogen", "H");
-        Molecule.CreateOrUpdate(astroDbContext, "Helium", "He");
-        Molecule.CreateOrUpdate(astroDbContext, "Oxygen", "O");
-        Molecule.CreateOrUpdate(astroDbContext, "Carbon", "C");
-        Molecule.CreateOrUpdate(astroDbContext, "Iron", "Fe");
-        Molecule.CreateOrUpdate(astroDbContext, "Neon", "Ne");
-        Molecule.CreateOrUpdate(astroDbContext, "Nitrogen", "N");
-        Molecule.CreateOrUpdate(astroDbContext, "Silicon", "Si");
-        Molecule.CreateOrUpdate(astroDbContext, "Magnesium", "Mg");
-        Molecule.CreateOrUpdate(astroDbContext, "Sulphur", "S");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Hydrogen", "H");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Helium", "He");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Oxygen", "O");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Carbon", "C");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Iron", "Fe");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Neon", "Ne");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Nitrogen", "N");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Silicon", "Si");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Magnesium", "Mg");
+        MoleculeRecord.CreateOrUpdate(astroDbContext, "Sulphur", "S");
 
         // Add the constituents.
         sun.Atmosphere.AddConstituent(astroDbContext, "H", 73.46);

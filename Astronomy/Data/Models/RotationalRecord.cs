@@ -1,11 +1,11 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class RotationalRecord : DataObject
+public class RotationalRecord : DatabaseRecord
 {
     // Link to owner.
     public int AstroObjectId { get; set; }
 
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     // Sidereal rotation period in days.
     public double? SiderealRotationPeriod { get; set; }

@@ -34,7 +34,7 @@ public class ApsideController(
         {
             planetName = "Earth";
         }
-        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Convert the apside from a character to an enum value.
         EApside apside;
@@ -75,8 +75,8 @@ public class ApsideController(
             double jdtt = TimeScales.DateTimeToJulianDate(dt);
             apsideEvent = apsideService.GetClosestApside(planet, jdtt);
             dt1 = apsideEvent.DateTimeUtc;
-            rMetres = apsideEvent.RadiusInMetres!.Value;
-            rAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
+            rMetres = apsideEvent.Radius_m!.Value;
+            rAu = apsideEvent.Radius_AU!.Value;
         }
         catch (Exception ex)
         {

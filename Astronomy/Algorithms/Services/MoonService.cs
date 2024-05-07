@@ -31,8 +31,8 @@ public class MoonService(AstroDbContext astroDbContext)
         if (lunarPhase != null)
         {
             // We found a USNO calculation, so return that.
-            return new LunarPhaseEvent(lunarPhase.LunationNumber,
-                (ELunarPhase)lunarPhase.PhaseNumber, lunarPhase.DateTimeUtcUsno!.Value);
+            return new LunarPhaseEvent(lunarPhase.Lunation,
+                (ELunarPhase)lunarPhase.Type, lunarPhase.DateTimeUtcUsno!.Value);
         }
 
         // Look for a lunar phase in the database with an AstroPixels datetime within 24 hours.
@@ -43,8 +43,8 @@ public class MoonService(AstroDbContext astroDbContext)
         if (lunarPhase != null)
         {
             // We found an AstroPixels calculation, so return that.
-            return new LunarPhaseEvent(lunarPhase.LunationNumber,
-                (ELunarPhase)lunarPhase.PhaseNumber, lunarPhase.DateTimeUtcAstroPixels!.Value);
+            return new LunarPhaseEvent(lunarPhase.Lunation,
+                (ELunarPhase)lunarPhase.Type, lunarPhase.DateTimeUtcAstroPixels!.Value);
         }
 
         // Use my calculation.
@@ -301,7 +301,7 @@ public class MoonService(AstroDbContext astroDbContext)
             }
 
             // Add it to the result.
-            if (phase == null || phaseEvent.Phase == phase)
+            if (phase == null || phaseEvent.Type == phase)
             {
                 result.Add(phaseEvent);
             }

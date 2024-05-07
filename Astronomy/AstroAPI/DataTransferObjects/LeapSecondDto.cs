@@ -21,9 +21,9 @@ public record struct LeapSecondDto
     /// <summary>
     /// Construct from internal type.
     /// </summary>
-    public LeapSecondDto(LeapSecond leapSecond)
+    public LeapSecondDto(LeapSecondRecord leapSecond)
     {
-        Date = leapSecond.LeapSecondDate.ToIsoString();
+        Date = leapSecond.Date.ToIsoString();
         Value = leapSecond.Value;
     }
 }

@@ -12,18 +12,18 @@ public class DocumentService(
 
     public const string DocumentIconDirApp = $"wwwroot/{DocumentIconDirUri}";
 
-    public Document? GetFolder(Document doc)
+    public DocumentRecord? GetFolder(DocumentRecord doc)
     {
-        if (doc.Folder != null)
+        if (doc.Parent != null)
         {
-            return doc.Folder;
+            return doc.Parent;
         }
-        if (doc.FolderId == null)
+        if (doc.ParentId == null)
         {
             return null;
         }
-        doc.Folder = documentRepo.GetById(doc.FolderId.Value);
-        return doc.Folder;
+        doc.Parent = documentRepo.GetById(doc.ParentId.Value);
+        return doc.Parent;
     }
 
     /// <summary>
@@ -37,19 +37,19 @@ public class DocumentService(
         return Regex.Replace(name, "[^a-zA-Z]+", "-").Trim('-').ToLower();
     }
 
-    public string GetPathAlias(Document doc)
+    public string GetPathAlias(DocumentRecord doc)
     {
-        Document? folder = GetFolder(doc);
+        DocumentRecord? folder = GetFolder(doc);
         return (folder == null ? "" : GetPathAlias(folder)) + "/" + ProcessUrlPart(doc.Title);
     }
 
-    public string GetBreadcrumb(Document doc)
+    public string GetBreadcrumb(DocumentRecord doc)
     {
-        Document? folder = GetFolder(doc);
+        DocumentRecord? folder = GetFolder(doc);
         return (folder == null ? "" : GetBreadcrumb(folder) + " / ") + doc.Title;
     }
 
-    public static string? GetIconPath(Document doc, bool absolute = false)
+    public static string? GetIconPath(DocumentRecord doc, bool absolute = false)
     {
         string iconBaseName = $"document-icon-{ProcessUrlPart(doc.Title)}";
 
@@ -71,7 +71,7 @@ public class DocumentService(
 
     public bool DeleteIcon(int docId)
     {
-        Document? doc = documentRepo.GetById(docId);
+        DocumentRecord? doc = documentRepo.GetById(docId);
         if (doc == null)
         {
             return false;
@@ -96,7 +96,7 @@ public class DocumentService(
 
     public bool FolderContainsCurrentDocument(int folderId, HttpRequest request)
     {
-        IEnumerable<Document> docs = documentRepo.GetByFolder(folderId);
+        IEnumerable<DocumentRecord> docs = documentRepo.GetByFolder(folderId);
         return docs.Any(doc =>
             (doc.IsFolder && FolderContainsCurrentDocument(doc.Id, request))
             || (!doc.IsFolder && request.Path == GetPathAlias(doc)));

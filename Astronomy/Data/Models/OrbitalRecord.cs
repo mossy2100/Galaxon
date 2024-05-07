@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an orbital record associated with an astronomical object.
 /// </summary>
-public class OrbitalRecord : DataObject
+public class OrbitalRecord : DatabaseRecord
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
@@ -13,7 +13,7 @@ public class OrbitalRecord : DataObject
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the date/time of reference for the current orbital parameters.

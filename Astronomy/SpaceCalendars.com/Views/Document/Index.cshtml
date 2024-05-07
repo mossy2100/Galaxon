@@ -1,5 +1,5 @@
 @using Galaxon.Astronomy.Data.Models
-@model IEnumerable<Galaxon.Astronomy.Data.Models.Document>
+@model IEnumerable<Galaxon.Astronomy.Data.Models.DocumentRecord>
 
 <div class="field">
     <a asp-action="Edit" asp-controller="Document"
@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (Document doc in Model)
+    @foreach (DocumentRecord doc in Model)
     {
         string iconClass = doc.IsFolder ? "bi-folder-fill" : "bi-file-richtext";
 

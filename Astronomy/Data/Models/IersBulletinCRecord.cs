@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Galaxon.Astronomy.Data.Models;
 
 [Index(nameof(BulletinNumber), IsUnique = true)]
-public class IersBulletinC : DataObject
+public class IersBulletinCRecord : DatabaseRecord
 {
     /// <summary>
     /// The IERS bulletin number.
@@ -16,6 +16,11 @@ public class IersBulletinC : DataObject
     /// </summary>
     [MaxLength(100)]
     public string BulletinUrl { get; set; } = "";
+
+    /// <summary>
+    /// The date the bulletin was published.
+    /// </summary>
+    public DateOnly DateTimePublished { get; set; }
 
     /// <summary>
     /// The datetime the bulletin was downloaded and parsed.
@@ -33,6 +38,6 @@ public class IersBulletinC : DataObject
     /// <summary>
     /// The date the leap second will be inserted (or skipped), if there is one.
     /// </summary>
-    [Column(TypeName = "DATE")]
+    [Column(TypeName = "date")]
     public DateOnly? LeapSecondDate { get; set; }
 }

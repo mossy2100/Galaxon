@@ -5,7 +5,7 @@ namespace Galaxon.Astronomy.Data.Models;
 /// <summary>
 /// Represents information about a stellar object.
 /// </summary>
-public class StellarRecord : DataObject
+public class StellarRecord : DatabaseRecord
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
@@ -15,7 +15,7 @@ public class StellarRecord : DataObject
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the spectral classification of the stellar object.

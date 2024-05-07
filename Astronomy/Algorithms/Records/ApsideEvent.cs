@@ -4,11 +4,11 @@ using Galaxon.Astronomy.Data.Models;
 namespace Galaxon.Astronomy.Algorithms.Records;
 
 public record struct ApsideEvent(
-    AstroObject Planet,
-    int OrbitNumber,
-    EApside Apside,
+    AstroObjectRecord Planet,
+    int Orbit,
+    EApside Type,
     double JulianDateTerrestrial,
     DateTime DateTimeUtc,
-    double? RadiusInMetres = null,
-    double? RadiusInAstronomicalUnits = null
+    double? Radius_m = null,
+    double? Radius_AU = null
 );

@@ -1,8 +1,8 @@
 @using Galaxon.Astronomy.Data.Models
-@model List<Galaxon.Astronomy.Data.Models.Document>
+@model List<Galaxon.Astronomy.Data.Models.DocumentRecord>
 
 <ul class="list-group" id="menu-@ViewBag.FolderId">
-    @foreach (Document doc in Model)
+    @foreach (DocumentRecord doc in Model)
     {
         string menuWrapperId = $"menu-wrapper-{doc.Id}";
         <li class="list-group-item">

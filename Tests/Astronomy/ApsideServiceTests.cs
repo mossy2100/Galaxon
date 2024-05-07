@@ -30,7 +30,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject venus = astroObjectRepository.LoadByName("Venus", "Planet");
+        AstroObjectRecord venus = astroObjectRepository.LoadByName("Venus", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -56,7 +56,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject mars = astroObjectRepository.LoadByName("Mars", "Planet");
+        AstroObjectRecord mars = astroObjectRepository.LoadByName("Mars", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -85,7 +85,7 @@ public class ApsideServiceTests
         // Get the planet.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject planet = astroObjectRepository.LoadByName("Earth", "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName("Earth", "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -145,7 +145,7 @@ public class ApsideServiceTests
         // Arrange.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Act.
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
@@ -154,8 +154,8 @@ public class ApsideServiceTests
         ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
         DateTime dt1 = apsideEvent.DateTimeUtc;
-        double actualRadiusInMetres = apsideEvent.RadiusInMetres!.Value;
-        double actualRadiusInAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
+        double actualRadiusInMetres = apsideEvent.Radius_m!.Value;
+        double actualRadiusInAu = apsideEvent.Radius_AU!.Value;
 
         // Output result.
         Console.WriteLine($"Event time = {dt1.ToIsoString()} = {jdtt1:F6} Julian Date (TT)");
@@ -222,7 +222,7 @@ public class ApsideServiceTests
         // Arrange.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
-        AstroObject planet = astroObjectRepository.LoadByName("Earth", "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName("Earth", "Planet");
 
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
 
@@ -236,14 +236,14 @@ public class ApsideServiceTests
         // Act.
         ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
-        double actualRadiusInMetres = apsideEvent.RadiusInMetres!.Value;
+        double actualRadiusInMetres = apsideEvent.Radius_m!.Value;
 
         // Get the computed event DateTime in Terrestrial (Dynamical) Time, matching the results in
         // the table in the book.
         DateTime dtttActual = TimeScales.JulianDateToDateTime(jdtt1);
 
         // Get the radius in AU.
-        double actualRadiusInAu = apsideEvent.RadiusInAstronomicalUnits!.Value;
+        double actualRadiusInAu = apsideEvent.Radius_AU!.Value;
 
         // Output.
         Console.WriteLine($"Expected event datetime = {dtttExpected.ToIsoString()} (TT)");

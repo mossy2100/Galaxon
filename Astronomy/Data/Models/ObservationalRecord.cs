@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an observational record related to an astronomical object.
 /// </summary>
-public class ObservationalRecord : DataObject
+public class ObservationalRecord : DatabaseRecord
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
@@ -13,7 +13,7 @@ public class ObservationalRecord : DataObject
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the absolute magnitude of the astronomical object.

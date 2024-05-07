@@ -25,8 +25,8 @@ public class LeapSecondController(AstroDbContext astroDbContext) : ControllerBas
         try
         {
             // Get the leap second info.
-            IOrderedQueryable<LeapSecond> leapSeconds =
-                astroDbContext.LeapSeconds.OrderBy(ls => ls.LeapSecondDate);
+            IOrderedQueryable<LeapSecondRecord> leapSeconds =
+                astroDbContext.LeapSeconds.OrderBy(ls => ls.Date);
             List<LeapSecondDto> leapSecondDtos =
                 leapSeconds.Select(ls => new LeapSecondDto(ls)).ToList();
 

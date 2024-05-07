@@ -16,7 +16,7 @@ public class SeasonalMarkerImportService(
 {
     public async Task Import()
     {
-        AstroObject earth = astroObjectRepository.LoadByName("Earth", "Planet");
+        AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
         for (int year = 1700; year <= 2100; year++)
         {
@@ -96,7 +96,7 @@ public class SeasonalMarkerImportService(
                                 SeasonalMarkerRecord newSeasonalMarkerRecord =
                                     new ()
                                     {
-                                        MarkerNumber = (byte)seasonalMarker,
+                                        Type = seasonalMarker,
                                         DateTimeUtcUsno = dt
                                     };
                                 string seasonalMarkerTypeName = seasonalMarker.GetDisplayName();
@@ -106,7 +106,7 @@ public class SeasonalMarkerImportService(
                                 // Update or insert the record.
                                 SeasonalMarkerRecord? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                                        sm.MarkerNumber == (byte)seasonalMarker
+                                        sm.Type == seasonalMarker
                                         && sm.DateTimeUtcUsno != null
                                         && sm.DateTimeUtcUsno.Value.Year == year);
                                 if (existingSeasonalMarker == null)

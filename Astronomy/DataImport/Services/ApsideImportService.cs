@@ -33,7 +33,7 @@ public class ApsideImportService(
         // {
         string planetName = "Earth";
         // Load the planet.
-        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
         if (planet == null)
         {
             throw new Exception($"Could not load {planetName} from the database.");
@@ -54,7 +54,7 @@ public class ApsideImportService(
         {
             ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdttApprox);
             Console.WriteLine(
-                $"Apside ({apsideEvent.Apside}) computed to occur at {apsideEvent.DateTimeUtc.ToIsoString()}");
+                $"Apside ({apsideEvent.Type}) computed to occur at {apsideEvent.DateTimeUtc.ToIsoString()}");
             double jdttEvent = apsideEvent.JulianDateTerrestrial;
 
             // Done?
@@ -69,8 +69,8 @@ public class ApsideImportService(
                 // Look for an existing record.
                 ApsideRecord? apsideRecord = astroDbContext.Apsides.FirstOrDefault(a =>
                     a.AstroObjectId == planet.Id
-                    && a.OrbitNumber == apsideEvent.OrbitNumber
-                    && a.ApsideNumber == (byte)apsideEvent.Apside);
+                    && a.Orbit == apsideEvent.Orbit
+                    && a.Type == apsideEvent.Type);
 
                 if (apsideRecord == null)
                 {
@@ -78,8 +78,8 @@ public class ApsideImportService(
                     apsideRecord = new ApsideRecord
                     {
                         AstroObjectId = planet.Id,
-                        OrbitNumber = apsideEvent.OrbitNumber,
-                        ApsideNumber = (byte)apsideEvent.Apside,
+                        Orbit = apsideEvent.Orbit,
+                        Type = apsideEvent.Type,
                         DateTimeUtc = apsideEvent.DateTimeUtc
                     };
                     astroDbContext.Apsides.Add(apsideRecord);

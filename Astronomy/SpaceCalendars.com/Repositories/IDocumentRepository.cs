@@ -2,17 +2,17 @@ using Galaxon.Astronomy.Data.Models;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 
-public interface IDocumentRepository : IRepository<Document>
+public interface IDocumentRepository : IRepository<DocumentRecord>
 {
-    public Document? GetByTitle(string title);
+    public DocumentRecord? GetByTitle(string title);
 
-    public IEnumerable<Document> GetPublished(bool published = true);
+    public IEnumerable<DocumentRecord> GetPublished(bool published = true);
 
-    public IEnumerable<Document> GetByFolder(int? folderId);
+    public IEnumerable<DocumentRecord> GetByFolder(int? folderId);
 
-    public IEnumerable<Document> GetPublishedByFolder(int? folderId, bool published = true);
+    public IEnumerable<DocumentRecord> GetPublishedByFolder(int? folderId, bool published = true);
 
-    public IEnumerable<Document> GetFolders();
+    public IEnumerable<DocumentRecord> GetFolders();
 
     public int Reorder(int? folderId = null, int order = 0);
 }

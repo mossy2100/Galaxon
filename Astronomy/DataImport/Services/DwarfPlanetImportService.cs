@@ -15,7 +15,7 @@ public class DwarfPlanetImportService(
     public async Task Import()
     {
         // Get the Sun.
-        AstroObject sun = astroObjectRepository.LoadByName("Sun", "Star");
+        AstroObjectRecord sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         try
         {
@@ -57,7 +57,7 @@ public class DwarfPlanetImportService(
 
                             // Load the dwarf planet record from the database, if present.
                             Console.WriteLine($"Dwarf planet: {name}");
-                            AstroObject dwarfPlanet;
+                            AstroObjectRecord dwarfPlanet;
                             try
                             {
                                 dwarfPlanet = astroObjectRepository.LoadByName(name, "Dwarf planet");
@@ -68,7 +68,7 @@ public class DwarfPlanetImportService(
                             {
                                 // Create a new dwarf planet in the database.
                                 Console.WriteLine($"Adding new dwarf planet {name}.");
-                                dwarfPlanet = new AstroObject(name);
+                                dwarfPlanet = new AstroObjectRecord(name);
                                 astroDbContext.AstroObjects.Add(dwarfPlanet);
                             }
 

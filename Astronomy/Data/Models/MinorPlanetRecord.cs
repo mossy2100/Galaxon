@@ -2,12 +2,12 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class MinorPlanetRecord : DataObject
+public class MinorPlanetRecord : DatabaseRecord
 {
     // Link to owner.
     public int AstroObjectId { get; set; }
 
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     // The designation in packed form.
     [MaxLength(30)]
@@ -32,7 +32,7 @@ public class MinorPlanetRecord : DataObject
     // The object a trojan or quasi-satellite is co-orbital with.
     public int? CoOrbitalObjectId { get; set; }
 
-    public virtual AstroObject? CoOrbitalObject { get; set; }
+    public virtual AstroObjectRecord? CoOrbitalObject { get; set; }
 
     // Tholen spectral type.
     [MaxLength(10)]

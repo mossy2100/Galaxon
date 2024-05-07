@@ -17,7 +17,7 @@ public static class AstroObjectExtensions
     /// <param name="location1">The geographical coordinates of location 1.</param>
     /// <param name="location2">The geographical coordinates of location 2.</param>
     /// <returns>The distance between the two locations in kilometres.</returns>
-    public static double CalculateShortestDistanceBetween(this AstroObject astroObj,
+    public static double CalculateShortestDistanceBetween(this AstroObjectRecord astroObj,
         GeoCoordinate location1, GeoCoordinate location2)
     {
         if (astroObj.Physical == null

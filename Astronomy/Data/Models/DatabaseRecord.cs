@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public abstract class DataObject
+public abstract class DatabaseRecord
 {
     // Primary key.
     [Key]

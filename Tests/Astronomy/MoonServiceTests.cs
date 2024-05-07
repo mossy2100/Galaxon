@@ -38,7 +38,7 @@ public class MoonServiceTests
         LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.NewMoon, phase.Phase);
+        Assert.AreEqual(ELunarPhase.NewMoon, phase.Type);
         Assert.AreEqual(1977, phase.DateTimeUtc.Year);
         Assert.AreEqual(2, phase.DateTimeUtc.Month);
         Assert.AreEqual(18, phase.DateTimeUtc.Day);
@@ -60,7 +60,7 @@ public class MoonServiceTests
         LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.ThirdQuarter, phase.Phase);
+        Assert.AreEqual(ELunarPhase.ThirdQuarter, phase.Type);
         Assert.AreEqual(2044, phase.DateTimeUtc.Year);
         Assert.AreEqual(1, phase.DateTimeUtc.Month);
         Assert.AreEqual(21, phase.DateTimeUtc.Day);
@@ -93,10 +93,10 @@ public class MoonServiceTests
                 moonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcAstroPixels!.Value);
 
             // Report on different type.
-            if (phaseFromDb.PhaseNumber != (int)phaseFromMethod.Phase)
+            if (phaseFromDb.Type != phaseFromMethod.Type)
             {
                 Console.WriteLine(
-                    $"{phaseFromDb.PhaseNumber,15}: {phaseFromDb.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {phaseFromMethod.Phase,15}: {phaseFromMethod.DateTimeUtc.ToIsoString()}");
+                    $"{phaseFromDb.Type,15}: {phaseFromDb.DateTimeUtcAstroPixels.Value.ToIsoString()} c.f. {phaseFromMethod.Type,15}: {phaseFromMethod.DateTimeUtc.ToIsoString()}");
             }
 
             // Calculate the difference in seconds between their and my calculations.
@@ -112,7 +112,7 @@ public class MoonServiceTests
             }
 
             // Assert.
-            Assert.AreEqual(phaseFromDb.PhaseNumber, (int)phaseFromMethod.Phase);
+            Assert.AreEqual(phaseFromDb.Type, phaseFromMethod.Type);
             Assert.IsTrue(diff.TotalSeconds <= maxDiffSeconds);
         }
 
@@ -143,11 +143,11 @@ public class MoonServiceTests
                 moonService.GetPhaseNearDateTime(phaseEventRecord.DateTimeUtcUsno!.Value);
 
             // Report on different type.
-            ELunarPhase phaseEventRecordPhase = (ELunarPhase)phaseEventRecord.PhaseNumber;
-            if (phaseEventRecord.PhaseNumber != (int)phaseEventCalculation.Phase)
+            ELunarPhase phaseEventRecordPhase = (ELunarPhase)phaseEventRecord.Type;
+            if (phaseEventRecord.Type != phaseEventCalculation.Type)
             {
                 Console.WriteLine(
-                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Phase,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
+                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Type,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
             }
 
             // Calculate the difference in seconds between their and my calculations.
@@ -163,7 +163,7 @@ public class MoonServiceTests
             }
 
             // Assert.
-            Assert.AreEqual(phaseEventRecord.PhaseNumber, (int)phaseEventCalculation.Phase);
+            Assert.AreEqual(phaseEventRecord.Type, phaseEventCalculation.Type);
             Assert.IsTrue(diff.TotalSeconds <= maxDiffSeconds);
         }
 

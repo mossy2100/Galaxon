@@ -635,7 +635,7 @@ public class LunisolarCalendar(
 
             // Check if there's also a New Moon at this time.
             LunarPhaseEvent newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
-            if (newMoon.Phase != ELunarPhase.NewMoon)
+            if (newMoon.Type != ELunarPhase.NewMoon)
             {
                 continue;
             }
@@ -652,7 +652,7 @@ public class LunisolarCalendar(
             Console.WriteLine();
             Console.WriteLine($"Alignment in year {y}:");
             Console.WriteLine($"{"Southern Solstice",20}: {solstice:R}");
-            Console.WriteLine($"{newMoon.Phase.GetDisplayName(),20}: {newMoon.DateTimeUtc:R}");
+            Console.WriteLine($"{newMoon.Type.GetDisplayName(),20}: {newMoon.DateTimeUtc:R}");
             Console.WriteLine(
                 $"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }

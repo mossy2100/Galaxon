@@ -43,7 +43,7 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
                 DateOnly newEasterDate = new (year, month, day);
 
                 // See if we already have one for this year.
-                EasterDate? existingEasterDate =
+                EasterDateRecord? existingEasterDate =
                     astroDbContext.EasterDates.FirstOrDefault(ed => ed.Date.Year == year);
 
                 // Add or update the record as needed.
@@ -53,7 +53,7 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
                     // Console.WriteLine($"Adding new Easter date {newEasterDate}");
                     Log.Information("Adding new Easter date {NewEasterDate}",
                         newEasterDate.ToIsoString());
-                    astroDbContext.EasterDates.Add(new EasterDate { Date = newEasterDate });
+                    astroDbContext.EasterDates.Add(new EasterDateRecord { Date = newEasterDate });
                 }
                 else if (existingEasterDate.Date != newEasterDate)
                 {
@@ -116,11 +116,11 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
                 int day = int.Parse(match.Groups[1].Value);
                 DateOnly newEasterDate = new (year, month, day);
                 // See if we already have one for this year.
-                EasterDate? existingEasterDate = astroDbContext.EasterDates
+                EasterDateRecord? existingEasterDate = astroDbContext.EasterDates
                     .FirstOrDefault(ed => ed.Date.Year == year);
                 if (existingEasterDate == null)
                 {
-                    astroDbContext.EasterDates.Add(new EasterDate { Date = newEasterDate });
+                    astroDbContext.EasterDates.Add(new EasterDateRecord { Date = newEasterDate });
                 }
                 else
                 {

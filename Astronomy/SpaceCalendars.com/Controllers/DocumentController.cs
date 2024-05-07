@@ -21,14 +21,14 @@ public class DocumentController(
         // Remember the levels to save time.
         Dictionary<int, int> levels = new ();
 
-        List<Document> docs = documentRepo.GetAll().ToList();
-        foreach (Document doc in docs)
+        List<DocumentRecord> docs = documentRepo.GetAll().ToList();
+        foreach (DocumentRecord doc in docs)
         {
             doc.PathAlias = documentService.GetPathAlias(doc);
             doc.IconPath = DocumentService.GetIconPath(doc);
 
             // Get the level.
-            doc.Level = doc.FolderId == null ? 0 : levels[doc.FolderId.Value] + 1;
+            doc.Level = doc.ParentId == null ? 0 : levels[doc.ParentId.Value] + 1;
             levels[doc.Id] = doc.Level;
         }
 
@@ -37,7 +37,7 @@ public class DocumentController(
 
     public IActionResult Details(int id)
     {
-        Document? doc = documentRepo.GetById(id);
+        DocumentRecord? doc = documentRepo.GetById(id);
 
         if (doc == null)
         {
@@ -50,15 +50,15 @@ public class DocumentController(
         return View(doc);
     }
 
-    private ViewResult ViewEditForm(Document doc)
+    private ViewResult ViewEditForm(DocumentRecord doc)
     {
         ViewBag.PageTitle = doc.Id == 0 ? "Create Document" : "Update Document";
         ViewBag.Folders = new SelectList(documentRepo.GetFolders(), "Id", "Name");
 
         // Get "breadcrumbs" (titles with hierarchy) for folders.
-        IEnumerable<Document> folders = documentRepo.GetFolders();
+        IEnumerable<DocumentRecord> folders = documentRepo.GetFolders();
         ViewBag.Folders = new List<SelectListItem>();
-        foreach (Document folder in folders)
+        foreach (DocumentRecord folder in folders)
         {
             SelectListItem option =
                 new (documentService.GetBreadcrumb(folder), folder.Id.ToString());
@@ -70,7 +70,7 @@ public class DocumentController(
 
     public ViewResult Edit(int? id)
     {
-        Document doc = (id != null ? documentRepo.GetById(id.Value) : null) ?? new Document();
+        DocumentRecord doc = (id != null ? documentRepo.GetById(id.Value) : null) ?? new DocumentRecord();
 
         if (doc.Id != 0)
         {
@@ -87,7 +87,7 @@ public class DocumentController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(Document doc, string? iconAction, IFormFile? icon)
+    public async Task<IActionResult> Edit(DocumentRecord doc, string? iconAction, IFormFile? icon)
     {
         ViewBag.ModelStateIsValid = ModelState.IsValid;
         if (!ModelState.IsValid)
@@ -164,7 +164,7 @@ public class DocumentController(
 
     public IActionResult Delete(int id)
     {
-        Document? doc = documentRepo.GetById(id);
+        DocumentRecord? doc = documentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -202,7 +202,7 @@ public class DocumentController(
     [AllowAnonymous]
     public IActionResult Display(int id)
     {
-        Document? doc = documentRepo.GetById(id);
+        DocumentRecord? doc = documentRepo.GetById(id);
         if (doc == null)
         {
             return NotFound();
@@ -215,7 +215,7 @@ public class DocumentController(
     [AllowAnonymous]
     public IActionResult DisplayFromPathAlias(string alias)
     {
-        Document? doc = documentRepo
+        DocumentRecord? doc = documentRepo
             .GetAll()
             .FirstOrDefault(doc => documentService.GetPathAlias(doc) == $"/{alias}");
 

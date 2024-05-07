@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class PhysicalRecord : DataObject
+public class PhysicalRecord : DatabaseRecord
 {
     /// <summary>
     /// Gets or sets the link to the astronomical object associated with this record.
@@ -12,7 +12,7 @@ public class PhysicalRecord : DataObject
     /// <summary>
     /// Gets or sets the reference to the astronomical object associated with this record.
     /// </summary>
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
     /// Gets or sets the first radius in kilometers.

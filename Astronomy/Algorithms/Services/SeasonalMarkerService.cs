@@ -124,46 +124,47 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         }
     }
 
-    /// <summary>
-    /// Expands the range of GetSeasonalMarkerMean() by using the GetTropicalYearLengthInEphemerisDays() method.
-    /// </summary>
-    /// <param name="year">The year to get the seasonal marker for.</param>
-    /// <param name="marker">The marker type.</param>
-    /// <returns>The approximate Julian date (TT) of the event.</returns>
-    private double GetSeasonalMarkerMeanExpanded(int year, ESeasonalMarker marker)
-    {
-        // Check year is in valid range.
-        if (year is < -7999 or > 12000)
-        {
-            throw new ArgumentOutOfRangeException(nameof(year),
-                "Must be in the range 8000 BCE to 12000 CE (-7999..12000).");
-        }
-
-        // Get the approximate result as a Julian Date (TT).
-        double jdtt;
-        if (year < -1000)
-        {
-            jdtt = GetSeasonalMarkerMean(-1000, marker);
-            for (int i = -1000; i > year; i--)
-            {
-                jdtt -= EarthService.GetTropicalYearInEphemerisDaysForYear(year);
-            }
-        }
-        else if (year > 3000)
-        {
-            jdtt = GetSeasonalMarkerMean(3000, marker);
-            for (int i = 3000; i < year; i++)
-            {
-                jdtt += EarthService.GetTropicalYearInEphemerisDaysForYear(year);
-            }
-        }
-        else
-        {
-            jdtt = GetSeasonalMarkerMean(year, marker);
-        }
-
-        return jdtt;
-    }
+    // /// <summary>
+    // /// Expands the range of GetSeasonalMarkerMean() by using the
+    // /// GetTropicalYearLengthInEphemerisDays() method.
+    // /// </summary>
+    // /// <param name="year">The year to get the seasonal marker for.</param>
+    // /// <param name="marker">The marker type.</param>
+    // /// <returns>The approximate Julian date (TT) of the event.</returns>
+    // private double GetSeasonalMarkerMeanExpanded(int year, ESeasonalMarker marker)
+    // {
+    //     // Check year is in valid range.
+    //     if (year is < -7999 or > 12000)
+    //     {
+    //         throw new ArgumentOutOfRangeException(nameof(year),
+    //             "Must be in the range 8000 BCE to 12000 CE (-7999..12000).");
+    //     }
+    //
+    //     // Get the approximate result as a Julian Date (TT).
+    //     double jdtt;
+    //     if (year < -1000)
+    //     {
+    //         jdtt = GetSeasonalMarkerMean(-1000, marker);
+    //         for (int i = -1000; i > year; i--)
+    //         {
+    //             jdtt -= EarthService.GetTropicalYearInEphemerisDaysForYear(year);
+    //         }
+    //     }
+    //     else if (year > 3000)
+    //     {
+    //         jdtt = GetSeasonalMarkerMean(3000, marker);
+    //         for (int i = 3000; i < year; i++)
+    //         {
+    //             jdtt += EarthService.GetTropicalYearInEphemerisDaysForYear(year);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         jdtt = GetSeasonalMarkerMean(year, marker);
+    //     }
+    //
+    //     return jdtt;
+    // }
 
     /// <summary>
     /// Calculate approximate datetime of a seasonal marker as as a Julian Date (TT).
@@ -289,7 +290,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         // Look for a matching seasonal marker in the database with a USNO datetime.
         SeasonalMarkerRecord? seasonalMarker =
             astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                sm.MarkerNumber == (int)marker
+                sm.Type == marker
                 && sm.DateTimeUtcUsno != null
                 && sm.DateTimeUtcUsno.Value.Year == year);
 

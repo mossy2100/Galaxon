@@ -1,4 +1,4 @@
-@model Galaxon.Astronomy.Data.Models.Document
+@model Galaxon.Astronomy.Data.Models.DocumentRecord
 
 <form asp-action="Edit" asp-controller="Document" class="pb-3" enctype="multipart/form-data"
     method="post" id="document-edit-form">
@@ -35,11 +35,11 @@
     </div>
 
     <div class="field">
-        <label asp-for="FolderId" class="form-label"></label>
-        <select asp-for="FolderId" asp-items="ViewBag.Folders" class="form-control form-select">
+        <label asp-for="ParentId" class="form-label"></label>
+        <select asp-for="ParentId" asp-items="ViewBag.Folders" class="form-control form-select">
             <option value="">-- None (top level) --</option>
         </select>
-        <span asp-validation-for="FolderId" class="text-danger"></span>
+        <span asp-validation-for="ParentId" class="text-danger"></span>
     </div>
 
     <div class="field">

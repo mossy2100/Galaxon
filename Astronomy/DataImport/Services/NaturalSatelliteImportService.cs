@@ -47,7 +47,7 @@ public class NaturalSatelliteImportService
                             int offset = satelliteName == "Namaka" ? -1 : 0;
 
                             // Load the satellite record from the database, if present.
-                            AstroObject satellite;
+                            AstroObjectRecord satellite;
                             try
                             {
                                 // Update satellite in the database.
@@ -60,14 +60,14 @@ public class NaturalSatelliteImportService
                             {
                                 // Create a new satellite in the database.
                                 Console.WriteLine($"Adding new satellite {satelliteName}.");
-                                satellite = new AstroObject(satelliteName);
+                                satellite = new AstroObjectRecord(satelliteName);
                                 astroDbContext.AstroObjects.Add(satellite);
                             }
 
                             // Planet or dwarf planet the satellite orbits.
                             string parentName = cells[2 + offset].InnerText.Trim();
                             Console.WriteLine($"Parent name: {parentName}");
-                            AstroObject parent;
+                            AstroObjectRecord parent;
                             try
                             {
                                 parent = astroObjectRepository.LoadByName(parentName, "Planet");

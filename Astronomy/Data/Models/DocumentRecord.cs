@@ -5,7 +5,7 @@ namespace Galaxon.Astronomy.Data.Models;
 /// <summary>
 /// Represents a document or a folder within the application.
 /// </summary>
-public class Document : DataObject
+public class DocumentRecord : DatabaseRecord
 {
     /// <summary>
     /// The title of the document. Required and limited to 255 characters.
@@ -37,17 +37,17 @@ public class Document : DataObject
     /// Optional ID of the containing folder.
     /// </summary>
     [Display(Name = "Folder")]
-    public int? FolderId { get; set; }
+    public int? ParentId { get; set; }
 
     /// <summary>
     /// Navigation property for the folder containing this document.
     /// </summary>
-    public virtual Document? Folder { get; set; }
+    public virtual DocumentRecord? Parent { get; set; }
 
     /// <summary>
     /// If this document is a folder, contains the documents within it.
     /// </summary>
-    public virtual List<Document>? Documents { get; set; }
+    public virtual List<DocumentRecord>? Children { get; set; }
 
     /// <summary>
     /// The order of the document within its folder.

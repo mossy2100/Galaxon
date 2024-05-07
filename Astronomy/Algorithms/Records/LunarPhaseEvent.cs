@@ -7,4 +7,4 @@ namespace Galaxon.Astronomy.Algorithms.Records;
 /// which represents a database record.
 /// This type represents a specific lunar phase, usually a method result.
 /// </summary>
-public record struct LunarPhaseEvent(int LunationNumber, ELunarPhase Phase, DateTime DateTimeUtc);
+public record struct LunarPhaseEvent(int LunationNumber, ELunarPhase Type, DateTime DateTimeUtc);

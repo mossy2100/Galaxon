@@ -78,13 +78,13 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
         {
             foreach (DateOnly d in dates.OrderBy(d => d.GetTotalDays()))
             {
-                LeapSecond? leapSecond =
-                    astroDbContext.LeapSeconds.FirstOrDefault(ls => ls.LeapSecondDate == d);
+                LeapSecondRecord? leapSecond =
+                    astroDbContext.LeapSeconds.FirstOrDefault(ls => ls.Date == d);
                 if (leapSecond == null)
                 {
                     // Add the new record.
-                    leapSecond = new LeapSecond();
-                    leapSecond.LeapSecondDate = d;
+                    leapSecond = new LeapSecondRecord();
+                    leapSecond.Date = d;
                     // All the leap seconds in that table are positive.
                     leapSecond.Value = 1;
                     astroDbContext.LeapSeconds.Add(leapSecond);
@@ -171,13 +171,13 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                 }
 
                 // Get the existing record if there is one.
-                IersBulletinC? iersBulletinC = astroDbContext.IersBulletinCs.FirstOrDefault(
+                IersBulletinCRecord? iersBulletinC = astroDbContext.IersBulletinCs.FirstOrDefault(
                     ls => ls.BulletinNumber == bulletinNumber);
                 if (iersBulletinC == null)
                 {
                     // Console.WriteLine("Existing leap second record not found.");
                     Log.Information("Existing leap second record not found.");
-                    iersBulletinC = new IersBulletinC();
+                    iersBulletinC = new IersBulletinCRecord();
                     astroDbContext.IersBulletinCs.Add(iersBulletinC);
                 }
                 else
@@ -220,13 +220,13 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                         GregorianCalendarExtensions.GetMonthLastDay(year, month);
 
                     // Update or insert the leap second record.
-                    LeapSecond? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>
-                        ls.LeapSecondDate == iersBulletinC.LeapSecondDate);
+                    LeapSecondRecord? leapSecond = astroDbContext.LeapSeconds.FirstOrDefault(ls =>
+                        ls.Date == iersBulletinC.LeapSecondDate);
                     if (leapSecond == null)
                     {
                         // Create new record.
-                        leapSecond = new LeapSecond();
-                        leapSecond.LeapSecondDate = iersBulletinC.LeapSecondDate.Value;
+                        leapSecond = new LeapSecondRecord();
+                        leapSecond.Date = iersBulletinC.LeapSecondDate.Value;
                         leapSecond.Value = iersBulletinC.Value;
                         astroDbContext.LeapSeconds.Add(leapSecond);
                     }

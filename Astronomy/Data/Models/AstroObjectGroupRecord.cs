@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AstroObjectGroup : DataObject
+public class AstroObjectGroupRecord : DatabaseRecord
 {
     /// <summary>
     /// Group name.
@@ -13,7 +13,7 @@ public class AstroObjectGroup : DataObject
     /// <summary>
     /// Objects in the group (navigation property).
     /// </summary>
-    public virtual List<AstroObject> Objects { get; set; } = [];
+    public virtual List<AstroObjectRecord> Objects { get; set; } = [];
 
     /// <summary>
     /// Id of the parent group.
@@ -23,5 +23,5 @@ public class AstroObjectGroup : DataObject
     /// <summary>
     /// The parent group.
     /// </summary>
-    public virtual AstroObjectGroup? Parent { get; set; }
+    public virtual AstroObjectGroupRecord? Parent { get; set; }
 }

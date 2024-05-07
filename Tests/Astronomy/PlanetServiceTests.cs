@@ -46,7 +46,7 @@ public class PlanetServiceTests
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
-        AstroObject? venus = astroObjectRepository.LoadByName("Venus", "Planet");
+        AstroObjectRecord? venus = astroObjectRepository.LoadByName("Venus", "Planet");
         if (venus == null)
         {
             Assert.Fail("Could not find Venus in the database.");
@@ -80,7 +80,7 @@ public class PlanetServiceTests
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
-        AstroObject? saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
+        AstroObjectRecord? saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
         if (saturn == null)
         {
             Assert.Fail("Could not find Saturn in the database.");

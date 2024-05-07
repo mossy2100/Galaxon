@@ -26,10 +26,10 @@ public class Program
             // await ImportDwarfPlanets();
             // await ImportNaturalSatellites();
             // await ImportLunarPhases();
-            // await ImportLeapSeconds();
+            await ImportLeapSeconds();
             // TestDbContext();
             // await ImportSeasonalMarkers();
-            PrepopulateApsides();
+            // PrepopulateApsides();
         }
         catch (Exception ex)
         {
@@ -164,7 +164,7 @@ public class Program
     {
         LeapSecondImportService leapSecondImportService =
             _serviceProvider!.GetRequiredService<LeapSecondImportService>();
-        await leapSecondImportService.ImportNistWebPage();
+        // await leapSecondImportService.ImportNistWebPage();
         await leapSecondImportService.ImportIersBulletins();
     }
 
@@ -180,8 +180,8 @@ public class Program
     {
         AstroObjectRepository astroObjectRepository =
             _serviceProvider!.GetRequiredService<AstroObjectRepository>();
-        List<AstroObject> planets = astroObjectRepository.LoadByGroup("Planet");
-        foreach (AstroObject planet in planets)
+        List<AstroObjectRecord> planets = astroObjectRepository.LoadByGroup("Planet");
+        foreach (AstroObjectRecord planet in planets)
         {
             Console.WriteLine($"{planet.Number}: {planet.Name}");
         }

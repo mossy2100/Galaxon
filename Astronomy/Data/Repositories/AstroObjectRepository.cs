@@ -31,7 +31,7 @@ public class AstroObjectRepository(
     /// <exception cref="InvalidOperationException">
     /// If more than one match is found.
     /// </exception>
-    public AstroObject? Load(string? astroObjectName, int? astroObjectNumber,
+    public AstroObjectRecord? Load(string? astroObjectName, int? astroObjectNumber,
         string? groupName = null)
     {
         // Check we have a name or number.
@@ -41,7 +41,7 @@ public class AstroObjectRepository(
         }
 
         // Match on name if specified (case-insensitive).
-        IQueryable<AstroObject> query = astroDbContext.AstroObjects;
+        IQueryable<AstroObjectRecord> query = astroDbContext.AstroObjects;
         if (!string.IsNullOrWhiteSpace(astroObjectName))
         {
             // Can't use string.Equals() here without requiring enumeration first. Using ToLower()
@@ -63,7 +63,7 @@ public class AstroObjectRepository(
         }
 
         // Enumerate.
-        List<AstroObject> results = query.ToList();
+        List<AstroObjectRecord> results = query.ToList();
 
         // Filter by group if specified.
         if (groupName != null)
@@ -92,9 +92,9 @@ public class AstroObjectRepository(
     /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
     /// "Plutoid", etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObject LoadByName(string astroObjectName, string? groupName = null)
+    public AstroObjectRecord LoadByName(string astroObjectName, string? groupName = null)
     {
-        AstroObject? obj = Load(astroObjectName, null, groupName);
+        AstroObjectRecord? obj = Load(astroObjectName, null, groupName);
 
         if (obj == null)
         {
@@ -118,9 +118,9 @@ public class AstroObjectRepository(
     /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
     /// etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObject LoadByNumber(int astroObjectNumber, string? groupName = null)
+    public AstroObjectRecord LoadByNumber(int astroObjectNumber, string? groupName = null)
     {
-        AstroObject? obj = Load(null, astroObjectNumber, groupName);
+        AstroObjectRecord? obj = Load(null, astroObjectNumber, groupName);
 
         if (obj == null)
         {
@@ -140,7 +140,7 @@ public class AstroObjectRepository(
     /// <param name="groupName">The name of the group, e.g. "Planet", "Asteroid", "Plutoid",
     /// etc.</param>
     /// <returns>The matching AstroObjects.</returns>
-    public List<AstroObject> LoadByGroup(string groupName)
+    public List<AstroObjectRecord> LoadByGroup(string groupName)
     {
         // Get objects with matching name.
         return astroDbContext.AstroObjects.ToList()

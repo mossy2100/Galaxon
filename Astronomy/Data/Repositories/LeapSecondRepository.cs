@@ -8,11 +8,11 @@ public class LeapSecondRepository(AstroDbContext astroDbContext)
     /// Cache of the leap seconds so we don't have to keep loading them if they're needed more than
     /// once during a program.
     /// </summary>
-    private List<LeapSecond>? _list;
+    private List<LeapSecondRecord>? _list;
 
     /// <summary>
     /// Get all leap seconds inserted so far, in date order.
     /// </summary>
-    public List<LeapSecond> List =>
-        _list ??= astroDbContext.LeapSeconds.OrderBy(ls => ls.LeapSecondDate).ToList();
+    public List<LeapSecondRecord> List =>
+        _list ??= astroDbContext.LeapSeconds.OrderBy(ls => ls.Date).ToList();
 }

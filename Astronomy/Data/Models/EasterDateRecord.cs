@@ -1,7 +1,7 @@
 ﻿namespace Galaxon.Astronomy.Data.Models;
 
-public class EasterDate : DataObject
+public class EasterDateRecord : DatabaseRecord
 {
-    [Column(TypeName = "DATE")]
+    [Column(TypeName = "date")]
     public DateOnly Date { get; set; }
 }

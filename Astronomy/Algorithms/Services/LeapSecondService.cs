@@ -15,12 +15,12 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     public int TotalLeapSeconds(DateOnly d)
     {
         int total = 0;
-        foreach (LeapSecond ls in leapSecondRepository.List)
+        foreach (LeapSecondRecord ls in leapSecondRepository.List)
         {
             // If the leap second date is earlier than or equal to the date argument, add the value
             // of the leap second (-1, 0, or 1). We're assuming that we want the total leap seconds
             // up to the very end of the given date.
-            if (ls.LeapSecondDate <= d)
+            if (ls.Date <= d)
             {
                 total += ls.Value;
             }
@@ -44,12 +44,12 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
         // Count leap seconds.
         int total = 0;
-        foreach (LeapSecond ls in leapSecondRepository.List)
+        foreach (LeapSecondRecord ls in leapSecondRepository.List)
         {
             // Get the datetime of the leap second.
             // When creating the new DateTime we use the same DateTimeKind as the argument so the
             // comparison works correctly. The time of day will be set to 00:00:00.
-            DateTime dtLeapSecond = ls.LeapSecondDate.ToDateTime(dt.Value.Kind);
+            DateTime dtLeapSecond = ls.Date.ToDateTime(dt.Value.Kind);
             // The actual time of day for the leap second is 23:59:60, which can't be represented
             // using DateTime. So we'll use the time 00:00:00 of the next day.
             dtLeapSecond = dtLeapSecond.AddDays(1);
@@ -131,7 +131,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     /// <returns>True if the year has a leap second, otherwise false.</returns>
     public bool YearHasLeapSecond(int year)
     {
-        return leapSecondRepository.List.Any(ls => ls.LeapSecondDate.Year == year);
+        return leapSecondRepository.List.Any(ls => ls.Date.Year == year);
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     /// <returns>The leap second date for the specified year, or null if there wasn't one.</returns>
     public DateOnly? LeapSecondDateForYear(int year)
     {
-        return leapSecondRepository.List.FirstOrDefault(ls => ls.LeapSecondDate.Year == year)
-            ?.LeapSecondDate;
+        return leapSecondRepository.List.FirstOrDefault(ls => ls.Date.Year == year)
+            ?.Date;
     }
 }

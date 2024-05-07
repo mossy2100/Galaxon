@@ -52,7 +52,7 @@ public class Vsop87ImportService(
             }
 
             // Attach the record to the right planet AstroObject.
-            AstroObject? planet = astroObjectRepository.LoadByNumber(planetNum, "Planet");
+            AstroObjectRecord? planet = astroObjectRepository.LoadByNumber(planetNum, "Planet");
             if (planet == null)
             {
                 throw new InvalidOperationException($"Could not find planet number {planetNum}.");
@@ -115,7 +115,7 @@ public class Vsop87ImportService(
             Console.WriteLine($"Frequency = {frequency}");
 
             // Look for an existing record.
-            VSOP87DRecord? record = astroDbContext.VSOP87DRecords.FirstOrDefault(record =>
+            VSOP87DRecord? record = astroDbContext.VSOP87D.FirstOrDefault(record =>
                 record.AstroObjectId == planet.Id
                 && record.Variable == variable
                 && record.Exponent == exponent
@@ -124,7 +124,7 @@ public class Vsop87ImportService(
             {
                 // Add a new record.
                 Console.WriteLine("Adding new record.");
-                astroDbContext.VSOP87DRecords.Add(new VSOP87DRecord
+                astroDbContext.VSOP87D.Add(new VSOP87DRecord
                 {
                     AstroObjectId = planet.Id,
                     Variable = variable,

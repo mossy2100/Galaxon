@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class AtmosphereRecord : DataObject
+public class AtmosphereRecord : DatabaseRecord
 {
     /// <summary>
     /// Default constructor.
@@ -17,7 +17,7 @@ public class AtmosphereRecord : DataObject
     /// <summary>
     /// Reference to containing Atmosphere object.
     /// </summary>
-    public virtual AstroObject? AstroObject { get; set; }
+    public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
     /// Surface pressure (Pa).
@@ -32,7 +32,7 @@ public class AtmosphereRecord : DataObject
     /// <summary>
     /// Atmosphere constituents.
     /// </summary>
-    public virtual List<AtmosphereConstituent> Constituents { get; set; } = [];
+    public virtual List<AtmosphereConstituentRecord> Constituents { get; set; } = [];
 
     /// <summary>
     /// Is it a surface-bounded exosphere?
@@ -48,20 +48,20 @@ public class AtmosphereRecord : DataObject
     /// <param name="percentage">The percentage of it in the atmosphere.</param>
     public void AddConstituent(AstroDbContext db, string symbol, double? percentage = null)
     {
-        AtmosphereConstituent? constituent =
+        AtmosphereConstituentRecord? constituent =
             Constituents.FirstOrDefault(ac => ac.Molecule.Symbol == symbol);
         if (constituent == null)
         {
             // Get the molecule.
             // TODO maybe use Molecule.Load() here.
-            Molecule? m = db.Molecules.FirstOrDefault(m => m.Symbol == symbol);
+            MoleculeRecord? m = db.Molecules.FirstOrDefault(m => m.Symbol == symbol);
             if (m == null)
             {
                 throw new DataNotFoundException($"Molecule '{symbol}' not found.");
             }
 
             // Create the new atmo constituent object.
-            constituent = new AtmosphereConstituent
+            constituent = new AtmosphereConstituentRecord
             {
                 Molecule = m,
                 Percentage = percentage

@@ -2,7 +2,7 @@
 
 namespace Galaxon.Astronomy.Data.Models;
 
-public class Molecule : DataObject
+public class MoleculeRecord : DatabaseRecord
 {
     // Name.
     [MaxLength(50)]
@@ -21,11 +21,11 @@ public class Molecule : DataObject
     public static void CreateOrUpdate(AstroDbContext db, string name, string symbol)
     {
         // Check if we already have this one.
-        Molecule? m = db.Molecules.FirstOrDefault(m => m.Symbol == symbol);
+        MoleculeRecord? m = db.Molecules.FirstOrDefault(m => m.Symbol == symbol);
         if (m == null)
         {
             // Create it.
-            m = new Molecule
+            m = new MoleculeRecord
             {
                 Name = name,
                 Symbol = symbol

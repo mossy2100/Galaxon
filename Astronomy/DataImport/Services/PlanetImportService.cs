@@ -32,7 +32,7 @@ public class PlanetImportService(
     public void Import()
     {
         // Get the Sun.
-        AstroObject sun = astroObjectRepository.LoadByName("Sun", "Star");
+        AstroObjectRecord sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         // Open the CSV file for parsing.
         string csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
@@ -54,7 +54,7 @@ public class PlanetImportService(
                 continue;
             }
 
-            AstroObject planet;
+            AstroObjectRecord planet;
             try
             {
                 planet = astroObjectRepository.LoadByName(name, "Planet");
@@ -66,7 +66,7 @@ public class PlanetImportService(
             {
                 // Create a new planet in the database.
                 Console.WriteLine($"Adding new planet {name}.");
-                planet = new AstroObject(name);
+                planet = new AstroObjectRecord(name);
                 astroDbContext.AstroObjects.Add(planet);
             }
 

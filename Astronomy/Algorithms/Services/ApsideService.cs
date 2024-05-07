@@ -52,7 +52,7 @@ public class ApsideService(
     /// <param name="planet">The planet.</param>
     /// <param name="jdtt">The approximate moment of the apside.</param>
     /// <returns>The apside event information, excluding the radius (distance to the Sun).</returns>
-    public ApsideEvent GetClosestApsideApprox(AstroObject planet, double jdtt)
+    public ApsideEvent GetClosestApsideApprox(AstroObjectRecord planet, double jdtt)
     {
         // Check the object is a major planet.
         if (!astroObjectGroupRepository.IsInGroup(planet, "Planet"))
@@ -132,7 +132,7 @@ public class ApsideService(
     /// <param name="planet">The planet.</param>
     /// <param name="jdtt">The approximate moment of the apside as a Julian Date (TT).</param>
     /// <returns>The apside event information.</returns>
-    public ApsideEvent GetClosestApside(AstroObject planet, double jdtt)
+    public ApsideEvent GetClosestApside(AstroObjectRecord planet, double jdtt)
     {
         // Get the orbital period in days.
         double? orbitalPeriodInSeconds = planet.Orbit?.SiderealOrbitPeriod;
@@ -154,7 +154,7 @@ public class ApsideService(
         Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius;
 
         // If we are looking for a minimum or a maximum radius.
-        bool findMax = approxApsideEvent.Apside == EApside.Apoapsis;
+        bool findMax = approxApsideEvent.Type == EApside.Apoapsis;
 
         // Result variables.
         double jdttResult;
@@ -205,7 +205,7 @@ public class ApsideService(
         // Compute the distance in AU.
         double radiusInAu = radiusInMetresResult / Length.METRES_PER_ASTRONOMICAL_UNIT;
 
-        return new ApsideEvent(planet, approxApsideEvent.OrbitNumber, approxApsideEvent.Apside,
+        return new ApsideEvent(planet, approxApsideEvent.Orbit, approxApsideEvent.Type,
             jdttResult, dtResult, radiusInMetresResult, radiusInAu);
     }
 }

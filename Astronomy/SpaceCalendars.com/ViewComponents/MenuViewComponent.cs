@@ -23,9 +23,9 @@ public class MenuViewComponent : ViewComponent
 
         // Get the documents in this folder.
         // If folderId is null, these will be the top-level items.
-        List<Document> docs = _documentRepo.GetPublishedByFolder(folderId).ToList();
+        List<DocumentRecord> docs = _documentRepo.GetPublishedByFolder(folderId).ToList();
 
-        foreach (Document doc in docs)
+        foreach (DocumentRecord doc in docs)
         {
             // Get the path alias for each document.
             doc.PathAlias = _documentService.GetPathAlias(doc);

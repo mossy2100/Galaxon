@@ -53,7 +53,7 @@ public class GregorianCalendarController(
                 dayOfWeek, jdut, century, millennium, solarCycle);
 
             // Load planet Earth.
-            AstroObject earth = astroObjectRepository.LoadByName("Earth", "Planet");
+            AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
             // Add the events.
 
@@ -87,7 +87,7 @@ public class GregorianCalendarController(
             List<LunarPhaseEvent> phases = moonService.GetPhasesInYear(year);
             foreach (LunarPhaseEvent phase in phases)
             {
-                dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.Phase.GetDisplayName());
+                dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.Type.GetDisplayName());
             }
 
             // Log it.

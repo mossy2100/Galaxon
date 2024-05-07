@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a constituent of the atmosphere.
 /// </summary>
-public class AtmosphereConstituent : DataObject
+public class AtmosphereConstituentRecord : DatabaseRecord
 {
     /// <summary>
     /// Foreign key referencing the parent AtmosphereRecord object.
@@ -23,7 +23,7 @@ public class AtmosphereConstituent : DataObject
     /// <summary>
     /// Reference to the gas molecule.
     /// </summary>
-    public virtual Molecule Molecule { get; set; } = new ();
+    public virtual MoleculeRecord Molecule { get; set; } = new ();
 
     /// <summary>
     /// Percentage of the gas in the atmosphere by volume.

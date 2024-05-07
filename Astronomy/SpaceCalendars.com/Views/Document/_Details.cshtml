@@ -1,4 +1,4 @@
-@model Galaxon.Astronomy.Data.Models.Document
+@model Galaxon.Astronomy.Data.Models.DocumentRecord
 
 <div class="bg-light card mb-3" id="document-details">
     <div class="card-body">
@@ -27,7 +27,7 @@
 
         <div class="field">
             <div class="field-name">Folder</div>
-            <div class="field-value">@Model.Folder?.Title</div>
+            <div class="field-value">@Model.Parent?.Title</div>
         </div>
 
         <div class="field">

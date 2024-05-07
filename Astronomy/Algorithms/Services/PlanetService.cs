@@ -32,12 +32,12 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
     /// <exception cref="DataNotFoundException">
     /// If no VSOP87D data could be found for the planet.
     /// </exception>
-    public Coordinates CalcPlanetPosition(AstroObject planet, double jdtt)
+    public Coordinates CalcPlanetPosition(AstroObjectRecord planet, double jdtt)
     {
         // Get the VSOP87D data for the planet from the database.
         // These aren't included in Load() so I may need to get them separately
         // rather than via the VSOP87DRecords property.
-        List<VSOP87DRecord> records = astroDbContext.VSOP87DRecords
+        List<VSOP87DRecord> records = astroDbContext.VSOP87D
             .Where(r => r.AstroObjectId == planet.Id).ToList();
 
         // Check there are records.
@@ -86,7 +86,7 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
     public Coordinates CalcPlanetPosition(string planetName, double jdtt)
     {
         // Load the planet.
-        AstroObject planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Call the other method.
         return CalcPlanetPosition(planet, jdtt);
