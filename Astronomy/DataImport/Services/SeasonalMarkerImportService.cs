@@ -1,14 +1,14 @@
-using DataImport.DataTransferObjects;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Time;
 using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
 public class SeasonalMarkerImportService(
     AstroDbContext astroDbContext,

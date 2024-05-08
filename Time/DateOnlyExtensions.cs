@@ -220,13 +220,14 @@ public static class DateOnlyExtensions
     #region Month names
 
     /// <summary>
-    /// Get the English month name of a date.
+    /// Get the month name of a date in the specified language.
     /// </summary>
     /// <param name="d">The date.</param>
+    /// <param name="languageCode">The language code, e.g. "fr", "es"</param>
     /// <returns>The month name.</returns>
-    public static string GetMonthName(this DateOnly d)
+    public static string GetMonthName(this DateOnly d, string languageCode = "en")
     {
-        return GregorianCalendarExtensions.MonthNumberToName(d.Month);
+        return GregorianMonth.GetName(d.Month, languageCode);
     }
 
     #endregion Month names

@@ -20,7 +20,8 @@ public class IersBulletinCRecord : DatabaseRecord
     /// <summary>
     /// The date the bulletin was published.
     /// </summary>
-    public DateOnly DateTimePublished { get; set; }
+    [Column(TypeName = "date")]
+    public DateOnly DatePublished { get; set; }
 
     /// <summary>
     /// The datetime the bulletin was downloaded and parsed.

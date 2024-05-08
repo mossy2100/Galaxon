@@ -1,4 +1,4 @@
-namespace DataImport.DataTransferObjects;
+namespace Galaxon.Astronomy.DataImport.DataTransferObjects;
 
 public record UsnoSeasonalMarker
 {

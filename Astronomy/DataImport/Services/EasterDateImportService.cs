@@ -4,7 +4,7 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using Serilog;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
 public class EasterDateImportService(AstroDbContext astroDbContext)
 {

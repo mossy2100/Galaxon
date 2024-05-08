@@ -5,7 +5,7 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
 public class Vsop87ImportService(
     AstroDbContext astroDbContext,

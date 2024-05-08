@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using DataImport.DataTransferObjects;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
+using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
@@ -12,9 +12,9 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
+public class LunarPhaseImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Get the links to the AstroPixels lunar phase data tables.
@@ -141,9 +141,7 @@ public class LunarPhaseDataImportService(AstroDbContext astroDbContext)
                     }
 
                     // Extract the date parts.
-                    int month =
-                        GregorianCalendarExtensions.MonthNameToNumber(dateTimeMatches[0]
-                            .Groups["month"].Value);
+                    int month = GregorianMonth.GetNumber(dateTimeMatches[0].Groups["month"].Value);
                     int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
                     int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);
                     int minute = int.Parse(dateTimeMatches[0].Groups["minute"].Value);

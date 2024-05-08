@@ -1,13 +1,13 @@
-﻿using DataImport.Services;
-using Galaxon.Astronomy.Algorithms.Services;
+﻿using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Astronomy.DataImport.Services;
 using Galaxon.Core.Files;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace DataImport;
+namespace Galaxon.Astronomy.DataImport;
 
 public class Program
 {
@@ -85,7 +85,7 @@ public class Program
             .AddScoped<DwarfPlanetImportService>()
             .AddScoped<EasterDateImportService>()
             .AddScoped<LeapSecondImportService>()
-            .AddScoped<LunarPhaseDataImportService>()
+            .AddScoped<LunarPhaseImportService>()
             .AddScoped<NaturalSatelliteImportService>()
             .AddScoped<PlanetImportService>()
             .AddScoped<SeasonalMarkerImportService>()
@@ -147,10 +147,10 @@ public class Program
 
     public static async Task ImportLunarPhases()
     {
-        LunarPhaseDataImportService lunarPhaseDataImportService =
-            _serviceProvider!.GetRequiredService<LunarPhaseDataImportService>();
-        // await lunarPhaseDataImportService.ImportAstroPixels();
-        await lunarPhaseDataImportService.ImportUsno();
+        LunarPhaseImportService lunarPhaseImportService =
+            _serviceProvider!.GetRequiredService<LunarPhaseImportService>();
+        // await lunarPhaseImportService.ImportAstroPixels();
+        await lunarPhaseImportService.ImportUsno();
     }
 
     public static async Task ImportSeasonalMarkers()
@@ -165,7 +165,7 @@ public class Program
         LeapSecondImportService leapSecondImportService =
             _serviceProvider!.GetRequiredService<LeapSecondImportService>();
         // await leapSecondImportService.ImportNistWebPage();
-        await leapSecondImportService.ImportIersBulletins();
+        await leapSecondImportService.ImportIersBulletins(true);
     }
 
     public static void ImportEasterDates()

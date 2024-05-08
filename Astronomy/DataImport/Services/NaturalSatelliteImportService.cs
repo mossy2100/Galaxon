@@ -1,11 +1,12 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Astronomy.DataImport.Utilities;
 using Galaxon.Core.Exceptions;
 using Galaxon.Time;
 using HtmlAgilityPack;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
 public class NaturalSatelliteImportService
 {

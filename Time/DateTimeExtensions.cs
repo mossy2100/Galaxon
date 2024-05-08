@@ -217,13 +217,14 @@ public static class DateTimeExtensions
     #region Month names
 
     /// <summary>
-    /// Get the English month name of a datetime.
+    /// Get the month name of a datetime in the specified language.
     /// </summary>
     /// <param name="dt">The datetime.</param>
+    /// <param name="languageCode">The language code, e.g. "fr", "es"</param>
     /// <returns>The month name.</returns>
-    public static string GetMonthName(this DateTime dt)
+    public static string GetMonthName(this DateTime dt, string languageCode = "en")
     {
-        return dt.GetDateOnly().GetMonthName();
+        return GregorianMonth.GetName(dt.Month, languageCode);
     }
 
     #endregion Month names

@@ -5,7 +5,7 @@ namespace Galaxon.Tests.Time;
 [TestClass]
 public class GregorianCalendarExtensionsTests
 {
-    #region MonthNameToNumber
+    #region GetNumber
 
     [DataTestMethod]
     [DataRow("jan", 1)]
@@ -39,7 +39,7 @@ public class GregorianCalendarExtensionsTests
         int expectedNumber)
     {
         // Act
-        int actualNumber = GregorianCalendarExtensions.MonthNameToNumber(monthName);
+        int actualNumber = GregorianMonth.GetNumber(monthName);
 
         // Assert
         Assert.AreEqual(expectedNumber, actualNumber);
@@ -49,15 +49,15 @@ public class GregorianCalendarExtensionsTests
     public void MonthNameToNumber_InvalidInput_ThrowsArgumentException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => GregorianCalendarExtensions.MonthNameToNumber("InvalidMonth"));
+        Assert.ThrowsException<ArgumentException>(() => GregorianMonth.GetNumber("InvalidMonth"));
     }
 
     [TestMethod]
     public void MonthNameToNumber_AmbiguousInput_ThrowsArgumentException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => GregorianCalendarExtensions.MonthNameToNumber("Ju"));
+        Assert.ThrowsException<ArgumentException>(() => GregorianMonth.GetNumber("Ju"));
     }
 
-    #endregion MonthNameToNumber
+    #endregion GetNumber
 }

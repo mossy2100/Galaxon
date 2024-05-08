@@ -308,101 +308,6 @@ public static class GregorianCalendarExtensions
 
     #endregion Year and month start and end
 
-    #region Month names and lengths
-
-    /// <summary>
-    /// Dictionary mapping month numbers (1-12) to months with names and usual lengths.
-    /// </summary>
-    public static readonly Dictionary<int, GregorianMonth> Months = new ()
-    {
-        { 1, new GregorianMonth("January", 31) },
-        { 2, new GregorianMonth("February", 28) },
-        { 3, new GregorianMonth("March", 31) },
-        { 4, new GregorianMonth("April", 30) },
-        { 5, new GregorianMonth("May", 31) },
-        { 6, new GregorianMonth("June", 30) },
-        { 7, new GregorianMonth("July", 31) },
-        { 8, new GregorianMonth("August", 31) },
-        { 9, new GregorianMonth("September", 30) },
-        { 10, new GregorianMonth("October", 31) },
-        { 11, new GregorianMonth("November", 30) },
-        { 12, new GregorianMonth("December", 31) }
-    };
-
-    /// <summary>
-    /// Create a new dictionary to store month names with their corresponding month number.
-    /// </summary>
-    /// <returns>
-    /// A dictionary where the key is the month number and the value is the month name.
-    /// </returns>
-    public static Dictionary<int, string> GetMonthNames()
-    {
-        // Using LINQ to transform the GregorianMonths dictionary into a dictionary of month numbers
-        // and names.
-        return Months.ToDictionary(pair => pair.Key, pair => pair.Value.Name);
-    }
-
-    /// <summary>
-    /// Converts a month name to its corresponding number (1-12).
-    /// Fails if 0 or more than 1 match is found.
-    /// </summary>
-    /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
-    /// <returns>The month number.</returns>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the provided month name or abbreviation doesn't produce a unique result.
-    /// </exception>
-    public static int MonthNameToNumber(string monthName)
-    {
-        // Look for matches in the Months dictionary.
-        List<int> matches = Months
-            .Where(pair => pair.Value.Name.StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase))
-            .Select(pair => pair.Key)
-            .ToList();
-
-        // Handle failure modes.
-        if (matches.Count == 0)
-        {
-            throw new ArgumentException("Invalid month name or abbreviation.", nameof(monthName));
-        }
-        if (matches.Count > 1)
-        {
-            throw new ArgumentException("More than one match found.", nameof(monthName));
-        }
-
-        // Return the result.
-        return matches[0];
-    }
-
-    /// <summary>
-    /// Converts a month number (1-12) to its corresponding name.
-    /// </summary>
-    /// <param name="month">The month number (1-12).</param>
-    /// <returns>The month name.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the provided month number is invalid.
-    /// </exception>
-    public static string MonthNumberToName(int month)
-    {
-        CheckMonth(month);
-
-        return Months[month].Name;
-    }
-
-    /// <summary>
-    /// Converts a month number (1-12) to its corresponding abbreviation (e.g. Jan, Feb).
-    /// </summary>
-    /// <param name="month">The month number (1-12).</param>
-    /// <returns>The abbreviated month name.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the provided month number is invalid.
-    /// </exception>
-    public static string MonthNumberToAbbrev(int month)
-    {
-        return MonthNumberToName(month)[..3];
-    }
-
-    #endregion Month names
-
     #region Time units
 
     /// <summary>
@@ -446,7 +351,7 @@ public static class GregorianCalendarExtensions
     {
         CheckMonth(month);
 
-        return (month == 2 && IsLeapYear(year)) ? 29 : Months[month].LengthInDays;
+        return (month == 2 && IsLeapYear(year)) ? 29 : GregorianMonth.Months[month].Length;
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
-namespace DataImport.Services;
+namespace Galaxon.Astronomy.DataImport.Services;
 
 public class PlanetImportService(
     AstroDbContext astroDbContext,
