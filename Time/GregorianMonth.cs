@@ -10,7 +10,12 @@ namespace Galaxon.Time;
 public readonly record struct GregorianMonth(int Length, Dictionary<string, string> Names)
 {
     /// <summary>
-    /// Static cache of month info.
+    /// Gets the Gregorian months.
+    /// </summary>
+    public static Dictionary<int, GregorianMonth> Months => _months ??= CreateMonths();
+
+    /// <summary>
+    /// Cache of month info.
     /// </summary>
     private static Dictionary<int, GregorianMonth>? _months;
 
@@ -157,14 +162,9 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     }
 
     /// <summary>
-    /// Gets the Gregorian months.
-    /// </summary>
-    public static Dictionary<int, GregorianMonth> Months => _months ??= CreateMonths();
-
-    /// <summary>
     /// Gets the month name in the specified language.
     /// </summary>
-    /// <param name="languageCode">The language code (e.g., 'en', 'fr').</param>
+    /// <param name="languageCode">The language code (e.g., "en", "fr").</param>
     /// <returns>The name of the month in the specified language.</returns>
     public static string GetName(int monthNumber, string languageCode = "en")
     {
@@ -205,11 +205,13 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     }
 
     /// <summary>
-    /// Converts a month name to its corresponding number (1-12).
+    /// Get a month number (1-12) given a name in a specified language (default is English).
     /// Fails if zero or more than one match is found.
     /// </summary>
     /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
-    /// <param name="languageCode">The language code to search within (default is "en").</param>
+    /// <param name="languageCode">
+    /// The language code specifying which set of names to search for a match (default is "en").
+    /// </param>
     /// <returns>The month number.</returns>
     /// <exception cref="ArgumentException">
     /// Thrown when the provided month name doesn't produce a unique result.

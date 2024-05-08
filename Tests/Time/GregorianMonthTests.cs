@@ -3,7 +3,7 @@ using Galaxon.Time;
 namespace Galaxon.Tests.Time;
 
 [TestClass]
-public class GregorianCalendarExtensionsTests
+public class GregorianMonthTests
 {
     #region GetNumber
 
