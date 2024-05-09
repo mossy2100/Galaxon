@@ -37,15 +37,15 @@ public class ApsideController(
         AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Convert the apside from a character to an enum value.
-        EApside apside;
+        EApsideType apsideType;
         switch (apsideCode)
         {
             case 'p' or 'P':
-                apside = EApside.Periapsis;
+                apsideType = EApsideType.Periapsis;
                 break;
 
             case 'a' or 'A':
-                apside = EApside.Apoapsis;
+                apsideType = EApsideType.Apoapsis;
                 break;
 
             default:
@@ -87,13 +87,13 @@ public class ApsideController(
         string strApsideDateTime = dt1.ToIsoString();
         Log.Information(
             "{Apside} for {Planet} near {Date} computed to be {EventDateTime}, at a distance of {RadiusMetres} metres ({RadiusAU} AU) from the Sun.",
-            apside.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rMetres, rAu);
+            apsideType.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rMetres, rAu);
 
         // Construct the result.
         object result = new
         {
             Planet = planet.Name,
-            Apside = apside == EApside.Periapsis ? "perihelion" : "aphelion",
+            Apside = apsideType == EApsideType.Periapsis ? "perihelion" : "aphelion",
             DateTime = strApsideDateTime,
             Radius = new Dictionary<string, double>
             {

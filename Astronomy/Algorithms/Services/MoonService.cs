@@ -32,7 +32,7 @@ public class MoonService(AstroDbContext astroDbContext)
         {
             // We found a USNO calculation, so return that.
             return new LunarPhaseEvent(lunarPhase.Lunation,
-                (ELunarPhase)lunarPhase.Type, lunarPhase.DateTimeUtcUsno!.Value);
+                (ELunarPhaseType)lunarPhase.Type, lunarPhase.DateTimeUtcUsno!.Value);
         }
 
         // Look for a lunar phase in the database with an AstroPixels datetime within 24 hours.
@@ -44,7 +44,7 @@ public class MoonService(AstroDbContext astroDbContext)
         {
             // We found an AstroPixels calculation, so return that.
             return new LunarPhaseEvent(lunarPhase.Lunation,
-                (ELunarPhase)lunarPhase.Type, lunarPhase.DateTimeUtcAstroPixels!.Value);
+                (ELunarPhaseType)lunarPhase.Type, lunarPhase.DateTimeUtcAstroPixels!.Value);
         }
 
         // Use my calculation.
@@ -73,7 +73,7 @@ public class MoonService(AstroDbContext astroDbContext)
         int lunationNumber = (int)Floor(k);
         // Have to use Mod() here instead of % because phaseNumber can be negative and we want a
         // positive result.
-        ELunarPhase phase = (ELunarPhase)NumberExtensions.Mod(phaseCount, 4);
+        ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseCount, 4);
 
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
@@ -140,9 +140,9 @@ public class MoonService(AstroDbContext astroDbContext)
         // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can
         // be negative and we want a non-negative result.
         double C1;
-        if (phase is ELunarPhase.NewMoon or ELunarPhase.FullMoon)
+        if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {
-            if (phase == ELunarPhase.NewMoon)
+            if (phaseType == ELunarPhaseType.NewMoon)
             {
                 // Phase is New Moon.
                 C1 = -0.40720 * Sin(L)
@@ -221,7 +221,7 @@ public class MoonService(AstroDbContext astroDbContext)
                 - 0.00002 * Cos(L - M)
                 + 0.00002 * Cos(L + M)
                 + 0.00002 * Cos(2 * F);
-            jdtt += phase == ELunarPhase.FirstQuarter ? W : -W;
+            jdtt += phaseType == ELunarPhaseType.FirstQuarter ? W : -W;
         }
 
         // Additional correction for all phases.
@@ -247,7 +247,7 @@ public class MoonService(AstroDbContext astroDbContext)
         DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Construct and return the LunarPhase object.
-        return new LunarPhaseEvent(lunationNumber, phase, dtPhase);
+        return new LunarPhaseEvent(lunationNumber, phaseType, dtPhase);
     }
 
     /// <summary>
@@ -270,7 +270,7 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <param name="end">The end of the period.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns></returns>
-    public List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end, ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end, ELunarPhaseType? phase = null)
     {
         List<LunarPhaseEvent> result = [];
 
@@ -318,7 +318,7 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <param name="month">The month number.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public List<LunarPhaseEvent> GetPhasesInMonth(int year, int month, ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInMonth(int year, int month, ELunarPhaseType? phase = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)
@@ -346,7 +346,7 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <param name="year">The year number.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhase? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhaseType? phase = null)
     {
         // Check year is valid. Valid range matches DateTime.IsLeapYear().
         if (year is < 1 or > 9999)

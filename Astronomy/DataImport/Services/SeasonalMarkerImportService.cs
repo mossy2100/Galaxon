@@ -45,39 +45,39 @@ public class SeasonalMarkerImportService(
                         foreach (UsnoSeasonalMarker usm in usms.data)
                         {
                             bool isSeasonalMarker;
-                            ESeasonalMarker seasonalMarker = default;
-                            // EApside apside = default;
+                            ESeasonalMarkerType seasonalMarkerType = default;
+                            // EApsideType apside = default;
 
                             // Get the seasonal marker or apside type.
                             if (usm is { month: 3, phenom: "Equinox" })
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarker = ESeasonalMarker.NorthwardEquinox;
+                                seasonalMarkerType = ESeasonalMarkerType.NorthwardEquinox;
                             }
                             else if (usm is { month: 6, phenom: "Solstice" })
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarker = ESeasonalMarker.NorthernSolstice;
+                                seasonalMarkerType = ESeasonalMarkerType.NorthernSolstice;
                             }
                             else if (usm is { month: 9, phenom: "Equinox" })
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarker = ESeasonalMarker.SouthwardEquinox;
+                                seasonalMarkerType = ESeasonalMarkerType.SouthwardEquinox;
                             }
                             else if (usm is { month: 12, phenom: "Solstice" })
                             {
                                 isSeasonalMarker = true;
-                                seasonalMarker = ESeasonalMarker.SouthernSolstice;
+                                seasonalMarkerType = ESeasonalMarkerType.SouthernSolstice;
                             }
                             else if (usm.phenom == "Perihelion")
                             {
                                 isSeasonalMarker = false;
-                                // apside = EApside.Periapsis;
+                                // apside = EApsideType.Periapsis;
                             }
                             else if (usm.phenom == "Aphelion")
                             {
                                 isSeasonalMarker = false;
-                                // apside = EApside.Apoapsis;
+                                // apside = EApsideType.Apoapsis;
                             }
                             else
                             {
@@ -96,17 +96,17 @@ public class SeasonalMarkerImportService(
                                 SeasonalMarkerRecord newSeasonalMarkerRecord =
                                     new ()
                                     {
-                                        Type = seasonalMarker,
+                                        Type = seasonalMarkerType,
                                         DateTimeUtcUsno = dt
                                     };
-                                string seasonalMarkerTypeName = seasonalMarker.GetDisplayName();
+                                string seasonalMarkerTypeName = seasonalMarkerType.GetDisplayName();
                                 Console.WriteLine(
                                     $"{seasonalMarkerTypeName,60}: {dt.ToIsoString()}");
 
                                 // Update or insert the record.
                                 SeasonalMarkerRecord? existingSeasonalMarker =
                                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                                        sm.Type == seasonalMarker
+                                        sm.Type == seasonalMarkerType
                                         && sm.DateTimeUtcUsno != null
                                         && sm.DateTimeUtcUsno.Value.Year == year);
                                 if (existingSeasonalMarker == null)

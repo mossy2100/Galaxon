@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Attributes;
 
 namespace Galaxon.Astronomy.Data.Enums;
 
-public enum ESeasonalMarker
+public enum ESeasonalMarkerType
 {
     [Display("Northward Equinox")]
     NorthwardEquinox = 0,

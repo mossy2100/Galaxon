@@ -38,7 +38,7 @@ public class MoonServiceTests
         LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.NewMoon, phase.Type);
+        Assert.AreEqual(ELunarPhaseType.NewMoon, phase.Type);
         Assert.AreEqual(1977, phase.DateTimeUtc.Year);
         Assert.AreEqual(2, phase.DateTimeUtc.Month);
         Assert.AreEqual(18, phase.DateTimeUtc.Day);
@@ -60,7 +60,7 @@ public class MoonServiceTests
         LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
-        Assert.AreEqual(ELunarPhase.ThirdQuarter, phase.Type);
+        Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.Type);
         Assert.AreEqual(2044, phase.DateTimeUtc.Year);
         Assert.AreEqual(1, phase.DateTimeUtc.Month);
         Assert.AreEqual(21, phase.DateTimeUtc.Day);
@@ -143,11 +143,11 @@ public class MoonServiceTests
                 moonService.GetPhaseNearDateTime(phaseEventRecord.DateTimeUtcUsno!.Value);
 
             // Report on different type.
-            ELunarPhase phaseEventRecordPhase = (ELunarPhase)phaseEventRecord.Type;
+            ELunarPhaseType phaseTypeEventRecordPhaseType = (ELunarPhaseType)phaseEventRecord.Type;
             if (phaseEventRecord.Type != phaseEventCalculation.Type)
             {
                 Console.WriteLine(
-                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Type,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
+                    $"{phaseTypeEventRecordPhaseType.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.Type,15}: {phaseEventCalculation.DateTimeUtc.ToIsoString()}");
             }
 
             // Calculate the difference in seconds between their and my calculations.
@@ -155,7 +155,7 @@ public class MoonServiceTests
             if (diff.TotalSeconds > maxDiffSeconds)
             {
                 Console.WriteLine(
-                    $"{phaseEventRecordPhase.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F1} seconds");
+                    $"{phaseTypeEventRecordPhaseType.GetDisplayName(),15}: {phaseEventRecord.DateTimeUtcUsno.Value.ToIsoString()} c.f. {phaseEventCalculation.DateTimeUtc.ToIsoString()} = {diff.TotalSeconds:F1} seconds");
             }
             if (diff.TotalSeconds > maxDiffSecondsFound)
             {

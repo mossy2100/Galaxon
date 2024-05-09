@@ -37,7 +37,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ObjectsId");
 
-                    b.ToTable("AstroObjectGroupRecordAstroObjectRecord");
+                    b.ToTable("AstroObjectGroupRecordAstroObjectRecord", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.ApsideRecord", b =>
@@ -51,7 +51,10 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
@@ -66,7 +69,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Apsides");
+                    b.ToTable("Apsides", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectGroupRecord", b =>
@@ -89,7 +92,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("AstroObjectGroups");
+                    b.ToTable("AstroObjectGroups", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectRecord", b =>
@@ -114,7 +117,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("AstroObjects");
+                    b.ToTable("AstroObjects", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AtmosphereConstituentRecord", b =>
@@ -140,7 +143,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("MoleculeId");
 
-                    b.ToTable("AtmosphereConstituents");
+                    b.ToTable("AtmosphereConstituents", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AtmosphereRecord", b =>
@@ -168,7 +171,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Atmospheres");
+                    b.ToTable("Atmospheres", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DocumentRecord", b =>
@@ -203,7 +206,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.EasterDateRecord", b =>
@@ -219,7 +222,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EasterDates");
+                    b.ToTable("EasterDates", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.IersBulletinCRecord", b =>
@@ -255,7 +258,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("BulletinNumber")
                         .IsUnique();
 
-                    b.ToTable("IersBulletinCs");
+                    b.ToTable("IersBulletinCs", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.LeapSecondRecord", b =>
@@ -274,7 +277,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeapSeconds");
+                    b.ToTable("LeapSeconds", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.LunarPhaseRecord", b =>
@@ -285,10 +288,10 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
@@ -303,7 +306,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LunarPhases");
+                    b.ToTable("LunarPhases", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.MoleculeRecord", b =>
@@ -326,7 +329,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Molecules");
+                    b.ToTable("Molecules", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.ObservationalRecord", b =>
@@ -360,7 +363,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Observationals");
+                    b.ToTable("Observationals", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.OrbitalRecord", b =>
@@ -418,7 +421,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Orbitals");
+                    b.ToTable("Orbitals", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.PhysicalRecord", b =>
@@ -506,7 +509,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Physicals");
+                    b.ToTable("Physicals", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.RotationalRecord", b =>
@@ -543,7 +546,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Rotationals");
+                    b.ToTable("Rotationals", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.SeasonalMarkerRecord", b =>
@@ -557,7 +560,10 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
@@ -572,7 +578,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SeasonalMarkers");
+                    b.ToTable("SeasonalMarkers", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.StellarRecord", b =>
@@ -604,7 +610,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Stellars");
+                    b.ToTable("Stellars", (string)null);
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.VSOP87DRecord", b =>
@@ -641,7 +647,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("AstroObjectId");
 
-                    b.ToTable("VSOP87D");
+                    b.ToTable("VSOP87D", (string)null);
                 });
 
             modelBuilder.Entity("AstroObjectGroupRecordAstroObjectRecord", b =>

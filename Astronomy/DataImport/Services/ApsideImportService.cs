@@ -79,14 +79,14 @@ public class ApsideImportService(
                         AstroObjectId = planet.Id,
                         Orbit = apsideEvent.Orbit,
                         Type = apsideEvent.Type,
-                        DateTimeUtc = apsideEvent.DateTimeUtc
+                        DateTimeUtcGalaxon = apsideEvent.DateTimeUtc
                     };
                     astroDbContext.Apsides.Add(apsideRecord);
                 }
                 else
                 {
                     // Update the existing record.
-                    apsideRecord.DateTimeUtc = apsideEvent.DateTimeUtc;
+                    apsideRecord.DateTimeUtcGalaxon = apsideEvent.DateTimeUtc;
                     astroDbContext.Apsides.Attach(apsideRecord);
                 }
 

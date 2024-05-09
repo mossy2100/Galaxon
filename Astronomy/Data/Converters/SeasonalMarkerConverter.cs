@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Galaxon.Astronomy.Data.Converters;
 
-public class SeasonalMarkerConverter() : ValueConverter<ESeasonalMarker, string>(
-    // Convert from ESeasonalMarker enum to string.
+public class SeasonalMarkerConverter() : ValueConverter<ESeasonalMarkerType, string>(
+    // Convert from enum to string.
     v => v.ToString(),
 
-    // Convert from string back to ESeasonalMarker enum.
-    v => (ESeasonalMarker)Enum.Parse(typeof(ESeasonalMarker), v)
+    // Convert from string to enum.
+    v => (ESeasonalMarkerType)Enum.Parse(typeof(ESeasonalMarkerType), v)
 );

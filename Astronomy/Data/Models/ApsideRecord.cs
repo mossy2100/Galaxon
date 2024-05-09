@@ -20,7 +20,7 @@ public class ApsideRecord : DatabaseRecord
     /// The apside type; periapsis or apoapsis.
     /// </summary>
     [Column(TypeName = "varchar(20)")]
-    public EApside Type { get; set; }
+    public EApsideType Type { get; set; }
 
     /// <summary>
     /// This will be a multiple of 0.5 and uniquely identify an apside for the given object.
@@ -32,12 +32,18 @@ public class ApsideRecord : DatabaseRecord
     public double Value => Orbit + (int)Type / 2.0;
 
     /// <summary>
-    /// The UTC datetime of the apside according to the Galaxon algorithms.
+    /// The UTC datetime of the apside according to my calculations.
     /// </summary>
-    public DateTime? DateTimeUtc { get; set; }
+    public DateTime? DateTimeUtcGalaxon { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the apside according to the USNO web service.
+    /// The UTC datetime of the apside according to AstroPixels.
+    /// <see href="https://www.astropixels.com/ephemeris/ephemeris.html"/>
+    /// </summary>
+    public DateTime? DateTimeUtcAstroPixels { get; set; }
+
+    /// <summary>
+    /// The UTC datetime of the apside according to USNO.
     /// <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
     /// </summary>
     public DateTime? DateTimeUtcUsno { get; set; }

@@ -8,7 +8,7 @@ namespace Galaxon.Astronomy.Data.Enums;
 /// If I do, it will require renumbering the phases and updating some algorithms that rely on these
 /// numbers.
 /// </summary>
-public enum ELunarPhase
+public enum ELunarPhaseType
 {
     [Display("New Moon")]
     NewMoon = 0,

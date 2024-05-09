@@ -6,7 +6,7 @@ namespace Galaxon.Astronomy.Algorithms.Records;
 public record struct ApsideEvent(
     AstroObjectRecord Planet,
     int Orbit,
-    EApside Type,
+    EApsideType Type,
     double JulianDateTerrestrial,
     DateTime DateTimeUtc,
     double? Radius_m = null,

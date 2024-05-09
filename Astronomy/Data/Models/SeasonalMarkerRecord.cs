@@ -19,15 +19,21 @@ public class SeasonalMarkerRecord : DatabaseRecord
     /// The seasonal marker type.
     /// </summary>
     [Column(TypeName = "varchar(20)")]
-    public ESeasonalMarker Type { get; set; }
+    public ESeasonalMarkerType Type { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the seasonal marker as calculated by my code.
+    /// The UTC datetime of the seasonal marker according to my calculations.
     /// </summary>
-    public DateTime? DateTimeUtc { get; set; }
+    public DateTime? DateTimeUtcGalaxon { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the seasonal marker as obtained from the USNO web service.
+    /// The UTC datetime of the seasonal marker according to AstroPixels.
+    /// <see href="https://www.astropixels.com/ephemeris/soleq2001.html"/>
+    /// </summary>
+    public DateTime? DateTimeUtcAstroPixels { get; set; }
+
+    /// <summary>
+    /// The UTC datetime of the seasonal marker according to USNO.
     /// <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
     /// </summary>
     public DateTime? DateTimeUtcUsno { get; set; }

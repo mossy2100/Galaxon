@@ -546,7 +546,7 @@ public class LunisolarCalendar(
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         List<LunarPhaseEvent> newMoons =
-            moonService.GetPhasesInPeriod(start, end, ELunarPhase.NewMoon);
+            moonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (LunarPhaseEvent newMoon in newMoons)
         {
             // Get Ls.
@@ -559,7 +559,7 @@ public class LunisolarCalendar(
             {
                 DateTime dtEquinox =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarker.NorthwardEquinox);
+                        ESeasonalMarkerType.NorthwardEquinox);
                 double diffDays =
                     Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -575,7 +575,7 @@ public class LunisolarCalendar(
             {
                 DateTime dtSolstice =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarker.SouthernSolstice);
+                        ESeasonalMarkerType.SouthernSolstice);
                 double diffDays =
                     Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
@@ -631,11 +631,11 @@ public class LunisolarCalendar(
             // Get the southern solstice.
             DateTime solstice =
                 seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
-                    ESeasonalMarker.SouthernSolstice);
+                    ESeasonalMarkerType.SouthernSolstice);
 
             // Check if there's also a New Moon at this time.
             LunarPhaseEvent newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
-            if (newMoon.Type != ELunarPhase.NewMoon)
+            if (newMoon.Type != ELunarPhaseType.NewMoon)
             {
                 continue;
             }

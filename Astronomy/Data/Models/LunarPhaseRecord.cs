@@ -13,7 +13,7 @@ public class LunarPhaseRecord : DatabaseRecord
     /// The phase type.
     /// </summary>
     [Column(TypeName = "varchar(20)")]
-    public ELunarPhase Type { get; set; }
+    public ELunarPhaseType Type { get; set; }
 
     /// <summary>
     /// The unique phase number, which is a multiple of 0.25. New moons will be integers.
@@ -21,17 +21,19 @@ public class LunarPhaseRecord : DatabaseRecord
     public double Value => Lunation + (int)Type / 4.0;
 
     /// <summary>
-    /// The UTC datetime of the lunar phase event as calculated by me.
+    /// The UTC datetime of the lunar phase according to my calculations.
     /// </summary>
-    public DateTime? DateTimeUtc { get; set; }
+    public DateTime? DateTimeUtcGalaxon { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the lunar phase event according to AstroPixels.
+    /// The UTC datetime of the lunar phase according to AstroPixels.
+    /// <see href="https://www.astropixels.com/ephemeris/phasescat/phasescat.html"/>
     /// </summary>
     public DateTime? DateTimeUtcAstroPixels { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the lunar phase event according to USNO.
+    /// The UTC datetime of the lunar phase according to USNO.
+    /// <see href="https://aa.usno.navy.mil/data/MoonPhases"/>
     /// </summary>
     public DateTime? DateTimeUtcUsno { get; set; }
 }

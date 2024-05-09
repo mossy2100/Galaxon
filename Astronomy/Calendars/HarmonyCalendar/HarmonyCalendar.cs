@@ -268,9 +268,9 @@ public class HarmonyCalendar : Calendar
         return seasonalMarkers.Select(sm => sm.DateTimeUtcUsno!.Value).ToArray();
     }
 
-    public static DateTime GetSeasonalMarker(int year, ESeasonalMarker seasonalMarkerNumber)
+    public static DateTime GetSeasonalMarker(int year, ESeasonalMarkerType seasonalMarkerTypeNumber)
     {
-        return GetSeasonalMarkers(year)[(int)seasonalMarkerNumber];
+        return GetSeasonalMarkers(year)[(int)seasonalMarkerTypeNumber];
     }
 
     public static int GetWeeksInYear(int year, int month)

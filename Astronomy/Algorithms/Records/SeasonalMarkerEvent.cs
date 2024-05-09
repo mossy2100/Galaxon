@@ -7,4 +7,4 @@ namespace Galaxon.Astronomy.Algorithms.Records;
 /// That type represents a database record.
 /// This type represents a specific seasonal marker, usually a method result.
 /// </summary>
-public record struct SeasonalMarkerEvent(ESeasonalMarker SeasonalMarker, DateTime DateTimeUtc);
+public record struct SeasonalMarkerEvent(ESeasonalMarkerType _SeasonalMarkerType, DateTime DateTimeUtc);

@@ -87,7 +87,7 @@ public class ApsideService(
 
         // Round off k to nearest 0.5.
         k = Round(k * 2) / 2;
-        EApside apside = double.IsInteger(k) ? EApside.Periapsis : EApside.Apoapsis;
+        EApsideType apsideType = double.IsInteger(k) ? EApsideType.Periapsis : EApsideType.Apoapsis;
 
         // Get the coefficients for the given planet.
         double[] coeffs = _Coefficients[planet.Number.Value];
@@ -101,7 +101,7 @@ public class ApsideService(
             double correction = 0;
             foreach (double[] values in _EarthCorrectionValues)
             {
-                if (apside == EApside.Periapsis)
+                if (apsideType == EApsideType.Periapsis)
                 {
                     correction += values[2] * Angles.SinDegrees(values[0] + values[1] * k);
                 }
@@ -120,7 +120,7 @@ public class ApsideService(
         DateTime dt2 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
             .RoundToNearestMinute();
 
-        return new ApsideEvent(planet, orbitNumber, apside, jdtt2, dt2);
+        return new ApsideEvent(planet, orbitNumber, apsideType, jdtt2, dt2);
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public class ApsideService(
         Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius;
 
         // If we are looking for a minimum or a maximum radius.
-        bool findMax = approxApsideEvent.Type == EApside.Apoapsis;
+        bool findMax = approxApsideEvent.Type == EApsideType.Apoapsis;
 
         // Result variables.
         double jdttResult;
