@@ -10,11 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Logs\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </None>
+      <None Update="appsettings.Development.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -22,8 +23,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Development\Application\Application.csproj" />
       <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
       <ProjectReference Include="..\Data\Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog" Version="3.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Logs\" />
     </ItemGroup>
 
 </Project>

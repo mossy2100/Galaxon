@@ -8,6 +8,21 @@ public class AstroObjectRepository(
     AstroObjectGroupRepository astroObjectGroupRepository)
 {
     /// <summary>
+    /// Dictionary mapping planet numbers to English names.
+    /// </summary>
+    public static readonly Dictionary<int, string> PLANET_NAMES = new ()
+    {
+        { 1, "Mercury" },
+        { 2, "Venus" },
+        { 3, "Earth" },
+        { 4, "Mars" },
+        { 5, "Jupiter" },
+        { 6, "Saturn" },
+        { 7, "Uranus" },
+        { 8, "Neptune" }
+    };
+
+    /// <summary>
     /// Load an AstroObject from the database by specifying either an object name or number, or
     /// both, and optional group name.
     /// Examples:
@@ -59,7 +74,7 @@ public class AstroObjectRepository(
                     "Object number must be positive.");
             }
 
-            query = query.Where(ao => ao.Number == astroObjectNumber);
+            query = query.Where(ao => ao.Number != null && ao.Number.Value == astroObjectNumber);
         }
 
         // Enumerate.

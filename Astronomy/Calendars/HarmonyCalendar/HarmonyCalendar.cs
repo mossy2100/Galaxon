@@ -225,19 +225,19 @@ public class HarmonyCalendar : Calendar
         return month is >= 1 and <= MonthsPerYear;
     }
 
-    public static bool IsValidDate(int year, int month, int dayOfMonth)
+    public bool IsValidDate(int year, int month, int dayOfMonth)
     {
         return IsValidYear(year)
             && IsValidMonth(month)
             && dayOfMonth >= 1
-            && dayOfMonth <= new HarmonyCalendar().GetDaysInMonth(year, month);
+            && dayOfMonth <= GetDaysInMonth(year, month);
     }
 
-    public static bool IsValidDate(int year, int dayOfYear)
+    public bool IsValidDate(int year, int dayOfYear)
     {
         return IsValidYear(year)
             && dayOfYear >= 1
-            && dayOfYear <= new HarmonyCalendar().GetDaysInYear(year);
+            && dayOfYear <= GetDaysInYear(year);
     }
 
     public static bool IsValidDayOfWeek(int dayOfWeek)
@@ -249,10 +249,10 @@ public class HarmonyCalendar : Calendar
 
     #region StaticMethods
 
-    public static DateTime[] GetSeasonalMarkers(int year)
+    public DateTime[] GetSeasonalMarkers(int year)
     {
-        using AstroDbContext db = new ();
-        List<SeasonalMarkerRecord> seasonalMarkers = db.SeasonalMarkers
+        AstroDbContext astroDbContext = new ();
+        List<SeasonalMarkerRecord> seasonalMarkers = astroDbContext.SeasonalMarkers
             .Where(sm => sm.DateTimeUtcUsno != null && sm.DateTimeUtcUsno.Value.Year == year)
             .OrderBy(sm => sm.DateTimeUtcUsno)
             .ToList();
@@ -268,7 +268,7 @@ public class HarmonyCalendar : Calendar
         return seasonalMarkers.Select(sm => sm.DateTimeUtcUsno!.Value).ToArray();
     }
 
-    public static DateTime GetSeasonalMarker(int year, ESeasonalMarkerType seasonalMarkerTypeNumber)
+    public DateTime GetSeasonalMarker(int year, ESeasonalMarkerType seasonalMarkerTypeNumber)
     {
         return GetSeasonalMarkers(year)[(int)seasonalMarkerTypeNumber];
     }
@@ -288,7 +288,7 @@ public class HarmonyCalendar : Calendar
     /// </summary>
     /// <param name="year">The date.</param>
     /// <returns></returns>
-    public static DateOnly GetFirstDayOfYear(int year)
+    public DateOnly GetFirstDayOfYear(int year)
     {
         // Find the March equinox date for the given Gregorian year.
         DateTime nve = GetSeasonalMarker(year, 0);

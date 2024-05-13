@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using AnyAscii;
 
-namespace Galaxon.Web;
+namespace Galaxon.Development.Application;
 
 public static class UriTools
 {

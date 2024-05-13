@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    partial class AstroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240512002254_AddedColumnsForRadiusValues")]
+    partial class AddedColumnsForRadiusValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,9 +51,6 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("ApsideNumber")
-                        .HasColumnType("double");
-
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
@@ -63,11 +63,18 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<double?>("RadiusAstroPixels_AU")
+                    b.Property<int>("Orbit")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("RadiusAuAstroPixels")
                         .HasColumnType("double");
 
-                    b.Property<double?>("RadiusGalaxon_AU")
+                    b.Property<double?>("RadiusAuGalaxon")
                         .HasColumnType("double");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 

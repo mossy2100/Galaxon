@@ -8,15 +8,13 @@ using HtmlAgilityPack;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class NaturalSatelliteImportService
+public class NaturalSatelliteImportService(
+    AstroDbContext astroDbContext,
+    AstroObjectRepository astroObjectRepository,
+    AstroObjectGroupRepository astroObjectGroupRepository)
 {
     public async Task Import()
     {
-        AstroDbContext astroDbContext = new ();
-        AstroObjectGroupRepository astroObjectGroupRepository = new (astroDbContext);
-        AstroObjectRepository astroObjectRepository =
-            new (astroDbContext, astroObjectGroupRepository);
-
         try
         {
             string url = "https://en.wikipedia.org/wiki/List_of_natural_satellites";

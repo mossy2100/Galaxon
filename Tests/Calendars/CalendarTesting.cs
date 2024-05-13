@@ -22,10 +22,12 @@ public class CalendarTesting
         JapaneseCalendar jcal = new();
         ShowCalendarInfo(jcal);
 
+        HarmonyCalendar hcal = new ();
+
         for (int year = 2002; year <= 2010; year++)
         {
             Console.WriteLine(
-                $"\nThe {year} NVE occurs at {HarmonyCalendar.GetSeasonalMarker(year, 0)}.");
+                $"\nThe {year} NVE occurs at {hcal.GetSeasonalMarker(year, 0)}.");
             DateOnly[] testValues =
             {
                 new(year, 3, 1),

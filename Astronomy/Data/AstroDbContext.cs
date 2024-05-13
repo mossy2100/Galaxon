@@ -1,9 +1,10 @@
 ﻿using Galaxon.Astronomy.Data.Converters;
+using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Files;
+using Galaxon.Development.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Galaxon.Astronomy.Data;
 
@@ -12,11 +13,6 @@ namespace Galaxon.Astronomy.Data;
 /// </summary>
 public class AstroDbContext : DbContext
 {
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    public AstroDbContext() { }
-
     #region Database tables
 
     // ---------------------------------------------------------------------------------------------
@@ -44,7 +40,8 @@ public class AstroDbContext : DbContext
 
     public DbSet<AtmosphereRecord> Atmospheres => Set<AtmosphereRecord>();
 
-    public DbSet<AtmosphereConstituentRecord> AtmosphereConstituents => Set<AtmosphereConstituentRecord>();
+    public DbSet<AtmosphereConstituentRecord> AtmosphereConstituents =>
+        Set<AtmosphereConstituentRecord>();
 
     public DbSet<MoleculeRecord> Molecules => Set<MoleculeRecord>();
 
@@ -84,25 +81,17 @@ public class AstroDbContext : DbContext
     /// <exception cref="InvalidOperationException"></exception>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Load the configuration.
-        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-            ?? Environment.GetEnvironmentVariable("CONSOLEAPP_ENVIRONMENT")
-            ?? "Production";
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            // Ensure this path is correct, particularly when running from a different context like
-            // a class library.
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", false, true)
-            .AddJsonFile($"appsettings.{environment}.json", true, true)
-            .Build();
-
         // Get the database connection string.
+        IConfiguration configuration = SetupTools.LoadConfiguration();
         string? connectionString = configuration.GetConnectionString("Astro");
-        if (connectionString == null)
+        if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException(
-                "Connection string for Astro database not found.");
+            throw new InvalidOperationException("Connection string for Astro database not found.");
         }
+
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            .UseLazyLoadingProxies()
+            .EnableSensitiveDataLogging();
 
         // Old connection strings:
         // MS SQL:
@@ -110,14 +99,6 @@ public class AstroDbContext : DbContext
         //     "SpaceCalendars": "Server=localhost,1433; Database=SpaceCalendars; User Id=SA; Password=HappyDays2023"
         // MySQL:
         //     "Galaxon": "Server=localhost;port=3306;database=galaxon;user=shaun;password=freedom"
-
-        // Configure the DbContext.
-        optionsBuilder
-            .UseLazyLoadingProxies()
-            .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-            .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
-                LogLevel.Warning)
-            .EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -163,10 +144,6 @@ public class AstroDbContext : DbContext
 
         // Converters.
         builder
-            .Entity<ApsideRecord>()
-            .Property(e => e.Type)
-            .HasConversion(new ApsideConverter());
-        builder
             .Entity<LunarPhaseRecord>()
             .Property(e => e.Type)
             .HasConversion(new LunarPhaseConverter());
@@ -190,6 +167,15 @@ public class AstroDbContext : DbContext
         configurationBuilder
             .Properties<DateTime>()
             .HaveConversion<NullableDateTimeConverter>();
+        configurationBuilder
+            .Properties<EApsideType>()
+            .HaveConversion<ApsideConverter>();
+        configurationBuilder
+            .Properties<ELunarPhaseType>()
+            .HaveConversion<LunarPhaseConverter>();
+        configurationBuilder
+            .Properties<ESeasonalMarkerType>()
+            .HaveConversion<SeasonalMarkerConverter>();
     }
 
     public static string DataDirectory()

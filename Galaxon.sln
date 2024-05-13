@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Development", "Development"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui", "Development\Maui\Maui.csproj", "{6F07E140-FC6B-4088-B4FF-2D11474D2207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Development\Web\Web.csproj", "{47E09AC7-D3BB-4EEA-BD3F-4301BBB3F702}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Development\Application\Application.csproj", "{47E09AC7-D3BB-4EEA-BD3F-4301BBB3F702}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Numerics\Extensions\Extensions.csproj", "{D478AAC7-F0BF-491C-81F4-2932C82B3DB3}"
 EndProject

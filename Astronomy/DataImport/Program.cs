@@ -3,7 +3,8 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Astronomy.DataImport.Services;
-using Galaxon.Core.Files;
+using Galaxon.Development.Application;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -12,13 +13,21 @@ namespace Galaxon.Astronomy.DataImport;
 public class Program
 {
     /// <summary>
+    /// Reference to the configuration.
+    /// </summary>
+    private static IConfiguration? _configuration;
+
+    /// <summary>
     /// Reference to the ServiceProvider.
     /// </summary>
     private static ServiceProvider? _serviceProvider;
 
     public static async Task Main(string[] args)
     {
-        SetupLogging();
+        // Initialize.
+        _configuration = SetupTools.Initialize();
+
+        // Set up services.
         SetupServices();
 
         try
@@ -26,10 +35,11 @@ public class Program
             // await ImportDwarfPlanets();
             // await ImportNaturalSatellites();
             // await ImportLunarPhases();
-            await ImportLeapSeconds();
+            // await ImportLeapSeconds();
             // TestDbContext();
             // await ImportSeasonalMarkers();
             // PrepopulateApsides();
+            await ImportApsidesFromUsno();
         }
         catch (Exception ex)
         {
@@ -41,22 +51,6 @@ public class Program
             // Dispose the service provider to clean up resources
             await _serviceProvider!.DisposeAsync();
         }
-    }
-
-    public static void SetupLogging()
-    {
-        string? solnDir = DirectoryUtility.GetSolutionDirectory();
-        if (solnDir == null)
-        {
-            throw new InvalidOperationException("Could not find solution directory.");
-        }
-
-        // Set up logging.
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.File(Path.Combine(solnDir, "logs/Galaxon.Astronomy.DataImport.log"))
-            .CreateLogger();
     }
 
     public static void SetupServices()
@@ -189,7 +183,21 @@ public class Program
 
     private static void PrepopulateApsides()
     {
-        ApsideImportService apsideImportService = _serviceProvider!.GetRequiredService<ApsideImportService>();
+        ApsideImportService apsideImportService =
+            _serviceProvider!.GetRequiredService<ApsideImportService>();
         apsideImportService.CacheCalculations();
+    }
+
+    private static async Task ImportApsidesFromUsno()
+    {
+        ApsideImportService apsideImportService =
+            _serviceProvider!.GetRequiredService<ApsideImportService>();
+        await apsideImportService.ImportApsidesFromUsno();
+    }
+    private static void ImportApsidesFromAstroPixels()
+    {
+        ApsideImportService apsideImportService =
+            _serviceProvider!.GetRequiredService<ApsideImportService>();
+        apsideImportService.ImportApsidesFromAstroPixels();
     }
 }

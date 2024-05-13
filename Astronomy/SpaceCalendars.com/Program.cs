@@ -1,6 +1,8 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
+using Galaxon.Core.Files;
+using Galaxon.Development.Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -15,11 +17,17 @@ namespace Galaxon.Astronomy.SpaceCalendars.com;
 /// </summary>
 public class Program
 {
+    /// <summary>
+    /// Reference to the configuration.
+    /// </summary>
+    private static IConfiguration? _configuration;
+
     public static void Main(string[] args)
     {
         try
         {
-            SetupLogger();
+            // Initialize.
+            _configuration = SetupTools.Initialize();
 
             Log.Information("Creating wep application builder...");
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -46,22 +54,6 @@ public class Program
         {
             Log.CloseAndFlush();
         }
-    }
-
-    /// <summary>
-    /// Configures the Serilog logging service.
-    /// </summary>
-    public static void SetupLogger()
-    {
-        // Build configuration
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        // Set up Serilog
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .CreateLogger();
     }
 
     /// <summary>

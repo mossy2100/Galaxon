@@ -67,13 +67,14 @@ public class HarmonyDate : IEarthDate
     /// <returns>A tuple containing the year and the day of the year.</returns>
     public static (int year, int dayOfYear) CalcYearAndDayOfYear(DateTime dt)
     {
+        HarmonyCalendar cal = new ();
         DateOnly date = DateOnly.FromDateTime(dt.ToUniversalTime());
         int year = date.Year;
-        DateOnly firstDayOfYear = HarmonyCalendar.GetFirstDayOfYear(year);
+        DateOnly firstDayOfYear = cal.GetFirstDayOfYear(year);
         if (date < firstDayOfYear)
         {
             year--;
-            firstDayOfYear = HarmonyCalendar.GetFirstDayOfYear(year);
+            firstDayOfYear = cal.GetFirstDayOfYear(year);
         }
 
         // Get the day of the year.
@@ -102,7 +103,8 @@ public class HarmonyDate : IEarthDate
 
     public DateTime ToDateTime()
     {
-        DateOnly date = HarmonyCalendar.GetFirstDayOfYear(Year);
+        HarmonyCalendar hcal = new ();
+        DateOnly date = hcal.GetFirstDayOfYear(Year);
         date.AddDays(DayOfYear - 1);
         return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
     }

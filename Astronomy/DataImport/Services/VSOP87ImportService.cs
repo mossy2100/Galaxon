@@ -12,21 +12,6 @@ public class Vsop87ImportService(
     AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
-    /// Dictionary mapping planet numbers to English names.
-    /// </summary>
-    public static readonly Dictionary<int, string> PLANET_NAMES = new ()
-    {
-        { 1, "Mercury" },
-        { 2, "Venus" },
-        { 3, "Earth" },
-        { 4, "Mars" },
-        { 5, "Jupiter" },
-        { 6, "Saturn" },
-        { 7, "Uranus" },
-        { 8, "Neptune" }
-    };
-
-    /// <summary>
     /// Parse a VSOP87 data file downloaded from the VSOP87 ftp site.
     /// <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
     /// As per AA2 we're using VSOP87D data files, which contain values for
@@ -154,7 +139,7 @@ public class Vsop87ImportService(
     {
         for (byte planetNum = 1; planetNum <= 8; planetNum++)
         {
-            string name = PLANET_NAMES[planetNum];
+            string name = AstroObjectRepository.PLANET_NAMES[planetNum];
             string abbrev = name[..3].ToLower();
             ImportVsop87DataFile($"VSOP87D.{abbrev}");
         }

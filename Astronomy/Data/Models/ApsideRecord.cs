@@ -11,30 +11,35 @@ public class ApsideRecord : DatabaseRecord
     public int AstroObjectId { get; set; }
 
     /// <summary>
-    /// As per Chapter 38, Astronomical Algorithms (2nd ed.) by Jeen Meeus.
-    /// This value is 0 or positive for dates after the beginning of 2000, negative for earlier.
-    /// </summary>
-    public int Orbit { get; set; }
-
-    /// <summary>
-    /// The apside type; periapsis or apoapsis.
-    /// </summary>
-    [Column(TypeName = "varchar(20)")]
-    public EApsideType Type { get; set; }
-
-    /// <summary>
     /// This will be a multiple of 0.5 and uniquely identify an apside for the given object.
-    /// This value is called 'k' in the book (Astronomical Algorithms, 2nd Ed. by Jean Meeus) and is
-    /// a multiple of 0.5 It will be 0 or positive for events after the beginning of 2000, negative
-    /// for before.
+    /// This value is called 'k' in Chapter 38, Astronomical Algorithms (2nd ed.) by Jeen Meeus.
+    /// It will be 0 or positive for dates after the beginning of 2000, negative for earlier.
+    /// Perihelion events have no fractional part; aphelion events have a fraction of 0.5.
+    /// </summary>
+    public double ApsideNumber { get; set; }
+
+    /// <summary>
+    /// The type of apside.
     /// </summary>
     [NotMapped]
-    public double Value => Orbit + (int)Type / 2.0;
+    public EApsideType ApsideType =>
+        double.IsInteger(ApsideNumber) ? EApsideType.Periapsis : EApsideType.Apoapsis;
 
     /// <summary>
     /// The UTC datetime of the apside according to my calculations.
     /// </summary>
     public DateTime? DateTimeUtcGalaxon { get; set; }
+
+    /// <summary>
+    /// The radius (distance to Sun) in AU of the apside according to my calculations.
+    /// </summary>
+    public double? RadiusGalaxon_AU { get; set; }
+
+    /// <summary>
+    /// The UTC datetime of the apside according to USNO.
+    /// <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
+    /// </summary>
+    public DateTime? DateTimeUtcUsno { get; set; }
 
     /// <summary>
     /// The UTC datetime of the apside according to AstroPixels.
@@ -43,8 +48,7 @@ public class ApsideRecord : DatabaseRecord
     public DateTime? DateTimeUtcAstroPixels { get; set; }
 
     /// <summary>
-    /// The UTC datetime of the apside according to USNO.
-    /// <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
+    /// The radius (distance to Sun) in AU of the apside according to AstroPixels.
     /// </summary>
-    public DateTime? DateTimeUtcUsno { get; set; }
+    public double? RadiusAstroPixels_AU { get; set; }
 }

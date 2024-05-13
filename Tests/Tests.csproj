@@ -24,7 +24,7 @@
         <ProjectReference Include="..\Astronomy\Algorithms\Algorithms.csproj" />
         <ProjectReference Include="..\Astronomy\Calendars\Calendars.csproj" />
         <ProjectReference Include="..\Core\Core.csproj"/>
-        <ProjectReference Include="..\Development\Web\Web.csproj" />
+        <ProjectReference Include="..\Development\Application\Application.csproj" />
         <ProjectReference Include="..\Numerics\Algebra\Algebra.csproj" />
         <ProjectReference Include="..\Numerics\Bases\Bases.csproj" />
         <ProjectReference Include="..\Numerics\BigNumbers\BigNumbers.csproj" />

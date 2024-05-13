@@ -67,7 +67,7 @@ public class ApsideService(
             throw new DataException("Planet number must be in the range 1-8.");
         }
 
-        // Convert the DateTime to a decimal year without doing any delta-T calculation, as the
+        // Convert the DateTime to a decimal year without making any adjustment for delta-T, as the
         // input JD(TT) is only approximate.
         double year = TimeScales.JulianDateToDecimalYear(jdtt);
 
@@ -101,13 +101,14 @@ public class ApsideService(
             double correction = 0;
             foreach (double[] values in _EarthCorrectionValues)
             {
+                double theta = values[0] + values[1] * k;
                 if (apsideType == EApsideType.Periapsis)
                 {
-                    correction += values[2] * Angles.SinDegrees(values[0] + values[1] * k);
+                    correction += values[2] * Angles.SinDegrees(theta);
                 }
                 else
                 {
-                    correction += values[3] * Angles.SinDegrees(values[0] + values[1] * k);
+                    correction += values[3] * Angles.SinDegrees(theta);
                 }
             }
             jdtt2 += correction;
@@ -120,7 +121,7 @@ public class ApsideService(
         DateTime dt2 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
             .RoundToNearestMinute();
 
-        return new ApsideEvent(planet, orbitNumber, apsideType, jdtt2, dt2);
+        return new ApsideEvent(planet, k, jdtt2, dt2);
     }
 
     /// <summary>
@@ -154,7 +155,7 @@ public class ApsideService(
         Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius;
 
         // If we are looking for a minimum or a maximum radius.
-        bool findMax = approxApsideEvent.Type == EApsideType.Apoapsis;
+        bool findMax = approxApsideEvent.ApsideType == EApsideType.Apoapsis;
 
         // Result variables.
         double jdttResult;
@@ -205,7 +206,7 @@ public class ApsideService(
         // Compute the distance in AU.
         double radiusInAu = radiusInMetresResult / Length.METRES_PER_ASTRONOMICAL_UNIT;
 
-        return new ApsideEvent(planet, approxApsideEvent.Orbit, approxApsideEvent.Type,
-            jdttResult, dtResult, radiusInMetresResult, radiusInAu);
+        return new ApsideEvent(planet, approxApsideEvent.ApsideNumber, jdttResult, dtResult,
+            radiusInMetresResult, radiusInAu);
     }
 }
