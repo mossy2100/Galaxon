@@ -11,7 +11,7 @@ public class BirthdayService(SunService sunService)
     {
         double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtBirth);
         Coordinates coords = sunService.CalcPosition(jdtt);
-        return coords.Longitude;
+        return coords.Longitude_rad;
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class BirthdayService(SunService sunService)
         Func<double, double> func = jdtt =>
         {
             Coordinates coords = sunService.CalcPosition(jdtt);
-            return Math.Abs(coords.Longitude - LsBirth);
+            return Math.Abs(coords.Longitude_rad - LsBirth);
         };
 
         // Find the input JD(TT) where the function is at a minimum.

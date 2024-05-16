@@ -89,6 +89,7 @@ public class AstroDbContext : DbContext
             throw new InvalidOperationException("Connection string for Astro database not found.");
         }
 
+        // Configure the connection.
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
             .UseLazyLoadingProxies()
             .EnableSensitiveDataLogging();

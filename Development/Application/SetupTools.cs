@@ -68,7 +68,7 @@ public class SetupTools
         // Load the config.
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(dir)
-            .AddJsonFile("appsettings.json", false, true)
+            .AddJsonFile("appsettings.json", true, true)
             .AddJsonFile($"appsettings.{env}.json", true, true)
             .Build();
 

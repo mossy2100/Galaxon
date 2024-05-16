@@ -34,13 +34,13 @@ public class ApsideImportService(
         }
 
         // Get the orbital period.
-        double? orbitalPeriodInSeconds = planet.Orbit?.SiderealOrbitPeriod ?? null;
-        if (orbitalPeriodInSeconds == null)
+        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod ?? null;
+        if (orbitalPeriod_s == null)
         {
             throw new DataNotFoundException(
                 $"Sidereal orbit period for {planetName} not found in database.");
         }
-        double orbitalPeriodInDays = orbitalPeriodInSeconds.Value / TimeConstants.SECONDS_PER_DAY;
+        double orbitalPeriod_d = orbitalPeriod_s.Value / TimeConstants.SECONDS_PER_DAY;
 
         // Get the start point of the period.
         DateTime dtStart = GregorianCalendarExtensions.GetYearStart(minYear);
@@ -103,7 +103,7 @@ public class ApsideImportService(
             }
 
             // Go to the next approximate apside.
-            jdttApprox = apsideEvent.JulianDateTerrestrial + orbitalPeriodInDays / 2;
+            jdttApprox = apsideEvent.JulianDateTerrestrial + orbitalPeriod_d / 2;
         } // while
     }
 

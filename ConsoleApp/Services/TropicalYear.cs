@@ -18,37 +18,38 @@ public static class TropicalYear
         double yearLengthAtEnd = 0;
         for (int y = minYear; y <= maxYear; y++)
         {
-            double tropicalYearLengthInEphemerisDays =
+            double tropicalYearLength_ephemerisDays =
                 EarthService.GetTropicalYearInEphemerisDaysForYear(y);
-            double solarDayLengthInSeconds = EarthService.GetSolarDayInSeconds(y);
-            double tropicalYearLengthInSolarDays = EarthService.GetTropicalYearInSolarDaysForYear(y);
+            double solarDayLength_s = EarthService.GetSolarDayInSeconds(y);
+            double tropicalYearLength_solarDays =
+                EarthService.GetTropicalYearInSolarDaysForYear(y);
 
             if (y < maxYear)
             {
-                totalEphemerisDays += tropicalYearLengthInEphemerisDays;
-                totalSolarDays += tropicalYearLengthInSolarDays;
+                totalEphemerisDays += tropicalYearLength_ephemerisDays;
+                totalSolarDays += tropicalYearLength_solarDays;
             }
 
             if (y == minYear)
             {
-                yearLengthAtStart = tropicalYearLengthInEphemerisDays;
+                yearLengthAtStart = tropicalYearLength_ephemerisDays;
             }
 
             if (y == maxYear)
             {
-                yearLengthAtEnd = tropicalYearLengthInEphemerisDays;
+                yearLengthAtEnd = tropicalYearLength_ephemerisDays;
             }
 
             if (y == minYear || y == maxYear)
             {
-                TimeSpan tsLength = TimeSpan.FromDays(tropicalYearLengthInEphemerisDays);
+                TimeSpan tsLength = TimeSpan.FromDays(tropicalYearLength_ephemerisDays);
                 string sTime = TimeSpanExtensions.GetTimeString(tsLength);
                 Console.WriteLine(
-                    $"Approx. tropical year length at commencement of year {y} is {tropicalYearLengthInEphemerisDays} ephemeris days ({sTime}).");
+                    $"Approx. tropical year length at commencement of year {y} is {tropicalYearLength_ephemerisDays} ephemeris days ({sTime}).");
                 Console.WriteLine(
-                    $"Approx. solar day length at commencement of year {y} is {solarDayLengthInSeconds} seconds.");
+                    $"Approx. solar day length at commencement of year {y} is {solarDayLength_s} seconds.");
                 Console.WriteLine(
-                    $"Thus, the approx. tropical year length at commencement of year {y} is {tropicalYearLengthInSolarDays} solar days.");
+                    $"Thus, the approx. tropical year length at commencement of year {y} is {tropicalYearLength_solarDays} solar days.");
                 Console.WriteLine();
             }
         }
@@ -65,15 +66,15 @@ public static class TropicalYear
 
         Console.WriteLine();
 
-        double totalChangeInDays = yearLengthAtEnd - yearLengthAtStart;
-        double totalChangeInSeconds = totalChangeInDays * TimeConstants.SECONDS_PER_DAY;
+        double totalChange_d = yearLengthAtEnd - yearLengthAtStart;
+        double totalChange_s = totalChange_d * TimeConstants.SECONDS_PER_DAY;
         Console.WriteLine(
-            $"The tropical year changes in length by {totalChangeInSeconds} seconds in {nYears} years.");
-        double changePerYearInSeconds = totalChangeInSeconds / nYears;
+            $"The tropical year changes in length by {totalChange_s} seconds in {nYears} years.");
+        double changePerYear_s = totalChange_s / nYears;
         Console.WriteLine(
-            $"Thus, it changes by about {changePerYearInSeconds} seconds ({changePerYearInSeconds * 1000} ms) per year.");
-        double changePerCenturyInSeconds = changePerYearInSeconds * 100;
-        Console.WriteLine($"Or about {changePerCenturyInSeconds} seconds per century.");
+            $"Thus, it changes by about {changePerYear_s} seconds ({changePerYear_s * 1000} ms) per year.");
+        double changePerCentury_s = changePerYear_s * 100;
+        Console.WriteLine($"Or about {changePerCentury_s} seconds per century.");
     }
 
     /// <summary>
@@ -115,9 +116,8 @@ public static class TropicalYear
         Console.WriteLine($"Average year length: {avgYearLength} solar days");
 
         // Look for a fraction.
-        double maxDiffInDays = 1.0 / TimeConstants.MINUTES_PER_DAY;
-        (int num, int den) =
-            FractionFinder.FindFraction(avgYearLength, maxDiffInDays, ETimeUnit.Day);
+        double maxDiff_d = 1.0 / TimeConstants.MINUTES_PER_DAY;
+        (int num, int den) = FractionFinder.FindFraction(avgYearLength, maxDiff_d, ETimeUnit.Day);
 
         // Look for possible rules.
         RuleFinder.FindRuleWith2Mods(num, den);
@@ -130,32 +130,33 @@ public static class TropicalYear
 
     public static void CalculateTotalDrift(int num, int den)
     {
-        double avgCalendarYearLengthInDays = 365 + (double)num / den;
-        Console.WriteLine($"Average calendar year length = {avgCalendarYearLengthInDays} days:");
-        double totalDriftInSeconds = 0;
+        double avgCalendarYearLength_d = 365 + (double)num / den;
+        Console.WriteLine($"Average calendar year length = {avgCalendarYearLength_d} days:");
+        double totalDrift_s = 0;
         bool oneDayShiftYearReported = false;
         for (int y = 2025; y <= 12000; y++)
         {
-            if (y % 1000 == 0 || totalDriftInSeconds > TimeConstants.SECONDS_PER_DAY && !oneDayShiftYearReported)
+            if (y % 1000 == 0
+                || totalDrift_s > TimeConstants.SECONDS_PER_DAY && !oneDayShiftYearReported)
             {
-                string timeString = TimeSpanExtensions.GetTimeString(TimeSpan.FromSeconds(totalDriftInSeconds), 0);
+                string timeString =
+                    TimeSpanExtensions.GetTimeString(TimeSpan.FromSeconds(totalDrift_s), 0);
                 Console.WriteLine(
                     $"By year {y} cumulative drift = {timeString}.");
 
-                if (totalDriftInSeconds > TimeConstants.SECONDS_PER_DAY && !oneDayShiftYearReported)
+                if (totalDrift_s > TimeConstants.SECONDS_PER_DAY && !oneDayShiftYearReported)
                 {
                     oneDayShiftYearReported = true;
                 }
             }
 
             // Calculate the approximate drift in seconds for this year.
-            double avgCalendarYearLengthInSeconds =
-                avgCalendarYearLengthInDays * EarthService.GetSolarDayInSeconds(y);
-            double tropicalYearLengthInSeconds =
-                EarthService.GetTropicalYearInEphemerisDaysForYear(y)
+            double avgCalendarYearLength_s =
+                avgCalendarYearLength_d * EarthService.GetSolarDayInSeconds(y);
+            double tropicalYearLength_s = EarthService.GetTropicalYearInEphemerisDaysForYear(y)
                 * TimeConstants.SECONDS_PER_DAY;
-            double driftInSeconds = avgCalendarYearLengthInSeconds - tropicalYearLengthInSeconds;
-            totalDriftInSeconds += driftInSeconds;
+            double drift_s = avgCalendarYearLength_s - tropicalYearLength_s;
+            totalDrift_s += drift_s;
         }
     }
 }

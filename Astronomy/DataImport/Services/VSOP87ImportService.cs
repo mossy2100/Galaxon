@@ -139,7 +139,7 @@ public class Vsop87ImportService(
     {
         for (byte planetNum = 1; planetNum <= 8; planetNum++)
         {
-            string name = AstroObjectRepository.PLANET_NAMES[planetNum];
+            string name = AstroObjectRepository.PLANET_NAMES[planetNum]!;
             string abbrev = name[..3].ToLower();
             ImportVsop87DataFile($"VSOP87D.{abbrev}");
         }

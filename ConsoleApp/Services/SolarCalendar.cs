@@ -490,7 +490,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         int firstYear = 2000;
         int lastYear = 2100;
-        double totalYearsLengthInDays = 0;
+        double totalYearsLength_d = 0;
 
         // Find the Southern Solstices and new year starts.
         Dictionary<int, DateTime> southernSolstices = new ();
@@ -512,20 +512,20 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int year = firstYear; year < lastYear; year++)
         {
             // Get the year length.
-            int yearLengthInDays = (int)(yearEnds[year] - yearEnds[year - 1]).TotalDays;
-            string commonOrLeap = yearLengthInDays == 365 ? "COMMON" : "LEAP";
-            double diffSolsticesInDays = (southernSolstices[year] - southernSolstices[year - 1]).TotalDays;
-            totalYearsLengthInDays += diffSolsticesInDays;
+            int yearLength_d = (int)(yearEnds[year] - yearEnds[year - 1]).TotalDays;
+            string commonOrLeap = yearLength_d == 365 ? "COMMON" : "LEAP";
+            double diffSolstices_d = (southernSolstices[year] - southernSolstices[year - 1]).TotalDays;
+            totalYearsLength_d += diffSolstices_d;
 
             Console.Write($"    {year}");
             Console.Write($"                   {commonOrLeap,-6}");
             Console.Write($"      {yearEnds[year - 1]:dd-MMM-yyyy}");
             Console.Write($"        {southernSolstices[year - 1]:dd-MMM-yyyy HH:mm} UTC");
-            Console.Write($"       {diffSolsticesInDays:F6}");
+            Console.Write($"       {diffSolstices_d:F6}");
             Console.WriteLine();
         }
         Console.WriteLine();
-        double avg = totalYearsLengthInDays / (lastYear - firstYear);
+        double avg = totalYearsLength_d / (lastYear - firstYear);
         Console.WriteLine($"Average calendar year length = {avg:F6} days.");
     }
 

@@ -3,6 +3,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
 
@@ -26,24 +27,39 @@ public class ApsideServiceTests
     [TestMethod]
     public void GetClosestApsideApprox_TestExample38a()
     {
+        ///////////
         // Arrange.
-        // Get the planet.
+
+        // Load services.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
+        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+
+        // Get the planet.
         AstroObjectRecord venus = astroObjectRepository.LoadByName("Venus", "Planet");
 
-        // Act.
-        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+        // Get approximate datetime to input.
         DateTime dt0 = new (1978, 10, 15);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(venus, jdtt0);
+
+        ///////////
+        // Act.
+        ApsideEvent apsideEvent =
+            apsideService.GetClosestApsideApprox(venus, jdtt0, EApsideType.Periapsis);
+
+        // Give some feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
         Console.WriteLine(jdtt1);
         DateTime dt1 = apsideEvent.DateTimeUtc;
         Console.WriteLine(dt1.ToIsoString());
 
+        ///////////
         // Assert.
-        Assert.AreEqual(2443_873.704, jdtt1, 5e-4);
+
+        // Allow up to 1 minute difference to allow for variations in delta-T calculations,
+        // precision, rounding errors, etc.
+        Assert.AreEqual(2443_873.704, jdtt1, 1.0 / TimeConstants.MINUTES_PER_DAY);
+
         Assert.AreEqual(1978, dt1.Year);
         Assert.AreEqual(12, dt1.Month);
         Assert.AreEqual(31, dt1.Day);
@@ -52,24 +68,39 @@ public class ApsideServiceTests
     [TestMethod]
     public void GetClosestApsideApprox_TestExample38b()
     {
+        ///////////
         // Arrange.
-        // Get the planet.
+
+        // Load services.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
+        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+
+        // Get the planet.
         AstroObjectRecord mars = astroObjectRepository.LoadByName("Mars", "Planet");
 
-        // Act.
-        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+        // Get approximate datetime to input.
         DateTime dt0 = new (2032, 1, 1);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(mars, jdtt0);
+
+        ///////////
+        // Act.
+        ApsideEvent apsideEvent =
+            apsideService.GetClosestApsideApprox(mars, jdtt0, EApsideType.Apoapsis);
+
+        // Give some feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
         Console.WriteLine(jdtt1);
         DateTime dt1 = apsideEvent.DateTimeUtc;
         Console.WriteLine(dt1.ToIsoString());
 
+        ///////////
         // Assert.
-        Assert.AreEqual(2463_530.456, jdtt1, 5e-4);
+
+        // Allow up to 1 minute difference to allow for variations in delta-T calculations,
+        // precision, rounding errors, etc.
+        Assert.AreEqual(2463_530.456, jdtt1, 1.0 / TimeConstants.MINUTES_PER_DAY);
+
         Assert.AreEqual(2032, dt1.Year);
         Assert.AreEqual(10, dt1.Month);
         Assert.AreEqual(24, dt1.Day);
@@ -81,26 +112,38 @@ public class ApsideServiceTests
     [TestMethod]
     public void GetClosestApsideApprox_TestEarthExample()
     {
+        ///////////
         // Arrange.
-        // Get the planet.
+
+        // Load services.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
+        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+
+        // Load the planet.
         AstroObjectRecord planet = astroObjectRepository.LoadByName("Earth", "Planet");
 
-        // Act.
-        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+        // Get the approximate result as an input value.
         DateTime dt0 = new (1990, 1, 4);
         double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
-        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(planet, jdtt0);
-        double jdtt1 = apsideEvent.JulianDateTerrestrial;
-        DateTime dt1 = apsideEvent.DateTimeUtc;
 
-        // Output.
+        ///////////
+        // Act.
+        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(planet, jdtt0);
+
+        // Feedback.
+        double jdtt1 = apsideEvent.JulianDateTerrestrial;
         Console.WriteLine(jdtt1);
+        DateTime dt1 = apsideEvent.DateTimeUtc;
         Console.WriteLine(dt1.ToIsoString());
 
+        ///////////
         // Assert.
-        Assert.AreEqual(2447_896.172, jdtt1, 5e-4);
+
+        // Allow up to 1 minute difference to allow for variations in delta-T calculations,
+        // precision, rounding errors, etc.
+        Assert.AreEqual(2447_896.172, jdtt1, 1.0 / TimeConstants.MINUTES_PER_DAY);
+
         Assert.AreEqual(1990, dt1.Year);
         Assert.AreEqual(1, dt1.Month);
         Assert.AreEqual(4, dt1.Day);
@@ -142,28 +185,37 @@ public class ApsideServiceTests
     public void GetClosestApside_TestChapter38OuterPlanetExamples(string planetName,
         EApsideType apsideType, int year, int month, int day, double expectedRadiusInAa)
     {
+        ///////////
         // Arrange.
+
+        // Load services.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
+        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+
+        // Load planet.
         AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
-        // Act.
-        ApsideService apsideService = ServiceManager.GetService<ApsideService>();
+        // Get an approximate result datetime to input to the method.
         DateOnly dt0 = new (year, month, day);
         double jdtt0 = TimeScales.DateOnlyToJulianDate(dt0);
+
+        ///////////
+        // Act.
         ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
+
+        // Provide feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
         DateTime dt1 = apsideEvent.DateTimeUtc;
-        double actualRadiusInMetres = apsideEvent.Radius_m!.Value;
-        double actualRadiusInAu = apsideEvent.Radius_AU!.Value;
-
-        // Output result.
+        double actualRadius_m = apsideEvent.Radius_m!.Value;
+        double actualRadius_AU = apsideEvent.Radius_AU!.Value;
         Console.WriteLine($"Event time = {dt1.ToIsoString()} = {jdtt1:F6} Julian Date (TT)");
-        Console.WriteLine($"Radius = {actualRadiusInMetres:F0} metres = {actualRadiusInAu:F6} AU");
+        Console.WriteLine($"Radius = {actualRadius_m:F0} metres = {actualRadius_AU:F6} AU");
 
+        ///////////
         // Assert.
         Assert.AreEqual(dt0, dt1.GetDateOnly());
-        Assert.AreEqual(expectedRadiusInAa, actualRadiusInAu, 5e-5);
+        Assert.AreEqual(expectedRadiusInAa, actualRadius_AU, 1e-4);
     }
 
     /// <summary>
@@ -174,7 +226,7 @@ public class ApsideServiceTests
     /// <param name="month"></param>
     /// <param name="day"></param>
     /// <param name="hours"></param>
-    /// <param name="expectedRadiusInAa"></param>
+    /// <param name="expectedRadius_AU"></param>
     [DataTestMethod]
     [DataRow(EApsideType.Periapsis, 1991, 1, 3, 3.0, 0.983_281)]
     [DataRow(EApsideType.Periapsis, 1992, 1, 3, 15.06, 0.983_324)]
@@ -216,9 +268,10 @@ public class ApsideServiceTests
     [DataRow(EApsideType.Apoapsis, 2008, 7, 4, 7.71, 1.016_754)]
     [DataRow(EApsideType.Apoapsis, 2009, 7, 4, 1.69, 1.016_666)]
     [DataRow(EApsideType.Apoapsis, 2010, 7, 6, 11.52, 1.016_702)]
-    public void GetClosestApside_TestChapter38EarthExamples(EApsideType apsideType, int year, int month,
-        int day, double hours, double expectedRadiusInAa)
+    public void GetClosestApside_TestChapter38EarthExamples(EApsideType apsideType, int year,
+        int month, int day, double hours, double expectedRadius_AU)
     {
+        ///////////
         // Arrange.
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
@@ -233,26 +286,64 @@ public class ApsideServiceTests
         // Get the expected result.
         DateTime dtttExpected = dt0 + TimeSpan.FromHours(hours);
 
+        ///////////
         // Act.
         ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
-        double jdtt1 = apsideEvent.JulianDateTerrestrial;
-        double actualRadiusInMetres = apsideEvent.Radius_m!.Value;
 
-        // Get the computed event DateTime in Terrestrial (Dynamical) Time, matching the results in
-        // the table in the book.
-        DateTime dtttActual = TimeScales.JulianDateToDateTime(jdtt1);
+        // Convert the computed event DateTime in Terrestrial (Dynamical) Time so we can compare it
+        // to the values in the table in the book.
+        DateTime dtttActual = TimeScales.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
 
         // Get the radius in AU.
-        double actualRadiusInAu = apsideEvent.Radius_AU!.Value;
+        double actualRadius_AU = apsideEvent.Radius_AU!.Value;
 
         // Output.
         Console.WriteLine($"Expected event datetime = {dtttExpected.ToIsoString()} (TT)");
-        Console.WriteLine(
-            $"Computed event datetime = {dtttActual.ToIsoString()} (TT) = {jdtt1:F6} Julian Date (TT)");
-        Console.WriteLine($"Radius = {actualRadiusInMetres:F0} metres = {actualRadiusInAu:F6} AU");
+        Console.WriteLine($"Computed event datetime = {dtttActual.ToIsoString()} (TT)");
+        Console.WriteLine($"Radius = {actualRadius_AU:F6} AU");
 
+        ///////////
         // Assert.
-        DateTimeAssert.AreEqual(dtttExpected, dtttActual, TimeSpan.FromMinutes(1));
-        Assert.AreEqual(expectedRadiusInAa, actualRadiusInAu, 5e-7);
+        Assert.AreEqual(apsideType, apsideEvent.ApsideType);
+        Assert.AreEqual(year, dtttActual.Year);
+        Assert.AreEqual(month, dtttActual.Month);
+        Assert.AreEqual(day, dtttActual.Day);
+        Assert.AreEqual(hours, (double)dtttActual.GetTimeOnly().Ticks / TimeConstants.TICKS_PER_HOUR, 0.005);
+        Assert.AreEqual(expectedRadius_AU, actualRadius_AU, 5e-7);
+    }
+
+    /// <summary>
+    /// The purpose of this "test" is to help debug the result I get for the date of Uranus
+    /// perihelion in 2050, which is 1 day earlier than the result shown in the book (AA2 p271).
+    /// </summary>
+    [TestMethod]
+    public void GetPlanetPosition_TestUranus()
+    {
+        PlanetService planetService = ServiceManager.GetService<PlanetService>();
+
+        double jdtt0 = TimeScales.DateTimeToJulianDate(new DateTime(2050, 8, 16));
+        double jdtt1 = TimeScales.DateTimeToJulianDate(new DateTime(2050, 8, 17));
+
+        double minRadius_m = double.MaxValue;
+        double jdttAtMinRadius = 0;
+
+
+        for (var jdtt = jdtt0; jdtt <= jdtt1; jdtt += 1.0 / TimeConstants.HOURS_PER_DAY)
+        {
+            Coordinates result = planetService.CalcPlanetPosition("Uranus", jdtt);
+            Console.WriteLine($"Julian Date (TT) {jdtt,20} => {result.Radius_m}");
+            if (result.Radius_m < minRadius_m)
+            {
+                minRadius_m = result.Radius_m;
+                jdttAtMinRadius = jdtt;
+            }
+        }
+
+        Console.WriteLine();
+        double minRadius_AU = minRadius_m / Length.METRES_PER_ASTRONOMICAL_UNIT;
+        DateTime dtAtMinRadius =
+            TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdttAtMinRadius);
+        Console.WriteLine(
+            $"Minimum distance = {minRadius_m} metres = {minRadius_AU} AU occurred at JD(TT) = {jdttAtMinRadius} = {dtAtMinRadius.ToIsoString()}");
     }
 }

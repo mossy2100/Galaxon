@@ -8,19 +8,20 @@ public class AstroObjectRepository(
     AstroObjectGroupRepository astroObjectGroupRepository)
 {
     /// <summary>
-    /// Dictionary mapping planet numbers to English names.
+    /// Array mapping planet numbers to English names.
     /// </summary>
-    public static readonly Dictionary<int, string> PLANET_NAMES = new ()
-    {
-        { 1, "Mercury" },
-        { 2, "Venus" },
-        { 3, "Earth" },
-        { 4, "Mars" },
-        { 5, "Jupiter" },
-        { 6, "Saturn" },
-        { 7, "Uranus" },
-        { 8, "Neptune" }
-    };
+    public static readonly string?[] PLANET_NAMES =
+    [
+        null,
+        "Mercury",
+        "Venus",
+        "Earth",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune"
+    ];
 
     /// <summary>
     /// Load an AstroObject from the database by specifying either an object name or number, or

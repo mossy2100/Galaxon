@@ -56,7 +56,7 @@ public class SunServiceTests
 
         // Assert
         Assert.AreEqual(2448908.5, jdtt);
-        Assert.AreEqual(expectedLongitude, sunPosition.Longitude, 1e-4);
-        Assert.AreEqual(expectedLatitude, sunPosition.Latitude, 1e-4);
+        Assert.AreEqual(expectedLongitude, sunPosition.Longitude_rad, 1e-4);
+        Assert.AreEqual(expectedLatitude, sunPosition.Latitude_rad, 1e-4);
     }
 }

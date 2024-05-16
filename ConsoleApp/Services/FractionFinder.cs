@@ -23,8 +23,9 @@ public class FractionFinder
             // See if this fraction is worth reporting.
             if (diff <= maxDiff && !BigRational.IsReducible(num, den))
             {
-                double diffInSeconds = TimeSpanExtensions.Convert(diff, timeUnit, ETimeUnit.Second);
-                Console.WriteLine($"Found fraction {num}/{den} = {frac2}. Difference = {diffInSeconds} seconds per year.");
+                double diff_s = TimeSpanExtensions.Convert(diff, timeUnit, ETimeUnit.Second);
+                Console.WriteLine(
+                    $"Found fraction {num}/{den} = {frac2}. Difference = {diff_s} seconds per year.");
                 bestNum = num;
                 bestDen = den;
             }

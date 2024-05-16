@@ -24,18 +24,18 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             // Get the approximate solar day length at specified time of the year.
-            double solarDayLength = EarthService.GetSolarDayInSeconds(year);
+            double solarDayLength_s = EarthService.GetSolarDayInSeconds(year);
 
             // Construct the result.
             Dictionary<string, double> result = new ()
             {
-                ["seconds"] = double.Round(solarDayLength, 6)
+                ["seconds"] = double.Round(solarDayLength_s, 6)
             };
 
             // Log it.
             Log.Information(
                 "Length of solar day at year {Year} computed to be {SolarDayLength} seconds.", year,
-                solarDayLength);
+                solarDayLength_s);
 
             // Return the result as JSON.
             return Ok(result);

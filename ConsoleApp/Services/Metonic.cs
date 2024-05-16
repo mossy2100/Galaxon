@@ -13,35 +13,35 @@ public class Metonic
         int yearThen = -433;
         int yearNow = 2024;
 
-        double dayLengthThen = EarthService.GetSolarDayInSeconds(yearThen);
-        Console.WriteLine($"The solar day length in {yearThen} was {dayLengthThen} days.");
-        double dayLengthNow = EarthService.GetSolarDayInSeconds(yearNow);
-        Console.WriteLine($"The solar day length in {yearNow} is {dayLengthNow} seconds.");
-        double dayDiff = dayLengthNow - dayLengthThen;
-        string dayIncreaseVerb = dayLengthNow > dayLengthThen ? "increased" : "decreased";
-        TimeSpan tsDayDiff = TimeSpan.FromSeconds(Math.Abs(dayDiff));
+        double dayLengthThen_s = EarthService.GetSolarDayInSeconds(yearThen);
+        Console.WriteLine($"The solar day length in {yearThen} was {dayLengthThen_s} days.");
+        double dayLengthNow_s = EarthService.GetSolarDayInSeconds(yearNow);
+        Console.WriteLine($"The solar day length in {yearNow} is {dayLengthNow_s} seconds.");
+        double dayDiff_s = dayLengthNow_s - dayLengthThen_s;
+        string dayIncreaseVerb = dayLengthNow_s > dayLengthThen_s ? "increased" : "decreased";
+        TimeSpan tsDayDiff = TimeSpan.FromSeconds(Math.Abs(dayDiff_s));
         Console.WriteLine($"The solar day has {dayIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsDayDiff)}.");
 
         Console.WriteLine();
 
-        double lunationLengthThen = MoonService.GetLunationInEphemerisDaysForYear(yearThen);
-        Console.WriteLine($"The lunation length in {yearThen} was {lunationLengthThen} days.");
-        double lunationLengthNow = MoonService.GetLunationInEphemerisDaysForYear(yearNow);
-        Console.WriteLine($"The lunation length in {yearNow} is {lunationLengthNow} days.");
-        double lunationDiff = lunationLengthNow - lunationLengthThen;
-        string lunationIncreaseVerb = lunationLengthNow > lunationLengthThen ? "increased" : "decreased";
-        TimeSpan tsLunationDiff = TimeSpan.FromDays(Math.Abs(lunationDiff));
+        double lunationLengthThen_d = MoonService.GetLunationInEphemerisDaysForYear(yearThen);
+        Console.WriteLine($"The lunation length in {yearThen} was {lunationLengthThen_d} days.");
+        double lunationLengthNow_d = MoonService.GetLunationInEphemerisDaysForYear(yearNow);
+        Console.WriteLine($"The lunation length in {yearNow} is {lunationLengthNow_d} days.");
+        double lunationDiff_d = lunationLengthNow_d - lunationLengthThen_d;
+        string lunationIncreaseVerb = lunationLengthNow_d > lunationLengthThen_d ? "increased" : "decreased";
+        TimeSpan tsLunationDiff = TimeSpan.FromDays(Math.Abs(lunationDiff_d));
         Console.WriteLine($"The lunation has {lunationIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsLunationDiff)}.");
 
         Console.WriteLine();
 
-        double yearLengthThen = EarthService.GetTropicalYearInEphemerisDaysForYear(yearThen);
-        Console.WriteLine($"The tropical year length in {yearThen} was {yearLengthThen} days.");
-        double yearLengthNow = EarthService.GetTropicalYearInEphemerisDaysForYear(yearNow);
-        Console.WriteLine($"The tropical year length in {yearNow} is {yearLengthNow} days.");
-        double yearDiff = yearLengthNow - yearLengthThen;
-        string yearIncreaseVerb = yearLengthNow > yearLengthThen ? "increased" : "decreased";
-        TimeSpan tsYearDiff = TimeSpan.FromDays(Math.Abs(yearDiff));
+        double yearLengthThen_d = EarthService.GetTropicalYearInEphemerisDaysForYear(yearThen);
+        Console.WriteLine($"The tropical year length in {yearThen} was {yearLengthThen_d} days.");
+        double yearLengthNow_d = EarthService.GetTropicalYearInEphemerisDaysForYear(yearNow);
+        Console.WriteLine($"The tropical year length in {yearNow} is {yearLengthNow_d} days.");
+        double yearDiff_d = yearLengthNow_d - yearLengthThen_d;
+        string yearIncreaseVerb = yearLengthNow_d > yearLengthThen_d ? "increased" : "decreased";
+        TimeSpan tsYearDiff = TimeSpan.FromDays(Math.Abs(yearDiff_d));
         Console.WriteLine($"The tropical year has {yearIncreaseVerb} by {TimeSpanExtensions.GetTimeString(tsYearDiff)}.");
     }
 }

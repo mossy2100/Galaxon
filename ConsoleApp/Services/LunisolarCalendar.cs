@@ -284,12 +284,12 @@ public class LunisolarCalendar(
     public static void FindFullMonthFraction()
     {
         double frac = DoubleExtensions.Frac(TimeConstants.DAYS_PER_LUNATION);
-        int daysInHollowMonth = (int)Math.Truncate(TimeConstants.DAYS_PER_LUNATION);
+        const int DAYS_IN_HOLLOW_MONTH = 29;
 
         // Ignore any solution that produces an error more than 1 hour.
-        double maxDiffInSeconds = 3600.0;
+        double maxDiff_s = 3600.0;
         // Keep track of the best solution we've found so far.
-        double smallestDiffSoFarInSeconds = double.MaxValue;
+        double smallestDiffSoFar_s = double.MaxValue;
 
         // Show column headings.
         Console.WriteLine(
@@ -301,16 +301,16 @@ public class LunisolarCalendar(
         {
             int num = (int)Math.Round(frac * den);
             double frac2 = (double)num / den;
-            double avgMonthLength = daysInHollowMonth + frac2;
-            double diffInDays = Math.Abs(frac - frac2);
-            double diffInSeconds = diffInDays * TimeConstants.SECONDS_PER_DAY;
+            double avgMonthLength = DAYS_IN_HOLLOW_MONTH + frac2;
+            double diff_d = Math.Abs(frac - frac2);
+            double diff_s = diff_d * TimeConstants.SECONDS_PER_DAY;
 
-            if (diffInSeconds <= maxDiffInSeconds && diffInSeconds < smallestDiffSoFarInSeconds)
+            if (diff_s <= maxDiff_s && diff_s < smallestDiffSoFar_s)
             {
-                smallestDiffSoFarInSeconds = diffInSeconds;
+                smallestDiffSoFar_s = diff_s;
                 string rational = $"{num} / {den}";
                 Console.WriteLine(
-                    $"{rational,15}{frac2,25:F9}{avgMonthLength,25:F9}{diffInSeconds,25:F9}");
+                    $"{rational,15}{frac2,25:F9}{avgMonthLength,25:F9}{diff_s,25:F9}");
 
                 if (den > 12628)
                 {
@@ -330,11 +330,11 @@ public class LunisolarCalendar(
         int num;
         int den = 2;
         // Ignore any solution that produces an error more than 1 hour.
-        double maxDiffInSeconds = 3600;
+        double maxDiff_s = 3600;
         // What's our target?
-        double goalDiffInSeconds = 1;
+        double goalDiff_s = 1;
         // Keep track of the best we've found so far.
-        double smallestDiffSoFarInSeconds = double.MaxValue;
+        double smallestDiffSoFar_s = double.MaxValue;
 
         // Show column headings.
         Console.WriteLine(
@@ -345,28 +345,27 @@ public class LunisolarCalendar(
         {
             num = (int)Math.Round(den * frac);
             double frac2 = (double)num / den;
-            double avgYearLengthInDays = (12 + frac2) * TimeConstants.DAYS_PER_LUNATION;
-            double diffInDays =
-                Math.Abs(TimeConstants.DAYS_PER_TROPICAL_YEAR - avgYearLengthInDays);
-            double diffInSeconds = diffInDays * 86400;
+            double avgYearLength_d = (12 + frac2) * TimeConstants.DAYS_PER_LUNATION;
+            double diff_d = Math.Abs(TimeConstants.DAYS_PER_TROPICAL_YEAR - avgYearLength_d);
+            double diff_s = diff_d * 86400;
 
-            // Output any result that is the best so far, and not more than maxDiffInSeconds.
-            if (diffInSeconds <= maxDiffInSeconds && diffInSeconds < smallestDiffSoFarInSeconds)
+            // Output any result that is the best so far, and not more than maxDiff.
+            if (diff_s <= maxDiff_s && diff_s < smallestDiffSoFar_s)
             {
                 int numLunations = den * 12 + num;
                 double numDays = numLunations * TimeConstants.DAYS_PER_LUNATION;
                 double fracDays = DoubleExtensions.Frac(numDays);
-                double fracDaysInSeconds = fracDays * TimeConstants.SECONDS_PER_DAY;
+                double fracDays_s = fracDays * TimeConstants.SECONDS_PER_DAY;
                 string rational = $"{num} / {den}";
                 Console.WriteLine(
-                    $"{rational,10}{frac2,25:F9}{numLunations,20}{numDays,25:F9}{avgYearLengthInDays,25:F9}{diffInSeconds,25:F9}");
+                    $"{rational,10}{frac2,25:F9}{numLunations,20}{numDays,25:F9}{avgYearLength_d,25:F9}{diff_s,25:F9}");
 
-                if (diffInSeconds <= goalDiffInSeconds && fracDaysInSeconds <= 3600)
+                if (diff_s <= goalDiff_s && fracDays_s <= 3600)
                 {
                     break;
                 }
 
-                smallestDiffSoFarInSeconds = diffInSeconds;
+                smallestDiffSoFar_s = diff_s;
             }
 
             den++;
@@ -375,7 +374,7 @@ public class LunisolarCalendar(
 
     public static void FindYearLengthRule()
     {
-        double bestDiff = double.MaxValue;
+        double bestDiff_s = double.MaxValue;
         const double LUNATIONS_PER_TROPICAL_YEAR =
             TimeConstants.DAYS_PER_TROPICAL_YEAR / TimeConstants.DAYS_PER_LUNATION;
 
@@ -392,7 +391,7 @@ public class LunisolarCalendar(
 
                         // Get the difference in seconds from the tropical year.
                         double avgYearLength = (double)numDays / numYears;
-                        double diffFromTropicalYearInSeconds =
+                        double diffFromTropicalYear_s =
                             (avgYearLength - TimeConstants.DAYS_PER_TROPICAL_YEAR)
                             * TimeConstants.SECONDS_PER_DAY;
 
@@ -402,32 +401,32 @@ public class LunisolarCalendar(
 
                         // Get the difference in seconds from the lunation.
                         double avgMonthLength = (double)numDays / numLunations;
-                        double diffFromLunationInSeconds =
+                        double diffFromLunation_s =
                             (avgMonthLength - TimeConstants.DAYS_PER_LUNATION)
                             * TimeConstants.SECONDS_PER_DAY;
-                        double annualDiffFromLunationsInSeconds =
-                            diffFromLunationInSeconds * LUNATIONS_PER_TROPICAL_YEAR;
+                        double annualDiffFromLunations_s =
+                            diffFromLunation_s * LUNATIONS_PER_TROPICAL_YEAR;
 
-                        double avgAnnualdiffBetweenLunationsAndTropicalYears =
+                        double avgAnnualDiffBetweenLunationsAndTropicalYears_s =
                             Math.Abs(numYears * TimeConstants.DAYS_PER_TROPICAL_YEAR
                                 - numLunations * TimeConstants.DAYS_PER_LUNATION)
                             / numYears
                             * TimeConstants.SECONDS_PER_DAY;
 
-                        if (Math.Abs(diffFromTropicalYearInSeconds) <= 10
-                            && Math.Abs(diffFromLunationInSeconds) <= 1
-                            && avgAnnualdiffBetweenLunationsAndTropicalYears < bestDiff)
+                        if (Math.Abs(diffFromTropicalYear_s) <= 10
+                            && Math.Abs(diffFromLunation_s) <= 1
+                            && avgAnnualDiffBetweenLunationsAndTropicalYears_s < bestDiff_s)
                         {
                             Console.WriteLine(
                                 $"Found solution: a={a}, b={b}, c={c}, d={d}, numDays={numDays}, numYears={numYears}, numLunations={numLunations}");
                             Console.WriteLine(
-                                $"Average annual error in seconds from tropical year = {diffFromTropicalYearInSeconds}");
+                                $"Average annual error in seconds from tropical year = {diffFromTropicalYear_s}");
                             Console.WriteLine(
-                                $"Average annual error in seconds from lunation = {annualDiffFromLunationsInSeconds}");
+                                $"Average annual error in seconds from lunation = {annualDiffFromLunations_s}");
                             Console.WriteLine(
-                                $"Average annual difference between tropical years and lunations = {avgAnnualdiffBetweenLunationsAndTropicalYears} seconds");
+                                $"Average annual difference between tropical years and lunations = {avgAnnualDiffBetweenLunationsAndTropicalYears_s} seconds");
                             Console.WriteLine();
-                            bestDiff = avgAnnualdiffBetweenLunationsAndTropicalYears;
+                            bestDiff_s = avgAnnualDiffBetweenLunationsAndTropicalYears_s;
                         }
                     }
                 }
@@ -480,14 +479,13 @@ public class LunisolarCalendar(
             {
                 for (int r = 0; r < b; r++)
                 {
-                    double avgMonthLengthInDays = calcAvgMonthLength(nYears, a, b, r);
-                    double diffInSeconds =
-                        Math.Abs(avgMonthLengthInDays - TimeConstants.DAYS_PER_LUNATION)
+                    double avgMonthLength_d = calcAvgMonthLength(nYears, a, b, r);
+                    double diff_s = Math.Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
                         * TimeConstants.SECONDS_PER_DAY;
-                    if (diffInSeconds < bestDiff)
+                    if (diff_s < bestDiff)
                     {
-                        Console.WriteLine($"a={a}, b={b}, r={r}, diff={diffInSeconds}");
-                        bestDiff = diffInSeconds;
+                        Console.WriteLine($"a={a}, b={b}, r={r}, diff={diff_s}");
+                        bestDiff = diff_s;
                         // break;
                     }
                 }
@@ -500,38 +498,35 @@ public class LunisolarCalendar(
         // for (int nYears = 1; nYears <= 10000; nYears++)
         // {
         int wholeYears = 2729;
-        double tropicalYearsInDays = wholeYears * TimeConstants.DAYS_PER_TROPICAL_YEAR;
-        int wholeDays = (int)Math.Round(tropicalYearsInDays);
-        double nLunations = tropicalYearsInDays / TimeConstants.DAYS_PER_LUNATION;
+        double tropicalYears_d = wholeYears * TimeConstants.DAYS_PER_TROPICAL_YEAR;
+        int wholeDays = (int)Math.Round(tropicalYears_d);
+        double nLunations = tropicalYears_d / TimeConstants.DAYS_PER_LUNATION;
         int wholeLunations = (int)Math.Round(nLunations);
-        double lunationsInDays = wholeLunations * TimeConstants.DAYS_PER_LUNATION;
+        double lunations_d = wholeLunations * TimeConstants.DAYS_PER_LUNATION;
 
-        double smallest = Min(wholeDays, lunationsInDays, tropicalYearsInDays);
-        double largest = Max(wholeDays, lunationsInDays, tropicalYearsInDays);
-        double diffInDays = Math.Abs(smallest - largest);
-        double diffInSeconds = diffInDays * TimeConstants.SECONDS_PER_DAY;
+        double smallest = Min(wholeDays, lunations_d, tropicalYears_d);
+        double largest = Max(wholeDays, lunations_d, tropicalYears_d);
+        double diff_d = Math.Abs(smallest - largest);
+        double diff_s = diff_d * TimeConstants.SECONDS_PER_DAY;
 
-        double avgYearLength = (double)wholeDays / wholeYears;
-        double yearErrorInSeconds =
-            Math.Abs(avgYearLength - TimeConstants.DAYS_PER_TROPICAL_YEAR)
+        double avgYearLength_d = (double)wholeDays / wholeYears;
+        double yearError_s = Math.Abs(avgYearLength_d - TimeConstants.DAYS_PER_TROPICAL_YEAR)
             * TimeConstants.SECONDS_PER_DAY;
 
-        double avgMonthLength = (double)wholeDays / wholeLunations;
-        double monthErrorInSeconds =
-            Math.Abs(avgMonthLength - TimeConstants.DAYS_PER_LUNATION)
+        double avgMonthLength_d = (double)wholeDays / wholeLunations;
+        double monthError_s = Math.Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
             * TimeConstants.SECONDS_PER_DAY;
 
         // if (diffInSeconds <= 3600)
         // {
         Console.WriteLine(
             $"nYears={wholeYears}, wholeDays={wholeDays}, wholeLunations={wholeLunations}");
-        Console.WriteLine($"{wholeYears} tropical years = {tropicalYearsInDays} days");
-        Console.WriteLine($"{wholeLunations} lunations = {lunationsInDays} days");
-        Console.WriteLine($"diffInDays = {diffInDays}");
-        Console.WriteLine($"diffInSeconds = {diffInSeconds}");
-        Console.WriteLine($"avgYearLength = {avgYearLength} days");
-        Console.WriteLine($"yearErrorInSeconds = {yearErrorInSeconds} seconds");
-        Console.WriteLine($"monthErrorInSeconds = {monthErrorInSeconds} seconds");
+        Console.WriteLine($"{wholeYears} tropical years = {tropicalYears_d} days");
+        Console.WriteLine($"{wholeLunations} lunations = {lunations_d} days");
+        Console.WriteLine($"diff = {diff_d} days = {diff_s} seconds");
+        Console.WriteLine($"avg year length = {avgYearLength_d} days");
+        Console.WriteLine($"year error = {yearError_s} seconds");
+        Console.WriteLine($"month error = {monthError_s} seconds");
         Console.WriteLine();
         // }
         // }

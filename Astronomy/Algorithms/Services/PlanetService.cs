@@ -11,7 +11,9 @@ using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
+public class PlanetService(
+    AstroDbContext astroDbContext,
+    AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
     /// Calculate the position of a planet in heliocentric ecliptic coordinates.
@@ -35,10 +37,8 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
     public Coordinates CalcPlanetPosition(AstroObjectRecord planet, double jdtt)
     {
         // Get the VSOP87D data for the planet from the database.
-        // These aren't included in Load() so I may need to get them separately
-        // rather than via the VSOP87DRecords property.
-        List<VSOP87DRecord> records = astroDbContext.VSOP87D
-            .Where(r => r.AstroObjectId == planet.Id).ToList();
+        List<VSOP87DRecord> records =
+            astroDbContext.VSOP87D.Where(r => r.AstroObjectId == planet.Id).ToList();
 
         // Check there are records.
         if (records.IsEmpty())

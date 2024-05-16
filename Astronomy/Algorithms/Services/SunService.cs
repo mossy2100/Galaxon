@@ -58,37 +58,37 @@ public class SunService(PlanetService planetService)
         (double Le, double Be, double Re) = planetService.CalcPlanetPosition("Earth", jdtt);
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
-        double Ls = WrapRadians(Le + PI);
-        double Bs = WrapRadians(-Be);
-        double Rs = Re;
+        double Ls_rad = WrapRadians(Le + PI);
+        double Bs_rad = WrapRadians(-Be);
+        double Rs_m = Re;
 
         // Convert to FK5.
         // This gives the true ("geometric") longitude of the Sun referred to the mean equinox of
         // the date.
         double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
         double lambdaPrime = Polynomials.EvaluatePolynomial(
-            [Ls, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
-        Ls -= DMSToRadians(0, 0, 0.090_33);
-        Bs += DMSToRadians(0, 0, 0.039_16) * (Cos(lambdaPrime) - Sin(lambdaPrime));
+            [Ls_rad, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
+        Ls_rad -= DMSToRadians(0, 0, 0.090_33);
+        Bs_rad += DMSToRadians(0, 0, 0.039_16) * (Cos(lambdaPrime) - Sin(lambdaPrime));
 
         // The Sun's longitude obtained thus far is the true ("geometric") longitude of the Sun
         // referred to the mean equinox of the date.
 
         // Calculate and add the nutation in longitude.
         Nutation nutation = NutationService.CalcNutation(jdtt);
-        Ls += nutation.Longitude;
+        Ls_rad += nutation.Longitude;
 
         // Calculate and add the aberration.
-        double deltaLambdaInRadians = CalcVariationInSunLongitude(jdtt);
-        double RsInAU = Rs / Length.METRES_PER_ASTRONOMICAL_UNIT;
-        double aberration = -0.005_775_518 * RsInAU * deltaLambdaInRadians;
-        Ls += aberration;
+        double deltaLambda_rad = CalcVariationInSunLongitude(jdtt);
+        double Rs_AU = Rs_m / Length.METRES_PER_ASTRONOMICAL_UNIT;
+        double aberration = -0.005_775_518 * Rs_AU * deltaLambda_rad;
+        Ls_rad += aberration;
 
-        // Make sure coordinates are in the standard range.
-        Ls = WrapRadians(Ls);
-        Bs = WrapRadians(Bs);
+        // Make sure coordinates are in the standard range (signed).
+        Ls_rad = WrapRadians(Ls_rad);
+        Bs_rad = WrapRadians(Bs_rad);
 
-        return new Coordinates(Ls, Bs, Rs);
+        return new Coordinates(Ls_rad, Bs_rad, Rs_m);
     }
 
     /// <summary>

@@ -280,9 +280,9 @@ class Program
         Console.WriteLine($"equal to {dtBirthLocal:yyyy-MM-dd HH:mm (zzz)}");
 
         // Get the Ls at birth.
-        double LsInRadians = birthdayService.CalcLongitudeOfSunAtBirth(dtBirthUtc);
-        double LsInDegrees = Angles.RadiansToDegreesWithWrap(LsInRadians, false);
-        Console.WriteLine($"The longitude of the Sun at my birth was {LsInDegrees:F3}°");
+        double Ls_rad = birthdayService.CalcLongitudeOfSunAtBirth(dtBirthUtc);
+        double Ls_deg = Angles.RadiansToDegreesWithWrap(Ls_rad, false);
+        Console.WriteLine($"The longitude of the Sun at my birth was {Ls_deg:F3}°");
 
         for (int y = 2024; y <= 2030; y++)
         {
