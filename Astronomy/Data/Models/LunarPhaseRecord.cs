@@ -7,18 +7,19 @@ public class LunarPhaseRecord : DatabaseRecord
     /// <summary>
     /// Meeus Lunation Number.
     /// </summary>
-    public int Lunation { get; set; }
+    public int LunationNumber { get; set; }
 
     /// <summary>
     /// The phase type.
     /// </summary>
     [Column(TypeName = "varchar(20)")]
-    public ELunarPhaseType Type { get; set; }
+    public ELunarPhaseType PhaseType { get; set; }
 
     /// <summary>
     /// The unique phase number, which is a multiple of 0.25. New moons will be integers.
     /// </summary>
-    public double Value => Lunation + (int)Type / 4.0;
+    [NotMapped]
+    public double PhaseNumber => LunationNumber + (int)PhaseType / 4.0;
 
     /// <summary>
     /// The UTC datetime of the lunar phase according to my calculations.

@@ -26,25 +26,27 @@ public class MoonService(AstroDbContext astroDbContext)
         // Look for a lunar phase in the database with a USNO datetime within 24 hours.
         LunarPhaseRecord? lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
             lp.DateTimeUtcUsno != null
-            && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
+            && Math.Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
             <= TimeConstants.HOURS_PER_DAY);
         if (lunarPhase != null)
         {
             // We found a USNO calculation, so return that.
-            return new LunarPhaseEvent(lunarPhase.Lunation,
-                (ELunarPhaseType)lunarPhase.Type, lunarPhase.DateTimeUtcUsno!.Value);
+            DateTime dt1 = lunarPhase.DateTimeUtcUsno!.Value;
+            double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dt1);
+            return new LunarPhaseEvent(lunarPhase.LunationNumber, lunarPhase.PhaseType, jdtt, dt1);
         }
 
         // Look for a lunar phase in the database with an AstroPixels datetime within 24 hours.
         lunarPhase = astroDbContext.LunarPhases.FirstOrDefault(lp =>
             lp.DateTimeUtcAstroPixels != null
-            && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!.Value)
+            && Math.Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!.Value)
             <= TimeConstants.HOURS_PER_DAY);
         if (lunarPhase != null)
         {
             // We found an AstroPixels calculation, so return that.
-            return new LunarPhaseEvent(lunarPhase.Lunation,
-                (ELunarPhaseType)lunarPhase.Type, lunarPhase.DateTimeUtcAstroPixels!.Value);
+            DateTime dt1 = lunarPhase.DateTimeUtcAstroPixels!.Value;
+            double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dt1);
+            return new LunarPhaseEvent(lunarPhase.LunationNumber, lunarPhase.PhaseType, jdtt, dt1);
         }
 
         // Use my calculation.
@@ -66,12 +68,13 @@ public class MoonService(AstroDbContext astroDbContext)
         // Calculate k, rounded off to nearest 0.25.
         TimeSpan timeSinceLunation0 = dt - TimeConstants.LUNATION_0_START;
         int phaseCount =
-            (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
+            (int)Math.Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
+        // k (in the book) is equal to PhaseNumber (in the LunarPhaseEvent record).
         double k = phaseCount / 4.0;
 
         // Get the lunation number and phase.
-        int lunationNumber = (int)Floor(k);
-        // Have to use Mod() here instead of % because phaseNumber can be negative and we want a
+        int lunationNumber = (int)Math.Floor(k);
+        // Have to use Mod() here instead of the % operator because k can be negative and we want a
         // positive result.
         ELunarPhaseType phaseType = (ELunarPhaseType)NumberExtensions.Mod(phaseCount, 4);
 
@@ -137,117 +140,116 @@ public class MoonService(AstroDbContext astroDbContext)
         double A13 = Angles.DegreesToRadiansWithWrap(239.56 + 25.513_099 * k);
         double A14 = Angles.DegreesToRadiansWithWrap(331.55 + 3.592_518 * k);
 
-        // I'm using Mod() here instead of the modulo operator (%) because the phaseNumber can
-        // be negative and we want a non-negative result.
         double C1;
         if (phaseType is ELunarPhaseType.NewMoon or ELunarPhaseType.FullMoon)
         {
             if (phaseType == ELunarPhaseType.NewMoon)
             {
                 // Phase is New Moon.
-                C1 = -0.40720 * Sin(L)
-                    + 0.17241 * E * Sin(M)
-                    + 0.01608 * Sin(2 * L)
-                    + 0.01039 * Sin(2 * F)
-                    + 0.00739 * E * Sin(L - M)
-                    - 0.00514 * E * Sin(L + M)
-                    + 0.00208 * E2 * Sin(2 * M);
+                C1 = -0.40720 * Math.Sin(L)
+                    + 0.17241 * E * Math.Sin(M)
+                    + 0.01608 * Math.Sin(2 * L)
+                    + 0.01039 * Math.Sin(2 * F)
+                    + 0.00739 * E * Math.Sin(L - M)
+                    - 0.00514 * E * Math.Sin(L + M)
+                    + 0.00208 * E2 * Math.Sin(2 * M);
             }
             else
             {
                 // Phase is Full Moon.
-                C1 = -0.40614 * Sin(L)
-                    + 0.17302 * E * Sin(M)
-                    + 0.01614 * Sin(2 * L)
-                    + 0.01043 * Sin(2 * F)
-                    + 0.00734 * E * Sin(L - M)
-                    - 0.00515 * E * Sin(L + M)
-                    + 0.00209 * E2 * Sin(2 * M);
+                C1 = -0.40614 * Math.Sin(L)
+                    + 0.17302 * E * Math.Sin(M)
+                    + 0.01614 * Math.Sin(2 * L)
+                    + 0.01043 * Math.Sin(2 * F)
+                    + 0.00734 * E * Math.Sin(L - M)
+                    - 0.00515 * E * Math.Sin(L + M)
+                    + 0.00209 * E2 * Math.Sin(2 * M);
             }
 
             // Phase is New Moon or Full Moon.
-            C1 += -0.00111 * Sin(L - 2 * F)
-                - 0.00057 * Sin(L + 2 * F)
-                + 0.00056 * E * Sin(2 * L + M)
-                - 0.00042 * Sin(3 * L)
-                + 0.00042 * E * Sin(M + 2 * F)
-                + 0.00038 * E * Sin(M - 2 * F)
-                - 0.00024 * E * Sin(2 * L - M)
-                - 0.00017 * Sin(Omega)
-                - 0.00007 * Sin(L + 2 * M)
-                + 0.00004 * Sin(2 * (L - F))
-                + 0.00004 * Sin(3 * M)
-                + 0.00003 * Sin(L + M - 2 * F)
-                + 0.00003 * Sin(2 * (L + F))
-                - 0.00003 * Sin(L + M + 2 * F)
-                + 0.00003 * Sin(L - M + 2 * F)
-                - 0.00002 * Sin(L - M - 2 * F)
-                - 0.00002 * Sin(3 * L + M)
-                + 0.00002 * Sin(4 * L);
+            C1 += -0.00111 * Math.Sin(L - 2 * F)
+                - 0.00057 * Math.Sin(L + 2 * F)
+                + 0.00056 * E * Math.Sin(2 * L + M)
+                - 0.00042 * Math.Sin(3 * L)
+                + 0.00042 * E * Math.Sin(M + 2 * F)
+                + 0.00038 * E * Math.Sin(M - 2 * F)
+                - 0.00024 * E * Math.Sin(2 * L - M)
+                - 0.00017 * Math.Sin(Omega)
+                - 0.00007 * Math.Sin(L + 2 * M)
+                + 0.00004 * Math.Sin(2 * (L - F))
+                + 0.00004 * Math.Sin(3 * M)
+                + 0.00003 * Math.Sin(L + M - 2 * F)
+                + 0.00003 * Math.Sin(2 * (L + F))
+                - 0.00003 * Math.Sin(L + M + 2 * F)
+                + 0.00003 * Math.Sin(L - M + 2 * F)
+                - 0.00002 * Math.Sin(L - M - 2 * F)
+                - 0.00002 * Math.Sin(3 * L + M)
+                + 0.00002 * Math.Sin(4 * L);
         }
         else
         {
             // Phase is First Quarter or Third Quarter.
-            C1 = -0.62801 * Sin(L)
-                + 0.17172 * E * Sin(M)
-                - 0.01183 * E * Sin(L + M)
-                + 0.00862 * Sin(2 * L)
-                + 0.00804 * Sin(2 * F)
-                + 0.00454 * E * Sin(L - M)
-                + 0.00204 * E2 * Sin(2 * M)
-                - 0.00180 * Sin(L - 2 * F)
-                - 0.00070 * Sin(L + 2 * F)
-                - 0.00040 * Sin(3 * L)
-                - 0.00034 * E * Sin(2 * L - M)
-                + 0.00032 * E * Sin(M + 2 * F)
-                + 0.00032 * E * Sin(M - 2 * F)
-                - 0.00028 * E2 * Sin(L + 2 * M)
-                + 0.00027 * E * Sin(2 * L + M)
-                - 0.00017 * Sin(Omega)
-                - 0.00005 * Sin(L - M - 2 * F)
-                + 0.00004 * Sin(2 * (L + F))
-                - 0.00004 * Sin(L + M + 2 * F)
-                + 0.00004 * Sin(L - 2 * M)
-                + 0.00003 * Sin(L + M - 2 * F)
-                + 0.00003 * Sin(3 * M)
-                + 0.00002 * Sin(2 * (L - F))
-                + 0.00002 * Sin(L - M + 2 * F)
-                - 0.00002 * Sin(3 * L + M);
+            C1 = -0.62801 * Math.Sin(L)
+                + 0.17172 * E * Math.Sin(M)
+                - 0.01183 * E * Math.Sin(L + M)
+                + 0.00862 * Math.Sin(2 * L)
+                + 0.00804 * Math.Sin(2 * F)
+                + 0.00454 * E * Math.Sin(L - M)
+                + 0.00204 * E2 * Math.Sin(2 * M)
+                - 0.00180 * Math.Sin(L - 2 * F)
+                - 0.00070 * Math.Sin(L + 2 * F)
+                - 0.00040 * Math.Sin(3 * L)
+                - 0.00034 * E * Math.Sin(2 * L - M)
+                + 0.00032 * E * Math.Sin(M + 2 * F)
+                + 0.00032 * E * Math.Sin(M - 2 * F)
+                - 0.00028 * E2 * Math.Sin(L + 2 * M)
+                + 0.00027 * E * Math.Sin(2 * L + M)
+                - 0.00017 * Math.Sin(Omega)
+                - 0.00005 * Math.Sin(L - M - 2 * F)
+                + 0.00004 * Math.Sin(2 * (L + F))
+                - 0.00004 * Math.Sin(L + M + 2 * F)
+                + 0.00004 * Math.Sin(L - 2 * M)
+                + 0.00003 * Math.Sin(L + M - 2 * F)
+                + 0.00003 * Math.Sin(3 * M)
+                + 0.00002 * Math.Sin(2 * (L - F))
+                + 0.00002 * Math.Sin(L - M + 2 * F)
+                - 0.00002 * Math.Sin(3 * L + M);
 
             // Calculate additional correction for first and third quarter phases.
             double W = 0.00306
-                - 0.00038 * E * Cos(M)
-                + 0.00026 * Cos(L)
-                - 0.00002 * Cos(L - M)
-                + 0.00002 * Cos(L + M)
-                + 0.00002 * Cos(2 * F);
+                - 0.00038 * E * Math.Cos(M)
+                + 0.00026 * Math.Cos(L)
+                - 0.00002 * Math.Cos(L - M)
+                + 0.00002 * Math.Cos(L + M)
+                + 0.00002 * Math.Cos(2 * F);
             jdtt += phaseType == ELunarPhaseType.FirstQuarter ? W : -W;
         }
 
         // Additional correction for all phases.
-        double C2 = 0.000_325 * Sin(A1)
-            + 0.000_165 * Sin(A2)
-            + 0.000_164 * Sin(A3)
-            + 0.000_126 * Sin(A4)
-            + 0.000_110 * Sin(A5)
-            + 0.000_062 * Sin(A6)
-            + 0.000_060 * Sin(A7)
-            + 0.000_056 * Sin(A8)
-            + 0.000_047 * Sin(A9)
-            + 0.000_042 * Sin(A10)
-            + 0.000_040 * Sin(A11)
-            + 0.000_037 * Sin(A12)
-            + 0.000_035 * Sin(A13)
-            + 0.000_023 * Sin(A14);
+        double C2 = 0.000_325 * Math.Sin(A1)
+            + 0.000_165 * Math.Sin(A2)
+            + 0.000_164 * Math.Sin(A3)
+            + 0.000_126 * Math.Sin(A4)
+            + 0.000_110 * Math.Sin(A5)
+            + 0.000_062 * Math.Sin(A6)
+            + 0.000_060 * Math.Sin(A7)
+            + 0.000_056 * Math.Sin(A8)
+            + 0.000_047 * Math.Sin(A9)
+            + 0.000_042 * Math.Sin(A10)
+            + 0.000_040 * Math.Sin(A11)
+            + 0.000_037 * Math.Sin(A12)
+            + 0.000_035 * Math.Sin(A13)
+            + 0.000_023 * Math.Sin(A14);
 
         // Apply corrections.
         jdtt += C1 + C2;
 
-        // Convert the Julian Date (TT) to a DateTime (UT).
-        DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        // Convert the Julian Date (TT) to a DateTime (UT), and round off to nearest minute.
+        DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt)
+            .RoundToNearestMinute();
 
-        // Construct and return the LunarPhase object.
-        return new LunarPhaseEvent(lunationNumber, phaseType, dtPhase);
+        // Construct and return the LunarPhaseEvent object.
+        return new LunarPhaseEvent(lunationNumber, phaseType, jdtt, dtPhase);
     }
 
     /// <summary>
@@ -270,7 +272,8 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <param name="end">The end of the period.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns></returns>
-    public List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end, ELunarPhaseType? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInPeriod(DateTime start, DateTime end,
+        ELunarPhaseType? phase = null)
     {
         List<LunarPhaseEvent> result = [];
 
@@ -294,14 +297,14 @@ public class MoonService(AstroDbContext astroDbContext)
             DateTime nextGuess = phaseEvent.DateTimeUtc.AddDays(daysPerPhase);
             phaseEvent = GetPhaseNearDateTime(nextGuess);
 
-            // We done?
+            // Are we done?
             if (phaseEvent.DateTimeUtc > end)
             {
                 break;
             }
 
             // Add it to the result.
-            if (phase == null || phaseEvent.Type == phase)
+            if (phase == null || phaseEvent.PhaseType == phase)
             {
                 result.Add(phaseEvent);
             }
@@ -318,21 +321,12 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <param name="month">The month number.</param>
     /// <param name="phase">The phase to find, or null for all.</param>
     /// <returns>A list of lunar phases.</returns>
-    public List<LunarPhaseEvent> GetPhasesInMonth(int year, int month, ELunarPhaseType? phase = null)
+    public List<LunarPhaseEvent> GetPhasesInMonth(int year, int month,
+        ELunarPhaseType? phase = null)
     {
-        // Check year is valid. Valid range matches DateTime.IsLeapYear().
-        if (year is < 1 or > 9999)
-        {
-            throw new ArgumentOutOfRangeException(nameof(year),
-                "Year must be in the range 1..9999");
-        }
-
-        // Check month is valid. Valid range is 1-12.
-        if (month is < 1 or > 12)
-        {
-            throw new ArgumentOutOfRangeException(nameof(month),
-                "Month must be in the range 1..12");
-        }
+        // Check year and month are valid.
+        GregorianCalendarExtensions.CheckYearInRange(year);
+        GregorianCalendarExtensions.CheckMonthInRange(month);
 
         return GetPhasesInPeriod(
             GregorianCalendarExtensions.GetMonthStart(year, month, DateTimeKind.Utc),
@@ -348,12 +342,8 @@ public class MoonService(AstroDbContext astroDbContext)
     /// <returns>A list of lunar phases.</returns>
     public List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhaseType? phase = null)
     {
-        // Check year is valid. Valid range matches DateTime.IsLeapYear().
-        if (year is < 1 or > 9999)
-        {
-            throw new ArgumentOutOfRangeException(nameof(year),
-                "Year must be in the range 1..9999");
-        }
+        // Check year is valid.
+        GregorianCalendarExtensions.CheckYearInRange(year);
 
         return GetPhasesInPeriod(GregorianCalendarExtensions.GetYearStart(year, DateTimeKind.Utc),
             GregorianCalendarExtensions.GetYearEnd(year, DateTimeKind.Utc), phase);

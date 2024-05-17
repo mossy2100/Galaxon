@@ -117,7 +117,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
             double deltaT = TimeScales.CalcDeltaT(dt);
             double DUT1 = CalcDUT1(dt);
             Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
-            if (Abs(DUT1) > 0.9)
+            if (Math.Abs(DUT1) > 0.9)
             {
                 Console.WriteLine("Wrong.");
             }

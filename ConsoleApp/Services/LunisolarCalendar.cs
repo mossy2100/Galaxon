@@ -592,8 +592,8 @@ public class LunisolarCalendar(
 
             // Check for New Moon within 1 day of the Gregorian New Year.
             DateTime nextNewYear =
-                new DateTime(newMoon.DateTimeUtc.Year, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-            DateTime prevNewYear = new DateTime(newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0,
+                new (newMoon.DateTimeUtc.Year, 12, 31, 0, 0, 0, DateTimeKind.Utc);
+            DateTime prevNewYear = new (newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0,
                 DateTimeKind.Utc);
             double diff1 =
                 Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
@@ -630,7 +630,7 @@ public class LunisolarCalendar(
 
             // Check if there's also a New Moon at this time.
             LunarPhaseEvent newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
-            if (newMoon.Type != ELunarPhaseType.NewMoon)
+            if (newMoon.PhaseType != ELunarPhaseType.NewMoon)
             {
                 continue;
             }
@@ -647,7 +647,7 @@ public class LunisolarCalendar(
             Console.WriteLine();
             Console.WriteLine($"Alignment in year {y}:");
             Console.WriteLine($"{"Southern Solstice",20}: {solstice:R}");
-            Console.WriteLine($"{newMoon.Type.GetDisplayName(),20}: {newMoon.DateTimeUtc:R}");
+            Console.WriteLine($"{newMoon.PhaseType.GetDisplayName(),20}: {newMoon.DateTimeUtc:R}");
             Console.WriteLine(
                 $"{"Difference",20}: {TimeSpanExtensions.GetTimeString(diff, ETimeUnit.Minute)}");
         }

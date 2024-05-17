@@ -181,11 +181,11 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         double JDE0 = GetSeasonalMarkerMean(year, markerType);
         double T = TimeScales.JulianCenturiesSinceJ2000(JDE0);
         double W = Angles.DegreesToRadians(35999.373 * T - 2.47);
-        double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
+        double dLambda = 1 + 0.0334 * Math.Cos(W) + 0.0007 * Math.Cos(2 * W);
 
         // Sum the periodic terms from Table 27.C.
         double S = PeriodicTerms.Sum(term =>
-            term.A * Cos(Angles.DegreesToRadians(term.B + term.C * T)));
+            term.A * Math.Cos(Angles.DegreesToRadians(term.B + term.C * T)));
 
         // Equation from p178.
         return JDE0 + 0.000_01 * S / dLambda;
@@ -217,13 +217,13 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
             double diffLs = Angles.WrapRadians(targetLs - Ls);
 
             // Check if we're done.
-            if (Abs(diffLs) < sunMovementRadiansPerHalfSecond)
+            if (Math.Abs(diffLs) < sunMovementRadiansPerHalfSecond)
             {
                 break;
             }
 
             // Make a correction.
-            jdtt += 58 * Sin(diffLs);
+            jdtt += 58 * Math.Sin(diffLs);
         }
         while (true);
 

@@ -170,7 +170,7 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     public static string NumberToName(int monthNumber, string languageCode = "en")
     {
         // Check for a valid month number.
-        GregorianCalendarExtensions.CheckMonth(monthNumber);
+        GregorianCalendarExtensions.CheckMonthInRange(monthNumber);
 
         try
         {

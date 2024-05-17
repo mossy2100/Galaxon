@@ -59,7 +59,7 @@ public class PlanetService(
             double amplitude = (double)record.Amplitude;
             double phase = (double)record.Phase;
             double frequency = (double)record.Frequency;
-            coeffs[record.IndexOfCoordinate][record.Exponent] += amplitude * Cos(phase + frequency * T);
+            coeffs[record.IndexOfCoordinate][record.Exponent] += amplitude * Math.Cos(phase + frequency * T);
         }
 
         // Calculate each coordinate variable.

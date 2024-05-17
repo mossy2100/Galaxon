@@ -59,7 +59,7 @@ public class SunService(PlanetService planetService)
             planetService.CalcPlanetPosition("Earth", jdtt);
 
         // Reverse to get the mean dynamical ecliptic and equinox of the date.
-        double sunLong_rad = WrapRadians(earthLong_rad + PI);
+        double sunLong_rad = WrapRadians(earthLong_rad + Math.PI);
         double sunLat_rad = WrapRadians(-earthLat_rad);
         double sunDist_AU = earthDist_AU;
 
@@ -70,7 +70,7 @@ public class SunService(PlanetService planetService)
         double lambdaPrime = Polynomials.EvaluatePolynomial(
             [sunLong_rad, -DegreesToRadians(1.397), -DegreesToRadians(0.000_31)], T);
         sunLong_rad -= DMSToRadians(0, 0, 0.090_33);
-        sunLat_rad += DMSToRadians(0, 0, 0.039_16) * (Cos(lambdaPrime) - Sin(lambdaPrime));
+        sunLat_rad += DMSToRadians(0, 0, 0.039_16) * (Math.Cos(lambdaPrime) - Math.Sin(lambdaPrime));
 
         // The Sun's longitude obtained thus far is the true ("geometric") longitude of the Sun
         // referred to the mean equinox of the date.

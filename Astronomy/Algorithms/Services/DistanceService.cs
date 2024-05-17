@@ -60,8 +60,8 @@ public static class DistanceService
         double S = sin2G * cos2Lambda + cos2F * sin2Lambda;
         double C = cos2G * cos2Lambda + sin2F * sin2Lambda;
 
-        double omega = Atan(Sqrt(S / C));
-        double R = Sqrt(S * C) / omega;
+        double omega = Math.Atan(Math.Sqrt(S / C));
+        double R = Math.Sqrt(S * C) / omega;
         double D = 2 * omega * radiusEquat;
         double H1 = (3 * R - 1) / 2 / C;
         double H2 = (3 * R + 1) / 2 / S;

@@ -108,17 +108,17 @@ public class ApsideService(
         {
             case EApsideType.Periapsis:
                 // Round off k to nearest integer.
-                k = Round(k);
+                k = Math.Round(k);
                 break;
 
             case EApsideType.Apoapsis:
                 // Round off k to nearest "integer + 0.5" value.
-                k = Round(k - 0.5) + 0.5;
+                k = Math.Round(k - 0.5) + 0.5;
                 break;
 
             default:
                 // Round off to nearest 0.5
-                k = Round(k * 2) / 2;
+                k = Math.Round(k * 2) / 2;
                 // Determine the apside type.
                 apsideType = double.IsInteger(k) ? EApsideType.Periapsis : EApsideType.Apoapsis;
                 break;

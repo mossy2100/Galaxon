@@ -21,7 +21,7 @@ public record struct LunarPhaseDto
     ///   2 = Full Moon
     ///   3 = Third Quarter
     /// </summary>
-    public int PhaseNumber { get; init; }
+    public int PhaseType { get; init; }
 
     /// <summary>
     /// String representing the phase.
@@ -39,9 +39,9 @@ public record struct LunarPhaseDto
     public LunarPhaseDto(LunarPhaseEvent lunarPhase)
     {
         LunationNumber = lunarPhase.LunationNumber;
-        PhaseNumber = (int)lunarPhase.Type;
-        Phase = lunarPhase.Type.GetDisplayName();
+        PhaseType = (int)lunarPhase.PhaseType;
+        Phase = lunarPhase.PhaseType.GetDisplayName();
         // Round off to nearest minute.
-        DateTime = DateTimeExtensions.Round(lunarPhase.DateTimeUtc, TimeSpan.FromMinutes(1)).ToIsoString();
+        DateTime = lunarPhase.DateTimeUtc.RoundToNearestMinute().ToIsoString();
     }
 }

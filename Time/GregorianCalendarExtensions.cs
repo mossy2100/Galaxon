@@ -30,7 +30,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="year"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private static void CheckYear(int year)
+    public static void CheckYearInRange(int year)
     {
         if (year is < 1 or > 9999)
         {
@@ -44,7 +44,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="month"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static void CheckMonth(int month)
+    public static void CheckMonthInRange(int month)
     {
         if (month is < 1 or > 12)
         {
@@ -71,7 +71,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The date of Easter Sunday for the given year.</returns>
     public static DateOnly GetEaster(int year)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         int a = year % 19;
         int b = year / 100;
@@ -97,7 +97,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The date of Christmas in the given year.</returns>
     public static DateOnly GetChristmas(int year)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         return new DateOnly(year, 12, 31);
     }
@@ -126,7 +126,7 @@ public static class GregorianCalendarExtensions
     /// <exception cref="ArgumentOutOfRangeException">If a valid date could not be found.</exception>
     public static DateOnly GetNthWeekdayInMonth(int year, int month, int n, DayOfWeek dayOfWeek)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         // Guard.
         if (Math.Abs(n) is < 1 or > 5)
@@ -165,7 +165,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The date of Thanksgiving.</returns>
     public static DateOnly GetThanksgiving(int year)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         // Get the 4th Thursday in November.
         return GetNthWeekdayInMonth(year, 11, 4, DayOfWeek.Thursday);
@@ -183,7 +183,7 @@ public static class GregorianCalendarExtensions
     /// <returns>A DateTime representing the start of the year (UT).</returns>
     public static DateTime GetYearStart(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         return new DateTime(year, 1, 1, 0, 0, 0, kind);
     }
@@ -196,7 +196,7 @@ public static class GregorianCalendarExtensions
     /// <returns>A DateTime representing the end of the year (UT).</returns>
     public static DateTime GetYearEnd(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         // There isn't a DateTime constructor that allows us to specify the time of day with
         // resolution of 1 tick (the best is microsecond), so instead, we get the start point of the
@@ -212,7 +212,7 @@ public static class GregorianCalendarExtensions
     /// <returns>A DateTime representing the end of the year (UT).</returns>
     public static DateTime GetYearMidPoint(int year, DateTimeKind kind = DateTimeKind.Unspecified)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         return GetYearStart(year, kind) + new TimeSpan(GetTicksInYear(year) / 2);
     }
@@ -227,8 +227,8 @@ public static class GregorianCalendarExtensions
     public static DateTime GetMonthStart(int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
-        CheckYear(year);
-        CheckMonth(month);
+        CheckYearInRange(year);
+        CheckMonthInRange(month);
 
         return new DateTime(year, month, 1, 0, 0, 0, kind);
     }
@@ -243,8 +243,8 @@ public static class GregorianCalendarExtensions
     public static DateTime GetMonthEnd(int year, int month,
         DateTimeKind kind = DateTimeKind.Unspecified)
     {
-        CheckYear(year);
-        CheckMonth(month);
+        CheckYearInRange(year);
+        CheckMonthInRange(month);
 
         // There isn't a DateTime constructor that allows us to specify the time of day with
         // resolution of 1 tick (the best is microsecond), so instead, we'll add the number of ticks
@@ -259,7 +259,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The first day of the specified year.</returns>
     public static DateOnly GetYearFirstDay(int year)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         return new DateOnly(year, 1, 1);
     }
@@ -271,7 +271,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The last day of the specified year.</returns>
     public static DateOnly GetYearLastDay(int year)
     {
-        CheckYear(year);
+        CheckYearInRange(year);
 
         return new DateOnly(year, 12, 31);
     }
@@ -284,8 +284,8 @@ public static class GregorianCalendarExtensions
     /// <returns>The first day of the specified month.</returns>
     public static DateOnly GetMonthFirstDay(int year, int month)
     {
-        CheckYear(year);
-        CheckMonth(month);
+        CheckYearInRange(year);
+        CheckMonthInRange(month);
 
         return new DateOnly(year, month, 1);
     }
@@ -299,8 +299,8 @@ public static class GregorianCalendarExtensions
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the month is not in the valid range (1-12).</exception>
     public static DateOnly GetMonthLastDay(int year, int month)
     {
-        CheckYear(year);
-        CheckMonth(month);
+        CheckYearInRange(year);
+        CheckMonthInRange(month);
 
         GregorianCalendar gc = GetInstance();
         return new DateOnly(year, month, gc.GetDaysInMonth(year, month));
@@ -349,7 +349,7 @@ public static class GregorianCalendarExtensions
     /// <returns>The number of days in the month.</returns>
     public static int GetDaysInMonth(int year, int month)
     {
-        CheckMonth(month);
+        CheckMonthInRange(month);
 
         return (month == 2 && IsLeapYear(year)) ? 29 : GregorianMonth.Months[month].Length;
     }
@@ -377,7 +377,7 @@ public static class GregorianCalendarExtensions
     /// <returns></returns>
     public static bool IsJulianDate(int year, int month, int day)
     {
-        CheckMonth(month);
+        CheckMonthInRange(month);
 
         if (year < 1582)
         {

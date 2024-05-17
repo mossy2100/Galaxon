@@ -87,7 +87,7 @@ public class GregorianCalendarController(
             List<LunarPhaseEvent> phases = moonService.GetPhasesInYear(year);
             foreach (LunarPhaseEvent phase in phases)
             {
-                dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.Type.GetDisplayName());
+                dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.PhaseType.GetDisplayName());
             }
 
             // Log it.
