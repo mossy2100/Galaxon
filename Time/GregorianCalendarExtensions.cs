@@ -302,11 +302,97 @@ public static class GregorianCalendarExtensions
         CheckYearInRange(year);
         CheckMonthInRange(month);
 
-        GregorianCalendar gc = GetInstance();
-        return new DateOnly(year, month, gc.GetDaysInMonth(year, month));
+        return new DateOnly(year, month, GetDaysInMonth(year, month));
     }
 
     #endregion Year and month start and end
+
+    #region Month names and numbers
+
+    /// <summary>
+    /// Retrieves the names of all Gregorian calendar months in the specified language.
+    /// </summary>
+    /// <param name="languageCode">The language code to use. Default is English ("en").</param>
+    /// <returns>
+    /// A dictionary where keys are month numbers (1-12) and values are month names.
+    /// </returns>
+    public static Dictionary<int, string> GetMonthNames(string languageCode = "en")
+    {
+        Dictionary<int, string> result = new ();
+        CultureInfo culture = new (languageCode);
+
+        for (int m = 1; m <= 12; m++)
+        {
+            // Year and day are arbitrary.
+            result[m] = new DateTime(2000, m, 1).ToString("MMMM", culture);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Given a month number, get the month name in the specified language.
+    /// </summary>
+    /// <param name="monthNumber">The month number (1-12).</param>
+    /// <param name="languageCode">The language code (e.g., "en", "fr").</param>
+    /// <returns>The name of the month in the specified language.</returns>
+    public static string MonthNumberToName(int monthNumber, string languageCode = "en")
+    {
+        CheckMonthInRange(monthNumber);
+
+        try
+        {
+            return GetMonthNames(languageCode)[monthNumber];
+        }
+        catch
+        {
+            throw new InvalidOperationException(
+                $"No month name found for month number {monthNumber} in language {languageCode}.");
+        }
+    }
+
+    /// <summary>
+    /// Given a name in a specified language (default is English), get the month number (1-12).
+    /// Matches abbreviations of any length, as long as the result is unique.
+    /// Matches are case-insensitive.
+    /// Fails if zero or more than one match is found.
+    /// </summary>
+    /// <param name="monthNameOrAbbreviation">
+    /// The month name or abbreviation (case-insensitive).
+    /// </param>
+    /// <param name="languageCode">
+    /// The language code specifying which set of names to search (default is "en").
+    /// </param>
+    /// <returns>The month number.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the provided month name doesn't produce a unique result.
+    /// </exception>
+    public static int MonthNameToNumber(string monthNameOrAbbreviation, string languageCode = "en")
+    {
+        // Find matches in the specified language.
+        List<int> matches = GetMonthNames(languageCode)
+            .Where(pair => pair.Value.StartsWith(monthNameOrAbbreviation,
+                StringComparison.CurrentCultureIgnoreCase))
+            .Select(pair => pair.Key)
+            .ToList();
+
+        // Handle failure modes.
+        if (matches.Count == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+                "Invalid month name or abbreviation.");
+        }
+        if (matches.Count > 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+                "Multiple matches found.");
+        }
+
+        // Return the result.
+        return matches[0];
+    }
+
+    #endregion Month names and numbers
 
     #region Time units
 
@@ -351,7 +437,23 @@ public static class GregorianCalendarExtensions
     {
         CheckMonthInRange(month);
 
-        return (month == 2 && IsLeapYear(year)) ? 29 : GregorianMonth.Months[month].Length;
+        return month switch
+        {
+            1 => 31,
+            2 => IsLeapYear(year) ? 29 : 28,
+            3 => 31,
+            4 => 30,
+            5 => 31,
+            6 => 30,
+            7 => 31,
+            8 => 31,
+            9 => 30,
+            10 => 31,
+            11 => 30,
+            12 => 31,
+            // This case is to silence the compiler. We already checked for a valid month number.
+            _ => 0,
+        };
     }
 
     /// <summary>

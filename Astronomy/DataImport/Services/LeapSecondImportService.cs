@@ -135,8 +135,8 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
 
             // Prepare regular expressions.
             // Get the month names.
-            string enMonths = string.Join('|', GregorianMonth.GetNames().Values);
-            string frMonths = string.Join('|', GregorianMonth.GetNames("fr").Values);
+            string enMonths = string.Join('|', GregorianCalendarExtensions.GetMonthNames().Values);
+            string frMonths = string.Join('|', GregorianCalendarExtensions.GetMonthNames("fr").Values);
             string rxsMonths = $"{enMonths}|{frMonths}";
             // Regular expression to match the bulletin URL.
             string rxsBulletinUrl = @"bulletinc-(\d+)\.txt$";
@@ -215,14 +215,14 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                 try
                 {
                     // Try to match the English month name.
-                    publishMonth = GregorianMonth.NameToNumber(monthName);
+                    publishMonth = GregorianCalendarExtensions.MonthNameToNumber(monthName);
                 }
                 catch
                 {
                     try
                     {
                         // Try French.
-                        publishMonth = GregorianMonth.NameToNumber(monthName, "fr");
+                        publishMonth = GregorianCalendarExtensions.MonthNameToNumber(monthName, "fr");
                     }
                     catch
                     {
@@ -254,7 +254,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
 
                     GroupCollection groups = matches[0].Groups;
                     iersBulletinC.Value = (sbyte)(groups["sign"].Value == "positive" ? 1 : -1);
-                    int month = GregorianMonth.NameToNumber(groups["month"].Value);
+                    int month = GregorianCalendarExtensions.MonthNameToNumber(groups["month"].Value);
                     int year = int.Parse(groups["year"].Value);
                     iersBulletinC.LeapSecondDate = GregorianCalendarExtensions.GetMonthLastDay(year, month);
 

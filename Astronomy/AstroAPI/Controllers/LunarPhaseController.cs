@@ -107,7 +107,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         }
         catch (Exception ex)
         {
-            string monthName = GregorianMonth.NumberToName(month);
+            string monthName = GregorianCalendarExtensions.MonthNumberToName(month);
             string error = $"Error computing lunar phases for {monthName} {year}.";
             return Program.ReturnException(this, error, ex);
         }

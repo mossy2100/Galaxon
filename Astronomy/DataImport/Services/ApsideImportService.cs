@@ -248,7 +248,7 @@ public class ApsideImportService(
                         {
                             // Get the date and time parts.
                             int apsideYear = parts[i] == "Dec" ? year - 1 : year;
-                            int apsideMonth = GregorianMonth.NameToNumber(parts[i]);
+                            int apsideMonth = GregorianCalendarExtensions.MonthNameToNumber(parts[i]);
                             int apsideDay = int.Parse(parts[i + 1]);
                             TimeOnly apsideTime = TimeOnly.Parse(parts[i + 2]);
 
