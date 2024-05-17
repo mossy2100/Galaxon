@@ -15,14 +15,14 @@ public class AstroDbContext : DbContext
 {
     #region Database tables
 
-    // ---------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // Astronomical objects and groups.
 
     public DbSet<AstroObjectRecord> AstroObjects => Set<AstroObjectRecord>();
 
     public DbSet<AstroObjectGroupRecord> AstroObjectGroups => Set<AstroObjectGroupRecord>();
 
-    // ---------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // AstroObject components.
 
     public DbSet<PhysicalRecord> Physicals => Set<PhysicalRecord>();
@@ -35,7 +35,7 @@ public class AstroDbContext : DbContext
 
     public DbSet<StellarRecord> Stellars => Set<StellarRecord>();
 
-    // ---------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // Atmospheres.
 
     public DbSet<AtmosphereRecord> Atmospheres => Set<AtmosphereRecord>();
@@ -45,15 +45,15 @@ public class AstroDbContext : DbContext
 
     public DbSet<MoleculeRecord> Molecules => Set<MoleculeRecord>();
 
-    // ---------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // Leap seconds.
 
     public DbSet<LeapSecondRecord> LeapSeconds => Set<LeapSecondRecord>();
 
     public DbSet<IersBulletinCRecord> IersBulletinCs => Set<IersBulletinCRecord>();
 
-    // ---------------------------------------------------------------------------------------------
-    // Other stuff.
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Events.
 
     public DbSet<SeasonalMarkerRecord> SeasonalMarkers => Set<SeasonalMarkerRecord>();
 
@@ -63,11 +63,12 @@ public class AstroDbContext : DbContext
 
     public DbSet<EasterDateRecord> EasterDates => Set<EasterDateRecord>();
 
-    // public DbSet<DeltaTRecord> DeltaTRecords => Set<DeltaTRecord>();
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Data for computing planetary positions.
 
     public DbSet<VSOP87DRecord> VSOP87D => Set<VSOP87DRecord>();
 
-    // ---------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // Website documents.
 
     public DbSet<DocumentRecord> Documents => Set<DocumentRecord>();
@@ -102,80 +103,71 @@ public class AstroDbContext : DbContext
         //     "Galaxon": "Server=localhost;port=3306;database=galaxon;user=shaun;password=freedom"
     }
 
+    /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<AstroObjectRecord>()
-            .HasMany(ao => ao.Groups)
-            .WithMany(g => g.Objects);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Parent)
-            .WithMany(ao => ao.Children);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Physical)
-            .WithOne(phys => phys.AstroObject)
-            .HasForeignKey<PhysicalRecord>(phys => phys.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Rotation)
-            .WithOne(rot => rot.AstroObject)
-            .HasForeignKey<RotationalRecord>(rot => rot.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Orbit)
-            .WithOne(orb => orb.AstroObject)
-            .HasForeignKey<OrbitalRecord>(orb => orb.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Observation)
-            .WithOne(obs => obs.AstroObject)
-            .HasForeignKey<ObservationalRecord>(obs => obs.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Atmosphere)
-            .WithOne(atmo => atmo.AstroObject)
-            .HasForeignKey<AtmosphereRecord>(atmo => atmo.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasOne(ao => ao.Stellar)
-            .WithOne(ss => ss.AstroObject)
-            .HasForeignKey<StellarRecord>(ss => ss.AstroObjectId);
-        // builder.Entity<AstroObject>()
-        //     .HasOne(ao => ao.MinorPlanet)
-        //     .WithOne(mpr => mpr.AstroObject)
-        //     .HasForeignKey<MinorPlanetRecord>(mpr => mpr.AstroObjectId);
-        builder.Entity<AstroObjectRecord>()
-            .HasMany(ao => ao.VSOP87DRecords)
-            .WithOne(vr => vr.AstroObject)
-            .HasForeignKey(vr => vr.AstroObjectId);
+        base.OnModelCreating(builder);
 
-        // Converters.
-        builder
-            .Entity<LunarPhaseRecord>()
-            .Property(e => e.Type)
-            .HasConversion(new LunarPhaseConverter());
-        builder
-            .Entity<SeasonalMarkerRecord>()
-            .Property(e => e.Type)
-            .HasConversion(new SeasonalMarkerConverter());
+        builder.Entity<AstroObjectRecord>(entity =>
+        {
+            entity.HasMany(ao => ao.Groups)
+                .WithMany(g => g.Objects);
+
+            entity.HasOne(ao => ao.Parent)
+                .WithMany(ao => ao.Children);
+
+            entity.HasOne(ao => ao.Physical)
+                .WithOne(phys => phys.AstroObject)
+                .HasForeignKey<PhysicalRecord>(phys => phys.AstroObjectId);
+
+            entity.HasOne(ao => ao.Rotation)
+                .WithOne(rot => rot.AstroObject)
+                .HasForeignKey<RotationalRecord>(rot => rot.AstroObjectId);
+
+            entity.HasOne(ao => ao.Orbit)
+                .WithOne(orb => orb.AstroObject)
+                .HasForeignKey<OrbitalRecord>(orb => orb.AstroObjectId);
+
+            entity.HasOne(ao => ao.Observation)
+                .WithOne(obs => obs.AstroObject)
+                .HasForeignKey<ObservationalRecord>(obs => obs.AstroObjectId);
+
+            entity.HasOne(ao => ao.Atmosphere)
+                .WithOne(atmo => atmo.AstroObject)
+                .HasForeignKey<AtmosphereRecord>(atmo => atmo.AstroObjectId);
+
+            entity.HasOne(ao => ao.Stellar)
+                .WithOne(ss => ss.AstroObject)
+                .HasForeignKey<StellarRecord>(ss => ss.AstroObjectId);
+        });
+
+        builder.Entity<VSOP87DRecord>()
+            .HasIndex(p => new { p.CodeOfBody, p.IndexOfCoordinate, p.Exponent, p.Rank })
+            .IsUnique();
     }
 
+    /// <inheritdoc/>
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder
-            .Properties<DateOnly>()
+        configurationBuilder.Properties<DateOnly>()
             .HaveConversion<DateOnlyConverter>();
-        configurationBuilder
-            .Properties<DateTime>()
+
+        configurationBuilder.Properties<DateTime>()
             .HaveConversion<DateTimeConverter>();
-        configurationBuilder
-            .Properties<DateOnly?>()
+
+        configurationBuilder.Properties<DateOnly?>()
             .HaveConversion<NullableDateOnlyConverter>();
-        configurationBuilder
-            .Properties<DateTime>()
+
+        configurationBuilder.Properties<DateTime?>()
             .HaveConversion<NullableDateTimeConverter>();
-        configurationBuilder
-            .Properties<EApsideType>()
+
+        configurationBuilder.Properties<EApsideType>()
             .HaveConversion<ApsideConverter>();
-        configurationBuilder
-            .Properties<ELunarPhaseType>()
+
+        configurationBuilder.Properties<ELunarPhaseType>()
             .HaveConversion<LunarPhaseConverter>();
-        configurationBuilder
-            .Properties<ESeasonalMarkerType>()
+
+        configurationBuilder.Properties<ESeasonalMarkerType>()
             .HaveConversion<SeasonalMarkerConverter>();
     }
 

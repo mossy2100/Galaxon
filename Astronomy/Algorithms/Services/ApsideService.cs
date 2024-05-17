@@ -6,12 +6,12 @@ using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class ApsideService(
+    AstroObjectRepository astroObjectRepository,
     AstroObjectGroupRepository astroObjectGroupRepository,
     PlanetService planetService)
 {
@@ -178,14 +178,14 @@ public class ApsideService(
         double tolerance = 30.0 / TimeConstants.SECONDS_PER_DAY;
 
         // The function to calculate distance to Sun (radius) from JD(TT).
-        Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius_m;
+        Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius_AU;
 
         // If we are looking for a minimum or a maximum radius.
         bool findMax = approxApsideEvent.ApsideType == EApsideType.Apoapsis;
 
         // Result variables.
         double jdttResult;
-        double radius_m;
+        double radius_AU;
 
         // Use a golden-section search to find a more accurate result.
         // Handle Neptune differently because of the potential for a double minimum or maximum.
@@ -197,22 +197,27 @@ public class ApsideService(
             double b = jdtt1 + fracOfOrbit;
 
             // Run 2 searches, which may find extremum on either side of the approximate result.
-            (double jdtt3, double radius3_m) =
+            (double jdttA, double radiusA_AU) =
                 GoldenSectionSearch.FindExtremum(func, a, jdtt1, findMax, tolerance);
-            (double jdtt4, double radius4_m) =
+            (double jdttB, double radiusB_AU) =
                 GoldenSectionSearch.FindExtremum(func, jdtt1, b, findMax, tolerance);
 
             // Compare to see which result is best.
-            if ((!findMax && radius3_m < radius4_m)
-                || (findMax && radius3_m > radius4_m))
+            if ((!findMax && radiusA_AU < radiusB_AU) || (findMax && radiusA_AU > radiusB_AU))
             {
-                jdttResult = jdtt3;
-                radius_m = radius3_m;
+                jdttResult = jdttA;
+                radius_AU = radiusA_AU;
             }
             else
             {
-                jdttResult = jdtt4;
-                radius_m = radius4_m;
+                jdttResult = jdttB;
+                radius_AU = radiusB_AU;
+            }
+
+            if (jdttResult == a || jdttResult == b)
+            {
+                throw new Exception(
+                    "The result JD(TT) matches a boundary value, so it's probably not the true extremum.");
             }
         }
         else
@@ -221,18 +226,35 @@ public class ApsideService(
             double fracOfOrbit = orbitalPeriod_d * 0.01;
             double a = jdtt1 - fracOfOrbit;
             double b = jdtt1 + fracOfOrbit;
-            (jdttResult, radius_m) =
+            (jdttResult, radius_AU) =
                 GoldenSectionSearch.FindExtremum(func, a, b, findMax, tolerance);
+
+            if (jdttResult == a || jdttResult == b)
+            {
+                throw new Exception(
+                    "The result JD(TT) matches a boundary value, so it's probably not the true extremum.");
+            }
         }
 
         // Get the datetime of the event rounded off to the nearest minute.
         DateTime dtResult = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
             .RoundToNearestMinute();
 
-        // Compute the distance in AU.
-        double radius_AU = radius_m / Length.METRES_PER_ASTRONOMICAL_UNIT;
-
         return new ApsideEvent(planet, approxApsideEvent.ApsideNumber, jdttResult, dtResult,
-            radius_m, radius_AU);
+            radius_AU);
+    }
+
+    /// <summary>
+    /// Variation of the above method that accepts the planet name as a string.
+    /// </summary>
+    /// <param name="planetName"></param>
+    /// <param name="jdtt"></param>
+    /// <param name="apsideType"></param>
+    /// <returns></returns>
+    public ApsideEvent GetClosestApside(string planetName, double jdtt,
+        EApsideType? apsideType = null)
+    {
+        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
+        return GetClosestApside(planet, jdtt, apsideType);
     }
 }

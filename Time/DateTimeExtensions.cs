@@ -224,7 +224,7 @@ public static class DateTimeExtensions
     /// <returns>The month name.</returns>
     public static string GetMonthName(this DateTime dt, string languageCode = "en")
     {
-        return GregorianMonth.GetName(dt.Month, languageCode);
+        return GregorianMonth.NumberToName(dt.Month, languageCode);
     }
 
     #endregion Month names

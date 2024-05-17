@@ -6,42 +6,44 @@
 public class VSOP87DRecord : DatabaseRecord
 {
     /// <summary>
-    /// Gets or sets the link to the astronomical object associated with this record.
+    /// The planet number (1-8), called "code of body" in the VSOP87 documentation.
     /// </summary>
-    public int AstroObjectId { get; set; }
+    public byte CodeOfBody { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference to the astronomical object associated with this record.
+    /// The index of the coordinate:
+    ///     1 = Longitude (L)
+    ///     2 = Latitude (B)
+    ///     3 = Radius (R)
     /// </summary>
-    public virtual AstroObjectRecord? AstroObject { get; set; }
+    public byte IndexOfCoordinate { get; set; }
 
     /// <summary>
-    /// Gets or sets the variable used in the record.
-    /// </summary>
-    public char Variable { get; set; }
-
-    /// <summary>
-    /// Gets or sets the exponent used in the record.
+    /// The exponent (degree alpha) of time variable T.
     /// </summary>
     public byte Exponent { get; set; }
 
     /// <summary>
-    /// Gets or sets the index used in the record.
+    /// Rank of the term in a series.
     /// </summary>
-    public ushort Index { get; set; }
+    public ushort Rank { get; set; }
 
     /// <summary>
-    /// Gets or sets the amplitude value in the record.
+    /// The amplitude, expressed in rad (for lat/long) or AU (for radius) per Julian millennium
+    /// (called "tjy" in the documentation, for "thousands of Julian years").
     /// </summary>
-    public double Amplitude { get; set; }
+    [Column(TypeName = "decimal(18, 11)")]
+    public decimal Amplitude { get; set; }
 
     /// <summary>
-    /// Gets or sets the phase value in the record.
+    /// The phase (radians).
     /// </summary>
-    public double Phase { get; set; }
+    [Column(TypeName = "decimal(14, 11)")]
+    public decimal Phase { get; set; }
 
     /// <summary>
-    /// Gets or sets the frequency value in the record.
+    /// The frequency (radians per Julian millennium).
     /// </summary>
-    public double Frequency { get; set; }
+    [Column(TypeName = "decimal(20, 11)")]
+    public decimal Frequency { get; set; }
 }

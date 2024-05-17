@@ -78,14 +78,13 @@ public class SetupTools
     /// <summary>
     /// Configures the Serilog logging service.
     /// </summary>
-    public static void SetupLogging(string workingDirectory, IConfiguration configuration)
+    public static void SetupLogging(string assemblyName, string workingDirectory, IConfiguration configuration)
     {
         // Get the path to the Logs directory and ensure it exists.
         string logsDir = Path.Combine(workingDirectory, "Logs");
         Directory.CreateDirectory(logsDir);
 
         // Get the full path to the log file.
-        string assemblyName = Assembly.GetExecutingAssembly().GetName().Name ?? "Unknown";
         string logFilePath = Path.Combine(logsDir, $"{assemblyName}.log");
 
         // Initialize Serilog using the configuration, but override the file path.
@@ -99,7 +98,8 @@ public class SetupTools
     {
         string dir = GetWorkingDirectory();
         IConfiguration configuration = LoadConfiguration();
-        SetupLogging(dir, configuration);
+        string assemblyName = Assembly.GetCallingAssembly().GetName().Name ?? "Unknown";
+        SetupLogging(assemblyName, dir, configuration);
         return configuration;
     }
 }

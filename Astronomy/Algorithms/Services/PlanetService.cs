@@ -37,8 +37,7 @@ public class PlanetService(
     public Coordinates CalcPlanetPosition(AstroObjectRecord planet, double jdtt)
     {
         // Get the VSOP87D data for the planet from the database.
-        List<VSOP87DRecord> records =
-            astroDbContext.VSOP87D.Where(r => r.AstroObjectId == planet.Id).ToList();
+        List<VSOP87DRecord> records = astroDbContext.VSOP87D.Where(r => r.CodeOfBody == planet.Number).ToList();
 
         // Check there are records.
         if (records.IsEmpty())
@@ -50,25 +49,24 @@ public class PlanetService(
         double T = TimeScales.JulianMillenniaSinceJ2000(jdtt);
 
         // Calculate the coefficients for each coordinate variable.
-        Dictionary<char, double[]> coeffs = new ();
+        Dictionary<byte, double[]> coeffs = new ();
         foreach (VSOP87DRecord record in records)
         {
-            if (!coeffs.ContainsKey(record.Variable))
+            if (!coeffs.ContainsKey(record.IndexOfCoordinate))
             {
-                coeffs[record.Variable] = new double[6];
+                coeffs[record.IndexOfCoordinate] = new double[6];
             }
-            double amplitude = record.Amplitude;
-            double phase = record.Phase;
-            double frequency = record.Frequency;
-            coeffs[record.Variable][record.Exponent] += amplitude * Cos(phase + frequency * T);
+            double amplitude = (double)record.Amplitude;
+            double phase = (double)record.Phase;
+            double frequency = (double)record.Frequency;
+            coeffs[record.IndexOfCoordinate][record.Exponent] += amplitude * Cos(phase + frequency * T);
         }
 
         // Calculate each coordinate variable.
-        double L = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['L'], T));
-        double B = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs['B'], T));
-        double R = Polynomials.EvaluatePolynomial(coeffs['R'], T)
-            * Length.METRES_PER_ASTRONOMICAL_UNIT;
-        return new Coordinates(L, B, R);
+        double longitude_rad = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs[1], T));
+        double latitude_rad = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs[2], T));
+        double radius_AU = Polynomials.EvaluatePolynomial(coeffs[3], T);
+        return new Coordinates(longitude_rad, latitude_rad, radius_AU);
     }
 
     /// <summary>

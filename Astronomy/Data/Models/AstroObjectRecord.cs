@@ -62,9 +62,6 @@ public class AstroObjectRecord : DatabaseRecord
     // Link to Minor Planet Center record.
     // public MinorPlanetRecord? MinorPlanet { get; set; }
 
-    // Link to matching VSOP87D records.
-    public virtual List<VSOP87DRecord>? VSOP87DRecords { get; set; }
-
     /// <summary>
     /// Specify the object's orbital parameters.
     /// </summary>

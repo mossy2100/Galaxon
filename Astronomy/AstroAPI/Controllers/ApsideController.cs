@@ -3,7 +3,6 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -66,7 +65,6 @@ public class ApsideController(
         }
 
         // Calculate the apside.
-        double rMetres;
         double rAu;
         DateTime dt1;
         ApsideEvent apsideEvent;
@@ -75,7 +73,6 @@ public class ApsideController(
             double jdtt = TimeScales.DateTimeToJulianDate(dt);
             apsideEvent = apsideService.GetClosestApside(planet, jdtt);
             dt1 = apsideEvent.DateTimeUtc;
-            rMetres = apsideEvent.Radius_m!.Value;
             rAu = apsideEvent.Radius_AU!.Value;
         }
         catch (Exception ex)
@@ -86,8 +83,8 @@ public class ApsideController(
         // Log it.
         string strApsideDateTime = dt1.ToIsoString();
         Log.Information(
-            "{Apside} for {Planet} near {Date} computed to be {EventDateTime}, at a distance of {RadiusMetres} metres ({RadiusAU} AU) from the Sun.",
-            apsideType.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rMetres, rAu);
+            "{Apside} for {Planet} near {Date} computed to be {EventDateTime}, at a distance of {RadiusAU} AU from the Sun.",
+            apsideType.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rAu);
 
         // Construct the result.
         object result = new
@@ -95,11 +92,7 @@ public class ApsideController(
             Planet = planet.Name,
             Apside = apsideType == EApsideType.Periapsis ? "perihelion" : "aphelion",
             DateTime = strApsideDateTime,
-            Radius = new Dictionary<string, double>
-            {
-                { "metres", Math.Round(rMetres) },
-                { "AU", Math.Round(rAu, 9) }
-            }
+            Radius_AU = Math.Round(rAu, 9)
         };
 
         // Return the result as JSON.

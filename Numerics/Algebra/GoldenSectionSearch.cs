@@ -13,7 +13,11 @@ public static class GoldenSectionSearch
     /// <param name="func">The function. It should be memoized for best performance.</param>
     /// <param name="a">The lower boundary input value.</param>
     /// <param name="b">The upper boundary input value.</param>
-    /// <param name="findMax">Whether to look for a minimum or a maximum.</param>
+    /// <param name="findMax">
+    /// Boolean value:
+    ///     - false if looking for a minimum
+    ///     - true if looking for a maximum
+    /// </param>
     /// <param name="tolerance">Maximum acceptable error in the result.</param>
     /// <returns>The input and output of the function at the extremum.</returns>
     private static (double, double) _FindExtremum(Func<double, double> func, double a, double b,
@@ -80,7 +84,11 @@ public static class GoldenSectionSearch
     /// <param name="func">The function.</param>
     /// <param name="a">The lower boundary input value.</param>
     /// <param name="b">The upper boundary input value.</param>
-    /// <param name="findMax">Whether to look for a minimum or a maximum.</param>
+    /// <param name="findMax">
+    /// Boolean value:
+    ///     - false if looking for a minimum
+    ///     - true if looking for a maximum
+    /// </param>
     /// <param name="tolerance">Maximum acceptable error in the result.</param>
     /// <returns>The input and output of the function at the extremum.</returns>
     public static (double, double) FindExtremum(Func<double, double> func, double a, double b,

@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    partial class AstroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516100303_AddedApsideTypeColumnToApsidesTable")]
+    partial class AddedApsideTypeColumnToApsidesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,8 +54,9 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<double>("ApsideNumber")
                         .HasColumnType("double");
 
-                    b.Property<char>("ApsideType")
-                        .HasColumnType("char(1)");
+                    b.Property<string>("ApsideType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");

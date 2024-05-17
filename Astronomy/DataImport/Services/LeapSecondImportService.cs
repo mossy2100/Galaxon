@@ -215,14 +215,14 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                 try
                 {
                     // Try to match the English month name.
-                    publishMonth = GregorianMonth.GetNumber(monthName);
+                    publishMonth = GregorianMonth.NameToNumber(monthName);
                 }
                 catch
                 {
                     try
                     {
                         // Try French.
-                        publishMonth = GregorianMonth.GetNumber(monthName, "fr");
+                        publishMonth = GregorianMonth.NameToNumber(monthName, "fr");
                     }
                     catch
                     {
@@ -254,7 +254,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
 
                     GroupCollection groups = matches[0].Groups;
                     iersBulletinC.Value = (sbyte)(groups["sign"].Value == "positive" ? 1 : -1);
-                    int month = GregorianMonth.GetNumber(groups["month"].Value);
+                    int month = GregorianMonth.NameToNumber(groups["month"].Value);
                     int year = int.Parse(groups["year"].Value);
                     iersBulletinC.LeapSecondDate = GregorianCalendarExtensions.GetMonthLastDay(year, month);
 

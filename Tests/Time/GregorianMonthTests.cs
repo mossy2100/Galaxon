@@ -39,24 +39,24 @@ public class GregorianMonthTests
         int expectedNumber)
     {
         // Act
-        int actualNumber = GregorianMonth.GetNumber(monthName);
+        int actualNumber = GregorianMonth.NameToNumber(monthName);
 
         // Assert
         Assert.AreEqual(expectedNumber, actualNumber);
     }
 
     [TestMethod]
-    public void MonthNameToNumber_InvalidInput_ThrowsArgumentException()
+    public void MonthNameToNumber_InvalidInput_ThrowsException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => GregorianMonth.GetNumber("InvalidMonth"));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => GregorianMonth.NameToNumber("InvalidMonth"));
     }
 
     [TestMethod]
-    public void MonthNameToNumber_AmbiguousInput_ThrowsArgumentException()
+    public void MonthNameToNumber_AmbiguousInput_ThrowsException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => GregorianMonth.GetNumber("Ju"));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => GregorianMonth.NameToNumber("Ju"));
     }
 
     #endregion GetNumber

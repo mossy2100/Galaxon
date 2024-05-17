@@ -19,11 +19,10 @@ public class ApsideRecord : DatabaseRecord
     public double ApsideNumber { get; set; }
 
     /// <summary>
-    /// The type of apside.
+    /// The type of apside. This is stored in the database as a single char 'P' or 'A' (not null).
     /// </summary>
-    [NotMapped]
-    public EApsideType ApsideType =>
-        double.IsInteger(ApsideNumber) ? EApsideType.Periapsis : EApsideType.Apoapsis;
+    [Column(TypeName = "char(1)")]
+    public EApsideType ApsideType { get; set; }
 
     /// <summary>
     /// The UTC datetime of the apside according to my calculations.

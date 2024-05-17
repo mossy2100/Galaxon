@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Galaxon.Astronomy.Data.Converters;
 
-public class ApsideConverter() : ValueConverter<EApsideType, string>(
+public class ApsideConverter() : ValueConverter<EApsideType, char>(
     // Convert from enum to string.
-    v => v.ToString(),
+    apsideType => apsideType.ToString()[0],
 
     // Convert from string to enum.
-    v => (EApsideType)Enum.Parse(typeof(EApsideType), v)
+    chApsideType => Enum.GetValues(typeof(EApsideType)).Cast<EApsideType>()
+        .FirstOrDefault(apsideType => apsideType.ToString()[0] == chApsideType)
 );

@@ -44,7 +44,7 @@ public static class GregorianCalendarExtensions
     /// </summary>
     /// <param name="month"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private static void CheckMonth(int month)
+    public static void CheckMonth(int month)
     {
         if (month is < 1 or > 12)
         {
@@ -367,4 +367,23 @@ public static class GregorianCalendarExtensions
     }
 
     #endregion Time units
+
+    /// <summary>
+    /// Check if a date triplet could refer to a date in the Julian Calendar.
+    /// </summary>
+    /// <param name="year"></param>
+    /// <param name="month"></param>
+    /// <param name="day"></param>
+    /// <returns></returns>
+    public static bool IsJulianDate(int year, int month, int day)
+    {
+        CheckMonth(month);
+
+        if (year < 1582)
+        {
+            return true;
+        }
+
+        return year * 10000 + month * 100 + day <= 1582_10_04;
+    }
 }

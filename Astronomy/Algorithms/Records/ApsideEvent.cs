@@ -35,11 +35,6 @@ public struct ApsideEvent
     public DateTime DateTimeUtc { get; set; }
 
     /// <summary>
-    /// Gets or sets the radius of the orbit at the apside event in metres (optional).
-    /// </summary>
-    public double? Radius_m { get; set; }
-
-    /// <summary>
     /// Gets or sets the radius of the orbit at the apside event in astronomical units (optional).
     /// </summary>
     public double? Radius_AU { get; set; }
@@ -54,26 +49,21 @@ public struct ApsideEvent
     /// The Julian Date (Terrestrial Time) of this apside event.
     /// </param>
     /// <param name="dateTimeUtc">The UTC datetime of this apside event.</param>
-    /// <param name="radius_m">
-    /// The radius of the orbit (i.e. distance from planet to Sun) at the apside event in metres
-    /// (optional).
-    /// </param>
     /// <param name="radius_AU">
     /// The radius of the orbit (i.e. distance from planet to Sun) at the apside event in
-    /// astronomical units (AU) (optional).</param>
+    /// astronomical units (AU) (optional).
+    /// </param>
     public ApsideEvent(
         AstroObjectRecord planet,
         double apsideNumber,
         double julianDateTerrestrial,
         DateTime dateTimeUtc,
-        double? radius_m = null,
         double? radius_AU = null)
     {
         Planet = planet;
         ApsideNumber = apsideNumber;
         JulianDateTerrestrial = julianDateTerrestrial;
         DateTimeUtc = dateTimeUtc;
-        Radius_m = radius_m;
         Radius_AU = radius_AU;
     }
 }

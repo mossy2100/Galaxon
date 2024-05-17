@@ -10,14 +10,14 @@ namespace Galaxon.Time;
 public readonly record struct GregorianMonth(int Length, Dictionary<string, string> Names)
 {
     /// <summary>
-    /// Gets the Gregorian months.
-    /// </summary>
-    public static Dictionary<int, GregorianMonth> Months => _months ??= CreateMonths();
-
-    /// <summary>
     /// Cache of month info.
     /// </summary>
     private static Dictionary<int, GregorianMonth>? _months;
+
+    /// <summary>
+    /// Get the Gregorian months.
+    /// </summary>
+    public static Dictionary<int, GregorianMonth> Months => _months ??= CreateMonths();
 
     /// <summary>
     /// Creates the Gregorian months and returns them in the static cache property.
@@ -162,12 +162,16 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     }
 
     /// <summary>
-    /// Gets the month name in the specified language.
+    /// Given a month number, get the month name in the specified language.
     /// </summary>
+    /// <param name="monthNumber">The month number (1-12).</param>
     /// <param name="languageCode">The language code (e.g., "en", "fr").</param>
     /// <returns>The name of the month in the specified language.</returns>
-    public static string GetName(int monthNumber, string languageCode = "en")
+    public static string NumberToName(int monthNumber, string languageCode = "en")
     {
+        // Check for a valid month number.
+        GregorianCalendarExtensions.CheckMonth(monthNumber);
+
         try
         {
             return Months[monthNumber].Names[languageCode];
@@ -188,16 +192,16 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     {
         Dictionary<int, string> result = new ();
 
-        foreach (KeyValuePair<int, GregorianMonth> month in Months)
+        foreach ((int monthNumber, GregorianMonth month) in Months)
         {
             try
             {
-                result[month.Key] = month.Value.Names[languageCode];
+                result[monthNumber] = month.Names[languageCode];
             }
-            catch (KeyNotFoundException)
+            catch (Exception)
             {
                 throw new InvalidOperationException(
-                    $"No month name found for month number {month.Key} in language {languageCode}.");
+                    $"No name found for month number {monthNumber} in language {languageCode}.");
             }
         }
 
@@ -205,43 +209,42 @@ public readonly record struct GregorianMonth(int Length, Dictionary<string, stri
     }
 
     /// <summary>
-    /// Get a month number (1-12) given a name in a specified language (default is English).
+    /// Given a name in a specified language (default is English), get the month number (1-12).
+    /// Matches abbreviations of any length, as long as the result is unique.
+    /// Matches are case-insensitive.
     /// Fails if zero or more than one match is found.
     /// </summary>
-    /// <param name="monthName">The month name or abbreviation (case-insensitive).</param>
+    /// <param name="monthNameOrAbbreviation">
+    /// The month name or abbreviation (case-insensitive).
+    /// </param>
     /// <param name="languageCode">
-    /// The language code specifying which set of names to search for a match (default is "en").
+    /// The language code specifying which set of names to search (default is "en").
     /// </param>
     /// <returns>The month number.</returns>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when the provided month name doesn't produce a unique result.
     /// </exception>
-    public static int GetNumber(string monthName, string languageCode = "en")
+    public static int NameToNumber(string monthNameOrAbbreviation, string languageCode = "en")
     {
         // Find matches in the specified language.
-        var matches = Months
-            .Where(pair =>
-            {
-                try
-                {
-                    return GetName(pair.Key, languageCode).StartsWith(monthName, StringComparison.CurrentCultureIgnoreCase);
-                }
-                catch (KeyNotFoundException)
-                {
-                    return false;
-                }
-            })
+        List<int> matches = Months
+            .Where(pair => pair.Value.Names.ContainsKey(languageCode)
+                && pair.Value.Names[languageCode].StartsWith(monthNameOrAbbreviation,
+                    StringComparison.CurrentCultureIgnoreCase)
+            )
             .Select(pair => pair.Key)
             .ToList();
 
         // Handle failure modes.
         if (matches.Count == 0)
         {
-            throw new ArgumentException("Invalid month name or abbreviation.", nameof(monthName));
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+                "Invalid month name or abbreviation.");
         }
         if (matches.Count > 1)
         {
-            throw new ArgumentException("More than one match found.", nameof(monthName));
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+                "Multiple matches found.");
         }
 
         // Return the result.

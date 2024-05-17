@@ -38,8 +38,12 @@ public class Program
             // await ImportLeapSeconds();
             // TestDbContext();
             // await ImportSeasonalMarkers();
+
             // PrepopulateApsides();
-            await ImportApsidesFromUsno();
+            // await ImportApsidesFromUsno();
+            await ImportApsidesFromAstroPixels();
+
+            // ImportVsop87Data();
         }
         catch (Exception ex)
         {
@@ -151,7 +155,7 @@ public class Program
     {
         SeasonalMarkerImportService seasonalMarkerImportService =
             _serviceProvider!.GetRequiredService<SeasonalMarkerImportService>();
-        await seasonalMarkerImportService.Import();
+        await seasonalMarkerImportService.ImportFromUsno();
     }
 
     public static async Task ImportLeapSeconds()
@@ -194,10 +198,10 @@ public class Program
             _serviceProvider!.GetRequiredService<ApsideImportService>();
         await apsideImportService.ImportApsidesFromUsno();
     }
-    private static void ImportApsidesFromAstroPixels()
+    private static async Task ImportApsidesFromAstroPixels()
     {
         ApsideImportService apsideImportService =
             _serviceProvider!.GetRequiredService<ApsideImportService>();
-        apsideImportService.ImportApsidesFromAstroPixels();
+        await apsideImportService.ImportApsidesFromAstroPixels();
     }
 }
