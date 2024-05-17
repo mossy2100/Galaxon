@@ -35,14 +35,14 @@ public class GregorianCalendarController(
         try
         {
             // Generate some info about the year.
-            bool isLeapYear = GregorianCalendarExtensions.IsLeapYear(year);
+            bool isLeapYear = GregorianCalendarUtility.IsLeapYear(year);
             string yearType = isLeapYear ? "leap" : "common";
-            int nDays = GregorianCalendarExtensions.GetDaysInYear(year);
+            int nDays = GregorianCalendarUtility.GetDaysInYear(year);
             DateOnly? leapSecondDate = leapSecondService.LeapSecondDateForYear(year);
             bool hasLeapSecond = leapSecondDate.HasValue;
             DateOnly firstDayOfYear = new (year, 1, 1);
             double jdut = TimeScales.DateOnlyToJulianDate(firstDayOfYear);
-            GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+            GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
             DayOfWeek dayOfWeek = gc.GetDayOfWeek(firstDayOfYear.ToDateTime());
             int century = (year - 1) / 100 + 1;
             int millennium = (year - 1) / 1000 + 1;

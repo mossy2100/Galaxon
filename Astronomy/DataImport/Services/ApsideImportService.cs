@@ -47,11 +47,11 @@ public class ApsideImportService(
         double orbitalPeriod_d = orbitalPeriod_s.Value / TimeConstants.SECONDS_PER_DAY;
 
         // Get the start point of the period.
-        DateTime dtStart = GregorianCalendarExtensions.GetYearStart(minYear);
+        DateTime dtStart = GregorianCalendarUtility.GetYearStart(minYear);
         double jdttStart = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtStart);
 
         // Get the end point of the period.
-        DateTime dtEnd = GregorianCalendarExtensions.GetYearEnd(maxYear);
+        DateTime dtEnd = GregorianCalendarUtility.GetYearEnd(maxYear);
         double jdttEnd = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtEnd);
 
         // Start at the start point.
@@ -248,14 +248,14 @@ public class ApsideImportService(
                         {
                             // Get the date and time parts.
                             int apsideYear = parts[i] == "Dec" ? year - 1 : year;
-                            int apsideMonth = GregorianCalendarExtensions.MonthNameToNumber(parts[i]);
+                            int apsideMonth = GregorianCalendarUtility.MonthNameToNumber(parts[i]);
                             int apsideDay = int.Parse(parts[i + 1]);
                             TimeOnly apsideTime = TimeOnly.Parse(parts[i + 2]);
 
                             // Convert the date parts to a DateTime.
                             DateTime apsideDateTime;
                             // Check if it's a Julian or Gregorian date.
-                            if (GregorianCalendarExtensions.IsJulianDate(apsideYear, apsideMonth,
+                            if (GregorianCalendarUtility.IsJulianDate(apsideYear, apsideMonth,
                                 apsideDay))
                             {
                                 apsideDateTime = jcal.ToDateTime(apsideYear, apsideMonth,

@@ -199,7 +199,7 @@ public static class DateOnlyExtensions
         }
 
         // Check day of year is in the valid range.
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
         var daysInYear = gc.GetDaysInYear(year);
         if (dayOfYear < 1 || dayOfYear > daysInYear)
         {
@@ -227,7 +227,7 @@ public static class DateOnlyExtensions
     /// <returns>The month name.</returns>
     public static string GetMonthName(this DateOnly d, string languageCode = "en")
     {
-        return GregorianCalendarExtensions.MonthNumberToName(d.Month, languageCode);
+        return GregorianCalendarUtility.MonthNumberToName(d.Month, languageCode);
     }
 
     #endregion Month names

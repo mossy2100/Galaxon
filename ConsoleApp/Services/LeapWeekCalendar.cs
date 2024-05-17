@@ -105,7 +105,7 @@ public class LeapWeekCalendar
             PrintedMonth printedMonth = new ();
 
             // Add the title and the days of the week.
-            string title = GregorianCalendarExtensions.MonthNumberToName(m).PadBoth(28, ' ', false);
+            string title = GregorianCalendarUtility.MonthNumberToName(m).PadBoth(28, ' ', false);
             printedMonth.AddLine(title);
             printedMonth.AddLine(" Mon Tue Wed Thu Fri Sat Sun");
 

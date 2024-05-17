@@ -325,12 +325,12 @@ public class MoonService(AstroDbContext astroDbContext)
         ELunarPhaseType? phase = null)
     {
         // Check year and month are valid.
-        GregorianCalendarExtensions.CheckYearInRange(year);
-        GregorianCalendarExtensions.CheckMonthInRange(month);
+        GregorianCalendarUtility.CheckYearInRange(year);
+        GregorianCalendarUtility.CheckMonthInRange(month);
 
         return GetPhasesInPeriod(
-            GregorianCalendarExtensions.GetMonthStart(year, month, DateTimeKind.Utc),
-            GregorianCalendarExtensions.GetMonthEnd(year, month, DateTimeKind.Utc), phase);
+            GregorianCalendarUtility.GetMonthStart(year, month, DateTimeKind.Utc),
+            GregorianCalendarUtility.GetMonthEnd(year, month, DateTimeKind.Utc), phase);
     }
 
     /// <summary>
@@ -343,10 +343,10 @@ public class MoonService(AstroDbContext astroDbContext)
     public List<LunarPhaseEvent> GetPhasesInYear(int year, ELunarPhaseType? phase = null)
     {
         // Check year is valid.
-        GregorianCalendarExtensions.CheckYearInRange(year);
+        GregorianCalendarUtility.CheckYearInRange(year);
 
-        return GetPhasesInPeriod(GregorianCalendarExtensions.GetYearStart(year, DateTimeKind.Utc),
-            GregorianCalendarExtensions.GetYearEnd(year, DateTimeKind.Utc), phase);
+        return GetPhasesInPeriod(GregorianCalendarUtility.GetYearStart(year, DateTimeKind.Utc),
+            GregorianCalendarUtility.GetYearEnd(year, DateTimeKind.Utc), phase);
     }
 
     #region Static methods

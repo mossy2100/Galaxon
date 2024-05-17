@@ -426,7 +426,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
 
     public void CountLeapYears()
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
         List<int> gregorianLeapYears = new ();
         List<int> worldPeaceLeapYears = new ();
         for (int y = 2000; y < 2100; y++)

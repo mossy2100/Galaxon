@@ -6,7 +6,7 @@ namespace Galaxon.Time;
 /// Extension methods for the GregorianCalendar class, and other useful methods relating to the
 /// Gregorian Calendar.
 /// </summary>
-public static class GregorianCalendarExtensions
+public static class GregorianCalendarUtility
 {
     #region Provide a singleton instance of GregorianCalendar
 
@@ -139,7 +139,7 @@ public static class GregorianCalendarExtensions
         int daysPerWeek = 7;
 
         // Get the first or last day of the month.
-        DateOnly firstOrLastOfMonth = new DateOnly(year, month, n > 0 ? 1 : daysInMonth);
+        DateOnly firstOrLastOfMonth = new (year, month, n > 0 ? 1 : daysInMonth);
 
         // Calculate the offset to the next or previous day of the week.
         int diffDays = ((int)dayOfWeek - (int)firstOrLastOfMonth.DayOfWeek + daysPerWeek)
@@ -324,7 +324,7 @@ public static class GregorianCalendarExtensions
         for (int m = 1; m <= 12; m++)
         {
             // Year and day are arbitrary.
-            result[m] = new DateTime(2000, m, 1).ToString("MMMM", culture);
+            result[m] = (new DateTime(2000, m, 1)).ToString("MMMM", culture);
         }
 
         return result;
@@ -357,7 +357,7 @@ public static class GregorianCalendarExtensions
     /// Matches are case-insensitive.
     /// Fails if zero or more than one match is found.
     /// </summary>
-    /// <param name="monthNameOrAbbreviation">
+    /// <param name="monthNameOrAbbrev">
     /// The month name or abbreviation (case-insensitive).
     /// </param>
     /// <param name="languageCode">
@@ -367,11 +367,11 @@ public static class GregorianCalendarExtensions
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when the provided month name doesn't produce a unique result.
     /// </exception>
-    public static int MonthNameToNumber(string monthNameOrAbbreviation, string languageCode = "en")
+    public static int MonthNameToNumber(string monthNameOrAbbrev, string languageCode = "en")
     {
         // Find matches in the specified language.
         List<int> matches = GetMonthNames(languageCode)
-            .Where(pair => pair.Value.StartsWith(monthNameOrAbbreviation,
+            .Where(pair => pair.Value.StartsWith(monthNameOrAbbrev,
                 StringComparison.CurrentCultureIgnoreCase))
             .Select(pair => pair.Key)
             .ToList();
@@ -379,12 +379,12 @@ public static class GregorianCalendarExtensions
         // Handle failure modes.
         if (matches.Count == 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbrev),
                 "Invalid month name or abbreviation.");
         }
         if (matches.Count > 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbreviation),
+            throw new ArgumentOutOfRangeException(nameof(monthNameOrAbbrev),
                 "Multiple matches found.");
         }
 

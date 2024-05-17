@@ -145,7 +145,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
 
                     // Extract the date parts.
                     int month =
-                        GregorianCalendarExtensions.MonthNameToNumber(dateTimeMatches[0].Groups["month"].Value);
+                        GregorianCalendarUtility.MonthNameToNumber(dateTimeMatches[0].Groups["month"].Value);
                     int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
                     int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);
                     int minute = int.Parse(dateTimeMatches[0].Groups["minute"].Value);
@@ -153,8 +153,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
                     // Construct the datetime.
                     DateTime dt;
                     // Check for Julian date.
-                    int dateNumber = year * 10000 + month * 100 + day;
-                    if (dateNumber < 1582_10_15)
+                    if (GregorianCalendarUtility.IsJulianDate(year, month, day))
                     {
                         // Construct a DateTime (Gregorian) from the Julian date parts.
                         dt = jc.ToDateTime(year, month, day, hour, minute, 0, 0);

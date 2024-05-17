@@ -255,7 +255,7 @@ class Program
 
     public static void Eras()
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
         for (int i = 0; i < gc.Eras.Length; i++)
             Console.WriteLine($"Eras[{i}] = {gc.Eras[i]}");
     }

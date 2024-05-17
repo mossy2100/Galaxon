@@ -111,7 +111,7 @@ public class EarthService
     /// <returns>The approximate length of that day in seconds.</returns>
     public static double GetSolarDayInSeconds(DateOnly date)
     {
-        GregorianCalendar gc = GregorianCalendarExtensions.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
         int daysInYear = gc.GetDaysInYear(date.Year);
         double frac = (date.Day - 0.5) / daysInYear;
         return GetSolarDayInSeconds(date.Year + frac);

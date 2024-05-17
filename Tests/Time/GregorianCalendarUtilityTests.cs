@@ -3,7 +3,7 @@ using Galaxon.Time;
 namespace Galaxon.Tests.Time;
 
 [TestClass]
-public class GregorianCalendarExtensionsTests
+public class GregorianCalendarUtilityTests
 {
     [DataTestMethod]
     [DataRow("jan", 1)]
@@ -37,7 +37,7 @@ public class GregorianCalendarExtensionsTests
         int expectedNumber)
     {
         // Act
-        int actualNumber = GregorianCalendarExtensions.MonthNameToNumber(monthName);
+        int actualNumber = GregorianCalendarUtility.MonthNameToNumber(monthName);
 
         // Assert
         Assert.AreEqual(expectedNumber, actualNumber);
@@ -48,7 +48,7 @@ public class GregorianCalendarExtensionsTests
     {
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.MonthNameToNumber("InvalidMonth"));
+            GregorianCalendarUtility.MonthNameToNumber("InvalidMonth"));
     }
 
     [TestMethod]
@@ -56,7 +56,7 @@ public class GregorianCalendarExtensionsTests
     {
         // Act & Assert
         Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            GregorianCalendarExtensions.MonthNameToNumber("Ju"));
+            GregorianCalendarUtility.MonthNameToNumber("Ju"));
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class GregorianCalendarExtensionsTests
         };
 
         // Act
-        Dictionary<int, string> result = GregorianCalendarExtensions.GetMonthNames();
+        Dictionary<int, string> result = GregorianCalendarUtility.GetMonthNames();
 
         // Assert
         Assert.AreEqual(12, result.Count, "Should return 12 months.");
@@ -89,7 +89,7 @@ public class GregorianCalendarExtensionsTests
         ];
 
         // Act
-        Dictionary<int, string> result = GregorianCalendarExtensions.GetMonthNames("fr");
+        Dictionary<int, string> result = GregorianCalendarUtility.GetMonthNames("fr");
 
         // Assert
         Assert.AreEqual(12, result.Count, "Should return 12 months.");
