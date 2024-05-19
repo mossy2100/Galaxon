@@ -24,26 +24,23 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             // Get the approximate solar day length at specified time of the year.
-            double solarDayLength_s = EarthService.GetSolarDayInSeconds(year);
-
-            // Construct the result.
-            Dictionary<string, double> result = new ()
-            {
-                ["seconds"] = double.Round(solarDayLength_s, 6)
-            };
+            double solarDay_s = Math.Round(EarthService.GetSolarDayInSeconds(year), 6);
 
             // Log it.
             Log.Information(
                 "Length of solar day at year {Year} computed to be {SolarDayLength} seconds.", year,
-                solarDayLength_s);
+                solarDay_s);
+
+            // Construct the result.
+            object result = new { seconds = solarDay_s };
 
             // Return the result as JSON.
             return Ok(result);
         }
         catch (Exception ex)
         {
-            string error = $"Error computing solar day length for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this,
+                $"Error computing solar day length for year {year}.", ex);
         }
     }
 
@@ -64,28 +61,25 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             // Get the year length in ephemeris and solar days.
-            double ephemerisDays = EarthService.GetTropicalYearInEphemerisDaysForYear(year);
-            double solarDays = EarthService.GetTropicalYearInSolarDaysForYear(year);
-
-            // Construct the result.
-            Dictionary<string, double> result = new ()
-            {
-                { "ephemerisDays", Math.Round(ephemerisDays, 6) },
-                { "solarDays", Math.Round(solarDays, 6) }
-            };
+            double ephemerisDays =
+                Math.Round(EarthService.GetTropicalYearInEphemerisDaysForYear(year), 9);
+            double solarDays = Math.Round(EarthService.GetTropicalYearInSolarDaysForYear(year), 9);
 
             // Log it.
             Log.Information(
-                "Length of tropical year {Year} computed to be {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
+                "Length of tropical year {Year} computed to be approximately {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
+
+            // Construct the result.
+            object result = new { ephemerisDays, solarDays };
 
             // Return the result as JSON.
             return Ok(result);
         }
         catch (Exception ex)
         {
-            string error = $"Error computing tropical year length for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this,
+                $"Error computing tropical year length for year {year}.", ex);
         }
     }
 
@@ -104,28 +98,25 @@ public class AstronomicalCycleController : ControllerBase
     {
         try
         {
-            double ephemerisDays = MoonService.GetLunationInEphemerisDaysForYear(year);
-            double solarDays = MoonService.GetLunationInSolarDaysForYear(year);
-
-            // Construct the result.
-            Dictionary<string, double> result = new ()
-            {
-                { "ephemerisDays", Math.Round(ephemerisDays, 6) },
-                { "solarDays", Math.Round(solarDays, 6) }
-            };
+            double ephemerisDays =
+                Math.Round(MoonService.GetLunationInEphemerisDaysForYear(year), 9);
+            double solarDays = Math.Round(MoonService.GetLunationInSolarDaysForYear(year), 9);
 
             // Log it.
             Log.Information(
-                "Length of lunation in year {Year} computed to be {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
+                "Length of lunation in year {Year} computed to be approximately {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
+
+            // Construct the result.
+            object result = new { ephemerisDays, solarDays };
 
             // Return the result as JSON.
             return Ok(result);
         }
         catch (Exception ex)
         {
-            string error = $"Error computing lunation length for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnException(this,
+                $"Error computing lunation length for year {year}.", ex);
         }
     }
 }

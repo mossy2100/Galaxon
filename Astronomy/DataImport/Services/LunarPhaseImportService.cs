@@ -153,7 +153,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
                     // Construct the datetime.
                     DateTime dt;
                     // Check for Julian date.
-                    if (GregorianCalendarUtility.IsJulianDate(year, month, day))
+                    if (JulianCalendarUtility.IsValidDate(year, month, day))
                     {
                         // Construct a DateTime (Gregorian) from the Julian date parts.
                         dt = jc.ToDateTime(year, month, day, hour, minute, 0, 0);

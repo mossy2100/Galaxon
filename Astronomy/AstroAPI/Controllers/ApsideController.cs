@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
@@ -20,60 +21,85 @@ public class ApsideController(
     /// <summary>
     /// Calculate the apside of a planet that occurs closest to a given date.
     /// </summary>
+    /// <param name="dateString">The date in ISO format (YYYY-MM-DD). Defaults to today.</param>
     /// <param name="planetName">The planet name. Defaults to "Earth".</param>
-    /// <param name="apsideCode">Either 'p' for perihelion or 'a' for aphelion.</param>
-    /// <param name="isoDateString">The date in the format YYYY-MM-DD.</param>
+    /// <param name="apsideCode">Either 'P' for perihelion, 'A' for aphelion, or omit to detect whichever is closest.</param>
     /// <returns></returns>
     [HttpGet("api/closest-apside")]
-    public IActionResult GetClosestApside(string? planetName, char apsideCode, string isoDateString)
+    public IActionResult GetClosestApside(string? dateString, string? planetName, char? apsideCode)
     {
-        // Load the planet.
-        // Default to Earth.
+        // Get the date to search near.
+        DateOnly date;
+        if (string.IsNullOrEmpty(dateString))
+        {
+            // Default to today.
+            date = DateOnlyExtensions.Today;
+        }
+        else
+        {
+            // Check the date is in the correct format.
+            if (!Regex.IsMatch(dateString, @"^\d{4}-\d{2}-\d{2}$"))
+            {
+                return Program.ReturnException(this,
+                    "The date was in an invalid format. Try formatting it as YYYY-MM-DD.");
+            }
+
+            // Convert the date string to a DateTime.
+            try
+            {
+                date = DateOnly.Parse(dateString);
+            }
+            catch (Exception ex)
+            {
+                return Program.ReturnException(this, "The date is invalid.", ex);
+            }
+        }
+
+        // Load the planet object. Default to Earth.
         if (string.IsNullOrEmpty(planetName))
         {
             planetName = "Earth";
         }
-        AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
-
-        // Convert the apside from a character to an enum value.
-        EApsideType apsideType;
-        switch (apsideCode)
-        {
-            case 'p' or 'P':
-                apsideType = EApsideType.Periapsis;
-                break;
-
-            case 'a' or 'A':
-                apsideType = EApsideType.Apoapsis;
-                break;
-
-            default:
-                return Program.ReturnException(this,
-                    "The apside code should be 'p' or 'P' for perihelion, or 'a' or 'A' for aphelion.");
-        }
-
-        // Convert the date string to a DateTime.
-        DateTime dt;
+        AstroObjectRecord planet;
         try
         {
-            dt = DateTime.Parse(isoDateString);
+            planet = astroObjectRepository.LoadByName(planetName, "Planet");
         }
         catch (Exception ex)
         {
             return Program.ReturnException(this,
-                "The date was in an invalid format. Try formatting it as YYYY-MM-DD.", ex);
+                $"The planet '{planetName}' is not supported. Try: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, or Neptune.",
+                ex);
+        }
+
+        // Convert the apside from a character to an enum value.
+        EApsideType? apsideType;
+        switch (apsideCode)
+        {
+            case null:
+                apsideType = null;
+                break;
+
+            case 'p':
+            case 'P':
+                apsideType = EApsideType.Periapsis;
+                break;
+
+            case 'a':
+            case 'A':
+                apsideType = EApsideType.Apoapsis;
+                break;
+
+            default:
+                return Program.ReturnException(this, $"Invalid apside code '{apsideCode}'.");
         }
 
         // Calculate the apside.
-        double rAu;
-        DateTime dt1;
         ApsideEvent apsideEvent;
         try
         {
-            double jdtt = TimeScales.DateTimeToJulianDate(dt);
-            apsideEvent = apsideService.GetClosestApside(planet, jdtt);
-            dt1 = apsideEvent.DateTimeUtc;
-            rAu = apsideEvent.Radius_AU!.Value;
+            double jdtt = TimeScales.DateOnlyToJulianDate(date);
+            apsideEvent = apsideService.GetClosestApside(planet, jdtt, apsideType);
         }
         catch (Exception ex)
         {
@@ -81,18 +107,21 @@ public class ApsideController(
         }
 
         // Log it.
-        string strApsideDateTime = dt1.ToIsoString();
+        string strApsideDateTime = apsideEvent.DateTimeUtc.ToIsoString();
+        string strApsideType =
+            apsideEvent.ApsideType == EApsideType.Periapsis ? "perihelion" : "aphelion";
+        double radius_AU = Math.Round(apsideEvent.Radius_AU!.Value, 9);
         Log.Information(
-            "{Apside} for {Planet} near {Date} computed to be {EventDateTime}, at a distance of {RadiusAU} AU from the Sun.",
-            apsideType.ToString(), planet.Name, dt.ToString("O"), strApsideDateTime, rAu);
+            "Closest {ApsideType} of {Planet} to {Date} computed to occur at {EventDateTime}, at a distance of {RadiusAU} AU.",
+            strApsideType, planet.Name, date.ToIsoString(), strApsideDateTime, radius_AU);
 
         // Construct the result.
         object result = new
         {
             Planet = planet.Name,
-            Apside = apsideType == EApsideType.Periapsis ? "perihelion" : "aphelion",
+            ApsideType = strApsideType,
             DateTime = strApsideDateTime,
-            Radius_AU = Math.Round(rAu, 9)
+            Radius_AU = radius_AU
         };
 
         // Return the result as JSON.

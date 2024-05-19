@@ -8,18 +8,9 @@ namespace Galaxon.Time;
 /// </summary>
 public static class GregorianCalendarUtility
 {
-    #region Provide a singleton instance of GregorianCalendar
+    #region Provide a singleton instance of GregorianCalendar.
 
-    private static readonly Lazy<GregorianCalendar> _GregorianCalendarInstance =
-        new (() => new GregorianCalendar());
-
-    /// <summary>
-    /// Get the single GregorianCalendar object.
-    /// </summary>
-    public static GregorianCalendar GetInstance()
-    {
-        return _GregorianCalendarInstance.Value;
-    }
+    public static GregorianCalendar GregorianCalendarInstance { get; } = new ();
 
     #endregion Provide a singleton instance of GregorianCalendar
 
@@ -49,7 +40,7 @@ public static class GregorianCalendarUtility
         if (month is < 1 or > 12)
         {
             throw new ArgumentOutOfRangeException(nameof(month),
-                "Month must be in the range 1..12");
+                "The month must be in the range 1..12");
         }
     }
 
@@ -469,23 +460,4 @@ public static class GregorianCalendarUtility
     }
 
     #endregion Time units
-
-    /// <summary>
-    /// Check if a date triplet could refer to a date in the Julian Calendar.
-    /// </summary>
-    /// <param name="year"></param>
-    /// <param name="month"></param>
-    /// <param name="day"></param>
-    /// <returns></returns>
-    public static bool IsJulianDate(int year, int month, int day)
-    {
-        CheckMonthInRange(month);
-
-        if (year < 1582)
-        {
-            return true;
-        }
-
-        return year * 10000 + month * 100 + day <= 1582_10_04;
-    }
 }

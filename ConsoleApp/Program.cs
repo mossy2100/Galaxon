@@ -255,9 +255,11 @@ class Program
 
     public static void Eras()
     {
-        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
         for (int i = 0; i < gc.Eras.Length; i++)
+        {
             Console.WriteLine($"Eras[{i}] = {gc.Eras[i]}");
+        }
     }
 
     public static void MyBirthMinutes()

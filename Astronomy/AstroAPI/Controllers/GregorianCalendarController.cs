@@ -42,7 +42,7 @@ public class GregorianCalendarController(
             bool hasLeapSecond = leapSecondDate.HasValue;
             DateOnly firstDayOfYear = new (year, 1, 1);
             double jdut = TimeScales.DateOnlyToJulianDate(firstDayOfYear);
-            GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
+            GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
             DayOfWeek dayOfWeek = gc.GetDayOfWeek(firstDayOfYear.ToDateTime());
             int century = (year - 1) / 100 + 1;
             int millennium = (year - 1) / 1000 + 1;

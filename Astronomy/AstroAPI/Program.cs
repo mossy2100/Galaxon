@@ -4,6 +4,8 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Development.Application;
 using Galaxon.Quantities;
+using Galaxon.Time;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -138,16 +140,25 @@ public class Program
     /// <returns>A standardized error response with a status code of 500.</returns>
     public static ObjectResult ReturnException(ControllerBase controller, string error, Exception? ex = null)
     {
+        // Logging.
         Log.Error("Error: {Error}", error);
         if (ex != null)
         {
-            Log.Error("Exception: {Exception}", ex.Message);
+            Log.Error("- Exception: {Exception}", ex.Message);
             if (ex.InnerException != null)
             {
-                Log.Error("Inner exception: {InnerException}", ex.InnerException.Message);
+                Log.Error("- Inner exception: {InnerException}", ex.InnerException.Message);
             }
         }
 
-        return controller.StatusCode(500, error);
+        // Construct and return the response.
+        object errorResponse = new
+        {
+            Error = error,
+            Request = controller.HttpContext.Request.GetEncodedPathAndQuery(),
+            Timestamp = DateTime.UtcNow.ToIsoString()
+        };
+
+        return controller.BadRequest(errorResponse);
     }
 }

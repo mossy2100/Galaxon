@@ -88,7 +88,7 @@ public static class TimeScales
         double deltaT;
 
         // Get the year as an integer.
-        var year = (int)Floor(y);
+        int year = (int)Floor(y);
 
         // Calculate deltaT.
         switch (year)

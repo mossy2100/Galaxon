@@ -199,7 +199,7 @@ public static class DateOnlyExtensions
         }
 
         // Check day of year is in the valid range.
-        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
+        GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
         var daysInYear = gc.GetDaysInYear(year);
         if (dayOfYear < 1 || dayOfYear > daysInYear)
         {

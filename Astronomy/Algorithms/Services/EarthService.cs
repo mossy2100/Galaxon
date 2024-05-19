@@ -10,8 +10,6 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 /// </summary>
 public class EarthService
 {
-    #region Static methods
-
     /// <summary>
     /// Calculate the Earth Rotation Angle from the Julian Date in UT1.
     /// <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
@@ -77,44 +75,35 @@ public class EarthService
         }
 
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jd = TimeScales.DecimalYearToJulianDate(year);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jd);
+        double jdtt = TimeScales.DecimalYearToJulianDate(year);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
         return GetTropicalYearInEphemerisDays(T);
     }
 
     /// <summary>
-    /// Calculate the approximate length of the solar day in SI seconds at a point in time.
+    /// Calculate the approximate length of the solar day in SI seconds at a point in time specified
+    /// by a decimal year.
     ///
-    /// The formula comes from https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time
-    ///
-    /// It is similar to:
+    /// The formula comes from
     /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
     /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
+    ///
+    /// <seealso cref="https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time"/>
     /// </summary>
     /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
     /// <param name="year">The year as a decimal.</param>
-    /// <returns>The day length in seconds at that point in time.</returns>
+    /// <returns>The approximate length of the solar day in SI seconds at that time.</returns>
     public static double GetSolarDayInSeconds(double year)
     {
-        // The length of the day has been increasing by about 1.7 ms/d/cy.
+        // The length of the day is increasing by about 1.62 ms/d/cy.
+        // This value for the rate of change is more precise than the value given in Wikipedia of
+        // 1.7 ms/d/cy, and more likely to be correct, or at least peer-reviewed.
         // According to the above link at cnmoc.usff.navy.mil, the solar day was equal to exactly
-        // 86,400 seconds in approximately 1820.
-        return TimeConstants.SECONDS_PER_DAY + 1.7e-5 * (year - 1820);
-    }
-
-    /// <summary>
-    /// Get the approximate length of a given day, in seconds.
-    /// </summary>
-    /// <param name="date">The date of the day.</param>
-    /// <returns>The approximate length of that day in seconds.</returns>
-    public static double GetSolarDayInSeconds(DateOnly date)
-    {
-        GregorianCalendar gc = GregorianCalendarUtility.GetInstance();
-        int daysInYear = gc.GetDaysInYear(date.Year);
-        double frac = (date.Day - 0.5) / daysInYear;
-        return GetSolarDayInSeconds(date.Year + frac);
+        // 86,400 seconds in approximately 1820, which is why the first-order delta-T formula is
+        // centred on 1820.
+        return TimeConstants.SECONDS_PER_DAY + 1.62e-3 * (year - 1820) / 100;
     }
 
     /// <summary>
@@ -128,6 +117,4 @@ public class EarthService
             * TimeConstants.SECONDS_PER_DAY
             / GetSolarDayInSeconds(year);
     }
-
-    #endregion Static methods
 }

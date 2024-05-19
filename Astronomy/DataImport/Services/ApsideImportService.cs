@@ -255,7 +255,7 @@ public class ApsideImportService(
                             // Convert the date parts to a DateTime.
                             DateTime apsideDateTime;
                             // Check if it's a Julian or Gregorian date.
-                            if (GregorianCalendarUtility.IsJulianDate(apsideYear, apsideMonth,
+                            if (JulianCalendarUtility.IsValidDate(apsideYear, apsideMonth,
                                 apsideDay))
                             {
                                 apsideDateTime = jcal.ToDateTime(apsideYear, apsideMonth,
