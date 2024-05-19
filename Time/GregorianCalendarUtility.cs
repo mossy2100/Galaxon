@@ -1,4 +1,5 @@
 using System.Globalization;
+using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.Time;
 
@@ -26,7 +27,7 @@ public static class GregorianCalendarUtility
         if (year is < 1 or > 9999)
         {
             throw new ArgumentOutOfRangeException(nameof(year),
-                "Year must be in the range 1..9999");
+                "The year must be in the range 1..9999");
         }
     }
 
@@ -64,20 +65,20 @@ public static class GregorianCalendarUtility
     {
         CheckYearInRange(year);
 
-        int a = year % 19;
+        int a = Mod(year, 19);
         int b = year / 100;
-        int c = year % 100;
+        int c = Mod(year, 100);
         int d = b / 4;
-        int e = b % 4;
+        int e = Mod(b, 4);
         int g = (8 * b + 13) / 25;
-        int h = (19 * a + b - d - g + 15) % 30;
+        int h = Mod(19 * a + b - d - g + 15, 30);
         int i = c / 4;
-        int k = c % 4;
-        int l = (32 + 2 * e + 2 * i - h - k) % 7;
+        int k = Mod(c, 4);
+        int l = Mod(32 + 2 * e + 2 * i - h - k, 7);
         int m = (a + 11 * h + 19 * l) / 433;
         int q = h + l - 7 * m;
         int month = (q + 90) / 25;
-        int day = (q + 33 * month + 19) % 32;
+        int day = Mod(q + 33 * month + 19, 32);
         return new DateOnly(year, month, day);
     }
 
@@ -126,7 +127,7 @@ public static class GregorianCalendarUtility
                 "The absolute value must be in the range 1..5.");
         }
 
-        int daysInMonth = DateTime.DaysInMonth(year, month);
+        int daysInMonth = GetDaysInMonth(year, month);
         int daysPerWeek = 7;
 
         // Get the first or last day of the month.
@@ -394,7 +395,7 @@ public static class GregorianCalendarUtility
     /// <returns>If the year is a leap year.</returns>
     public static bool IsLeapYear(int year)
     {
-        return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
+        return Mod(year, 400) == 0 || (Mod(year, 4) == 0 && Mod(year, 100) != 0);
     }
 
     /// <summary>
@@ -430,20 +431,9 @@ public static class GregorianCalendarUtility
 
         return month switch
         {
-            1 => 31,
             2 => IsLeapYear(year) ? 29 : 28,
-            3 => 31,
-            4 => 30,
-            5 => 31,
-            6 => 30,
-            7 => 31,
-            8 => 31,
-            9 => 30,
-            10 => 31,
-            11 => 30,
-            12 => 31,
-            // This case is to silence the compiler. We already checked for a valid month number.
-            _ => 0,
+            4 or 6 or 9 or 11 => 30,
+            _ => 31
         };
     }
 

@@ -199,8 +199,8 @@ public static class DateOnlyExtensions
         }
 
         // Check day of year is in the valid range.
-        GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
-        var daysInYear = gc.GetDaysInYear(year);
+        GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
+        var daysInYear = gcal.GetDaysInYear(year);
         if (dayOfYear < 1 || dayOfYear > daysInYear)
         {
             throw new ArgumentOutOfRangeException(nameof(dayOfYear),
@@ -208,7 +208,7 @@ public static class DateOnlyExtensions
         }
 
         // Calculate.
-        var k = gc.IsLeapYear(year) ? 1 : 2;
+        var k = gcal.IsLeapYear(year) ? 1 : 2;
         var month = dayOfYear < 32 ? 1 : (int)(9 * (k + dayOfYear) / 275.0 + 0.98);
         var day = dayOfYear - (int)(275 * month / 9.0) + k * (int)((month + 9) / 12.0) + 30;
 

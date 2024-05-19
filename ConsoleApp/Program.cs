@@ -255,10 +255,10 @@ class Program
 
     public static void Eras()
     {
-        GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
-        for (int i = 0; i < gc.Eras.Length; i++)
+        GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
+        for (int i = 0; i < gcal.Eras.Length; i++)
         {
-            Console.WriteLine($"Eras[{i}] = {gc.Eras[i]}");
+            Console.WriteLine($"Eras[{i}] = {gcal.Eras[i]}");
         }
     }
 

@@ -207,7 +207,7 @@ public class ApsideImportService(
     public async Task ImportApsidesFromAstroPixels()
     {
         AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
-        JulianCalendar jcal = new ();
+        JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
 
         // Loop through all relevant URLS.
         for (int startYear = 1501; startYear <= 2401; startYear += 100)

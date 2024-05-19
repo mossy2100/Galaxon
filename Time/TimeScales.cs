@@ -542,8 +542,8 @@ public static class TimeScales
     /// <returns>The equivalent Gregorian date.</returns>
     public static DateOnly JulianCalendarDateToGregorianDate(int year, int month, int day)
     {
-        JulianCalendar jc = new ();
-        DateTime dt = jc.ToDateTime(year, month, day, 0, 0, 0, 0);
+        JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
+        DateTime dt = jcal.ToDateTime(year, month, day, 0, 0, 0, 0);
         return DateOnly.FromDateTime(dt);
     }
 

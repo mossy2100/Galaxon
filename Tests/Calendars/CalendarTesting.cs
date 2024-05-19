@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Galaxon.Astronomy.Calendars;
+using Galaxon.Time;
 
 namespace Galaxon.Tests.Calendars;
 
@@ -16,11 +17,11 @@ public class CalendarTesting
 
     public static void RunCalendarTests()
     {
-        GregorianCalendar gcal = new();
+        GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
         ShowCalendarInfo(gcal);
 
-        JapaneseCalendar jcal = new();
-        ShowCalendarInfo(jcal);
+        JapaneseCalendar jpcal = new ();
+        ShowCalendarInfo(jpcal);
 
         HarmonyCalendar hcal = new ();
 

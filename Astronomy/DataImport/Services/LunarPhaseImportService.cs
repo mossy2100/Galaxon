@@ -74,7 +74,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
     /// <exception cref="InvalidOperationException"></exception>
     public async Task ImportAstroPixelsPage(string url)
     {
-        JulianCalendar jc = new ();
+        JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
 
         // Use HttpClient to fetch the content.
         using HttpClient httpClient = new ();
@@ -156,7 +156,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
                     if (JulianCalendarUtility.IsValidDate(year, month, day))
                     {
                         // Construct a DateTime (Gregorian) from the Julian date parts.
-                        dt = jc.ToDateTime(year, month, day, hour, minute, 0, 0);
+                        dt = jcal.ToDateTime(year, month, day, hour, minute, 0, 0);
                         DateTime.SpecifyKind(dt, DateTimeKind.Utc);
                     }
                     else

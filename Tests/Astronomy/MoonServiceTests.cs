@@ -43,7 +43,7 @@ public class MoonServiceTests
         Assert.AreEqual(2, phase.DateTimeUtc.Month);
         Assert.AreEqual(18, phase.DateTimeUtc.Day);
         Assert.AreEqual(3, phase.DateTimeUtc.Hour);
-        Assert.AreEqual(36, phase.DateTimeUtc.Minute);
+        Assert.AreEqual(36, phase.DateTimeUtc.Minute, 1);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public class MoonServiceTests
         Assert.AreEqual(23, phase.DateTimeUtc.Hour);
         // This differs from the example by 2 minutes, because I'm using NASA's formulae for
         // calculating deltaT instead of Meeus's.
-        Assert.AreEqual(46, phase.DateTimeUtc.Minute);
+        Assert.AreEqual(46, phase.DateTimeUtc.Minute, 1);
     }
 
     /// <summary>

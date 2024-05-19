@@ -46,16 +46,11 @@ public class PlanetServiceTests
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
-        AstroObjectRecord? venus = astroObjectRepository.LoadByName("Venus", "Planet");
-        if (venus == null)
-        {
-            Assert.Fail("Could not find Venus in the database.");
-            return;
-        }
+        AstroObjectRecord venus = astroObjectRepository.LoadByName("Venus", "Planet");
 
         double expectedL = Angles.WrapRadians(-68.659_258_2);
         double expectedB = Angles.WrapRadians(-0.045_739_9);
-        var expectedR = 0.724_603;
+        double expectedR = 0.724_603;
 
         // Act.
         (double actualL, double actualB, double actualR) =
@@ -67,7 +62,7 @@ public class PlanetServiceTests
         // thereby producing a more accurate result.
         Assert.AreEqual(expectedL, actualL, 1e-5);
         Assert.AreEqual(expectedB, actualB, 1e-5);
-        Assert.AreEqual(expectedR, actualR / Length.METRES_PER_ASTRONOMICAL_UNIT, 1e-5);
+        Assert.AreEqual(expectedR, actualR, 1e-5);
     }
 
     /// <summary>
@@ -80,12 +75,7 @@ public class PlanetServiceTests
         AstroObjectRepository astroObjectRepository =
             ServiceManager.GetService<AstroObjectRepository>();
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
-        AstroObjectRecord? saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
-        if (saturn == null)
-        {
-            Assert.Fail("Could not find Saturn in the database.");
-            return;
-        }
+        AstroObjectRecord saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
         var dttt = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
         double jdtt = TimeScales.DateTimeToJulianDate(dttt);
 

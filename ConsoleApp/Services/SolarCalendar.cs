@@ -426,12 +426,12 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
 
     public void CountLeapYears()
     {
-        GregorianCalendar gc = GregorianCalendarUtility.GregorianCalendarInstance;
+        GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
         List<int> gregorianLeapYears = new ();
         List<int> worldPeaceLeapYears = new ();
         for (int y = 2000; y < 2100; y++)
         {
-            if (gc.IsLeapYear(y)) gregorianLeapYears.Add(y);
+            if (gcal.IsLeapYear(y)) gregorianLeapYears.Add(y);
             if (y % 500 % 33 % 4 == 2) worldPeaceLeapYears.Add(y);
         }
         Console.WriteLine($"Gregorian leap years:   {string.Join(", ", gregorianLeapYears)}");

@@ -139,27 +139,43 @@ public static class NumberExtensions
     #region Division-related methods
 
     /// <summary>
-    /// Modulo operation using floored division.
-    ///
-    /// With this variation of the modulo operation, the result will always have the same sign as
-    /// the divisor.
-    ///
-    /// Unlike the truncated division version of the modulo operator in C# and other C-based
-    /// languages, the floored division version produces a regular cycling pattern through both
-    /// negative and positive divisors.
-    /// It permits things like:
-    ///     bool isOdd = FloorMod(num, 2) == 1;
-    /// Doing this with the % operator will fail for negative divisors. e.g.
-    ///     bool isOdd = num % 2 == 1;
-    /// In this case, if num is negative 0, num % 2 == -1
+    /// Performs a modulo operation using floored division, ensuring that the result always has the
+    /// same sign as the divisor.
+    /// This method differs from the standard '%' operator used in C# and other C-style languages,
+    /// which performs truncated division.
+    /// Floored division modulo produces a regular cycling pattern through both negative and
+    /// positive dividends, making it suitable for scenarios like checking if a number is odd across
+    /// both positive and negative domains.
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Modulo_operation"/>
-    /// <see href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#floorMod-int-int-"/>
+    /// <param name="a">The dividend in the modulo operation.</param>
+    /// <param name="b">
+    /// The divisor in the modulo operation. Must not be zero; otherwise, a
+    /// <see cref="DivideByZeroException"/> is thrown.</param>
+    /// <returns>
+    /// The result of the modulo operation, adjusted so that it always has the same sign as the
+    /// divisor <paramref name="b"/>.</returns>
+    /// <exception cref="DivideByZeroException">
+    /// Thrown when the divisor <paramref name="b"/> is zero.
+    /// </exception>
+    /// <example>
+    /// This example shows how to call the <see cref="Mod{T}(T, T)"/> method.
+    /// <code>
+    /// int result = NumberExtensions.Mod(-3, 2); // result is 1
+    /// </code>
+    /// </example>
+    /// <remarks>
+    /// Using this modulo operation is particularly useful for applications where a consistent
+    /// positive remainder is necessary, such as in mathematical computations following modular
+    /// arithmetic rules that differ from typical programming language implementations.
+    /// </remarks>
     public static T Mod<T>(T a, T b) where T : INumberBase<T>, IModulusOperators<T, T, T>,
         IComparisonOperators<T, T, bool>
     {
+        // Perform default modulo operation, which will work fine if both operands are positive.
         T r = a % b;
-        return r < T.Zero ? r + b : r;
+
+        // Adjust the result to ensure it has the same sign as the divisor.
+        return (r < T.Zero && b > T.Zero) || (r > T.Zero && b < T.Zero) ? r + b : r;
     }
 
     #endregion Division-related methods

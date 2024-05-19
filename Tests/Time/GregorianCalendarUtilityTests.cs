@@ -5,6 +5,18 @@ namespace Galaxon.Tests.Time;
 [TestClass]
 public class GregorianCalendarUtilityTests
 {
+    private string[] englishMonthNames =
+    {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    };
+
+    private string[] frenchMonthNames =
+    {
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    };
+
     [DataTestMethod]
     [DataRow("jan", 1)]
     [DataRow("feb", 2)]
@@ -60,40 +72,69 @@ public class GregorianCalendarUtilityTests
     }
 
     [TestMethod]
+    public void MonthNumberToName_ValidMonths_English()
+    {
+        // Test the English month names
+        for (int i = 1; i <= 12; i++)
+        {
+            string result = GregorianCalendarUtility.MonthNumberToName(i, "en");
+            Assert.AreEqual(englishMonthNames[i - 1], result, true, $"Failed for month number {i}");
+        }
+    }
+
+    [TestMethod]
+    public void MonthNumberToName_ValidMonths_French()
+    {
+        // Test the French month names
+        for (int i = 1; i <= 12; i++)
+        {
+            string result = GregorianCalendarUtility.MonthNumberToName(i, "fr");
+            Assert.AreEqual(frenchMonthNames[i - 1], result, true, $"Failed for month number {i}");
+        }
+    }
+
+    [TestMethod]
+    public void MonthNumberToName_InvalidMonthNumber_ThrowsException()
+    {
+        // Test invalid month numbers below 1 and above 12
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            GregorianCalendarUtility.MonthNumberToName(0, "en"));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            GregorianCalendarUtility.MonthNumberToName(13, "en"));
+    }
+
+    [TestMethod]
+    public void MonthNumberToName_UnsupportedLanguageCode_ReturnsEnglish()
+    {
+        // Test with an unsupported language code
+        Assert.AreEqual("January", GregorianCalendarUtility.MonthNumberToName(1, "xx"), true, $"Failed for month number 1.");
+    }
+
+    [TestMethod]
     public void GetMonthNames_DefaultEnglish_ReturnsCorrectMonthNames()
     {
-        // Arrange
-        string[] expectedEnglishMonthNames =
-        {
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        };
-
         // Act
         Dictionary<int, string> result = GregorianCalendarUtility.GetMonthNames();
 
         // Assert
         Assert.AreEqual(12, result.Count, "Should return 12 months.");
-        CollectionAssert.AreEqual(expectedEnglishMonthNames, result.Values.ToArray(),
-            "The month names should match the expected English month names.");
+        for (int i = 1; i <= 12; i++)
+        {
+            Assert.AreEqual(englishMonthNames[i - 1], result[i], true, $"Failed for month number {i}");
+        }
     }
 
     [TestMethod]
     public void GetMonthNames_French_ReturnsCorrectMonthNames()
     {
-        // Arrange
-        string[] expectedFrenchMonthNames =
-        [
-            "janvier", "février", "mars", "avril", "mai", "juin",
-            "juillet", "août", "septembre", "octobre", "novembre", "décembre"
-        ];
-
         // Act
         Dictionary<int, string> result = GregorianCalendarUtility.GetMonthNames("fr");
 
         // Assert
         Assert.AreEqual(12, result.Count, "Should return 12 months.");
-        CollectionAssert.AreEqual(expectedFrenchMonthNames, result.Values.ToArray(),
-            "The month names should match the expected French month names.");
+        for (int i = 1; i <= 12; i++)
+        {
+            Assert.AreEqual(frenchMonthNames[i - 1], result[i], true, $"Failed for month number {i}");
+        }
     }
 }

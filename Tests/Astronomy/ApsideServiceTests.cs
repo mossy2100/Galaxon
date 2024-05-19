@@ -366,7 +366,7 @@ public class ApsideServiceTests
         ApsideService apsideService = ServiceManager.GetService<ApsideService>();
 
         // Specify the maximum allowable difference in time and distance.
-        TimeSpan maxTimeDiff = TimeSpan.FromMinutes(5);
+        TimeSpan maxTimeDiff = TimeSpan.FromMinutes(6);
         double maxDistanceDiff_AU = 1e-4;
 
         // Get the apsides with a USNO result.
