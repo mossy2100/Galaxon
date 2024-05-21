@@ -104,9 +104,9 @@ public class OrbitalRecord : DatabaseRecord
             }
             double M = MeanAnomaly.Value;
             double e = Eccentricity.Value;
-            double e3 = Math.Pow(e, 3);
-            return M + (2 * e - e3 / 4) * Math.Sin(M) + 5 * e * e * Math.Sin(2 * M) / 4
-                + 13 * e3 * Math.Sin(3 * M) / 12;
+            double e3 = Pow(e, 3);
+            return M + (2 * e - e3 / 4) * Sin(M) + 5 * e * e * Sin(2 * M) / 4
+                + 13 * e3 * Sin(3 * M) / 12;
         }
     }
 }

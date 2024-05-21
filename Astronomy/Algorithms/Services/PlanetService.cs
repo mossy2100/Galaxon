@@ -6,14 +6,11 @@ using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class PlanetService(
-    AstroDbContext astroDbContext,
-    AstroObjectRepository astroObjectRepository)
+public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository astroObjectRepository)
 {
     /// <summary>
     /// Calculate the position of a planet in heliocentric ecliptic coordinates.
@@ -21,7 +18,7 @@ public class PlanetService(
     /// The result is a Coordinates object tuple with the 3 coordinate values as radians.
     ///     Longitude = the heliocentric longitude in radians, in range -PI..PI
     ///     Latitude = the heliocentric latitude in radians, in range -PI/2..PI/2
-    ///     Radius = the orbital radius in metres.
+    ///     Radius = the orbital radius (distance to Sun) in astronomical units (AU).
     /// <see href="https://www.caglow.com/info/compute/vsop87"/>
     /// Original data files are from:
     /// <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
@@ -49,7 +46,7 @@ public class PlanetService(
         double T = TimeScales.JulianMillenniaSinceJ2000(jdtt);
 
         // Calculate the coefficients for each coordinate variable.
-        Dictionary<byte, double[]> coeffs = new ();
+        Dictionary<byte, double[]> coeffs = new();
         foreach (VSOP87DRecord record in records)
         {
             if (!coeffs.ContainsKey(record.IndexOfCoordinate))
@@ -59,12 +56,12 @@ public class PlanetService(
             double amplitude = (double)record.Amplitude;
             double phase = (double)record.Phase;
             double frequency = (double)record.Frequency;
-            coeffs[record.IndexOfCoordinate][record.Exponent] += amplitude * Math.Cos(phase + frequency * T);
+            coeffs[record.IndexOfCoordinate][record.Exponent] += amplitude * Cos(phase + frequency * T);
         }
 
         // Calculate each coordinate variable.
-        double longitude_rad = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs[1], T));
-        double latitude_rad = Angles.WrapRadians(Polynomials.EvaluatePolynomial(coeffs[2], T));
+        double longitude_rad = WrapRadians(Polynomials.EvaluatePolynomial(coeffs[1], T));
+        double latitude_rad = WrapRadians(Polynomials.EvaluatePolynomial(coeffs[2], T));
         double radius_AU = Polynomials.EvaluatePolynomial(coeffs[3], T);
         return new Coordinates(longitude_rad, latitude_rad, radius_AU);
     }

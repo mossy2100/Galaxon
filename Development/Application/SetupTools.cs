@@ -88,7 +88,7 @@ public class SetupTools
         string logFilePath = Path.Combine(logsDir, $"{assemblyName}.log");
 
         // Initialize Serilog using the configuration, but override the file path.
-        Log.Logger = new LoggerConfiguration()
+        Slog.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
             .CreateLogger();

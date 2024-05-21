@@ -6,7 +6,6 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -110,8 +109,8 @@ public class ApsideController(
         string strApsideDateTime = apsideEvent.DateTimeUtc.ToIsoString();
         string strApsideType =
             apsideEvent.ApsideType == EApsideType.Periapsis ? "perihelion" : "aphelion";
-        double radius_AU = Math.Round(apsideEvent.Radius_AU!.Value, 9);
-        Log.Information(
+        double radius_AU = Round(apsideEvent.Radius_AU!.Value, 9);
+        Slog.Information(
             "Closest {ApsideType} of {Planet} to {Date} computed to occur at {EventDateTime}, at a distance of {RadiusAU} AU.",
             strApsideType, planet.Name, date.ToIsoString(), strApsideDateTime, radius_AU);
 

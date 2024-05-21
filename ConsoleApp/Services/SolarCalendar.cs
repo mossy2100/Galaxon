@@ -150,12 +150,12 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
 
         // Calculate p, being the last term in the modulo chain.
         double frac = (double)nYearsInCycle / nLeapYearsWanted;
-        int p = (int)Math.Round(frac);
+        int p = (int)Round(frac);
         Console.WriteLine($"p = {p}");
 
         // Calculate the min and max gap.
-        int minGap = (int)Math.Floor(frac);
-        int maxGap = (int)Math.Ceiling(frac);
+        int minGap = (int)Floor(frac);
+        int maxGap = (int)Ceiling(frac);
 
         bool foundSolution = false;
 
@@ -224,11 +224,11 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             double num = den * frac;
 
             // Try the integer below.
-            int num1 = (int)Math.Floor(num);
+            int num1 = (int)Floor(num);
             TestFraction(frac, num1, den, ref minDiff, ref bestNum, ref bestDen);
 
             // Try the integer above.
-            int num2 = (int)Math.Ceiling(num);
+            int num2 = (int)Ceiling(num);
             TestFraction(frac, num2, den, ref minDiff, ref bestNum, ref bestDen);
         }
     }
@@ -238,7 +238,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         double frac = (double)num / den;
         // Console.WriteLine($"Test frac = {frac}");
-        double diff = Math.Abs(targetFrac - frac);
+        double diff = Abs(targetFrac - frac);
 
         // Convert difference to seconds.
         double seconds = diff * 89428.3286475439;
@@ -266,7 +266,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (var den = 1; den <= 10000; den++)
         {
             // Console.WriteLine($"Testing d = {d}...");
-            var num = (int)Math.Round(frac * den);
+            var num = (int)Round(frac * den);
             double frac2 = num / (double)den;
 
             // Eliminate duplicates.
@@ -276,7 +276,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
             }
             fractions.Add(frac2);
 
-            double diffSeconds = Math.Abs(frac - frac2) * TimeConstants.SECONDS_PER_DAY;
+            double diffSeconds = Abs(frac - frac2) * TimeConstants.SECONDS_PER_DAY;
             if (diffSeconds <= 1)
             {
                 Console.WriteLine(
@@ -310,7 +310,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         Console.WriteLine(
             $"This gives {leapYearCount} leap years per {yearsPerCycle} years, which is an average of {calYearLengthDays} days per year.");
         double driftDaysPerYear =
-            Math.Abs(calYearLengthDays - TimeConstants.DAYS_PER_TROPICAL_YEAR);
+            Abs(calYearLengthDays - TimeConstants.DAYS_PER_TROPICAL_YEAR);
         double driftSecondsPerYear = driftDaysPerYear * TimeConstants.SECONDS_PER_DAY;
         double driftSecondsPerCycle = driftSecondsPerYear * yearsPerCycle;
         Console.WriteLine(
@@ -340,7 +340,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         Console.WriteLine(
             $"This gives {leapYearCount} leap years per {a} years, which is an average of {calYearLengthDays} days per year.");
         double driftDaysPerYear =
-            Math.Abs(calYearLengthDays - TimeConstants.DAYS_PER_TROPICAL_YEAR);
+            Abs(calYearLengthDays - TimeConstants.DAYS_PER_TROPICAL_YEAR);
         double driftSecondsPerYear = driftDaysPerYear * TimeConstants.SECONDS_PER_DAY;
         double driftSecondsPerCycle = driftSecondsPerYear * a;
         Console.WriteLine(
@@ -360,7 +360,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         while (true)
         {
             avg = TropicalYear.GetAverageLengthInSolarDays(minYear, maxYear);
-            double diff = Math.Abs(avg - targetAvg) * TimeConstants.SECONDS_PER_DAY;
+            double diff = Abs(avg - targetAvg) * TimeConstants.SECONDS_PER_DAY;
 
             if (diff < 0.1)
             {
@@ -412,7 +412,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (int y = 3000; y < 4000; y++)
         {
             double yearLengthSolar = EarthService.GetTropicalYearInSolarDaysForYear(y);
-            double diff = Math.Abs(yearLengthSolar - targetAvg);
+            double diff = Abs(yearLengthSolar - targetAvg);
             if (diff < smallestDiff)
             {
                 smallestDiff = diff;
@@ -440,7 +440,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         Console.WriteLine($"Number of World Peace leap years: {worldPeaceLeapYears.Count}");
 
         // Print the valid start years for the new system.
-        int n = Math.Min(gregorianLeapYears.Count, worldPeaceLeapYears.Count);
+        int n = Min(gregorianLeapYears.Count, worldPeaceLeapYears.Count);
         SortedSet<int> validStartYears = new ();
         // Add all in valid period.
         for (int y = 2025; y <= 2100; y++)
@@ -450,8 +450,8 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         // Remove those that won't work.
         for (int i = 0; i < n; i++)
         {
-            int min = Math.Min(gregorianLeapYears[i], worldPeaceLeapYears[i]) + 1;
-            int max = Math.Max(gregorianLeapYears[i], worldPeaceLeapYears[i]);
+            int min = Min(gregorianLeapYears[i], worldPeaceLeapYears[i]) + 1;
+            int max = Max(gregorianLeapYears[i], worldPeaceLeapYears[i]);
             for (int y = min; y <= max; y++)
             {
                 validStartYears.Remove(y);
@@ -540,7 +540,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         for (maxYear = minYear; maxYear <= 9999; maxYear++)
         {
             avgYearLength = TropicalYear.GetAverageLengthInSolarDays(minYear, maxYear);
-            double diff = Math.Abs(targetAvgYearLength - avgYearLength);
+            double diff = Abs(targetAvgYearLength - avgYearLength);
             if (diff < minDiff)
             {
                 minDiff = diff;

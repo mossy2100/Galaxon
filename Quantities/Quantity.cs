@@ -83,7 +83,7 @@ public class Quantity
     /// Construct from a amount as double and units as string.
     /// Example:
     /// Quantity m = new(-12.34, "kg*m/s2");
-    /// Quantity m = new(Math.PI, "rad");
+    /// Quantity m = new(PI, "rad");
     /// Quantity m = new(5, "ft");
     /// Quantity m = new(100, "$/h");
     /// </summary>

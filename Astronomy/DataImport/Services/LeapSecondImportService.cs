@@ -3,7 +3,6 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Time;
 using HtmlAgilityPack;
-using Serilog;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
@@ -30,7 +29,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
     /// </summary>
     public async Task ImportNistWebPage()
     {
-        Log.Information("Parsing NIST web page.");
+        Slog.Information("Parsing NIST web page.");
 
         using HttpClient httpClient = new ();
 
@@ -106,7 +105,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
     /// </remarks>
     public async Task ImportIersBulletins(bool updateExisting = false)
     {
-        Log.Information("Importing IERS Bulletin Cs.");
+        Slog.Information("Importing IERS Bulletin Cs.");
 
         using HttpClient httpClient = new ();
 
@@ -151,7 +150,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
             // Loop through individual bulletin URLs and process them
             foreach (string bulletinUrl in bulletinUrls)
             {
-                Log.Information("Bulletin URL: {BulletinUrl}", bulletinUrl);
+                Slog.Information("Bulletin URL: {BulletinUrl}", bulletinUrl);
 
                 // Get the bulletin number.
                 Match matchBulletinUrl = Regex.Match(bulletinUrl, rxsBulletinUrl);
@@ -160,12 +159,12 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                     throw new InvalidOperationException("Could not get bulletin number.");
                 }
                 int bulletinNumber = int.Parse(matchBulletinUrl.Groups[1].Value);
-                Log.Information("Bulletin number: {BulletinNumber}", bulletinNumber);
+                Slog.Information("Bulletin number: {BulletinNumber}", bulletinNumber);
 
                 // Ignore Bulletin C 10.
                 if (bulletinNumber == 10)
                 {
-                    Log.Information("Ignoring bulletin {BulletinNumber}.", bulletinNumber);
+                    Slog.Information("Ignoring bulletin {BulletinNumber}.", bulletinNumber);
                     continue;
                 }
 
@@ -175,7 +174,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
 
                 if (iersBulletinC == null)
                 {
-                    Log.Information("Existing leap second record not found, creating a new one.");
+                    Slog.Information("Existing leap second record not found, creating a new one.");
                     iersBulletinC = new IersBulletinCRecord
                     {
                         BulletinNumber = bulletinNumber
@@ -186,12 +185,12 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                 {
                     if (!updateExisting)
                     {
-                        Log.Information("Existing leap second record found, not updating.");
+                        Slog.Information("Existing leap second record found, not updating.");
                         continue;
                     }
                     else
                     {
-                        Log.Information("Existing leap second record found, updating.");
+                        Slog.Information("Existing leap second record found, updating.");
                     }
                 }
 
@@ -232,7 +231,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                 int publishYear = int.Parse(matchDatePublished.Groups["year"].Value);
                 DateOnly datePublished = new (publishYear, publishMonth, publishDay);
                 iersBulletinC.DatePublished = datePublished;
-                Log.Information("Bulletin publish date = {PublishDate}",
+                Slog.Information("Bulletin publish date = {PublishDate}",
                     datePublished.ToIsoString());
 
                 // See if there's a leap second or not.
@@ -241,7 +240,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                     // No leap second.
                     iersBulletinC.Value = 0;
                     iersBulletinC.LeapSecondDate = null;
-                    Log.Information("No leap second.");
+                    Slog.Information("No leap second.");
                 }
                 else
                 {
@@ -258,8 +257,8 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
                     int year = int.Parse(groups["year"].Value);
                     iersBulletinC.LeapSecondDate = GregorianCalendarUtility.GetMonthLastDay(year, month);
 
-                    Log.Information("Leap second value = {Value}", iersBulletinC.Value);
-                    Log.Information("Leap second date = {Date}",
+                    Slog.Information("Leap second value = {Value}", iersBulletinC.Value);
+                    Slog.Information("Leap second date = {Date}",
                         iersBulletinC.LeapSecondDate.Value.ToIsoString());
 
                     // Update or insert the leap second record.
@@ -281,7 +280,7 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
         }
         catch (Exception ex)
         {
-            Log.Error("{Message}", ex.Message);
+            Slog.Error("{Message}", ex.Message);
         }
     }
 }

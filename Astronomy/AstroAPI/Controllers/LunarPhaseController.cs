@@ -3,7 +3,6 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -33,7 +32,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
             LunarPhaseDto dto = new (lunarPhase);
 
             // Log it.
-            Log.Information("Lunar phases calculated: {Result}", dto);
+            Slog.Information("Lunar phases calculated: {Result}", dto);
 
             // Return the lunar phase as JSON.
             return Ok(dto);
@@ -66,7 +65,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
                 .ToList();
 
             // Log it.
-            Log.Information("{Count} lunar phases found.", phaseEvents.Count);
+            Slog.Information("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
             return Ok(phaseEventDtos);
@@ -100,7 +99,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
                 .ToList();
 
             // Log it.
-            Log.Information("{Count} lunar phases found.", phaseEvents.Count);
+            Slog.Information("{Count} lunar phases found.", phaseEvents.Count);
 
             // Return the lunar phases as HTTP response in JSON.
             return Ok(phaseEventDtos);

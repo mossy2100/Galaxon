@@ -467,7 +467,7 @@ public static class StringExtensions
             {
                 sb.Append(separator);
             }
-            sb.Append(str.Substring(i, Math.Min(size, str.Length - i)));
+            sb.Append(str.Substring(i, Min(size, str.Length - i)));
         }
         return sb.ToString();
     }

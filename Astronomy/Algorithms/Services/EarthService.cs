@@ -15,12 +15,12 @@ public class EarthService
     /// <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
     /// </summary>
     /// <param name="jdut">The Julian Date in UT1.</param>
-    /// <returns>The Earth Rotation Angles.</returns>
+    /// <returns>The Earth Rotation </returns>
     public static double CalcEarthRotationAngle(double jdut)
     {
         double t = TimeScales.JulianDaysSinceJ2000(jdut);
-        double radians = Math.Tau * (0.779_057_273_264 + 1.002_737_811_911_354_48 * t);
-        return Angles.WrapRadians(radians);
+        double radians = Tau * (0.779_057_273_264 + 1.002_737_811_911_354_48 * t);
+        return WrapRadians(radians);
     }
 
     /// <summary>

@@ -1,6 +1,5 @@
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -31,11 +30,11 @@ public class DeltaTController : ControllerBase
             // Construct the result.
             Dictionary<string, double> result = new ()
             {
-                { "seconds", Math.Round(deltaT, 6) }
+                { "seconds", Round(deltaT, 6) }
             };
 
             // Log it.
-            Log.Information("Delta-T computed for year {Year} is {DeltaT} seconds.", year, deltaT);
+            Slog.Information("Delta-T computed for year {Year} is {DeltaT} seconds.", year, deltaT);
 
             // Return the delta-T value as HTTP response in JSON.
             return Ok(result);

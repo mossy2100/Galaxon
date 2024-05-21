@@ -3,7 +3,6 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -16,7 +15,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// How far the mean Sun moves through its orbit in half a second.
     /// </summary>
     public const double SUN_MOVEMENT_RADIANS_PER_HALF_SECOND =
-        Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
+        RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
 
     /// <summary>
     /// Values from Table 27.C in Astronomical Algorithms 2nd ed.
@@ -178,17 +177,17 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a Julian Date (TT).</returns>
     public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerType)
     {
-        double JDE0 = GetSeasonalMarkerMean(year, markerType);
-        double T = TimeScales.JulianCenturiesSinceJ2000(JDE0);
-        double W = Angles.DegreesToRadians(35999.373 * T - 2.47);
-        double dLambda = 1 + 0.0334 * Math.Cos(W) + 0.0007 * Math.Cos(2 * W);
+        double jdtt = GetSeasonalMarkerMean(year, markerType);
+        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double W = DegreesToRadians(35999.373 * T - 2.47);
+        double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
 
         // Sum the periodic terms from Table 27.C.
         double S = PeriodicTerms.Sum(term =>
-            term.A * Math.Cos(Angles.DegreesToRadians(term.B + term.C * T)));
+            term.A * Cos(DegreesToRadians(term.B + term.C * T)));
 
         // Equation from p178.
-        return JDE0 + 0.000_01 * S / dLambda;
+        return jdtt + 0.000_01 * S / dLambda;
     }
 
     /// <summary>
@@ -205,7 +204,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         // might be excessively precise given other imprecisions in the calculation method, but the
         // method doesn't take too long with this value.
         const double sunMovementRadiansPerHalfSecond =
-            Angles.RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
+            RADIANS_PER_CIRCLE / TimeConstants.SECONDS_PER_TROPICAL_YEAR / 2;
 
         do
         {
@@ -214,16 +213,16 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
 
             // Calculate the difference between the computed longitude of the Sun at this time, and
             // the target value.
-            double diffLs = Angles.WrapRadians(targetLs - Ls);
+            double diffLs = WrapRadians(targetLs - Ls);
 
             // Check if we're done.
-            if (Math.Abs(diffLs) < sunMovementRadiansPerHalfSecond)
+            if (Abs(diffLs) < sunMovementRadiansPerHalfSecond)
             {
                 break;
             }
 
             // Make a correction.
-            jdtt += 58 * Math.Sin(diffLs);
+            jdtt += 58 * Sin(diffLs);
         }
         while (true);
 
@@ -244,7 +243,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         double jdtt = GetSeasonalMarkerMean(year, markerType);
 
         // Find the target Ls in radians (0, π/2, -π, or -π/2).
-        double targetLs = Angles.WrapRadians((int)markerType * Angles.RADIANS_PER_QUADRANT);
+        double targetLs = WrapRadians((int)markerType * RADIANS_PER_QUADRANT);
 
         // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);
@@ -317,7 +316,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         jdtt += TimeConstants.DAYS_PER_TROPICAL_YEAR / 36;
 
         // Find the target Ls in radians.
-        double targetLs = Angles.DegreesToRadiansWithWrap(280);
+        double targetLs = DegreesToRadiansWithWrap(280);
 
         // Improve the initial value until the desired accuracy is reached.
         return _LoopUntilDesiredPrecision(jdtt, targetLs);

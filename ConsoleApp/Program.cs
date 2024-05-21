@@ -39,7 +39,7 @@ class Program
         catch (Exception ex)
         {
             // Log any unhandled exceptions
-            Log.Error(ex, "An error occurred.");
+            Slog.Error(ex, "An error occurred.");
         }
         finally
         {
@@ -57,7 +57,7 @@ class Program
         }
 
         // Set up logging.
-        Log.Logger = new LoggerConfiguration()
+        Slog.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
             .WriteTo.File(Path.Combine(solnDir, "logs/Astronomy.DataImport.log"))
@@ -213,7 +213,7 @@ class Program
             //     Console.WriteLine($"    Original value for decimal year: {y}");
             //     Console.WriteLine($"    JDUT, limited range method:      {jdut1}");
             //     Console.WriteLine($"    JDUT, unlimited range method:    {jdut2}");
-            //     Console.WriteLine($"    Difference:                      {Math.Abs(jdut2 - jdut1)}");
+            //     Console.WriteLine($"    Difference:                      {Abs(jdut2 - jdut1)}");
             //     Console.WriteLine();
             //     break;
             // }
@@ -224,7 +224,7 @@ class Program
             //     Console.WriteLine("Error in JulianDateUniversalToDecimalYearLimitedRange().");
             //     Console.WriteLine($"    Original value for decimal year:    {y}");
             //     Console.WriteLine($"    Decimal year, limited range method: {y1}");
-            //     Console.WriteLine($"    Difference:                         {Math.Abs(y1 - y)}");
+            //     Console.WriteLine($"    Difference:                         {Abs(y1 - y)}");
             //     Console.WriteLine();
             //     break;
             // }
@@ -235,7 +235,7 @@ class Program
                 Console.WriteLine("Error in JulianDateUniversalToDecimalYear().");
                 Console.WriteLine($"    Original value for decimal year:      {y}");
                 Console.WriteLine($"    Decimal year, unlimited range method: {y2}");
-                Console.WriteLine($"    Difference:                           {Math.Abs(y2 - y)}");
+                Console.WriteLine($"    Difference:                           {Abs(y2 - y)}");
                 Console.WriteLine();
                 break;
             }
@@ -246,7 +246,7 @@ class Program
             //     Console.WriteLine($"    Original value for decimal year:      {y}");
             //     Console.WriteLine($"    Decimal year, limited range method:   {y1}");
             //     Console.WriteLine($"    Decimal year, unlimited range method: {y2}");
-            //     Console.WriteLine($"    Difference:                           {Math.Abs(y2 - y1)}");
+            //     Console.WriteLine($"    Difference:                           {Abs(y2 - y1)}");
             //     Console.WriteLine();
             //     break;
             // }

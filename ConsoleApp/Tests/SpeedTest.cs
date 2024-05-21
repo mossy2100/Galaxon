@@ -23,6 +23,6 @@ public class SpeedTest
 
     private static bool ApproxEqual(double d1, double d2)
     {
-        return Math.Abs(d1 - d2) < 1e-9;
+        return Abs(d1 - d2) < 1e-9;
     }
 }

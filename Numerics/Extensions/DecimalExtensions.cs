@@ -92,7 +92,7 @@ public static class DecimalExtensions
 
         // Scale the value to the range (0..1) so the Taylor series converges quickly and to avoid
         // overflow.
-        var scale = (int)Math.Floor(Math.Log10((double)m)) + 1;
+        var scale = (int)Floor(Math.Log10((double)m)) + 1;
         decimal x;
 
         // Some cleverness to avoid overflow if scale == 29.
@@ -361,7 +361,7 @@ public static class DecimalExtensions
         var e = (decimal)expected;
         if (actual != 0)
         {
-            var m = (int)Math.Floor(Math.Log10(Math.Abs(expected)));
+            var m = (int)Floor(Math.Log10(Abs(expected)));
             if (m > 0)
             {
                 var scaleFactor = Exp10(m);

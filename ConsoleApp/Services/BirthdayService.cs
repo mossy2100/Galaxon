@@ -40,7 +40,7 @@ public class BirthdayService(SunService sunService)
         Func<double, double> func = jdtt =>
         {
             Coordinates coords = sunService.CalcPosition(jdtt);
-            return Math.Abs(coords.Longitude_rad - LsBirth);
+            return Abs(coords.Longitude_rad - LsBirth);
         };
 
         // Find the input JD(TT) where the function is at a minimum.

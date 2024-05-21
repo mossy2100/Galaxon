@@ -121,7 +121,7 @@ public static class GregorianCalendarUtility
         CheckYearInRange(year);
 
         // Guard.
-        if (Math.Abs(n) is < 1 or > 5)
+        if (Abs(n) is < 1 or > 5)
         {
             throw new ArgumentOutOfRangeException(nameof(n),
                 "The absolute value must be in the range 1..5.");

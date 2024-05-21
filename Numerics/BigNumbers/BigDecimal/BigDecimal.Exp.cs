@@ -539,9 +539,9 @@ public partial struct BigDecimal
                 "Logarithms are undefined for a base of 1.");
         }
 
-        // Log(1, 0) == 0, same as Math.Log().
+        // Log(1, 0) == 0, same as Log().
         // NB: 0^0 can be undefined or 1. Many programming languages, including C#, use 1.
-        // Thus, Math.Pow(0, 0) == 1 and Math.Log(1, 0) == 0. We replicate that here.
+        // Thus, Pow(0, 0) == 1 and Log(1, 0) == 0. We replicate that here.
         // We also need this clause to avoid an ArgumentOutOfRangeException.
         if (x == 1 && y == 0)
         {

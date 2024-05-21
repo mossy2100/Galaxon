@@ -38,8 +38,8 @@ public static class DoubleExtensions
             throw new ArgumentOutOfRangeException(nameof(nSigFigs), "Must be positive.");
         }
 
-        double scale = Math.Pow(10, Math.Floor(Math.Log10(d)) + 1);
-        double result = scale * Math.Round(d / scale, nSigFigs);
+        double scale = Pow(10, Floor(Log10(d)) + 1);
+        double result = scale * Round(d / scale, nSigFigs);
 
         return result;
     }
@@ -101,7 +101,7 @@ public static class DoubleExtensions
     /// </summary>
     public static bool IsPerfectSquare(double d)
     {
-        return double.IsPositive(d) && double.IsInteger(Math.Sqrt(d));
+        return double.IsPositive(d) && double.IsInteger(Sqrt(d));
     }
 
     #endregion Methods for checking doubles as integers
@@ -112,8 +112,8 @@ public static class DoubleExtensions
     /// Check if 2 double values are equal for practical purposes.
     /// If two double values differ only by the least significant bit, this is more likely
     /// due to inaccuracies in floating point representations than actual inequality.
-    /// This code is copied/adapted from Google Guava DoubleMath.fuzzyEquals().
-    /// <see href="https://github.com/google/guava/blob/master/guava/src/com/google/common/math/DoubleMath.java#L360"/>
+    /// This code is copied/adapted from Google Guava DoublefuzzyEquals().
+    /// <see href="https://github.com/google/guava/blob/master/guava/src/com/google/common/math/Doublejava#L360"/>
     /// I initially tried the algorithm from the Microsoft documentation, it didn't work in all cases.
     /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.double.equals?view=net-7.0#system-double-equals(system-double)"/>
     /// </summary>
@@ -133,7 +133,7 @@ public static class DoubleExtensions
         // Handle NaN separately so the method behaves the same as double.Equals().
         // The equality operator will return false when comparing 2 NaN values.
         // The equality operator will return true when comparing infinities.
-        return (double.IsNaN(a) && double.IsNaN(b)) || a == b || Math.Abs(a - b) <= tolerance;
+        return (double.IsNaN(a) && double.IsNaN(b)) || a == b || Abs(a - b) <= tolerance;
     }
 
     /// <summary>
@@ -166,7 +166,7 @@ public static class DoubleExtensions
     /// </summary>
     public static bool FuzzyIsInteger(double d, double tolerance = DELTA)
     {
-        return d.FuzzyEquals(Math.Round(d), tolerance);
+        return d.FuzzyEquals(Round(d), tolerance);
     }
 
     /// <summary>

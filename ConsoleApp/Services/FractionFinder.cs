@@ -7,7 +7,7 @@ public class FractionFinder
 {
     public static (int, int) FindFraction(double avg, double maxDiff, ETimeUnit timeUnit)
     {
-        int whole = (int)Math.Floor(avg);
+        int whole = (int)Floor(avg);
         double frac = avg - whole;
         Console.WriteLine($"Average = {avg}");
         Console.WriteLine($"Fraction = {frac}");
@@ -16,9 +16,9 @@ public class FractionFinder
 
         for (int den = 2; den <= 500; den++)
         {
-            int num = (int)Math.Round(den * frac);
+            int num = (int)Round(den * frac);
             double frac2 = (double)num / den;
-            double diff = Math.Abs(frac - frac2);
+            double diff = Abs(frac - frac2);
 
             // See if this fraction is worth reporting.
             if (diff <= maxDiff && !BigRational.IsReducible(num, den))

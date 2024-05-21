@@ -2,7 +2,6 @@ using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -31,7 +30,7 @@ public class LeapSecondController(AstroDbContext astroDbContext) : ControllerBas
                 leapSeconds.Select(ls => new LeapSecondDto(ls)).ToList();
 
             // Log it.
-            Log.Information("{Count} leap seconds reported.", leapSecondDtos.Count);
+            Slog.Information("{Count} leap seconds reported.", leapSecondDtos.Count);
 
             // Return the lunar phase as HTTP response in JSON.
             return Ok(leapSecondDtos);

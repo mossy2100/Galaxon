@@ -1,12 +1,10 @@
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.SpaceCalendars.com.Repositories;
 using Galaxon.Astronomy.SpaceCalendars.com.Services;
-using Galaxon.Core.Files;
 using Galaxon.Development.Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Serilog;
 
 namespace Galaxon.Astronomy.SpaceCalendars.com;
 
@@ -29,30 +27,30 @@ public class Program
             // Initialize.
             _configuration = SetupTools.Initialize();
 
-            Log.Information("Creating wep application builder...");
+            Slog.Information("Creating wep application builder...");
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            Log.Information("Configuring services...");
+            Slog.Information("Configuring services...");
             ConfigureServices(builder);
 
-            Log.Information("Building web application...");
+            Slog.Information("Building web application...");
             WebApplication app = builder.Build();
 
-            Log.Information("Configuring web application...");
+            Slog.Information("Configuring web application...");
             ConfigureApp(app);
 
-            Log.Information("Running web application...");
+            Slog.Information("Running web application...");
             app.Run();
         }
         catch (Exception ex) when (ex is not HostAbortedException
             && ex.Source
             != "Microsoft.EntityFrameworkCore.Design") // see https://github.com/dotnet/efcore/issues/29923
         {
-            Log.Fatal(ex, "Application terminated unexpectedly.");
+            Slog.Fatal(ex, "Application terminated unexpectedly.");
         }
         finally
         {
-            Log.CloseAndFlush();
+            Slog.CloseAndFlush();
         }
     }
 
@@ -135,13 +133,13 @@ public class Program
         Exception? ex = null)
     {
         // Log the error and exception details.
-        Log.Error("Error: {Error}", error);
+        Slog.Error("Error: {Error}", error);
         if (ex != null)
         {
-            Log.Error("Exception: {Exception}", ex.Message);
+            Slog.Error("Exception: {Exception}", ex.Message);
             if (ex.InnerException != null)
             {
-                Log.Error("Inner exception: {InnerException}", ex.InnerException.Message);
+                Slog.Error("Inner exception: {InnerException}", ex.InnerException.Message);
             }
         }
 

@@ -13,7 +13,6 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
-using Serilog;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
@@ -82,7 +81,7 @@ public class ApsideImportService(
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("{Exception}", ex.Message);
+                    Slog.Error("{Exception}", ex.Message);
                     return;
                 }
 
@@ -131,13 +130,13 @@ public class ApsideImportService(
                 }
                 else
                 {
-                    Log.Error("Failed to retrieve data. Status code: {StatusCode}",
+                    Slog.Error("Failed to retrieve data. Status code: {StatusCode}",
                         response.StatusCode);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error("{Exception}", ex.Message);
+                Slog.Error("{Exception}", ex.Message);
             }
         }
     }
@@ -153,7 +152,7 @@ public class ApsideImportService(
 
         if (usms?.data == null || usms.data.IsEmpty())
         {
-            Log.Error("Failed to retrieve data. Status code: {StatusCode}", response.StatusCode);
+            Slog.Error("Failed to retrieve data. Status code: {StatusCode}", response.StatusCode);
         }
         else
         {
@@ -184,18 +183,18 @@ public class ApsideImportService(
                 ApsideRecord? existingApside =
                     astroDbContext.Apsides.FirstOrDefault(apsideRecord =>
                         apsideRecord.AstroObjectId == earth.Id
-                        && Math.Abs(EF.Functions.DateDiffDay(apsideRecord.DateTimeUtcGalaxon, dt)
+                        && Abs(EF.Functions.DateDiffDay(apsideRecord.DateTimeUtcGalaxon, dt)
                             ?? 2)
                         <= 1);
 
                 if (existingApside == null)
                 {
-                    Log.Warning("No matching record found for the {ApsideType} at {DateTime}.",
+                    Slog.Warning("No matching record found for the {ApsideType} at {DateTime}.",
                         apsideType.GetDisplayName(), dt.ToIsoString());
                 }
                 else
                 {
-                    Log.Information("Updating record for the {ApsideType} at {DateTime}.",
+                    Slog.Information("Updating record for the {ApsideType} at {DateTime}.",
                         apsideType.GetDisplayName(), dt.ToIsoString());
                     existingApside.DateTimeUtcUsno = dt;
                     await astroDbContext.SaveChangesAsync();
@@ -274,7 +273,7 @@ public class ApsideImportService(
                             double apsideDistance = double.Parse(parts[i + 3]);
 
                             // Log the extracted data.
-                            Log.Information(
+                            Slog.Information(
                                 "Apside type: {ApsideType}, Datetime: {ApsideDateTime}, Distance: {ApsideDistance} AU",
                                 apsideType.GetDisplayName(), apsideDateTime.ToIsoString(),
                                 apsideDistance);
@@ -284,20 +283,20 @@ public class ApsideImportService(
                                 astroDbContext.Apsides.FirstOrDefault(apsideRecord =>
                                     apsideRecord.AstroObjectId == earth.Id
                                     && apsideRecord.ApsideType == apsideType
-                                    && Math.Abs(
+                                    && Abs(
                                         EF.Functions.DateDiffMinute(apsideRecord.DateTimeUtcGalaxon,
                                             apsideDateTime)
                                         ?? int.MaxValue)
                                     <= 10);
                             if (existingApside == null)
                             {
-                                Log.Warning(
+                                Slog.Warning(
                                     "No matching record found for the {ApsideType} apside at {DateTime}.",
                                     apsideType.GetDisplayName(), apsideDateTime.ToIsoString());
                             }
                             else
                             {
-                                Log.Information(
+                                Slog.Information(
                                     "Updating record for the {ApsideType} at {DateTime}.",
                                     apsideType.GetDisplayName(), apsideDateTime.ToIsoString());
                                 existingApside.DateTimeUtcAstroPixels = apsideDateTime;
@@ -313,7 +312,7 @@ public class ApsideImportService(
             }
             catch (Exception ex)
             {
-                Log.Error("{Exception}", ex.Message);
+                Slog.Error("{Exception}", ex.Message);
             }
         }
     }

@@ -10,7 +10,7 @@ public static class Int32Extensions
     /// <returns></returns>
     public static int Sqrt(int n)
     {
-        return (int)Math.Round(Math.Sqrt(n));
+        return (int)Round(Math.Sqrt(n));
     }
 
     /// <summary>

@@ -3,11 +3,9 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Development.Application;
-using Galaxon.Quantities;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI;
 
@@ -34,28 +32,28 @@ public class Program
         {
             _configuration = SetupTools.Initialize();
 
-            Log.Information("Creating web application builder...");
+            Slog.Information("Creating web application builder...");
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            Log.Information("Configuring services...");
+            Slog.Information("Configuring services...");
             ConfigureServices(builder);
 
-            Log.Information("Building web application...");
+            Slog.Information("Building web application...");
             WebApplication app = builder.Build();
 
-            Log.Information("Configuring web application...");
+            Slog.Information("Configuring web application...");
             ConfigureApp(app);
 
-            Log.Information("Running web application...");
+            Slog.Information("Running web application...");
             app.Run();
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Application terminated unexpectedly.");
+            Slog.Fatal(ex, "Application terminated unexpectedly.");
         }
         finally
         {
-            Log.CloseAndFlush();
+            Slog.CloseAndFlush();
         }
     }
 
@@ -74,7 +72,6 @@ public class Program
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.Converters.Add(new QuantityJsonConverter());
         });
 
         // Swagger.
@@ -141,13 +138,13 @@ public class Program
     public static ObjectResult ReturnException(ControllerBase controller, string error, Exception? ex = null)
     {
         // Logging.
-        Log.Error("Error: {Error}", error);
+        Slog.Error("Error: {Error}", error);
         if (ex != null)
         {
-            Log.Error("- Exception: {Exception}", ex.Message);
+            Slog.Error("- Exception: {Exception}", ex.Message);
             if (ex.InnerException != null)
             {
-                Log.Error("- Inner exception: {InnerException}", ex.InnerException.Message);
+                Slog.Error("- Inner exception: {InnerException}", ex.InnerException.Message);
             }
         }
 

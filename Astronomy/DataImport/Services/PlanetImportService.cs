@@ -125,7 +125,7 @@ public class PlanetImportService(
             planet.Orbit.ArgPeriapsis = GetDoubleValue(csv, 13, Angles.RADIANS_PER_DEGREE);
 
             // Calculate the mean motion in rad/s.
-            planet.Orbit.MeanMotion = Math.Tau / planet.Orbit.SiderealOrbitPeriod;
+            planet.Orbit.MeanMotion = Tau / planet.Orbit.SiderealOrbitPeriod;
 
             // Save the orbital parameters.
             astroDbContext.SaveChanges();

@@ -54,7 +54,7 @@ public class RuleFinder
     public static bool FindRuleWith2Mods(int num, int den)
     {
         bool result = false;
-        int a = (int)Math.Round((double)den / num);
+        int a = (int)Round((double)den / num);
         for (int r = 0; r < a; r++)
         {
             Func<int, bool> isLeapYear = y => y % den % a == r;
@@ -73,7 +73,7 @@ public class RuleFinder
     public static bool FindRuleWith3Mods(int num, int den)
     {
         bool result = false;
-        int b = (int)Math.Round((double)den / num);
+        int b = (int)Round((double)den / num);
         for (int a = 2; a < den; a++)
         {
             for (int r = 0; r < b; r++)
@@ -95,7 +95,7 @@ public class RuleFinder
     public static bool FindRuleWith4Mods(int num, int den)
     {
         bool result = false;
-        int c = (int)Math.Round((double)den / num);
+        int c = (int)Round((double)den / num);
         for (int a = 2; a < den; a++)
         {
             for (int b = 2; b < a; b++)
@@ -188,14 +188,14 @@ public class RuleFinder
         }
 
         // Start with the closest fraction 1/n greater than frac.
-        int a = (int)Math.Floor(1 / leapYearFrac);
+        int a = (int)Floor(1 / leapYearFrac);
         double fracPart = 1.0 / a;
         newFrac = fracPart;
         Console.WriteLine($"Unless the year is divisible by {a}, then it's a {commonOrLeap} year. This gives a fraction of {newFrac:F9}");
         // int nRules = 1;
         while (true)
         {
-            double diff = Math.Abs(frac - newFrac);
+            double diff = Abs(frac - newFrac);
             Console.WriteLine($"Current difference: {diff:F9}.");
             if (diff < 1e-6)
             {

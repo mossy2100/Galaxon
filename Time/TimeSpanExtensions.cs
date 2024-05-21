@@ -65,27 +65,27 @@ public static class TimeSpanExtensions
         ETimeUnit precision = ETimeUnit.Millisecond)
     {
         // Round off to the nearest unit specified as precision.
-        long units = (long)Math.Round(Convert(t.Ticks, ETimeUnit.Tick, precision));
+        long units = (long)Round(Convert(t.Ticks, ETimeUnit.Tick, precision));
         // Convert back to ticks for breaking down into parts.
-        long ticks = (long)Math.Round(Convert(units, precision));
+        long ticks = (long)Round(Convert(units, precision));
 
         Dictionary<ETimeUnit, double> result = new ();
 
         // Get days.
         double nDays = (double)ticks / TimeConstants.TICKS_PER_DAY;
-        int iDays = (int)Math.Truncate(nDays);
+        int iDays = (int)Truncate(nDays);
         result[ETimeUnit.Day] = iDays;
 
         // Get hours.
         ticks -= iDays * TimeConstants.TICKS_PER_DAY;
         double nHours = (double)ticks / TimeConstants.TICKS_PER_HOUR;
-        int iHours = (int)Math.Truncate(nHours);
+        int iHours = (int)Truncate(nHours);
         result[ETimeUnit.Hour] = iHours;
 
         // Get minutes.
         ticks -= iHours * TimeConstants.TICKS_PER_HOUR;
         double nMinutes = (double)ticks / TimeConstants.TICKS_PER_MINUTE;
-        int iMinutes = (int)Math.Truncate(nMinutes);
+        int iMinutes = (int)Truncate(nMinutes);
         result[ETimeUnit.Minute] = iMinutes;
 
         // Get seconds.

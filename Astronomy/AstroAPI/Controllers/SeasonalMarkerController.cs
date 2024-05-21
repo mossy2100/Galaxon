@@ -2,7 +2,6 @@ using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -36,7 +35,7 @@ public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerServic
             }
 
             // Log it.
-            Log.Information("Seasonal markers found for year {Year}: {Results}", year, results);
+            Slog.Information("Seasonal markers found for year {Year}: {Results}", year, results);
 
             // Return the seasonal markers as HTTP response in JSON.
             return Ok(results);

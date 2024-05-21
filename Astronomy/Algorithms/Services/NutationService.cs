@@ -91,28 +91,28 @@ public class NutationService
         // Calculate mean elongation of the Moon from the Sun.
         double D = Polynomials.EvaluatePolynomial([297.850_36, 445_267.111_480, -0.001_9142,
             1.0 / 189_474], T);
-        D = Angles.WrapDegrees(D, false);
+        D = WrapDegrees(D, false);
 
         // Calculate mean anomaly of the Sun (Earth).
         double M = Polynomials.EvaluatePolynomial([357.527_72, 35_999.050_340, -0.000_1603,
             -1.0 / 300_000], T);
-        M = Angles.WrapDegrees(M, false);
+        M = WrapDegrees(M, false);
 
         // Calculate mean anomaly of the Moon.
         double N = Polynomials.EvaluatePolynomial([134.962_98, 477_198.867_398, 0.008_6972,
             1.0 / 56_250], T);
-        N = Angles.WrapDegrees(N, false);
+        N = WrapDegrees(N, false);
 
         // Calculate Moon's argument of latitude.
         double F = Polynomials.EvaluatePolynomial([93.271_91, 483_202.017_538, -0.003_6825,
             1.0 / 327_270], T);
-        F = Angles.WrapDegrees(F, false);
+        F = WrapDegrees(F, false);
 
         // Calculate longitude of the ascending node of the Moon's mean orbit on the ecliptic,
         // measured from the mean equinox of the date.
         double G = Polynomials.EvaluatePolynomial([125.044_52, -1934.136_261, 0.002_0708,
             1.0 / 450_000], T);
-        G = Angles.WrapDegrees(G, false);
+        G = WrapDegrees(G, false);
 
         double nutLong = 0;
         double nutOb = 0;
@@ -120,12 +120,12 @@ public class NutationService
                 double c1) in Table22A)
         {
             double arg = multD * D + multM * M + multN * N + multF * F + multG * G;
-            nutLong += (s0 + s1 * T) * Angles.SinDegrees(arg);
-            nutOb += (c0 + c1 * T) * Angles.CosDegrees(arg);
+            nutLong += (s0 + s1 * T) * SinDegrees(arg);
+            nutOb += (c0 + c1 * T) * CosDegrees(arg);
         }
 
         // Convert from units of 0.0001 arcseconds to radians.
-        double k = 10000 * Angles.ARCSECONDS_PER_RADIAN;
+        double k = 10000 * ARCSECONDS_PER_RADIAN;
         nutLong /= k;
         nutOb /= k;
 

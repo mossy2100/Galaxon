@@ -19,7 +19,7 @@ public static class DeltaT
         {
             double deltaTNasa = TimeScales.CalcDeltaT(y);
             double deltaTMeeus = TimeScales.CalcDeltaTMeeus(y);
-            double diff = Math.Abs(deltaTMeeus - deltaTNasa);
+            double diff = Abs(deltaTMeeus - deltaTNasa);
 
             string grade = diff switch
             {
@@ -46,7 +46,7 @@ public static class DeltaT
         {
             double deltaTNasa = TimeScales.CalcDeltaT(y);
             double deltaTMeeus = TimeScales.CalcDeltaTMeeus(y);
-            double diff = Math.Abs(deltaTMeeus - deltaTNasa);
+            double diff = Abs(deltaTMeeus - deltaTNasa);
             writer.WriteLine($"{y},{deltaTNasa},{deltaTMeeus},{diff}");
         }
     }

@@ -63,7 +63,7 @@ public class LeapWeekCalendar
         int numWeeks = numLeapYears * 53 + numCommonYears * 52;
         int numDays = numWeeks * 7;
         double numDays2 = numYears * TimeConstants.DAYS_PER_TROPICAL_YEAR;
-        double diffDays = Math.Abs(numDays2 - numDays);
+        double diffDays = Abs(numDays2 - numDays);
         double diffSeconds = diffDays * TimeConstants.SECONDS_PER_DAY;
         double diffSecondsPerYear = diffSeconds / numYears;
         Console.WriteLine($"{diffSecondsPerYear} seconds per year.");

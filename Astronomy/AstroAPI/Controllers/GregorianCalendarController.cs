@@ -2,14 +2,11 @@ using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
-using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Exceptions;
 using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -91,7 +88,7 @@ public class GregorianCalendarController(
             }
 
             // Log it.
-            Log.Information(
+            Slog.Information(
                 "Gregorian calendar year {Year} is a {YearType} year with {Days} days.",
                 year, yearType, nDays);
 

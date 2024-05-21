@@ -13,7 +13,6 @@ using Galaxon.Time;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Serilog;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
@@ -317,10 +316,10 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
 
         // Round off to nearest phase.
         int phaseCount =
-            (int)Math.Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
+            (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
 
         // Calculate the Lunation Number.
-        return (int)Math.Floor(phaseCount / 4.0);
+        return (int)Floor(phaseCount / 4.0);
     }
 
     /// <summary>
@@ -332,11 +331,11 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
         return astroDbContext.LunarPhases
             .FirstOrDefault(lp =>
                 (lp.DateTimeUtcAstroPixels != null
-                    && Math.Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!
+                    && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!
                         .Value)
                     <= TimeConstants.HOURS_PER_DAY)
                 || (lp.DateTimeUtcUsno != null
-                    && Math.Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
+                    && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
                     <= TimeConstants.HOURS_PER_DAY)
             );
     }
@@ -357,7 +356,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
                 if (phaseRecord == null)
                 {
                     // Insert new record.
-                    Log.Information(
+                    Slog.Information(
                         "Inserting new record: LN = {LN}, Phase = {Phase}, DateTime = {DateTime}.",
                         phaseEvent.LunationNumber, phaseEvent.PhaseType.ToString(),
                         phaseEvent.DateTimeUtc.ToIsoString());
@@ -371,7 +370,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
                 else
                 {
                     // Update existing record.
-                    Log.Information(
+                    Slog.Information(
                         "Updating existing record: LN = {LN}, Phase = {Phase}, DateTime = {DateTime}.",
                         phaseEvent.LunationNumber, phaseEvent.PhaseType.ToString(),
                         phaseEvent.DateTimeUtc.ToIsoString());

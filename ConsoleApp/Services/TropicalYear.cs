@@ -123,7 +123,7 @@ public static class TropicalYear
         RuleFinder.FindRuleWith2Mods(num, den);
         RuleFinder.FindRuleWith3Mods(num, den);
 
-        // int nLeapDays = (int)Math.Round(DoubleExtensions.Frac(avg) * 1000);
+        // int nLeapDays = (int)Round(DoubleExtensions.Frac(avg) * 1000);
         // Console.WriteLine($"Number of leap days needed = {nLeapDays}");
         Console.WriteLine();
     }

@@ -82,7 +82,7 @@ public class LunisolarCalendar(
         Console.WriteLine(
             $"This gives {longMonthCount} long months per {monthsPerCycle} months, which is an average of {calMonthLengthDays} days per month.");
         double driftDaysPerMonth =
-            Math.Abs(calMonthLengthDays - TimeConstants.DAYS_PER_LUNATION);
+            Abs(calMonthLengthDays - TimeConstants.DAYS_PER_LUNATION);
         double driftSecondsPerMonth = driftDaysPerMonth * TimeConstants.SECONDS_PER_DAY;
         Console.WriteLine(
             $"The drift is about {driftDaysPerMonth:N9} days or {driftSecondsPerMonth:N3} seconds per month.");
@@ -299,10 +299,10 @@ public class LunisolarCalendar(
         int den = 2;
         while (true)
         {
-            int num = (int)Math.Round(frac * den);
+            int num = (int)Round(frac * den);
             double frac2 = (double)num / den;
             double avgMonthLength = DAYS_IN_HOLLOW_MONTH + frac2;
-            double diff_d = Math.Abs(frac - frac2);
+            double diff_d = Abs(frac - frac2);
             double diff_s = diff_d * TimeConstants.SECONDS_PER_DAY;
 
             if (diff_s <= maxDiff_s && diff_s < smallestDiffSoFar_s)
@@ -343,10 +343,10 @@ public class LunisolarCalendar(
 
         while (true)
         {
-            num = (int)Math.Round(den * frac);
+            num = (int)Round(den * frac);
             double frac2 = (double)num / den;
             double avgYearLength_d = (12 + frac2) * TimeConstants.DAYS_PER_LUNATION;
-            double diff_d = Math.Abs(TimeConstants.DAYS_PER_TROPICAL_YEAR - avgYearLength_d);
+            double diff_d = Abs(TimeConstants.DAYS_PER_TROPICAL_YEAR - avgYearLength_d);
             double diff_s = diff_d * 86400;
 
             // Output any result that is the best so far, and not more than maxDiff.
@@ -397,7 +397,7 @@ public class LunisolarCalendar(
 
                         // How many lunations?
                         int numLunations =
-                            (int)Math.Round(numDays / TimeConstants.DAYS_PER_LUNATION);
+                            (int)Round(numDays / TimeConstants.DAYS_PER_LUNATION);
 
                         // Get the difference in seconds from the lunation.
                         double avgMonthLength = (double)numDays / numLunations;
@@ -408,13 +408,13 @@ public class LunisolarCalendar(
                             diffFromLunation_s * LUNATIONS_PER_TROPICAL_YEAR;
 
                         double avgAnnualDiffBetweenLunationsAndTropicalYears_s =
-                            Math.Abs(numYears * TimeConstants.DAYS_PER_TROPICAL_YEAR
+                            Abs(numYears * TimeConstants.DAYS_PER_TROPICAL_YEAR
                                 - numLunations * TimeConstants.DAYS_PER_LUNATION)
                             / numYears
                             * TimeConstants.SECONDS_PER_DAY;
 
-                        if (Math.Abs(diffFromTropicalYear_s) <= 10
-                            && Math.Abs(diffFromLunation_s) <= 1
+                        if (Abs(diffFromTropicalYear_s) <= 10
+                            && Abs(diffFromLunation_s) <= 1
                             && avgAnnualDiffBetweenLunationsAndTropicalYears_s < bestDiff_s)
                         {
                             Console.WriteLine(
@@ -480,7 +480,7 @@ public class LunisolarCalendar(
                 for (int r = 0; r < b; r++)
                 {
                     double avgMonthLength_d = calcAvgMonthLength(nYears, a, b, r);
-                    double diff_s = Math.Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
+                    double diff_s = Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
                         * TimeConstants.SECONDS_PER_DAY;
                     if (diff_s < bestDiff)
                     {
@@ -499,22 +499,22 @@ public class LunisolarCalendar(
         // {
         int wholeYears = 2729;
         double tropicalYears_d = wholeYears * TimeConstants.DAYS_PER_TROPICAL_YEAR;
-        int wholeDays = (int)Math.Round(tropicalYears_d);
+        int wholeDays = (int)Round(tropicalYears_d);
         double nLunations = tropicalYears_d / TimeConstants.DAYS_PER_LUNATION;
-        int wholeLunations = (int)Math.Round(nLunations);
+        int wholeLunations = (int)Round(nLunations);
         double lunations_d = wholeLunations * TimeConstants.DAYS_PER_LUNATION;
 
         double smallest = Min(wholeDays, lunations_d, tropicalYears_d);
         double largest = Max(wholeDays, lunations_d, tropicalYears_d);
-        double diff_d = Math.Abs(smallest - largest);
+        double diff_d = Abs(smallest - largest);
         double diff_s = diff_d * TimeConstants.SECONDS_PER_DAY;
 
         double avgYearLength_d = (double)wholeDays / wholeYears;
-        double yearError_s = Math.Abs(avgYearLength_d - TimeConstants.DAYS_PER_TROPICAL_YEAR)
+        double yearError_s = Abs(avgYearLength_d - TimeConstants.DAYS_PER_TROPICAL_YEAR)
             * TimeConstants.SECONDS_PER_DAY;
 
         double avgMonthLength_d = (double)wholeDays / wholeLunations;
-        double monthError_s = Math.Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
+        double monthError_s = Abs(avgMonthLength_d - TimeConstants.DAYS_PER_LUNATION)
             * TimeConstants.SECONDS_PER_DAY;
 
         // if (diffInSeconds <= 3600)
@@ -549,14 +549,14 @@ public class LunisolarCalendar(
             double LsDeg = Angles.RadiansToDegrees(Ls);
 
             // Check for New Moon within 1° of the northward equinox.
-            double diff = Math.Abs(LsDeg);
+            double diff = Abs(LsDeg);
             if (diff < 1)
             {
                 DateTime dtEquinox =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
                         ESeasonalMarkerType.NorthwardEquinox);
                 double diffDays =
-                    Math.Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
+                    Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
                 Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
                 Console.WriteLine($"The northward equinox occurred at {dtEquinox}");
@@ -565,14 +565,14 @@ public class LunisolarCalendar(
             }
 
             // Check for New Moon within 1° of the southern solstice.
-            diff = Math.Abs(LsDeg + 90);
+            diff = Abs(LsDeg + 90);
             if (diff < 1)
             {
                 DateTime dtSolstice =
                     seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
                         ESeasonalMarkerType.SouthernSolstice);
                 double diffDays =
-                    Math.Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
+                    Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
                 Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
                 Console.WriteLine($"The southern solstice occurred at {dtSolstice}");
@@ -581,7 +581,7 @@ public class LunisolarCalendar(
             }
 
             // Check for New Moon within 1° of the Besselian new year.
-            diff = Math.Abs(LsDeg + 80);
+            diff = Abs(LsDeg + 80);
             if (diff < 1)
             {
                 Console.WriteLine();
@@ -596,9 +596,9 @@ public class LunisolarCalendar(
             DateTime prevNewYear = new (newMoon.DateTimeUtc.Year - 1, 12, 31, 0, 0, 0,
                 DateTimeKind.Utc);
             double diff1 =
-                Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
+                Abs(newMoon.DateTimeUtc.GetTotalDays() - nextNewYear.GetTotalDays());
             double diff2 =
-                Math.Abs(newMoon.DateTimeUtc.GetTotalDays() - prevNewYear.GetTotalDays());
+                Abs(newMoon.DateTimeUtc.GetTotalDays() - prevNewYear.GetTotalDays());
             if (diff1 < 1)
             {
                 Console.WriteLine();

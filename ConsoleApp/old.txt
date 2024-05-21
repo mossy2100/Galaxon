@@ -174,7 +174,7 @@
 
             double percentFaster = (double) (tPow - tHorner) / tPow * 100;
 
-            double diff = Math.Abs(deltaT1 - deltaT2);
+            double diff = Abs(deltaT1 - deltaT2);
             if (diff > 1e-9)
             {
                 Console.WriteLine($"Error with calc for year {year}. deltaT-Pow={deltaT1}, deltaT-Horner={deltaT2}, diff={diff}");

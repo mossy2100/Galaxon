@@ -17,7 +17,6 @@
       <ProjectReference Include="..\..\Numerics\Algebra\Algebra.csproj" />
       <ProjectReference Include="..\..\Numerics\Extensions\Extensions.csproj" />
       <ProjectReference Include="..\..\Numerics\Geometry\Geometry.csproj" />
-      <ProjectReference Include="..\..\Quantities\Quantities.csproj" />
       <ProjectReference Include="..\..\Time\Time.csproj" />
       <ProjectReference Include="..\Data\Data.csproj" />
     </ItemGroup>

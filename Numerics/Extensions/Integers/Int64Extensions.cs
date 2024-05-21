@@ -11,7 +11,7 @@ public static class Int64Extensions
     /// <returns></returns>
     public static long Pow(long x, long y)
     {
-        return (long)Math.Round(Math.Pow(x, y));
+        return (long)Round(Math.Pow(x, y));
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ public static class Int64Extensions
     /// <returns></returns>
     public static long Sqrt(long x)
     {
-        return (long)Math.Round(Math.Sqrt(x));
+        return (long)Round(Math.Sqrt(x));
     }
 
     /// <summary>

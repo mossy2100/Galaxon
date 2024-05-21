@@ -1,6 +1,5 @@
 using Galaxon.Astronomy.Algorithms.Services;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
 
@@ -24,10 +23,10 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             // Get the approximate solar day length at specified time of the year.
-            double solarDay_s = Math.Round(EarthService.GetSolarDayInSeconds(year), 6);
+            double solarDay_s = Round(EarthService.GetSolarDayInSeconds(year), 6);
 
             // Log it.
-            Log.Information(
+            Slog.Information(
                 "Length of solar day at year {Year} computed to be {SolarDayLength} seconds.", year,
                 solarDay_s);
 
@@ -62,11 +61,11 @@ public class AstronomicalCycleController : ControllerBase
         {
             // Get the year length in ephemeris and solar days.
             double ephemerisDays =
-                Math.Round(EarthService.GetTropicalYearInEphemerisDaysForYear(year), 9);
-            double solarDays = Math.Round(EarthService.GetTropicalYearInSolarDaysForYear(year), 9);
+                Round(EarthService.GetTropicalYearInEphemerisDaysForYear(year), 9);
+            double solarDays = Round(EarthService.GetTropicalYearInSolarDaysForYear(year), 9);
 
             // Log it.
-            Log.Information(
+            Slog.Information(
                 "Length of tropical year {Year} computed to be approximately {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
 
@@ -99,11 +98,11 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             double ephemerisDays =
-                Math.Round(MoonService.GetLunationInEphemerisDaysForYear(year), 9);
-            double solarDays = Math.Round(MoonService.GetLunationInSolarDaysForYear(year), 9);
+                Round(MoonService.GetLunationInEphemerisDaysForYear(year), 9);
+            double solarDays = Round(MoonService.GetLunationInSolarDaysForYear(year), 9);
 
             // Log it.
-            Log.Information(
+            Slog.Information(
                 "Length of lunation in year {Year} computed to be approximately {EphemerisDays} ephemeris days or approximately {SolarDays} solar days.",
                 year, ephemerisDays, solarDays);
 

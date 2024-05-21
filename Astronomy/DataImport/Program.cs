@@ -42,7 +42,7 @@ public class Program
         catch (Exception ex)
         {
             // Log any unhandled exceptions
-            Log.Error("{Exception}", ex.Message);
+            Slog.Error("{Exception}", ex.Message);
         }
         finally
         {

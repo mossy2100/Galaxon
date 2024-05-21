@@ -110,7 +110,7 @@ public class Polynomials
         }
 
         // There are 2 solutions.
-        double sqrtD = Math.Sqrt(d);
+        double sqrtD = Sqrt(d);
         result.Add((-b + sqrtD) / twoA);
         result.Add((-b - sqrtD) / twoA);
         // Order the solutions so the results are predictable and testable.

@@ -22,7 +22,7 @@ public partial struct BigComplex
         if (z == 0)
         {
             // 0 raised to a negative real value is undefined (it is equivalent to division by 0).
-            // Math.Pow() returns double.Infinity in this case, but BigDecimal can't represent
+            // Pow() returns double.Infinity in this case, but BigDecimal can't represent
             // infinities.
             if (w.Imaginary == 0 && w.Real < 0)
             {
@@ -38,7 +38,7 @@ public partial struct BigComplex
 
         // Any value (real or complex) raised to the 0 power is 1.
         // 0^0 has no agreed-upon value, but some programming languages, including C#, return 1
-        // (i.e. Math.Pow(0, 0) == 1). We'll do that here, too, for consistency.
+        // (i.e. Pow(0, 0) == 1). We'll do that here, too, for consistency.
         if (w == 0)
         {
             return 1;
@@ -177,7 +177,7 @@ public partial struct BigComplex
     /// You can use this method to get the square root of a negative value (including a BigDecimal
     /// value).
     /// e.g. BigComplex z = BigComplex.Sqrt(-5);
-    /// <see cref="System.Math.Sqrt"/>
+    /// <see cref="System.Sqrt"/>
     /// <see cref="System.Numerics.Complex.Sqrt"/>
     /// <see cref="BigDecimal.Sqrt"/>
     /// </summary>
@@ -297,7 +297,7 @@ public partial struct BigComplex
                 "Logarithms are undefined for a base of 1.");
         }
 
-        // 0^0 == 1. Mimics Math.Log().
+        // 0^0 == 1. Mimics Log().
         if (x == 1 && b == 0)
         {
             return 0;

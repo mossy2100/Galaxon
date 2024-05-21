@@ -33,11 +33,11 @@ public static class Sexagesimal
         // Calculate the units part.
         // This will throw an exception if the truncated value of n is outside the valid range for
         // long. We could make units a BigInteger but that seems unnecessary at this stage.
-        var units = (int)Math.Truncate(n);
+        var units = (int)Truncate(n);
 
         // Calculate the minutes part.
         double decimalMinutes = (n - units) * BASE;
-        var minutes = (int)Math.Truncate(decimalMinutes);
+        var minutes = (int)Truncate(decimalMinutes);
 
         // Calculate the seconds part.
         double seconds = (decimalMinutes - minutes) * BASE;

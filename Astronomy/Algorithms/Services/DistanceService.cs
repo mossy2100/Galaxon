@@ -45,23 +45,23 @@ public static class DistanceService
         // Calculate the flattening.
         double f = (radiusEquat - radiusPolar) / radiusEquat;
 
-        double F = Angles.DegreesToRadians((location1.Latitude + location2.Latitude) / 2);
-        double sin2F = Angles.Sin2(F);
-        double cos2F = Angles.Cos2(F);
+        double F = DegreesToRadians((location1.Latitude + location2.Latitude) / 2);
+        double sin2F = Sin2(F);
+        double cos2F = Cos2(F);
 
-        double G = Angles.DegreesToRadians((location1.Latitude - location2.Latitude) / 2);
-        double sin2G = Angles.Sin2(G);
-        double cos2G = Angles.Cos2(G);
+        double G = DegreesToRadians((location1.Latitude - location2.Latitude) / 2);
+        double sin2G = Sin2(G);
+        double cos2G = Cos2(G);
 
-        double lambda = Angles.DegreesToRadians((location1.Longitude - location2.Longitude) / 2);
-        double sin2Lambda = Angles.Sin2(lambda);
-        double cos2Lambda = Angles.Cos2(lambda);
+        double lambda = DegreesToRadians((location1.Longitude - location2.Longitude) / 2);
+        double sin2Lambda = Sin2(lambda);
+        double cos2Lambda = Cos2(lambda);
 
         double S = sin2G * cos2Lambda + cos2F * sin2Lambda;
         double C = cos2G * cos2Lambda + sin2F * sin2Lambda;
 
-        double omega = Math.Atan(Math.Sqrt(S / C));
-        double R = Math.Sqrt(S * C) / omega;
+        double omega = Atan(Sqrt(S / C));
+        double R = Sqrt(S * C) / omega;
         double D = 2 * omega * radiusEquat;
         double H1 = (3 * R - 1) / 2 / C;
         double H2 = (3 * R + 1) / 2 / S;

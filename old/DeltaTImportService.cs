@@ -28,7 +28,7 @@ public class DeltaTImportService
                 continue;
             }
 
-            var nEntries = (int)Math.Ceiling(years.Length / 5.0);
+            var nEntries = (int)Ceiling(years.Length / 5.0);
             for (var entry = 0; entry < nEntries; entry++)
             {
                 // Get the year and ∆T value.
