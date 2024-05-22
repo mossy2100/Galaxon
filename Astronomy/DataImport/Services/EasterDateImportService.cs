@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 

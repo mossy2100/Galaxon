@@ -1,4 +1,4 @@
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;

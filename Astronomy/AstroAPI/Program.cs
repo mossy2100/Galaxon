@@ -3,7 +3,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Development.Application;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 

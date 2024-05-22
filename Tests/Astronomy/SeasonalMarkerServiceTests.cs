@@ -1,8 +1,8 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Time;
 using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Astronomy;
@@ -31,13 +31,13 @@ public class SeasonalMarkerServiceTests
         // Arrange
         SeasonalMarkerService seasonalMarkerService =
             ServiceManager.GetService<SeasonalMarkerService>();
-        var expected = new DateTime(1962, 6, 21, 21, 25, 8);
-        var delta = TimeSpan.FromMinutes(1);
+        DateTime expected = new (1962, 6, 21, 21, 25, 8);
+        TimeSpan delta = TimeSpan.FromMinutes(1);
 
         // Act
         double jdtt =
             seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarkerType.NorthernSolstice);
-        DateTime dt = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        DateTime dt = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Assert
         DateTimeAssert.AreEqual(dt, expected, delta);
@@ -66,8 +66,7 @@ public class SeasonalMarkerServiceTests
 
             // Act.
             DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
-                seasonalMarker.DateTimeUtcUsno.Value.Year,
-                (ESeasonalMarkerType)seasonalMarker.Type);
+                seasonalMarker.DateTimeUtcUsno.Value.Year, seasonalMarker.Type);
 
             // Assert.
             DateTimeAssert.AreEqual(expected, actual, maxDiff);

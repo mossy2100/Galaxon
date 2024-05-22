@@ -1,6 +1,8 @@
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -104,7 +106,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
         return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS
             / TimeConstants.MILLISECONDS_PER_SECOND
-            - TimeScales.CalcDeltaT(dt.Value)
+            - DeltaTUtility.CalcDeltaT(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
     }
 
@@ -114,7 +116,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
         {
             DateTime dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             int LSC = TotalLeapSeconds(dt);
-            double deltaT = TimeScales.CalcDeltaT(dt);
+            double deltaT = DeltaTUtility.CalcDeltaT(dt);
             double DUT1 = CalcDUT1(dt);
             Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
             if (Abs(DUT1) > 0.9)

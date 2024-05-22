@@ -1,4 +1,3 @@
-using Galaxon.Numerics.Geometry;
 using GeoCoordinatePortable;
 
 namespace Galaxon.Astronomy.Algorithms.Services;

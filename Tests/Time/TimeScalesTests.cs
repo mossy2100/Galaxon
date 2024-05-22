@@ -1,4 +1,7 @@
-﻿using Galaxon.Time;
+﻿using Galaxon.Astronomy.Algorithms.Utilities;
+using Galaxon.Time;
+using Galaxon.Time.Extensions;
+using Galaxon.Time.Utilities;
 using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Time;
@@ -20,19 +23,19 @@ public class TimeScalesTests
 
         // Test start of range.
         date = new DateOnly(1, 1, 1);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 1721426);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 1721426);
 
         // Test current date.
         date = new DateOnly(2022, 6, 8);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 2459739);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 2459739);
 
         // Test middle of range.
         date = new DateOnly(5000, 7, 2);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 3547455);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 3547455);
 
         // Test end of range.
         date = new DateOnly(9999, 12, 31);
-        Assert.AreEqual(TimeScales.DateOnlyToJulianDay(date), 5373484);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 5373484);
     }
 
     #endregion DateOnlyToJulianDate
@@ -46,22 +49,22 @@ public class TimeScalesTests
 
         // Test start of range.
         date1 = new DateOnly(1, 1, 1);
-        date2 = TimeScales.JulianDateToDateOnly(1721425.5);
+        date2 = JulianDateUtility.JulianDateToDateOnly(1721425.5);
         Assert.AreEqual(date1.GetTicks(), date2.GetTicks());
 
         // Test current date.
         date1 = new DateOnly(2022, 6, 8);
-        date2 = TimeScales.JulianDateToDateOnly(2459738.5);
+        date2 = JulianDateUtility.JulianDateToDateOnly(2459738.5);
         Assert.AreEqual(date1.GetTicks(), date2.GetTicks());
 
         // Test middle of range.
         date1 = new DateOnly(5000, 7, 2);
-        date2 = TimeScales.JulianDateToDateOnly(3547454.5);
+        date2 = JulianDateUtility.JulianDateToDateOnly(3547454.5);
         Assert.AreEqual(date1.GetTicks(), date2.GetTicks());
 
         // Test end of range.
         date1 = new DateOnly(9999, 12, 31);
-        date2 = TimeScales.JulianDateToDateOnly(5373483.5);
+        date2 = JulianDateUtility.JulianDateToDateOnly(5373483.5);
         Assert.AreEqual(date1.GetTicks(), date2.GetTicks());
     }
 
@@ -76,39 +79,39 @@ public class TimeScalesTests
 
         // Test start of range.
         dt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 1721425.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 1721425.5);
 
         // Test current date.
         dt = new DateTime(2022, 6, 7, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2459737.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2459737.5);
 
         // Test middle of range.
         dt = new DateTime(5000, 7, 2, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 3547454.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 3547454.5);
 
         // Test end of range.
         dt = new DateTime(9999, 12, 31, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 5373483.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 5373483.5);
 
         // Test values from Meeus p62.
         dt = new DateTime(2000, 1, 1, 12, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2451545.0);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2451545.0);
         dt = new DateTime(1999, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2451179.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2451179.5);
         dt = new DateTime(1987, 1, 27, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2446822.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2446822.5);
         dt = new DateTime(1987, 6, 19, 12, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2446966.0);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2446966.0);
         dt = new DateTime(1988, 1, 27, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2447187.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2447187.5);
         dt = new DateTime(1988, 6, 19, 12, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2447332.0);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2447332.0);
         dt = new DateTime(1900, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2415020.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2415020.5);
         dt = new DateTime(1600, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2305447.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2305447.5);
         dt = new DateTime(1600, 12, 31, 0, 0, 0, 0, DateTimeKind.Utc);
-        Assert.AreEqual(TimeScales.DateTimeToJulianDate(dt), 2305812.5);
+        Assert.AreEqual(JulianDateUtility.DateTimeToJulianDate(dt), 2305812.5);
     }
 
     #endregion DateTimeToJulianDate
@@ -121,19 +124,19 @@ public class TimeScalesTests
         DateTime dt1, dt2;
 
         dt1 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = TimeScales.JulianDateToDateTime(1721425.5);
+        dt2 = JulianDateUtility.JulianDateToDateTime(1721425.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(2022, 6, 7, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = TimeScales.JulianDateToDateTime(2459737.5);
+        dt2 = JulianDateUtility.JulianDateToDateTime(2459737.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(5000, 7, 2, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = TimeScales.JulianDateToDateTime(3547454.5);
+        dt2 = JulianDateUtility.JulianDateToDateTime(3547454.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
 
         dt1 = new DateTime(9999, 12, 31, 0, 0, 0, 0, DateTimeKind.Utc);
-        dt2 = TimeScales.JulianDateToDateTime(5373483.5);
+        dt2 = JulianDateUtility.JulianDateToDateTime(5373483.5);
         Assert.AreEqual(dt1.Ticks, dt2.Ticks);
     }
 
@@ -207,7 +210,7 @@ public class TimeScalesTests
         DateOnly expected = new (year, gMonth, gDay);
 
         // Act
-        DateOnly actual = TimeScales.JulianCalendarDateToGregorianDate(year, jMonth, jDay);
+        DateOnly actual = JulianCalendarUtility.JulianCalendarDateToGregorianDate(year, jMonth, jDay);
 
         // Assert
         Assert.AreEqual(expected, actual);

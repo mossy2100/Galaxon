@@ -1,4 +1,5 @@
-﻿using Galaxon.Time;
+﻿using Galaxon.Astronomy.Algorithms.Utilities;
+using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -15,7 +16,7 @@ public class MarsService()
     /// <returns>The Mars Sol Date.</returns>
     public static double CalcMarsSolDate(double jdtt)
     {
-        double JD_TAI = TimeScales.JulianDateTerrestrialToInternationalAtomic(jdtt);
+        double JD_TAI = JulianDateUtility.JulianDateTerrestrialToInternationalAtomic(jdtt);
         const double k = 1.0 / 4000;
         double MSD = (JD_TAI - 2451549.5 + k) / TimeConstants.DAYS_PER_SOL + 44796.0;
         return MSD;

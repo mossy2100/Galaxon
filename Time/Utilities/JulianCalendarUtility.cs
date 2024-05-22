@@ -67,4 +67,17 @@ public static class JulianCalendarUtility
         // Note, I think this could throw if the year is less than or equal to 0, need to test.
         return day >= 1 && day <= GetDaysInMonth(year, month);
     }
+
+    /// <summary>
+    /// Convert a Julian Calendar date to a Gregorian Calendar date.
+    /// </summary>
+    /// <param name="year">The year (-44+)</param>
+    /// <param name="month">The month (1-12)</param>
+    /// <param name="day">The day (1-31)</param>
+    /// <returns>The equivalent Gregorian date.</returns>
+    public static DateOnly JulianCalendarDateToGregorianDate(int year, int month, int day)
+    {
+        DateTime dt = JulianCalendarInstance.ToDateTime(year, month, day, 0, 0, 0, 0);
+        return DateOnly.FromDateTime(dt);
+    }
 }

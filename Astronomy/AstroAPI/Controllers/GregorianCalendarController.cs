@@ -1,10 +1,11 @@
 using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Galaxon.Time.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
@@ -39,7 +40,7 @@ public class GregorianCalendarController(
             DateOnly? leapSecondDate = leapSecondService.LeapSecondDateForYear(year);
             bool hasLeapSecond = leapSecondDate.HasValue;
             DateOnly firstDayOfYear = new (year, 1, 1);
-            double jdut = TimeScales.DateOnlyToJulianDate(firstDayOfYear);
+            double jdut = JulianDateUtility.DateOnlyToJulianDate(firstDayOfYear);
             GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
             DayOfWeek dayOfWeek = gcal.GetDayOfWeek(firstDayOfYear.ToDateTime());
             int century = (year - 1) / 100 + 1;
@@ -58,17 +59,18 @@ public class GregorianCalendarController(
             // Apsides.
             // Perihelion.
             ApsideEvent perihelion =
-                apsideService.GetClosestApside(earth, TimeScales.DecimalYearToJulianDate(year));
+                apsideService.GetClosestApside(earth,
+                    JulianDateUtility.DecimalYearToJulianDate(year));
             dto.Events.Add(
-                TimeScales
+                JulianDateUtility
                     .JulianDateTerrestrialToDateTimeUniversal(perihelion.JulianDateTerrestrial)
                     .ToIsoString(), "Perihelion");
 
             // Aphelion.
             ApsideEvent aphelion = apsideService.GetClosestApside(earth,
-                TimeScales.DecimalYearToJulianDate(year + 0.5));
+                JulianDateUtility.DecimalYearToJulianDate(year + 0.5));
             dto.Events.Add(
-                TimeScales
+                JulianDateUtility
                     .JulianDateTerrestrialToDateTimeUniversal(aphelion.JulianDateTerrestrial)
                     .ToIsoString(), "Aphelion");
 

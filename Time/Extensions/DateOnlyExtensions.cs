@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Galaxon.Time.Utilities;
 
-namespace Galaxon.Time;
+namespace Galaxon.Time.Extensions;
 
 /// <summary>
 /// Extension methods for the DateOnly class.

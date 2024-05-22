@@ -1,11 +1,13 @@
 using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Extensions;
-using Galaxon.Time.Utilities;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
+using Galaxon.Time.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -32,7 +34,7 @@ public class MoonService(AstroDbContext astroDbContext)
         {
             // We found a USNO calculation, so return that.
             DateTime dt1 = lunarPhase.DateTimeUtcUsno!.Value;
-            double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dt1);
+            double jdtt = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dt1);
             return new LunarPhaseEvent(lunarPhase.LunationNumber, lunarPhase.PhaseType, jdtt, dt1);
         }
 
@@ -45,7 +47,7 @@ public class MoonService(AstroDbContext astroDbContext)
         {
             // We found an AstroPixels calculation, so return that.
             DateTime dt1 = lunarPhase.DateTimeUtcAstroPixels!.Value;
-            double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dt1);
+            double jdtt = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dt1);
             return new LunarPhaseEvent(lunarPhase.LunationNumber, lunarPhase.PhaseType, jdtt, dt1);
         }
 
@@ -81,8 +83,8 @@ public class MoonService(AstroDbContext astroDbContext)
         // Calculate T and powers of T.
         DateTime dtPhaseApprox =
             TimeConstants.LUNATION_0_START.AddDays(k * TimeConstants.DAYS_PER_LUNATION);
-        double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double jdtt = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dtPhaseApprox);
+        double T = JulianDateUtility.JulianCenturiesSinceJ2000(jdtt);
         double T2 = T * T;
         double T3 = T * T2;
         double T4 = T * T3;
@@ -245,7 +247,7 @@ public class MoonService(AstroDbContext astroDbContext)
         jdtt += C1 + C2;
 
         // Convert the Julian Date (TT) to a DateTime (UT), and round off to nearest minute.
-        DateTime dtPhase = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt)
+        DateTime dtPhase = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt)
             .RoundToNearestMinute();
 
         // Construct and return the LunarPhaseEvent object.
@@ -372,8 +374,8 @@ public class MoonService(AstroDbContext astroDbContext)
     public static double GetLunationInEphemerisDaysForYear(double year)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jd = TimeScales.DecimalYearToJulianDate(year);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jd);
+        double jd = JulianDateUtility.DecimalYearToJulianDate(year);
+        double T = JulianDateUtility.JulianCenturiesSinceJ2000(jd);
         // Evaluate the polynomial.
         return GetLunationInEphemerisDays(T);
     }

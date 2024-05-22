@@ -1,4 +1,5 @@
 using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -178,7 +179,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     public double GetSeasonalMarkerApprox(int year, ESeasonalMarkerType markerType)
     {
         double jdtt = GetSeasonalMarkerMean(year, markerType);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double T = JulianDateUtility.JulianCenturiesSinceJ2000(jdtt);
         double W = DegreesToRadians(35999.373 * T - 2.47);
         double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
 
@@ -258,7 +259,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     public DateTime GetSeasonalMarkerAsDateTime(int year, ESeasonalMarkerType markerType)
     {
         double jdtt = GetSeasonalMarker(year, markerType);
-        return TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt);
+        return JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt);
     }
 
     /// <summary>

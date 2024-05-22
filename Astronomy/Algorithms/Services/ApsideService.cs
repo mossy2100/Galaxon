@@ -1,12 +1,13 @@
 using System.Data;
 using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -97,7 +98,7 @@ public class ApsideService(
 
         // Convert the DateTime to a decimal year without making any adjustment for delta-T, as the
         // input JD(TT) is only approximate.
-        double year = TimeScales.JulianDateToDecimalYear(jdtt);
+        double year = JulianDateUtility.JulianDateToDecimalYear(jdtt);
 
         // Get approximate value for k.
         double[] formulaInputs = _ApproximateKFormulaInputs[planet.Number.Value]!;
@@ -139,7 +140,7 @@ public class ApsideService(
         }
 
         // Get the datetime rounded off to the nearest minute.
-        DateTime dt2 = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
+        DateTime dt2 = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
             .RoundToNearestMinute();
 
         return new ApsideEvent(planet, k, jdtt2, dt2);
@@ -237,7 +238,7 @@ public class ApsideService(
         }
 
         // Get the datetime of the event rounded off to the nearest minute.
-        DateTime dtResult = TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
+        DateTime dtResult = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
             .RoundToNearestMinute();
 
         return new ApsideEvent(planet, approxApsideEvent.ApsideNumber, jdttResult, dtResult,

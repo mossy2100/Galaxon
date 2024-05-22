@@ -302,8 +302,8 @@ public static class DecimalExtensions
             return 0;
         }
 
-        decimal scale = Exp10(Math.Floor(Log10(Math.Abs(m))) + 1);
-        return scale * Math.Round(m / scale, n);
+        decimal scale = Exp10(Floor(Log10(Abs(m))) + 1);
+        return scale * Round(m / scale, n);
     }
 
     /// <summary>

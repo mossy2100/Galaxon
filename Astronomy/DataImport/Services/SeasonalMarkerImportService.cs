@@ -3,7 +3,7 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 

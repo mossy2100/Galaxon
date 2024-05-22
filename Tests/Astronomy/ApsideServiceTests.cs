@@ -1,10 +1,12 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Astronomy;
@@ -40,7 +42,7 @@ public class ApsideServiceTests
 
         // Get approximate datetime to input.
         DateTime dt0 = new (1978, 10, 15);
-        double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
 
         ///////////
         // Act.
@@ -81,7 +83,7 @@ public class ApsideServiceTests
 
         // Get approximate datetime to input.
         DateTime dt0 = new (2032, 1, 1);
-        double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
 
         ///////////
         // Act.
@@ -125,7 +127,7 @@ public class ApsideServiceTests
 
         // Get the approximate result as an input value.
         DateTime dt0 = new (1990, 1, 4);
-        double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
 
         ///////////
         // Act.
@@ -198,7 +200,7 @@ public class ApsideServiceTests
 
         // Get an approximate result datetime to input to the method.
         DateOnly dt0 = new (year, month, day);
-        double jdtt0 = TimeScales.DateOnlyToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.DateOnlyToJulianDate(dt0);
 
         ///////////
         // Act.
@@ -282,7 +284,7 @@ public class ApsideServiceTests
 
         // Get the initial estimate of event date.
         DateTime dt0 = new (year, month, day, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt0 = TimeScales.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
 
         // Get the expected result.
         DateTime dtttExpected = dt0 + TimeSpan.FromHours(hours);
@@ -293,7 +295,7 @@ public class ApsideServiceTests
 
         // Convert the computed event from JD(TT) to DateTime (TT) so we can compare it to the
         // values in the book. (The ApsideEvent class only provides the DateTime in UTC.)
-        DateTime dtttActual = TimeScales.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
+        DateTime dtttActual = JulianDateUtility.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
 
         // Get the radius in AU.
         double actualRadius_AU = apsideEvent.Radius_AU!.Value;
@@ -344,7 +346,7 @@ public class ApsideServiceTests
             ////////////////////
             // Act.
             ApsideEvent apsideEvent = apsideService.GetClosestApside("Earth",
-                TimeScales.DateTimeToJulianDate(dtExpected), apside.ApsideType);
+                JulianDateUtility.DateTimeToJulianDate(dtExpected), apside.ApsideType);
 
             ////////////////////
             // Assert.
@@ -385,7 +387,7 @@ public class ApsideServiceTests
             ////////////////////
             // Act.
             ApsideEvent apsideEvent = apsideService.GetClosestApside("Earth",
-                TimeScales.DateTimeToJulianDate(dtExpected), apside.ApsideType);
+                JulianDateUtility.DateTimeToJulianDate(dtExpected), apside.ApsideType);
 
             ////////////////////
             // Assert.

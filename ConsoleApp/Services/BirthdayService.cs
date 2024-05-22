@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Time;
 
@@ -9,7 +10,7 @@ public class BirthdayService(SunService sunService)
 {
     public double CalcLongitudeOfSunAtBirth(DateTime dtBirth)
     {
-        double jdtt = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtBirth);
+        double jdtt = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dtBirth);
         Coordinates coords = sunService.CalcPosition(jdtt);
         return coords.Longitude_rad;
     }
@@ -33,7 +34,7 @@ public class BirthdayService(SunService sunService)
         DateTime dtBirthday = new (year, dtBirth.Month, dtBirth.Day, 12, 0, 0);
 
         // Convert to a Julian Date. Don't worry about delta-T; again, this is just an estimate.
-        double jdBirthday = TimeScales.DateTimeToJulianDate(dtBirthday);
+        double jdBirthday = JulianDateUtility.DateTimeToJulianDate(dtBirthday);
 
         // Construct a function to find the difference between the Ls at a certain datetime and the
         // difference from the Ls at birth.
@@ -69,6 +70,6 @@ public class BirthdayService(SunService sunService)
         // }
 
         // Convert back to a DateTime.
-        return TimeScales.JulianDateTerrestrialToDateTimeUniversal(jdttBirthMinute);
+        return JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdttBirthMinute);
     }
 }

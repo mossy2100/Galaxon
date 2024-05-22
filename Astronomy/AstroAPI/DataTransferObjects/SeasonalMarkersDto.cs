@@ -1,6 +1,6 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Core.Types;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 

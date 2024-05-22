@@ -1,3 +1,4 @@
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Time;
 using Galaxon.UnitTesting;
 
@@ -13,7 +14,9 @@ public class TimeConstantsTests
     public void J2000EpochDeltaTTest()
     {
         DateTime expected = TimeConstants.START_J2000_EPOCH_UTC;
-        DateTime actual = TimeScales.JulianDateTerrestrialToDateTimeUniversal(TimeConstants.START_J2000_EPOCH_JDTT);
+        DateTime actual =
+            JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(TimeConstants
+                .START_J2000_EPOCH_JDTT);
         DateTimeAssert.AreEqual(expected, actual, TimeSpan.FromSeconds(0.5));
     }
 }

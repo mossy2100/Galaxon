@@ -1,4 +1,4 @@
-using Galaxon.Time;
+using Galaxon.Astronomy.Algorithms.Utilities;
 
 namespace Galaxon.ConsoleApp.Services;
 
@@ -10,15 +10,15 @@ public static class DeltaT
     public static void CompareDeltaTCalcs()
     {
         // Open a file.
-        using var writer = new StreamWriter("CalcDeltaTComparison.txt");
+        using StreamWriter writer = new ("CalcDeltaTComparison.txt");
         writer.WriteLine(
             $"{"Year",-10}{"Delta-T NASA",-25}{"Delta-T Meeus",-25}{"Difference",-25}");
 
         // Range of years is from https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
         for (int y = -1999; y <= 3000; y++)
         {
-            double deltaTNasa = TimeScales.CalcDeltaT(y);
-            double deltaTMeeus = TimeScales.CalcDeltaTMeeus(y);
+            double deltaTNasa = DeltaTUtility.CalcDeltaT(y);
+            double deltaTMeeus = DeltaTUtility.CalcDeltaTMeeus(y);
             double diff = Abs(deltaTMeeus - deltaTNasa);
 
             string grade = diff switch
@@ -39,13 +39,13 @@ public static class DeltaT
     public static void GenerateDeltaTCsvFile()
     {
         // Open a file.
-        using var writer = new StreamWriter("DeltaT.csv");
+        using StreamWriter writer = new ("DeltaT.csv");
 
         // Range of years is from https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html
         for (int y = -1999; y <= 3000; y++)
         {
-            double deltaTNasa = TimeScales.CalcDeltaT(y);
-            double deltaTMeeus = TimeScales.CalcDeltaTMeeus(y);
+            double deltaTNasa = DeltaTUtility.CalcDeltaT(y);
+            double deltaTMeeus = DeltaTUtility.CalcDeltaTMeeus(y);
             double diff = Abs(deltaTMeeus - deltaTNasa);
             writer.WriteLine($"{y},{deltaTNasa},{deltaTMeeus},{diff}");
         }

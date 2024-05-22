@@ -1,6 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Numerics.Extensions.Integers;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.ConsoleApp.Services;
 

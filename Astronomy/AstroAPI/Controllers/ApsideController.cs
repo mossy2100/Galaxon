@@ -1,10 +1,11 @@
 using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -97,7 +98,7 @@ public class ApsideController(
         ApsideEvent apsideEvent;
         try
         {
-            double jdtt = TimeScales.DateOnlyToJulianDate(date);
+            double jdtt = JulianDateUtility.DateOnlyToJulianDate(date);
             apsideEvent = apsideService.GetClosestApside(planet, jdtt, apsideType);
         }
         catch (Exception ex)

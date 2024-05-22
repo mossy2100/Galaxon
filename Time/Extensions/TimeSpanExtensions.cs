@@ -1,4 +1,4 @@
-namespace Galaxon.Time;
+namespace Galaxon.Time.Extensions;
 
 public static class TimeSpanExtensions
 {

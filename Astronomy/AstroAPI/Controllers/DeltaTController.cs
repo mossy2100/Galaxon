@@ -1,4 +1,4 @@
-using Galaxon.Time;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -25,7 +25,7 @@ public class DeltaTController : ControllerBase
         try
         {
             // Computer the delta-T for the given time specified as a decimal year.
-            double deltaT = TimeScales.CalcDeltaT(year);
+            double deltaT = DeltaTUtility.CalcDeltaT(year);
 
             // Construct the result.
             Dictionary<string, double> result = new ()

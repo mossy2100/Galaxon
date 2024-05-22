@@ -1,9 +1,8 @@
 ﻿using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Numerics.Geometry;
-using Galaxon.Quantities.Kinds;
-using Galaxon.Time;
 
 namespace Galaxon.Tests.Astronomy;
 
@@ -76,8 +75,8 @@ public class PlanetServiceTests
             ServiceManager.GetService<AstroObjectRepository>();
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
         AstroObjectRecord saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
-        var dttt = new DateTime(1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt = TimeScales.DateTimeToJulianDate(dttt);
+        DateTime dttt = new (1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
+        double jdtt = JulianDateUtility.DateTimeToJulianDate(dttt);
 
         // Act.
         (double actualL, double _, double _) = planetService.CalcPlanetPosition(saturn, jdtt);

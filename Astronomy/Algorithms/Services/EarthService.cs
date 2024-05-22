@@ -1,6 +1,5 @@
-﻿using System.Globalization;
+﻿using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
@@ -18,7 +17,7 @@ public class EarthService
     /// <returns>The Earth Rotation </returns>
     public static double CalcEarthRotationAngle(double jdut)
     {
-        double t = TimeScales.JulianDaysSinceJ2000(jdut);
+        double t = JulianDateUtility.JulianDaysSinceJ2000(jdut);
         double radians = Tau * (0.779_057_273_264 + 1.002_737_811_911_354_48 * t);
         return WrapRadians(radians);
     }
@@ -30,7 +29,7 @@ public class EarthService
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double jdut = TimeScales.DateTimeToJulianDate(dt);
+        double jdut = JulianDateUtility.DateTimeToJulianDate(dt);
         return CalcEarthRotationAngle(jdut);
     }
 
@@ -75,8 +74,8 @@ public class EarthService
         }
 
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdtt = TimeScales.DecimalYearToJulianDate(year);
-        double T = TimeScales.JulianCenturiesSinceJ2000(jdtt);
+        double jdtt = JulianDateUtility.DecimalYearToJulianDate(year);
+        double T = JulianDateUtility.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
         return GetTropicalYearInEphemerisDays(T);
@@ -90,7 +89,7 @@ public class EarthService
     /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
     /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
     ///
-    /// <seealso cref="https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time"/>
     /// </summary>
     /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
     /// <param name="year">The year as a decimal.</param>

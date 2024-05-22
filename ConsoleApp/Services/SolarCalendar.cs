@@ -3,6 +3,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Galaxon.Time.Utilities;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 

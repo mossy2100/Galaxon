@@ -187,9 +187,9 @@ public class BaseUnit
             "m"));
 
         // Angles.
-        Add(new BaseUnit("°", "degree", null, Angles.RADIANS_PER_DEGREE, "rad"));
-        Add(new BaseUnit("′", "arcminute", null, Angles.RADIANS_PER_ARCMINUTE, "rad"));
-        Add(new BaseUnit("″", "arcsecond", null, Angles.RADIANS_PER_ARCSECOND, "rad"));
+        Add(new BaseUnit("°", "degree", null, RADIANS_PER_DEGREE, "rad"));
+        Add(new BaseUnit("′", "arcminute", null, RADIANS_PER_ARCMINUTE, "rad"));
+        Add(new BaseUnit("″", "arcsecond", null, RADIANS_PER_ARCSECOND, "rad"));
 
         // Area.
         Add(new BaseUnit("ha", "hectare", null, 10_000, "m2"));

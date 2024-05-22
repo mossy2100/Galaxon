@@ -1,4 +1,4 @@
-﻿using Galaxon.Time;
+﻿using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.Calendars;
 

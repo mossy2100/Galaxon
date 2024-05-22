@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
 using Galaxon.Numerics.Extensions.FloatingPoint;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
 using Galaxon.Time.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -207,7 +207,7 @@ class Program
             double y = rnd.Next(1, 9999) + rnd.NextDouble();
 
             // double jdut1 = TimeScales.DecimalYearToJulianDateLimitedRange(y);
-            double jdut2 = TimeScales.DecimalYearToJulianDate(y);
+            double jdut2 = JulianDateUtility.DecimalYearToJulianDate(y);
             // if (!jdut2.FuzzyEquals(jdut1))
             // {
             //     Console.WriteLine("Error in DecimalYearToJulianDate():");
@@ -230,7 +230,7 @@ class Program
             //     break;
             // }
 
-            double y2 = TimeScales.JulianDateToDecimalYear(jdut2);
+            double y2 = JulianDateUtility.JulianDateToDecimalYear(jdut2);
             if (!y2.FuzzyEquals(y))
             {
                 Console.WriteLine("Error in JulianDateUniversalToDecimalYear().");
@@ -284,7 +284,7 @@ class Program
 
         // Get the Ls at birth.
         double Ls_rad = birthdayService.CalcLongitudeOfSunAtBirth(dtBirthUtc);
-        double Ls_deg = Angles.RadiansToDegreesWithWrap(Ls_rad, false);
+        double Ls_deg = RadiansToDegreesWithWrap(Ls_rad, false);
         Console.WriteLine($"The longitude of the Sun at my birth was {Ls_deg:F3}°");
 
         for (int y = 2024; y <= 2030; y++)

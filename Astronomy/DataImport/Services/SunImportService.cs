@@ -59,8 +59,8 @@ public class SunImportService(
         // Absolute magnitude.
         sun.Observation.AbsMag = 4.83;
         // Angular diameter.
-        sun.Observation.MinAngularDiam = Angles.DegreesToRadians(0.527);
-        sun.Observation.MaxAngularDiam = Angles.DegreesToRadians(0.545);
+        sun.Observation.MinAngularDiam = DegreesToRadians(0.527);
+        sun.Observation.MaxAngularDiam = DegreesToRadians(0.545);
         astroDbContext.SaveChanges();
 
         // Physical parameters.
@@ -108,10 +108,10 @@ public class SunImportService(
         // Rotational parameters.
         sun.Rotation ??= new RotationalRecord();
         // Obliquity in radians.
-        sun.Rotation.Obliquity = Angles.DegreesToRadians(7.25);
+        sun.Rotation.Obliquity = DegreesToRadians(7.25);
         // North Pole location in radians.
-        sun.Rotation.NorthPoleRightAscension = Angles.DegreesToRadians(286.13);
-        sun.Rotation.NorthPoleDeclination = Angles.DegreesToRadians(63.87);
+        sun.Rotation.NorthPoleRightAscension = DegreesToRadians(286.13);
+        sun.Rotation.NorthPoleDeclination = DegreesToRadians(63.87);
         // Sidereal rotation period in seconds.
         sun.Rotation.SiderealRotationPeriod = 25.05 * TimeConstants.SECONDS_PER_DAY;
         // Equatorial rotation velocity in m/s.

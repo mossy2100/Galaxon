@@ -1,5 +1,5 @@
 using Galaxon.Astronomy.Algorithms.Services;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.ConsoleApp.Services;
 

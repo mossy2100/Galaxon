@@ -1,5 +1,5 @@
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 

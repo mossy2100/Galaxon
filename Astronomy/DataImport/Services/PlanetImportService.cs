@@ -113,16 +113,16 @@ public class PlanetImportService(
             planet.Orbit.AvgOrbitSpeed = GetDoubleValue(csv, 9, 1000);
 
             // Mean anomaly is provided in degrees, convert to radians.
-            planet.Orbit.MeanAnomaly = GetDoubleValue(csv, 10, Angles.RADIANS_PER_DEGREE);
+            planet.Orbit.MeanAnomaly = GetDoubleValue(csv, 10, RADIANS_PER_DEGREE);
 
             // Inclination is provided in degrees, convert to radians.
-            planet.Orbit.Inclination = GetDoubleValue(csv, 11, Angles.RADIANS_PER_DEGREE);
+            planet.Orbit.Inclination = GetDoubleValue(csv, 11, RADIANS_PER_DEGREE);
 
             // Long. of asc. node is provided in degrees, convert to radians.
-            planet.Orbit.LongAscNode = GetDoubleValue(csv, 12, Angles.RADIANS_PER_DEGREE);
+            planet.Orbit.LongAscNode = GetDoubleValue(csv, 12, RADIANS_PER_DEGREE);
 
             // Arg. of perihelion is provided in degrees, convert to radians.
-            planet.Orbit.ArgPeriapsis = GetDoubleValue(csv, 13, Angles.RADIANS_PER_DEGREE);
+            planet.Orbit.ArgPeriapsis = GetDoubleValue(csv, 13, RADIANS_PER_DEGREE);
 
             // Calculate the mean motion in rad/s.
             planet.Orbit.MeanMotion = Tau / planet.Orbit.SiderealOrbitPeriod;
@@ -165,11 +165,11 @@ public class PlanetImportService(
             planet.Rotation.SiderealRotationPeriod =
                 GetDoubleValue(csv, 31, TimeConstants.SECONDS_PER_DAY);
             planet.Rotation.EquatRotationVelocity = GetDoubleValue(csv, 32);
-            planet.Rotation.Obliquity = GetDoubleValue(csv, 33, Angles.RADIANS_PER_DEGREE);
+            planet.Rotation.Obliquity = GetDoubleValue(csv, 33, RADIANS_PER_DEGREE);
             planet.Rotation.NorthPoleRightAscension =
-                GetDoubleValue(csv, 34, Angles.RADIANS_PER_DEGREE);
+                GetDoubleValue(csv, 34, RADIANS_PER_DEGREE);
             planet.Rotation.NorthPoleDeclination =
-                GetDoubleValue(csv, 35, Angles.RADIANS_PER_DEGREE);
+                GetDoubleValue(csv, 35, RADIANS_PER_DEGREE);
             astroDbContext.SaveChanges();
 
             // Atmosphere.

@@ -1,12 +1,11 @@
 using Galaxon.Astronomy.Algorithms.Records;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Numerics.Geometry;
-using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -43,10 +42,10 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
         }
 
         // Get T in Julian millennia from the epoch J2000.0.
-        double T = TimeScales.JulianMillenniaSinceJ2000(jdtt);
+        double T = JulianDateUtility.JulianMillenniaSinceJ2000(jdtt);
 
         // Calculate the coefficients for each coordinate variable.
-        Dictionary<byte, double[]> coeffs = new();
+        Dictionary<byte, double[]> coeffs = new ();
         foreach (VSOP87DRecord record in records)
         {
             if (!coeffs.ContainsKey(record.IndexOfCoordinate))

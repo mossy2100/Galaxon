@@ -1,6 +1,8 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -9,6 +11,7 @@ using Galaxon.Astronomy.DataImport.DataTransferObjects;
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Galaxon.Time.Utilities;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
@@ -48,11 +51,11 @@ public class ApsideImportService(
 
         // Get the start point of the period.
         DateTime dtStart = GregorianCalendarUtility.GetYearStart(minYear);
-        double jdttStart = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtStart);
+        double jdttStart = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dtStart);
 
         // Get the end point of the period.
         DateTime dtEnd = GregorianCalendarUtility.GetYearEnd(maxYear);
-        double jdttEnd = TimeScales.DateTimeUniversalToJulianDateTerrestrial(dtEnd);
+        double jdttEnd = JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dtEnd);
 
         // Start at the start point.
         double jdttApprox = jdttStart;
@@ -233,7 +236,7 @@ public class ApsideImportService(
                     {
                         // Split the line by multiple spaces (assumes space is the delimiter).
                         string[] parts =
-                            System.Text.RegularExpressions.Regex.Split(line.Trim(), @"\s+");
+                            Regex.Split(line.Trim(), @"\s+");
 
                         // To see if this is a data record, check array has the right number of
                         // parts, and that the first part is an integer.

@@ -4,8 +4,8 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Core.Functional;
 using Galaxon.Core.Strings;
 using Galaxon.Numerics.Extensions.FloatingPoint;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.OpenApi.Extensions;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
@@ -546,7 +546,7 @@ public class LunisolarCalendar(
         {
             // Get Ls.
             (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.DateTimeUtc);
-            double LsDeg = Angles.RadiansToDegrees(Ls);
+            double LsDeg = RadiansToDegrees(Ls);
 
             // Check for New Moon within 1° of the northward equinox.
             double diff = Abs(LsDeg);

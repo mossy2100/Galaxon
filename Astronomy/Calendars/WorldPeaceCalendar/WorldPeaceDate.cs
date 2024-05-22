@@ -1,4 +1,4 @@
-﻿namespace Galaxon.Astronomy.Calendars;
+﻿namespace Galaxon.Astronomy.Calendars.WorldPeaceCalendar;
 
 public class EarthianDate : IEarthDate
 {

@@ -4,7 +4,7 @@ using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Time;
+using Galaxon.Time.Extensions;
 using Microsoft.OpenApi.Extensions;
 
 namespace Galaxon.Tests.Astronomy;
