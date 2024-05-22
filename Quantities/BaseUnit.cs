@@ -1,6 +1,5 @@
 using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
-using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 
