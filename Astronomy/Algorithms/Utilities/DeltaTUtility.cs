@@ -15,20 +15,21 @@ public static class DeltaTUtility
     /// as UT).
     /// Thus: ∆T = TT - UT1
     ///
-    /// Equations in this method were copied from:
+    /// Equations in this method were copied from
     /// <see href="https://eclipse.gsfc.nasa.gov/SEcat5/deltatpoly.html"/>
-    /// These appear to mostly agree with:
+    ///
+    /// These appear to mostly agree with
     /// <see href="https://eclipsewise.com/help/deltatpoly2014.html"/>
     ///
     /// These are intended to be a simpler method for calculating ∆T than using tables as in Meeus
     /// AA2 and other sources. Estimates of ∆T are assumed to be reasonably accurate in the range
     /// 1620..2100, but since ∆T varies unpredictably, uncertainty in ∆T increases outside of this
     /// range.
-    /// <see href="https://eclipse.gsfc.nasa.gov/SEcat5/uncertainty.html"/>
-    /// <see href="https://maia.usno.navy.mil/products/deltaT"/>
-    /// <see href="https://asa.hmnao.com/SecK/DeltaT.html"/>
-    /// <see href="https://www.hermetic.ch/cal_stud/meeus1.htm"/>
     /// </summary>
+    /// <seealso href="https://eclipse.gsfc.nasa.gov/SEcat5/uncertainty.html"/>
+    /// <seealso href="https://maia.usno.navy.mil/products/deltaT"/>
+    /// <seealso href="https://asa.hmnao.com/SecK/DeltaT.html"/>
+    /// <seealso href="https://www.hermetic.ch/cal_stud/meeus1.htm"/>
     /// <param name="y">The year as a decimal value.</param>
     /// <returns>The calculated value for ∆T.</returns>
     public static double CalcDeltaT(double y)

@@ -33,7 +33,7 @@ public partial struct BigDecimal
     /// Calculate the value of x^y where x is a BigDecimal and y is a BigInteger.
     /// Uses exponentiation by squaring for non-trivial parameters.
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Exponentiation_by_squaring"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Exponentiation_by_squaring"/>
     /// <param name="x">The BigDecimal base.</param>
     /// <param name="y">The BigInteger exponent.</param>
     /// <returns>
@@ -456,7 +456,7 @@ public partial struct BigDecimal
     #region Logarithm functions
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Mercator_series"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Mercator_series"/>
     /// <exception cref="ArgumentOutOfRangeException">If x is less than or equal to 0.</exception>
     public static BigDecimal Log(BigDecimal x)
     {

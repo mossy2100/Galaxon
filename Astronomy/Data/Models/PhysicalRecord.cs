@@ -169,11 +169,11 @@ public class PhysicalRecord : DatabaseRecord
     /// <summary>
     /// Specify the object's size and shape.
     /// This can be used for any object. The other methods are for convenience.
-    /// <see cref="SetSphericalShape"/>
-    /// <see cref="SetSpheroidalShape"/>
-    /// <see cref="SetEllipsoidalShape"/>
-    /// <see cref="SetNonEllipsoidShape"/>
     /// </summary>
+    /// <seealso cref="SetSphericalShape"/>
+    /// <seealso cref="SetSpheroidalShape"/>
+    /// <seealso cref="SetEllipsoidalShape"/>
+    /// <seealso cref="SetNonEllipsoidShape"/>
     /// <param name="radiusA">The first radius (or half length).</param>
     /// <param name="radiusB">The second radius (or half width).</param>
     /// <param name="radiusC">The third radius (or half height).</param>

@@ -22,7 +22,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
 {
     /// <summary>
     /// Get the links to the AstroPixels lunar phase data tables.
-    /// <see href="http://astropixels.com/ephemeris/phasescat/phasescat.html"/>
+    /// See: <see href="http://astropixels.com/ephemeris/phasescat/phasescat.html"/>
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>

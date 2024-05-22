@@ -214,7 +214,7 @@ public static class DateTimeExtensions
 
     #endregion Rounding off
 
-    #region Month names
+    #region Month name
 
     /// <summary>
     /// Get the month name of a datetime in the specified language.
@@ -227,5 +227,5 @@ public static class DateTimeExtensions
         return GregorianCalendarUtility.MonthNumberToName(dt.Month, languageCode);
     }
 
-    #endregion Month names
+    #endregion Month name
 }

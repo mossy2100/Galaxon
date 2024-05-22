@@ -52,9 +52,9 @@ public partial struct BigDecimal
 
     /// <summary>Compute π.</summary>
     /// <remarks>
-    /// The Chudnovsky algorithm used here was the one used to generate π to 6.2 trillion decimal
-    /// places, the current world record.
-    /// <see href="https://en.wikipedia.org/wiki/Chudnovsky_algorithm"/>
+    /// The Chudnovsky algorithm
+    /// (see <see href="https://en.wikipedia.org/wiki/Chudnovsky_algorithm"/>) used here was used to
+    /// generate π to 6.2 trillion decimal places, the current world record.
     /// </remarks>
     public static BigDecimal ComputePi()
     {

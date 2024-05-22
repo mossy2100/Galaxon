@@ -18,10 +18,10 @@
 /// should be done using nameof()), unless there are several, in which case the offending arguments
 /// can be identified in the message.
 /// </summary>
-/// <see cref="FormatException"/>
-/// <see cref="ArgumentException"/>
-/// <see cref="ArgumentNullException"/>
-/// <see cref="ArgumentOutOfRangeException"/>
+/// <seealso cref="FormatException"/>
+/// <seealso cref="ArgumentException"/>
+/// <seealso cref="ArgumentNullException"/>
+/// <seealso cref="ArgumentOutOfRangeException"/>
 public class ArgumentFormatException : ArgumentException
 {
     /// <summary>

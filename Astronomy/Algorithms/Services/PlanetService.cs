@@ -13,14 +13,17 @@ public class PlanetService(AstroDbContext astroDbContext, AstroObjectRepository 
 {
     /// <summary>
     /// Calculate the position of a planet in heliocentric ecliptic coordinates.
-    /// Algorithm is from AA2 p218.
+    ///
     /// The result is a Coordinates object tuple with the 3 coordinate values as radians.
     ///     Longitude = the heliocentric longitude in radians, in range -PI..PI
     ///     Latitude = the heliocentric latitude in radians, in range -PI/2..PI/2
     ///     Radius = the orbital radius (distance to Sun) in astronomical units (AU).
-    /// <see href="https://www.caglow.com/info/compute/vsop87"/>
-    /// Original data files are from:
-    /// <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
+    ///
+    /// Algorithm is from AA2 p218.
+    ///
+    /// See <see href="https://www.caglow.com/info/compute/vsop87"/>
+    ///
+    /// Original data files are from <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>.
     /// </summary>
     /// <param name="planet">The planet.</param>
     /// <param name="jdtt">The Julian Ephemeris Day.</param>

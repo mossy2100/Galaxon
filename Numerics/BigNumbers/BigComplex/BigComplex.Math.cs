@@ -11,7 +11,7 @@ public partial struct BigComplex
     /// </summary>
     /// <param name="z">A BigComplex number.</param>
     /// <returns>The magnitude of the argument.</returns>
-    /// <see cref="Complex.Abs"/>
+    /// <seealso cref="Complex.Abs"/>
     public static BigDecimal Abs(BigComplex z)
     {
         return BigDecimal.Hypot(z.Real, z.Imaginary);
@@ -30,7 +30,7 @@ public partial struct BigComplex
     /// <param name="magnitude">The magnitude of the complex number.</param>
     /// <param name="phase">The phase angle in radians.</param>
     /// <returns>The new BigComplex number.</returns>
-    /// <see cref="Complex.FromPolarCoordinates"/>
+    /// <seealso cref="Complex.FromPolarCoordinates"/>
     public static BigComplex FromPolarCoordinates(BigDecimal magnitude, BigDecimal phase)
     {
         return FromTuple(BigDecimal.PolarToCartesian(magnitude, phase));

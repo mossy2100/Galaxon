@@ -217,7 +217,7 @@ public static class DateOnlyExtensions
 
     #endregion Create new object
 
-    #region Month names
+    #region Month name
 
     /// <summary>
     /// Get the month name of a date in the specified language.
@@ -230,5 +230,5 @@ public static class DateOnlyExtensions
         return GregorianCalendarUtility.MonthNumberToName(d.Month, languageCode);
     }
 
-    #endregion Month names
+    #endregion Month name
 }

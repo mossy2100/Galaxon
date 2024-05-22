@@ -171,7 +171,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// The algorithm is from "Astronomical Algorithms, 2nd Ed." by Jean Meeus, Chapter 27
     /// "Equinoxes and Solstices" (pp177-180).
     /// This method is accurate to within 51 seconds for years 1951-2050 (see the book).
-    /// For improved accuracy <see cref="GetSeasonalMarker"/>
+    /// For improved accuracy use <see cref="GetSeasonalMarker"/>.
     /// </summary>
     /// <param name="year">The year (-1000..3000)</param>
     /// <param name="markerType">The seasonal marker (as enum)</param>

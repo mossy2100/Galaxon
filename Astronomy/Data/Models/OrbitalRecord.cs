@@ -82,18 +82,18 @@ public class OrbitalRecord : DatabaseRecord
 
     /// <summary>
     /// Gets the longitude of the periapsis in degrees.
+    ///
+    /// See: <see href="https://en.wikipedia.org/wiki/Longitude_of_the_periapsis"/>
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Longitude_of_the_periapsis"/>
     public double? LongPeriapsis => LongAscNode + ArgPeriapsis;
 
     /// <summary>
     /// Calculates the approximate true anomaly in degrees.
-    /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/True_anomaly#From_the_mean_anomaly"/>
-    /// <remarks>
+    /// See: <see href="https://en.wikipedia.org/wiki/True_anomaly#From_the_mean_anomaly"/>
+    ///
     /// Note that for reasons of accuracy, this approximation is usually limited to orbits
     /// where the eccentricity (e) is small.
-    /// </remarks>
+    /// </summary>
     public double? ApproxTrueAnomaly
     {
         get

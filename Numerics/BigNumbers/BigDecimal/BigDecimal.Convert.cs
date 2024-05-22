@@ -698,7 +698,7 @@ public partial struct BigDecimal
     }
 
     /// <inheritdoc/>
-    /// <see cref="BigDecimal.explicit operator BigInteger(BigDecimal)"/>
+    /// <seealso cref="BigDecimal.explicit operator BigInteger(BigDecimal)"/>
     public static bool TryConvertToTruncating<TOther>(BigDecimal value, out TOther result)
         where TOther : INumberBase<TOther>
     {

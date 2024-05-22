@@ -12,10 +12,9 @@ public static class DurationUtility
     /// The formula comes from
     /// McCarthy, Dennis D.; Seidelmann, P. Kenneth. "Time: From Earth Rotation to Atomic Physics",
     /// Section 4.5: "Current Understanding of the Earth’s Variable Rotation".
-    ///
-    /// <seealso href="https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time"/>
     /// </summary>
-    /// <see href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/%CE%94T_(timekeeping)#Universal_time"/>
+    /// <seealso href="https://www.cnmoc.usff.navy.mil/Our-Commands/United-States-Naval-Observatory/Precise-Time-Department/Global-Positioning-System/USNO-GPS-Time-Transfer/Leap-Seconds"/>
     /// <param name="year">The year as a decimal.</param>
     /// <returns>The approximate length of the solar day in SI seconds at that time.</returns>
     public static double GetSolarDayInSeconds(double year)
@@ -31,7 +30,7 @@ public static class DurationUtility
 
     /// <summary>
     /// Calculate the mean tropical year length in ephemeris days at a point in time.
-    /// The formula is valid for 8000 BCE to 12000 CE, and comes from:
+    /// The formula is valid for 8000 BCE to 12000 CE, and comes from
     /// <see href="https://en.wikipedia.org/wiki/Tropical_year#Mean_tropical_year_current_value"/>
     /// </summary>
     /// <param name="T">The number of Julian centuries since noon, January 1, 2000 (TT).</param>

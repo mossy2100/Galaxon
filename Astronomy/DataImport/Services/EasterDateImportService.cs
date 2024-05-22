@@ -9,8 +9,8 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Parse the data file from the US Census Bureau.
+    /// See: <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
     /// </summary>
-    /// <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
     internal void ImportEasterDates1600_2099()
     {
         Slog.Information("Parsing easter dates 1600-2999 from {Url}.",
@@ -82,8 +82,8 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
 
     /// <summary>
     /// Parse the data file from the Astronomical Society of South Australia.
+    /// See: <see href="https://www.assa.org.au/edm"/>
     /// </summary>
-    /// <see href="https://www.assa.org.au/edm"/>
     internal void ImportEasterDates1700_2299()
     {
         Slog.Information("Parsing easter dates 1600-2999 from {Url}.",

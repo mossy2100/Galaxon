@@ -99,7 +99,7 @@ public partial struct BigComplex
     #region Inverse trigonometric methods
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
     public static BigComplex Asin(BigComplex z)
     {
         return I * Log(Sqrt(1 - z * z) - I * z);
@@ -112,7 +112,7 @@ public partial struct BigComplex
     }
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
     public static BigComplex Acos(BigComplex z)
     {
         return -I * Log(z + I * Sqrt(1 - z * z));
@@ -125,7 +125,7 @@ public partial struct BigComplex
     }
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
     public static BigComplex Atan(BigComplex z)
     {
         return -I / 2 * Log((I - z) / (I + z));
@@ -238,21 +238,21 @@ public partial struct BigComplex
     #region Inverse hyperbolic methods
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_sine"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_sine"/>
     public static BigComplex Asinh(BigComplex z)
     {
         return Log(z + Sqrt(Sqr(z) + 1));
     }
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_cosine"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_cosine"/>
     public static BigComplex Acosh(BigComplex z)
     {
         return Log(z + Sqrt(z + 1) * Sqrt(z - 1));
     }
 
     /// <inheritdoc/>
-    /// <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_values_of_the_inverse_hyperbolic_tangent_and_cotangent"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_values_of_the_inverse_hyperbolic_tangent_and_cotangent"/>
     public static BigComplex Atanh(BigComplex z)
     {
         return Log((1 + z) / (1 - z)) / 2;

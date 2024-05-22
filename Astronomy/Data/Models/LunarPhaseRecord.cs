@@ -28,13 +28,13 @@ public class LunarPhaseRecord : DatabaseRecord
 
     /// <summary>
     /// The UTC datetime of the lunar phase according to AstroPixels.
-    /// <see href="https://www.astropixels.com/ephemeris/phasescat/phasescat.html"/>
+    /// See: <see href="https://www.astropixels.com/ephemeris/phasescat/phasescat.html"/>
     /// </summary>
     public DateTime? DateTimeUtcAstroPixels { get; set; }
 
     /// <summary>
     /// The UTC datetime of the lunar phase according to USNO.
-    /// <see href="https://aa.usno.navy.mil/data/MoonPhases"/>
+    /// See: <see href="https://aa.usno.navy.mil/data/MoonPhases"/>
     /// </summary>
     public DateTime? DateTimeUtcUsno { get; set; }
 }

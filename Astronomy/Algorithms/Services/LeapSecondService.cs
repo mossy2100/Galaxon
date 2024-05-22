@@ -82,7 +82,9 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
     /// <summary>
     /// Calculate the difference between UT1 and UTC in seconds.
+    ///
     /// DUT1 = UT1 - UTC
+    ///
     /// In theory, this should always be between -0.9 and 0.9. However, because the CalcDeltaT()
     /// algorithm is only approximate, it isn't.
     ///
@@ -94,7 +96,8 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     /// seconds have been added to produce exactly this effect. The error must be in CalcDeltaT(),
     /// which leads me to believe the NASA formulae used in this library either aren't super
     /// accurate or (more likely) they were developed before 2010.
-    /// <see href="https://en.wikipedia.org/wiki/DUT1"/>
+    ///
+    /// See <see href="https://en.wikipedia.org/wiki/DUT1"/>.
     /// </summary>
     /// <param name="dt">A point in time. Defaults to current DateTime.</param>
     /// <returns>The difference between UT1 and UTC.</returns>

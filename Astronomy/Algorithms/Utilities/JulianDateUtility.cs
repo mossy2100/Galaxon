@@ -84,50 +84,6 @@ public static class JulianDateUtility
     }
 
     /// <summary>
-    /// Convert a DateOnly object to a Julian Date, equal to start point of that day.
-    /// </summary>
-    /// <param name="date">The DateOnly instance.</param>
-    /// <returns>The Julian Date.</returns>
-    public static double DateOnlyToJulianDate(DateOnly date)
-    {
-        return DateTimeToJulianDate(date.ToDateTime());
-    }
-
-    /// <summary>
-    /// Convert a Julian Date to a Gregorian Calendar date.
-    /// </summary>
-    /// <param name="jdut">
-    /// The Julian Date. If a fractional part indicating the time of day is included, this
-    /// information will be discarded.
-    /// </param>
-    /// <returns>A new DateOnly object.</returns>
-    public static DateOnly JulianDateToDateOnly(double jdut)
-    {
-        return DateOnly.FromDateTime(JulianDateToDateTime(jdut));
-    }
-
-    /// <summary>
-    /// Convert a DateOnly object to a Julian Day Number, equal to the Julian Date at noon on that
-    /// day.
-    /// </summary>
-    /// <param name="date">The DateOnly instance.</param>
-    /// <returns>The Julian Day Number.</returns>
-    public static int DateOnlyToJulianDay(DateOnly date)
-    {
-        return (int)DateTimeToJulianDate(date.ToDateTime(new TimeOnly(12, 0)));
-    }
-
-    /// <summary>
-    /// Convert a Julian Day Number to a Gregorian Calendar date.
-    /// </summary>
-    /// <param name="jdn">The Julian Day Number.</param>
-    /// <returns>A new DateOnly object.</returns>
-    public static DateOnly JulianDayToDateOnly(int jdn)
-    {
-        return JulianDateToDateOnly(jdn);
-    }
-
-    /// <summary>
     /// Given a Julian Date in Universal Time (UT), find the equivalent in TT (Terrestrial Time).
     /// This is also known as the Julian Ephemeris Day, or JDE.
     /// ∆T = TT - UT  =>  TT = UT + ∆T
@@ -161,9 +117,20 @@ public static class JulianDateUtility
     /// <summary>
     /// Convert a Julian Date in Terrestrial Time (TT) to a Julian Date in International Atomic Time
     /// (TAI).
+    ///
+    /// TT = TAI + 32.184 seconds
+    ///
+    /// Since the unit of TT used here (and throughout the library) is days, in the form of Julian
+    /// Date (TT), we must convert the 32.184 seconds to days to find Julian Date (TAI).
+    ///
+    /// From the Wikipedia article (see link below): "The offset 32.184 seconds was the 1976
+    /// estimate of the difference between Ephemeris Time (ET) and TAI, to provide continuity with
+    /// the current values and practice in the use of Ephemeris Time."
+    ///
+    /// See: <see href="https://en.wikipedia.org/wiki/Terrestrial_Time#TAI"/>
     /// </summary>
-    /// <param name="jdtt">Julian Date in Terrestrial Time.</param>
-    /// <returns>Julian Date in International Atomic Time.</returns>
+    /// <param name="jdtt">Julian Date in Terrestrial Time (TT).</param>
+    /// <returns>Julian Date in International Atomic Time (TAI).</returns>
     public static double JulianDateTerrestrialToInternationalAtomic(double jdtt)
     {
         return jdtt
@@ -171,6 +138,55 @@ public static class JulianDateUtility
     }
 
     #endregion Conversion between Julian dates and other time scales
+
+    #region Conversion between DateOnly and Julian Date or Day Number
+
+    /// <summary>
+    /// Convert a DateOnly object to a Julian Date equal to start point of that day.
+    /// If you want to convert a DateOnly to a Julian Date equal to noon on that day, use
+    /// <see cref="DateOnlyToJulianDayNumber"/>.
+    /// </summary>
+    /// <param name="date">The DateOnly instance.</param>
+    /// <returns>The Julian Date.</returns>
+    public static double DateOnlyToJulianDate(DateOnly date)
+    {
+        return DateTimeToJulianDate(date.ToDateTime());
+    }
+
+    /// <summary>
+    /// Convert a Julian Date to a Gregorian Calendar date.
+    /// </summary>
+    /// <param name="jd">
+    /// The Julian Date. If a fractional part indicating the time of day is included, this
+    /// information will be discarded.
+    /// </param>
+    /// <returns>A new DateOnly object.</returns>
+    public static DateOnly JulianDateToDateOnly(double jd)
+    {
+        return DateOnly.FromDateTime(JulianDateToDateTime(jd));
+    }
+
+    /// <summary>
+    /// Convert a DateOnly to a Julian Day Number.
+    /// </summary>
+    /// <param name="date">The DateOnly instance.</param>
+    /// <returns>The Julian Day Number.</returns>
+    public static int DateOnlyToJulianDayNumber(DateOnly date)
+    {
+        return (int)DateTimeToJulianDate(date.ToDateTime(new TimeOnly(12, 0)));
+    }
+
+    /// <summary>
+    /// Convert a Julian Day Number to a Gregorian date.
+    /// </summary>
+    /// <param name="jdn">The Julian Day Number.</param>
+    /// <returns>A new DateOnly object.</returns>
+    public static DateOnly JulianDayNumberToDateOnly(int jdn)
+    {
+        return JulianDateToDateOnly(jdn);
+    }
+
+    #endregion Conversion between DateOnly and Julian Day Number
 
     #region Julian periods since start J2000 epoch.
 

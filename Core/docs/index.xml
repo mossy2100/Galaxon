@@ -87,10 +87,10 @@
              should be done using nameof()), unless there are several, in which case the offending arguments
              can be identified in the message.
              </summary>
-             <see cref="T:System.FormatException"/>
-             <see cref="T:System.ArgumentException"/>
-             <see cref="T:System.ArgumentNullException"/>
-             <see cref="T:System.ArgumentOutOfRangeException"/>
+             <seealso cref="T:System.FormatException"/>
+             <seealso cref="T:System.ArgumentException"/>
+             <seealso cref="T:System.ArgumentNullException"/>
+             <seealso cref="T:System.ArgumentOutOfRangeException"/>
         </member>
         <member name="M:Galaxon.Core.Exceptions.ArgumentFormatException.#ctor">
             <summary>
@@ -129,9 +129,9 @@
             should be done using nameof()), unless there are several, in which case the offending arguments
             can be identified in the message.
             </summary>
-            <see cref="T:System.ArgumentException"/>
-            <see cref="T:System.ArgumentNullException"/>
-            <see cref="T:System.ArgumentOutOfRangeException"/>
+            <seealso cref="T:System.ArgumentException"/>
+            <seealso cref="T:System.ArgumentNullException"/>
+            <seealso cref="T:System.ArgumentOutOfRangeException"/>
         </member>
         <member name="M:Galaxon.Core.Exceptions.ArgumentInvalidException.#ctor">
             <summary>

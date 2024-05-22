@@ -148,7 +148,7 @@ public partial struct BigDecimal
     }
 
     /// <inheritdoc/>
-    /// <see href="https://developer.apple.com/documentation/swift/floatingpoint/maximummagnitude(_:_:)-820gl"/>
+    /// <seealso href="https://developer.apple.com/documentation/swift/floatingpoint/maximummagnitude(_:_:)-820gl"/>
     public static BigDecimal MaxMagnitude(BigDecimal x, BigDecimal y)
     {
         var absX = Abs(x);
@@ -163,7 +163,7 @@ public partial struct BigDecimal
     }
 
     /// <inheritdoc/>
-    /// <see href="https://developer.apple.com/documentation/swift/floatingpoint/minimummagnitude(_:_:)-2i4od"/>
+    /// <seealso href="https://developer.apple.com/documentation/swift/floatingpoint/minimummagnitude(_:_:)-2i4od"/>
     public static BigDecimal MinMagnitude(BigDecimal x, BigDecimal y)
     {
         var absX = Abs(x);
@@ -224,7 +224,7 @@ public partial struct BigDecimal
     /// <summary>
     /// Get the unit of least precision (ULP) in the provided floating point number.
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Unit_in_the_last_place"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Unit_in_the_last_place"/>
     /// <param name="f">A floating point number.</param>
     /// <typeparam name="T">A standard floating point type.</typeparam>
     /// <returns>The value of the unit of least precision.</returns>

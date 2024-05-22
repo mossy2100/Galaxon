@@ -36,13 +36,13 @@ public class ApsideRecord : DatabaseRecord
 
     /// <summary>
     /// The UTC datetime of the apside according to USNO.
-    /// <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
+    /// See: <see href="https://aa.usno.navy.mil/data/Earth_Seasons"/>
     /// </summary>
     public DateTime? DateTimeUtcUsno { get; set; }
 
     /// <summary>
     /// The UTC datetime of the apside according to AstroPixels.
-    /// <see href="https://www.astropixels.com/ephemeris/ephemeris.html"/>
+    /// See: <see href="https://www.astropixels.com/ephemeris/ephemeris.html"/>
     /// </summary>
     public DateTime? DateTimeUtcAstroPixels { get; set; }
 

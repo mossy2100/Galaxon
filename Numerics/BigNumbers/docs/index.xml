@@ -408,7 +408,7 @@
         </member>
         <member name="P:Galaxon.Numerics.BigNumbers.BigComplex.ImaginaryOne">
             <summary>Value of the imaginary unit, equal to Sqrt(-1).</summary>
-            <see cref="F:System.Numerics.Complex.ImaginaryOne"/>
+            <seealso cref="F:System.Numerics.Complex.ImaginaryOne"/>
         </member>
         <member name="P:Galaxon.Numerics.BigNumbers.BigComplex.I">
             <summary>Convenient shorthand for ImaginaryOne.</summary>
@@ -439,9 +439,10 @@
             <summary>Construct a zero BigComplex.</summary>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Pow(Galaxon.Numerics.BigNumbers.BigComplex,Galaxon.Numerics.BigNumbers.BigComplex)">
-            <summary>Complex exponentiation.</summary>
-            <remarks>Only the principal value is returned.</remarks>
-            <see href="https://en.wikipedia.org/wiki/Exponentiation#Complex_exponentiation"/>
+            <summary>
+            Complex exponentiation. Only the principal value is returned.
+            See: <see href="https://en.wikipedia.org/wiki/Exponentiation#Complex_exponentiation"/>
+            </summary>
             <param name="z">The base.</param>
             <param name="w">The exponent.</param>
             <returns>The result of the exponentiation.</returns>
@@ -478,10 +479,10 @@
             You can use this method to get the square root of a negative value (including a BigDecimal
             value).
             e.g. BigComplex z = BigComplex.Sqrt(-5);
-            <see cref="M:System.Math.Sqrt(System.Double)"/>
-            <see cref="M:System.Numerics.Complex.Sqrt(System.Numerics.Complex)"/>
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Sqrt(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             </summary>
+            <seealso cref="M:System.Math.Sqrt(System.Double)"/>
+            <seealso cref="M:System.Numerics.Complex.Sqrt(System.Numerics.Complex)"/>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Sqrt(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             <param name="z">A BigComplex number.</param>
             <returns>The positive square root as a BigComplex number.</returns>
         </member>
@@ -508,9 +509,9 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Log(Galaxon.Numerics.BigNumbers.BigComplex,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <summary>
             Logarithm of a complex number in a specified base.
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigComplex.Log(Galaxon.Numerics.BigNumbers.BigComplex)"/>
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             </summary>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigComplex.Log(Galaxon.Numerics.BigNumbers.BigComplex)"/>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             <param name="z">The complex arg.</param>
             <param name="b">The base.</param>
             <returns>The logarithm of z in base b.</returns>
@@ -522,18 +523,18 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Log2(Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>
             Logarithm of a complex number in base 2.
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log2(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             </summary>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log2(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             <param name="z">The complex arg.</param>
             <returns>The logarithm of z in base 2.</returns>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Log10(Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>
             Logarithm of a complex number in base 10.
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log10(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
-            <see href="https://en.wikipedia.org/wiki/Euler%27s_identity"/>
-            <see href="https://tauday.com/tau-manifesto#sec-euler_s_identity"/>
             </summary>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log10(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
+            <seealso href="https://en.wikipedia.org/wiki/Euler%27s_identity"/>
+            <seealso href="https://tauday.com/tau-manifesto#sec-euler_s_identity"/>
             <param name="z">The complex arg.</param>
             <returns>The logarithm of z in base 10.</returns>
         </member>
@@ -594,7 +595,7 @@
             </summary>
             <param name="z">A BigComplex number.</param>
             <returns>The magnitude of the argument.</returns>
-            <see cref="M:System.Numerics.Complex.Abs(System.Numerics.Complex)"/>
+            <seealso cref="M:System.Numerics.Complex.Abs(System.Numerics.Complex)"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.System#Numerics#INumberBase{Galaxon#Numerics#BigNumbers#BigComplex}#Abs(Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>This method isn't needed for practical purposes, just for the interface.</summary>
@@ -607,7 +608,7 @@
             <param name="magnitude">The magnitude of the complex number.</param>
             <param name="phase">The phase angle in radians.</param>
             <returns>The new BigComplex number.</returns>
-            <see cref="M:System.Numerics.Complex.FromPolarCoordinates(System.Double,System.Double)"/>
+            <seealso cref="M:System.Numerics.Complex.FromPolarCoordinates(System.Double,System.Double)"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Clone(Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>Clone method.</summary>
@@ -843,21 +844,21 @@
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Asin(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.AsinPi(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Acos(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.AcosPi(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Atan(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Logarithmic_forms"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.AtanPi(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
@@ -905,15 +906,15 @@
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Asinh(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_sine"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_sine"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Acosh(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_cosine"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_value_of_the_inverse_hyperbolic_cosine"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Atanh(Galaxon.Numerics.BigNumbers.BigComplex)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_values_of_the_inverse_hyperbolic_tangent_and_cotangent"/>
+            <seealso href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_values_of_the_inverse_hyperbolic_tangent_and_cotangent"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigComplex.Acoth(Galaxon.Numerics.BigNumbers.BigComplex)">
             <summary>Calculate the inverse hyperbolic cotangent of a BigComplex value.</summary>
@@ -958,8 +959,8 @@
             <summary>
             Trigonometric methods for BigDecimal.
             </summary>
-            <see href="https://en.wikipedia.org/wiki/Taylor_series#Trigonometric_functions"/>
-            <see href="https://en.wikipedia.org/wiki/Sine_and_cosine#Series_definitions"/>
+            <seealso href="https://en.wikipedia.org/wiki/Taylor_series#Trigonometric_functions"/>
+            <seealso href="https://en.wikipedia.org/wiki/Sine_and_cosine#Series_definitions"/>
         </member>
         <member name="F:Galaxon.Numerics.BigNumbers.BigDecimal._BITS_PER_BYTE">
             <summary>Number of bits per byte.</summary>
@@ -1040,14 +1041,14 @@
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.MaxMagnitude(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
-            <see href="https://developer.apple.com/documentation/swift/floatingpoint/maximummagnitude(_:_:)-820gl"/>
+            <seealso href="https://developer.apple.com/documentation/swift/floatingpoint/maximummagnitude(_:_:)-820gl"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.MaxMagnitudeNumber(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.MinMagnitude(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
-            <see href="https://developer.apple.com/documentation/swift/floatingpoint/minimummagnitude(_:_:)-2i4od"/>
+            <seealso href="https://developer.apple.com/documentation/swift/floatingpoint/minimummagnitude(_:_:)-2i4od"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.MinMagnitudeNumber(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
@@ -1074,7 +1075,7 @@
             <summary>
             Get the unit of least precision (ULP) in the provided floating point number.
             </summary>
-            <see href="https://en.wikipedia.org/wiki/Unit_in_the_last_place"/>
+            <seealso href="https://en.wikipedia.org/wiki/Unit_in_the_last_place"/>
             <param name="f">A floating point number.</param>
             <typeparam name="T">A standard floating point type.</typeparam>
             <returns>The value of the unit of least precision.</returns>
@@ -1108,9 +1109,9 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.ComputePi">
             <summary>Compute π.</summary>
             <remarks>
-            The Chudnovsky algorithm used here was the one used to generate π to 6.2 trillion decimal
-            places, the current world record.
-            <see href="https://en.wikipedia.org/wiki/Chudnovsky_algorithm"/>
+            The Chudnovsky algorithm
+            (see <see href="https://en.wikipedia.org/wiki/Chudnovsky_algorithm"/>) used here was used to
+            generate π to 6.2 trillion decimal places, the current world record.
             </remarks>
         </member>
         <member name="F:Galaxon.Numerics.BigNumbers.BigDecimal._tau">
@@ -1410,7 +1411,7 @@
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.TryConvertToTruncating``1(Galaxon.Numerics.BigNumbers.BigDecimal,``0@)">
             <inheritdoc/>
-            <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.op_Explicit(Galaxon.Numerics.BigNumbers.BigDecimal)~System.Numerics.BigInteger"/>
+            <seealso cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.op_Explicit(Galaxon.Numerics.BigNumbers.BigDecimal)~System.Numerics.BigInteger"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.ConvertFromFloatingPoint``1(``0)">
             <summary>
@@ -1534,7 +1535,7 @@
             Calculate the value of x^y where x is a BigDecimal and y is a BigInteger.
             Uses exponentiation by squaring for non-trivial parameters.
             </summary>
-            <see href="https://en.wikipedia.org/wiki/Exponentiation_by_squaring"/>
+            <seealso href="https://en.wikipedia.org/wiki/Exponentiation_by_squaring"/>
             <param name="x">The BigDecimal base.</param>
             <param name="y">The BigInteger exponent.</param>
             <returns>
@@ -1613,7 +1614,7 @@
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log(Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
-            <see href="https://en.wikipedia.org/wiki/Mercator_series"/>
+            <seealso href="https://en.wikipedia.org/wiki/Mercator_series"/>
             <exception cref="T:System.ArgumentOutOfRangeException">If x is less than or equal to 0.</exception>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.Log(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
@@ -1718,11 +1719,12 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.op_Modulus(Galaxon.Numerics.BigNumbers.BigDecimal,Galaxon.Numerics.BigNumbers.BigDecimal)">
             <inheritdoc/>
             <remarks>
-            There are various ways to implement the modulo operator:
-            <see href="https://en.wikipedia.org/wiki/Modulo"/>
+            There are various ways to implement the modulo operator
+            (see <see href="https://en.wikipedia.org/wiki/Modulo"/>).
             This method uses truncated division, to match the behaviour of the operator as used with the
             standard number types in .NET.
             It means the result (the remainder) will have the same sign as the dividend (x).
+            TODO Test the <see cref="M:Galaxon.Numerics.Extensions.NumberExtensions.Mod``1(``0,``0)"/> method with BigDecimal.
             </remarks>
             <exception cref="T:System.DivideByZeroException">if the divisor is 0.</exception>
         </member>
@@ -1754,7 +1756,7 @@
             <remarks>
             The default rounding mode of MidpointRounding.ToEven is the same as used by similar methods
             in .NET Core.
-            <see href="https://learn.microsoft.com/en-us/dotnet/api/system.math.round?view=net-7.0#system-math-round(system-double-system-int32)"/>
+            <seealso href="https://learn.microsoft.com/en-us/dotnet/api/system.math.round?view=net-7.0#system-math-round(system-double-system-int32)"/>
             </remarks>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.RoundSigFigs(Galaxon.Numerics.BigNumbers.BigDecimal,System.Nullable{System.Int32},System.MidpointRounding)">
@@ -1771,8 +1773,8 @@
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.Frac(Galaxon.Numerics.BigNumbers.BigDecimal)">
             <summary>Return the fractional part of the value.</summary>
             <remarks>
-            There are multiple ways to define the frac() function for negative numbers:
-            <see href="https://en.wikipedia.org/wiki/Fractional_part"/>
+            There are multiple ways to define the frac() function for negative numbers.
+            See: <see href="https://en.wikipedia.org/wiki/Fractional_part"/>
             The definition used in this implementation simply keeps the digits to the right of the
             decimal point, and keeps the sign.
             e.g.
@@ -1802,7 +1804,7 @@
             <summary>
             Compute the arithmetic-geometric mean of two values.
             </summary>
-            <see href="https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean"/>
+            <seealso href="https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean"/>
         </member>
         <member name="M:Galaxon.Numerics.BigNumbers.BigDecimal.AddGuardDigits(System.Int32)">
             <summary>
@@ -1894,7 +1896,7 @@
             <summary>
             Format the BigDecimal as a string.
             Supported formats are the usual: D, E, F, G, N, P, and R.
-            <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings"/>
+            See: <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings"/>
             Although "D" is normally only used by integral types, in this case both the significand and
             exponent will be formatted as integers.
             An secondary code "U" is provided, which follows the precision (if given).

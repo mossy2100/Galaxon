@@ -6,8 +6,8 @@ namespace Galaxon.Numerics.BigNumbers;
 /// <summary>
 /// Trigonometric methods for BigDecimal.
 /// </summary>
-/// <see href="https://en.wikipedia.org/wiki/Taylor_series#Trigonometric_functions"/>
-/// <see href="https://en.wikipedia.org/wiki/Sine_and_cosine#Series_definitions"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Taylor_series#Trigonometric_functions"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Sine_and_cosine#Series_definitions"/>
 public partial struct BigDecimal
 {
     #region Trigonometric methods

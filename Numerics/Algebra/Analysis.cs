@@ -11,8 +11,8 @@ public static class Analysis
     /// <summary>
     /// Calculate a Bernoulli number.
     /// NB: The Bernoulli number for n=1 can be ±1/2. This method returns 1/2.
+    /// See: <see href="https://en.wikipedia.org/wiki/Bernoulli_number"/>
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Bernoulli_number"/>
     /// <param name="n">The index of the Bernoulli number to calculate.</param>
     /// <returns>The Bernoulli number as a BigRational.</returns>
     private static BigRational _Bernoulli(int n)

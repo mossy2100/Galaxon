@@ -44,12 +44,12 @@ namespace Galaxon.Numerics.Bases;
 /// simple continuation of hexadecimal that uses the English letters from g-v (or G-V) to
 /// represent the values 16-31. It is the same method as used by JavaScript.
 /// </summary>
-/// <see href="https://en.wikipedia.org/wiki/List_of_numeral_systems"/>
-/// <see href="https://en.wikipedia.org/wiki/Binary_number"/>
-/// <see href="https://en.wikipedia.org/wiki/Quaternary_numeral_system"/>
-/// <see href="https://en.wikipedia.org/wiki/Octal"/>
-/// <see href="https://en.wikipedia.org/wiki/Hexadecimal"/>
-/// <see href="https://en.wikipedia.org/wiki/Base32"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Bernoulli_number"/> href="https://en.wikipedia.org/wiki/List_of_numeral_systems"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Binary_number"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Quaternary_numeral_system"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Octal"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Hexadecimal"/>
+/// <seealso href="https://en.wikipedia.org/wiki/Base32"/>
 public static class ConvertBase
 {
     #region Constants

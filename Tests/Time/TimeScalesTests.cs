@@ -22,19 +22,19 @@ public class TimeScalesTests
 
         // Test start of range.
         date = new DateOnly(1, 1, 1);
-        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 1721426);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDayNumber(date), 1721426);
 
         // Test current date.
         date = new DateOnly(2022, 6, 8);
-        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 2459739);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDayNumber(date), 2459739);
 
         // Test middle of range.
         date = new DateOnly(5000, 7, 2);
-        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 3547455);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDayNumber(date), 3547455);
 
         // Test end of range.
         date = new DateOnly(9999, 12, 31);
-        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDay(date), 5373484);
+        Assert.AreEqual(JulianDateUtility.DateOnlyToJulianDayNumber(date), 5373484);
     }
 
     #endregion DateOnlyToJulianDate

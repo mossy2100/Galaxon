@@ -35,7 +35,7 @@ public partial struct BigComplex :
     public static BigComplex One { get; } = new (1, 0);
 
     /// <summary>Value of the imaginary unit, equal to Sqrt(-1).</summary>
-    /// <see cref="Complex.ImaginaryOne"/>
+    /// <seealso cref="Complex.ImaginaryOne"/>
     public static BigComplex ImaginaryOne { get; } = new (0, 1);
 
     /// <summary>Convenient shorthand for ImaginaryOne.</summary>

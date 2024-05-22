@@ -139,7 +139,7 @@ public partial struct BigDecimal
     /// <summary>
     /// Format the BigDecimal as a string.
     /// Supported formats are the usual: D, E, F, G, N, P, and R.
-    /// <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings"/>
+    /// See: <see href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings"/>
     /// Although "D" is normally only used by integral types, in this case both the significand and
     /// exponent will be formatted as integers.
     /// An secondary code "U" is provided, which follows the precision (if given).

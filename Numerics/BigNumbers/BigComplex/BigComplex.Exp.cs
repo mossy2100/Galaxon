@@ -7,9 +7,10 @@ public partial struct BigComplex
 {
     #region Power functions
 
-    /// <summary>Complex exponentiation.</summary>
-    /// <remarks>Only the principal value is returned.</remarks>
-    /// <see href="https://en.wikipedia.org/wiki/Exponentiation#Complex_exponentiation"/>
+    /// <summary>
+    /// Complex exponentiation. Only the principal value is returned.
+    /// See: <see href="https://en.wikipedia.org/wiki/Exponentiation#Complex_exponentiation"/>
+    /// </summary>
     /// <param name="z">The base.</param>
     /// <param name="w">The exponent.</param>
     /// <returns>The result of the exponentiation.</returns>
@@ -177,10 +178,10 @@ public partial struct BigComplex
     /// You can use this method to get the square root of a negative value (including a BigDecimal
     /// value).
     /// e.g. BigComplex z = BigComplex.Sqrt(-5);
-    /// <see cref="System.Math.Sqrt"/>
-    /// <see cref="System.Numerics.Complex.Sqrt"/>
-    /// <see cref="BigDecimal.Sqrt"/>
     /// </summary>
+    /// <seealso cref="System.Math.Sqrt"/>
+    /// <seealso cref="System.Numerics.Complex.Sqrt"/>
+    /// <seealso cref="BigDecimal.Sqrt"/>
     /// <param name="z">A BigComplex number.</param>
     /// <returns>The positive square root as a BigComplex number.</returns>
     public static BigComplex Sqrt(BigComplex z)
@@ -308,9 +309,9 @@ public partial struct BigComplex
 
     /// <summary>
     /// Logarithm of a complex number in a specified base.
-    /// <see cref="Log(BigComplex)"/>
-    /// <see cref="BigDecimal.Log(BigDecimal, BigDecimal)"/>
     /// </summary>
+    /// <seealso cref="Log(BigComplex)"/>
+    /// <seealso cref="BigDecimal.Log(BigDecimal, BigDecimal)"/>
     /// <param name="z">The complex arg.</param>
     /// <param name="b">The base.</param>
     /// <returns>The logarithm of z in base b.</returns>
@@ -331,8 +332,8 @@ public partial struct BigComplex
 
     /// <summary>
     /// Logarithm of a complex number in base 2.
-    /// <see cref="BigDecimal.Log2"/>
     /// </summary>
+    /// <seealso cref="BigDecimal.Log2"/>
     /// <param name="z">The complex arg.</param>
     /// <returns>The logarithm of z in base 2.</returns>
     public static BigComplex Log2(BigComplex z)
@@ -342,10 +343,10 @@ public partial struct BigComplex
 
     /// <summary>
     /// Logarithm of a complex number in base 10.
-    /// <see cref="BigDecimal.Log10"/>
-    /// <see href="https://en.wikipedia.org/wiki/Euler%27s_identity"/>
-    /// <see href="https://tauday.com/tau-manifesto#sec-euler_s_identity"/>
     /// </summary>
+    /// <seealso cref="BigDecimal.Log10"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Euler%27s_identity"/>
+    /// <seealso href="https://tauday.com/tau-manifesto#sec-euler_s_identity"/>
     /// <param name="z">The complex arg.</param>
     /// <returns>The logarithm of z in base 10.</returns>
     public static BigComplex Log10(BigComplex z)

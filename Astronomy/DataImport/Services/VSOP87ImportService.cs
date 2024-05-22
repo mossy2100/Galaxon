@@ -8,10 +8,10 @@ public class Vsop87ImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Parse a VSOP87 data file downloaded from the VSOP87 ftp site.
-    /// <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
+    /// See: <see href="ftp://ftp.imcce.fr/pub/ephem/planets/vsop87"/>
     /// As per AA2 we're using VSOP87D data files, which contain values for
     /// heliocentric dynamical ecliptic and equinox of the date.
-    /// <see href="https://www.caglow.com/info/compute/vsop87"/>
+    /// See: <see href="https://www.caglow.com/info/compute/vsop87"/>
     /// </summary>
     public void ImportVsop87DataFile(int planetNumber)
     {

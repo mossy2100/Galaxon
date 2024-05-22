@@ -1,3 +1,5 @@
+using Galaxon.Numerics.Extensions;
+
 namespace Galaxon.Numerics.BigNumbers;
 
 public partial struct BigDecimal
@@ -130,16 +132,17 @@ public partial struct BigDecimal
 
     /// <inheritdoc/>
     /// <remarks>
-    /// There are various ways to implement the modulo operator:
-    /// <see href="https://en.wikipedia.org/wiki/Modulo"/>
+    /// There are various ways to implement the modulo operator
+    /// (see <see href="https://en.wikipedia.org/wiki/Modulo"/>).
     /// This method uses truncated division, to match the behaviour of the operator as used with the
     /// standard number types in .NET.
     /// It means the result (the remainder) will have the same sign as the dividend (x).
+    /// TODO Test the <see cref="NumberExtensions.Mod"/> method with BigDecimal.
     /// </remarks>
     /// <exception cref="DivideByZeroException">if the divisor is 0.</exception>
     public static BigDecimal operator %(BigDecimal x, BigDecimal y)
     {
-        var mod = x - Truncate(x / y) * y;
+        BigDecimal mod = x - Truncate(x / y) * y;
         return RoundSigFigs(mod);
     }
 

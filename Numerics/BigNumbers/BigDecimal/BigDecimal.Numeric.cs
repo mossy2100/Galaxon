@@ -17,7 +17,7 @@ public partial struct BigDecimal
     /// <remarks>
     /// The default rounding mode of MidpointRounding.ToEven is the same as used by similar methods
     /// in .NET Core.
-    /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.math.round?view=net-7.0#system-math-round(system-double-system-int32)"/>
+    /// <seealso href="https://learn.microsoft.com/en-us/dotnet/api/system.math.round?view=net-7.0#system-math-round(system-double-system-int32)"/>
     /// </remarks>
     public static BigDecimal Round(BigDecimal x, int nDecimals = 0,
         MidpointRounding mode = MidpointRounding.ToEven)
@@ -63,8 +63,8 @@ public partial struct BigDecimal
 
     /// <summary>Return the fractional part of the value.</summary>
     /// <remarks>
-    /// There are multiple ways to define the frac() function for negative numbers:
-    /// <see href="https://en.wikipedia.org/wiki/Fractional_part"/>
+    /// There are multiple ways to define the frac() function for negative numbers.
+    /// See: <see href="https://en.wikipedia.org/wiki/Fractional_part"/>
     /// The definition used in this implementation simply keeps the digits to the right of the
     /// decimal point, and keeps the sign.
     /// e.g.
@@ -103,7 +103,7 @@ public partial struct BigDecimal
     /// <summary>
     /// Compute the arithmetic-geometric mean of two values.
     /// </summary>
-    /// <see href="https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean"/>
+    /// <seealso href="https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean"/>
     public static BigDecimal ArithmeticGeometricMean(BigDecimal x, BigDecimal y)
     {
         // Guards.

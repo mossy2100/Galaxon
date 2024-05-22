@@ -7,7 +7,7 @@ public static class EarthUtility
 {
     /// <summary>
     /// Calculate the Earth Rotation Angle from the Julian Date in UT1.
-    /// <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
+    /// See: <see href="https://en.wikipedia.org/wiki/Sidereal_time#ERA"/>
     /// </summary>
     /// <param name="jdut">The Julian Date in UT1.</param>
     /// <returns>The Earth Rotation </returns>
