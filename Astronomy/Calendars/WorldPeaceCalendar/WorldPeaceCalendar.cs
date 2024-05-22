@@ -1,6 +1,6 @@
 ﻿namespace Galaxon.Astronomy.Calendars;
 
-public class EarthianCalendar : Calendar
+public class WorldPeaceCalendar : Calendar
 {
     public override int[] Eras => throw new NotImplementedException();
 
