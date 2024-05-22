@@ -1,5 +1,5 @@
+using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 
 namespace Galaxon.Tests.Time;
 

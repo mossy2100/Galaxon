@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Numerics.Extensions.Integers;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
@@ -20,10 +20,10 @@ public static class TropicalYear
         for (int y = minYear; y <= maxYear; y++)
         {
             double tropicalYearLength_ephemerisDays =
-                EarthService.GetTropicalYearInEphemerisDaysForYear(y);
-            double solarDayLength_s = EarthService.GetSolarDayInSeconds(y);
+                DurationUtility.GetTropicalYearInEphemerisDaysForYear(y);
+            double solarDayLength_s = DurationUtility.GetSolarDayInSeconds(y);
             double tropicalYearLength_solarDays =
-                EarthService.GetTropicalYearInSolarDaysForYear(y);
+                DurationUtility.GetTropicalYearInSolarDaysForYear(y);
 
             if (y < maxYear)
             {
@@ -90,7 +90,7 @@ public static class TropicalYear
         double totalSolarDays = 0;
         for (int y = minYear; y < maxYear; y++)
         {
-            double yearLengthInSolarDays = EarthService.GetTropicalYearInSolarDaysForYear(y);
+            double yearLengthInSolarDays = DurationUtility.GetTropicalYearInSolarDaysForYear(y);
             totalSolarDays += yearLengthInSolarDays;
         }
         return totalSolarDays / (maxYear - minYear);
@@ -153,8 +153,8 @@ public static class TropicalYear
 
             // Calculate the approximate drift in seconds for this year.
             double avgCalendarYearLength_s =
-                avgCalendarYearLength_d * EarthService.GetSolarDayInSeconds(y);
-            double tropicalYearLength_s = EarthService.GetTropicalYearInEphemerisDaysForYear(y)
+                avgCalendarYearLength_d * DurationUtility.GetSolarDayInSeconds(y);
+            double tropicalYearLength_s = DurationUtility.GetTropicalYearInEphemerisDaysForYear(y)
                 * TimeConstants.SECONDS_PER_DAY;
             double drift_s = avgCalendarYearLength_s - tropicalYearLength_s;
             totalDrift_s += drift_s;

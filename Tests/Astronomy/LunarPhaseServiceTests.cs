@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Extensions;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class MoonServiceTests
+public class LunarPhaseServiceTests
 {
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
@@ -34,8 +34,8 @@ public class MoonServiceTests
         DateTime dtApprox = new (1977, 2, 15);
 
         // Act
-        MoonService moonService = ServiceManager.GetService<MoonService>();
-        LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
+        LunarPhaseService lunarPhaseService = ServiceManager.GetService<LunarPhaseService>();
+        LunarPhaseEvent phase = lunarPhaseService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.NewMoon, phase.PhaseType);
@@ -56,8 +56,8 @@ public class MoonServiceTests
         DateTime dtApprox = new (2044, 1, 20);
 
         // Act
-        MoonService moonService = ServiceManager.GetService<MoonService>();
-        LunarPhaseEvent phase = moonService.GetPhaseNearDateTime(dtApprox);
+        LunarPhaseService lunarPhaseService = ServiceManager.GetService<LunarPhaseService>();
+        LunarPhaseEvent phase = lunarPhaseService.GetPhaseNearDateTime(dtApprox);
 
         // Assert
         Assert.AreEqual(ELunarPhaseType.ThirdQuarter, phase.PhaseType);
@@ -88,9 +88,9 @@ public class MoonServiceTests
         foreach (LunarPhaseRecord phaseFromDb in phasesFromDb)
         {
             // Act.
-            MoonService moonService = ServiceManager.GetService<MoonService>();
+            LunarPhaseService lunarPhaseService = ServiceManager.GetService<LunarPhaseService>();
             LunarPhaseEvent phaseFromMethod =
-                moonService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcAstroPixels!.Value);
+                lunarPhaseService.GetPhaseNearDateTime(phaseFromDb.DateTimeUtcAstroPixels!.Value);
 
             // Report on different type.
             if (phaseFromDb.PhaseType != phaseFromMethod.PhaseType)
@@ -138,9 +138,9 @@ public class MoonServiceTests
         foreach (LunarPhaseRecord phaseEventRecord in phaseEventRecords)
         {
             // Act.
-            MoonService moonService = ServiceManager.GetService<MoonService>();
+            LunarPhaseService lunarPhaseService = ServiceManager.GetService<LunarPhaseService>();
             LunarPhaseEvent phaseEventCalculation =
-                moonService.GetPhaseNearDateTime(phaseEventRecord.DateTimeUtcUsno!.Value);
+                lunarPhaseService.GetPhaseNearDateTime(phaseEventRecord.DateTimeUtcUsno!.Value);
 
             // Report on different type.
             ELunarPhaseType phaseTypeEventRecordPhaseType = (ELunarPhaseType)phaseEventRecord.PhaseType;

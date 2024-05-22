@@ -88,15 +88,4 @@ public class SunService(PlanetService planetService)
 
         return new Coordinates(sunLong_rad, sunLat_rad, sunDist_AU);
     }
-
-    /// <summary>
-    /// Calculate apparent solar latitude and longitude for a given instant specified as a DateTime
-    /// (UT).
-    /// </summary>
-    /// <param name="dt">The instant specified as a DateTime (UT).</param>
-    /// <returns>The latitude and longitude of the Sun, in radians, at the given instant.</returns>
-    public Coordinates CalcPosition(DateTime dt)
-    {
-        return CalcPosition(JulianDateUtility.DateTimeUniversalToJulianDateTerrestrial(dt));
-    }
 }

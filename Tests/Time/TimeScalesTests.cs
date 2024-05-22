@@ -1,7 +1,6 @@
 ﻿using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Time;

@@ -147,7 +147,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     //         jdtt = GetSeasonalMarkerMean(-1000, marker);
     //         for (int i = -1000; i > year; i--)
     //         {
-    //             jdtt -= EarthService.GetTropicalYearInEphemerisDaysForYear(year);
+    //             jdtt -= DurationUtility.GetTropicalYearInEphemerisDaysForYear(year);
     //         }
     //     }
     //     else if (year > 3000)
@@ -155,7 +155,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     //         jdtt = GetSeasonalMarkerMean(3000, marker);
     //         for (int i = 3000; i < year; i++)
     //         {
-    //             jdtt += EarthService.GetTropicalYearInEphemerisDaysForYear(year);
+    //             jdtt += DurationUtility.GetTropicalYearInEphemerisDaysForYear(year);
     //         }
     //     }
     //     else

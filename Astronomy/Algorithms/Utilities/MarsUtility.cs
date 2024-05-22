@@ -1,12 +1,11 @@
-﻿using Galaxon.Astronomy.Algorithms.Utilities;
-using Galaxon.Time;
+﻿using Galaxon.Time;
 
-namespace Galaxon.Astronomy.Algorithms.Services;
+namespace Galaxon.Astronomy.Algorithms.Utilities;
 
 /// <summary>
 /// A container for constants and static methods related to Mars.
 /// </summary>
-public class MarsService()
+public static class MarsUtility
 {
     /// <summary>
     /// Calculate the Mars Sol Date for a given point in time, expressed as a Julian Date.

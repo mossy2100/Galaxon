@@ -13,7 +13,7 @@ namespace Galaxon.ConsoleApp.Services;
 
 public class LunisolarCalendar(
     SeasonalMarkerService seasonalMarkerService,
-    MoonService moonService,
+    LunarPhaseService lunarPhaseService,
     SunService sunService)
 {
     public static bool IsFullMonth(int m)
@@ -541,11 +541,11 @@ public class LunisolarCalendar(
         DateTime start = new (2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime end = new (2050, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         List<LunarPhaseEvent> newMoons =
-            moonService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
+            lunarPhaseService.GetPhasesInPeriod(start, end, ELunarPhaseType.NewMoon);
         foreach (LunarPhaseEvent newMoon in newMoons)
         {
             // Get Ls.
-            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.DateTimeUtc);
+            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.JulianDateTerrestrial);
             double LsDeg = RadiansToDegrees(Ls);
 
             // Check for New Moon within 1° of the northward equinox.
@@ -629,7 +629,7 @@ public class LunisolarCalendar(
                     ESeasonalMarkerType.SouthernSolstice);
 
             // Check if there's also a New Moon at this time.
-            LunarPhaseEvent newMoon = moonService.GetPhaseNearDateTimeHumble(solstice);
+            LunarPhaseEvent newMoon = lunarPhaseService.GetPhaseNearDateTimeHumble(solstice);
             if (newMoon.PhaseType != ELunarPhaseType.NewMoon)
             {
                 continue;

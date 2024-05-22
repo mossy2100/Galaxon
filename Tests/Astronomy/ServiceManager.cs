@@ -19,9 +19,8 @@ public static class ServiceManager
             .AddScoped<AstroObjectRepository>()
             // Register services.
             .AddScoped<PlanetService>()
-            .AddScoped<EarthService>()
             .AddScoped<SunService>()
-            .AddScoped<MoonService>()
+            .AddScoped<LunarPhaseService>()
             .AddScoped<SeasonalMarkerService>()
             .AddScoped<ApsideService>()
             // Build it.

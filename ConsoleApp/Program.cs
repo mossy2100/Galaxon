@@ -7,7 +7,6 @@ using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Time;
-using Galaxon.Time.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -80,10 +79,9 @@ class Program
         // Add algorithm services.
         serviceCollection
             .AddSingleton<PlanetService>()
-            .AddSingleton<EarthService>()
             .AddSingleton<SunService>()
             .AddSingleton<SeasonalMarkerService>()
-            .AddSingleton<MoonService>();
+            .AddSingleton<LunarPhaseService>();
 
         // Add calendar services.
         serviceCollection

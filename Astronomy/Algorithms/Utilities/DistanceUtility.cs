@@ -1,12 +1,12 @@
 using GeoCoordinatePortable;
 
-namespace Galaxon.Astronomy.Algorithms.Services;
+namespace Galaxon.Astronomy.Algorithms.Utilities;
 
 /// <summary>
 /// Provides methods for calculating distances between geographical coordinates
 /// on the surface of an oblate spheroid world using Andoyer's method.
 /// </summary>
-public static class DistanceService
+public static class DistanceUtility
 {
     /// <summary>
     /// Calculates the shortest distance between two points along the surface of an

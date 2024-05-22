@@ -5,8 +5,8 @@ using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
+using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
 
@@ -19,7 +19,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 public class GregorianCalendarController(
     AstroObjectRepository astroObjectRepository,
     LeapSecondService leapSecondService,
-    MoonService moonService,
+    LunarPhaseService lunarPhaseService,
     SeasonalMarkerService seasonalMarkerService,
     ApsideService apsideService) : ControllerBase
 {
@@ -84,7 +84,7 @@ public class GregorianCalendarController(
             }
 
             // Lunar phases.
-            List<LunarPhaseEvent> phases = moonService.GetPhasesInYear(year);
+            List<LunarPhaseEvent> phases = lunarPhaseService.GetPhasesInYear(year);
             foreach (LunarPhaseEvent phase in phases)
             {
                 dto.Events.Add(phase.DateTimeUtc.ToIsoString(), phase.PhaseType.GetDisplayName());

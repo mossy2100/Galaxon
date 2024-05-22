@@ -1,4 +1,4 @@
-using Galaxon.Time.Utilities;
+using Galaxon.Time;
 
 namespace Galaxon.Tests.Time;
 

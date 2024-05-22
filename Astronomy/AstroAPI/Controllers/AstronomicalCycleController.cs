@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -23,7 +23,7 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             // Get the approximate solar day length at specified time of the year.
-            double solarDay_s = Round(EarthService.GetSolarDayInSeconds(year), 6);
+            double solarDay_s = Round(DurationUtility.GetSolarDayInSeconds(year), 6);
 
             // Log it.
             Slog.Information(
@@ -61,8 +61,8 @@ public class AstronomicalCycleController : ControllerBase
         {
             // Get the year length in ephemeris and solar days.
             double ephemerisDays =
-                Round(EarthService.GetTropicalYearInEphemerisDaysForYear(year), 9);
-            double solarDays = Round(EarthService.GetTropicalYearInSolarDaysForYear(year), 9);
+                Round(DurationUtility.GetTropicalYearInEphemerisDaysForYear(year), 9);
+            double solarDays = Round(DurationUtility.GetTropicalYearInSolarDaysForYear(year), 9);
 
             // Log it.
             Slog.Information(
@@ -98,8 +98,8 @@ public class AstronomicalCycleController : ControllerBase
         try
         {
             double ephemerisDays =
-                Round(MoonService.GetLunationInEphemerisDaysForYear(year), 9);
-            double solarDays = Round(MoonService.GetLunationInSolarDaysForYear(year), 9);
+                Round(DurationUtility.GetLunationInEphemerisDaysForYear(year), 9);
+            double solarDays = Round(DurationUtility.GetLunationInSolarDaysForYear(year), 9);
 
             // Log it.
             Slog.Information(

@@ -17,11 +17,6 @@ namespace Galaxon.Astronomy.AstroAPI;
 public class Program
 {
     /// <summary>
-    /// Reference to the configuration.
-    /// </summary>
-    private static IConfiguration? _configuration;
-
-    /// <summary>
     /// Main entry point for the application.
     /// Sets up logging, builds and configures the web application, and runs it.
     /// </summary>
@@ -30,7 +25,7 @@ public class Program
     {
         try
         {
-            _configuration = SetupTools.Initialize();
+            SetupTools.Initialize();
 
             Slog.Information("Creating web application builder...");
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -87,8 +82,7 @@ public class Program
         builder.Services.AddScoped<AstroObjectGroupRepository>();
         builder.Services.AddScoped<AstroObjectRepository>();
         builder.Services.AddScoped<PlanetService>();
-        builder.Services.AddScoped<EarthService>();
-        builder.Services.AddScoped<MoonService>();
+        builder.Services.AddScoped<LunarPhaseService>();
         builder.Services.AddScoped<SunService>();
         builder.Services.AddScoped<SeasonalMarkerService>();
         builder.Services.AddScoped<LeapSecondRepository>();

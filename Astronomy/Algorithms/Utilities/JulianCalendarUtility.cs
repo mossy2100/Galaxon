@@ -1,7 +1,8 @@
 using System.Globalization;
+using Galaxon.Time;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
-namespace Galaxon.Time.Utilities;
+namespace Galaxon.Astronomy.Algorithms.Utilities;
 
 public static class JulianCalendarUtility
 {

@@ -1,10 +1,10 @@
 using System.Globalization;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
 namespace Galaxon.ConsoleApp.Services;
@@ -391,9 +391,9 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
     {
         for (int y = 2000; y <= 9000; y += 1000)
         {
-            double yearLengthEphemeris = EarthService.GetTropicalYearInEphemerisDaysForYear(y);
-            double yearLengthSolar = EarthService.GetTropicalYearInSolarDaysForYear(y);
-            double dayLengthSeconds = EarthService.GetSolarDayInSeconds(y);
+            double yearLengthEphemeris = DurationUtility.GetTropicalYearInEphemerisDaysForYear(y);
+            double yearLengthSolar = DurationUtility.GetTropicalYearInSolarDaysForYear(y);
+            double dayLengthSeconds = DurationUtility.GetSolarDayInSeconds(y);
             Console.WriteLine($"Tropical year {y}");
             string timeString =
                 TimeSpanExtensions.GetTimeString(TimeSpan.FromDays(yearLengthEphemeris));
@@ -413,7 +413,7 @@ public class SolarCalendar(SeasonalMarkerService seasonalMarkerService)
         double closestYearLength = 0;
         for (int y = 3000; y < 4000; y++)
         {
-            double yearLengthSolar = EarthService.GetTropicalYearInSolarDaysForYear(y);
+            double yearLengthSolar = DurationUtility.GetTropicalYearInSolarDaysForYear(y);
             double diff = Abs(yearLengthSolar - targetAvg);
             if (diff < smallestDiff)
             {

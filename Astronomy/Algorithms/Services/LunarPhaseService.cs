@@ -3,19 +3,14 @@ using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
-using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Extensions;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-/// <summary>
-/// Stuff relating to the Moon.
-/// </summary>
-public class MoonService(AstroDbContext astroDbContext)
+public class LunarPhaseService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Get the lunar phase closest to the given DateTime, deferring first to other calculations
@@ -350,47 +345,4 @@ public class MoonService(AstroDbContext astroDbContext)
         return GetPhasesInPeriod(GregorianCalendarUtility.GetYearStart(year, DateTimeKind.Utc),
             GregorianCalendarUtility.GetYearEnd(year, DateTimeKind.Utc), phase);
     }
-
-    #region Static methods
-
-    /// <summary>
-    /// Calculate the approximate average length of a lunation in ephemeris days at a point in time.
-    /// The formula is taken from Wikipedia:
-    /// <see href="https://en.wikipedia.org/wiki/Lunar_month#Synodic_month"/>
-    /// </summary>
-    /// <param name="T">The number of Julian centuries since noon, January 1, 2000.</param>
-    /// <returns>The average lunation length in seconds at that point in time.</returns>
-    public static double GetLunationInEphemerisDays(double T)
-    {
-        return Polynomials.EvaluatePolynomial([29.530_588_8531, 0.000_000_216_21, -3.64e-10], T);
-    }
-
-    /// <summary>
-    /// Calculate the approximate average length of a lunation in ephemeris days for a given year.
-    /// The year can have a fractional part.
-    /// </summary>
-    /// <param name="year">The year as a decimal.</param>
-    /// <returns>The average lunation length in days at that point in time.</returns>
-    public static double GetLunationInEphemerisDaysForYear(double year)
-    {
-        // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jd = JulianDateUtility.DecimalYearToJulianDate(year);
-        double T = JulianDateUtility.JulianCenturiesSinceJ2000(jd);
-        // Evaluate the polynomial.
-        return GetLunationInEphemerisDays(T);
-    }
-
-    /// <summary>
-    /// Calculate the mean lunation length in solar days for a given year.
-    /// </summary>
-    /// <param name="year">The year as a decimal.</param>
-    /// <returns>The lunation length in solar days at that point in time.</returns>
-    public static double GetLunationInSolarDaysForYear(double year)
-    {
-        return GetLunationInEphemerisDaysForYear(year)
-            * TimeConstants.SECONDS_PER_DAY
-            / EarthService.GetSolarDayInSeconds(year);
-    }
-
-    #endregion Static methods
 }

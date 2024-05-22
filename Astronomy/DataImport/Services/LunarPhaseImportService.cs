@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
@@ -11,14 +12,13 @@ using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Galaxon.Time.Utilities;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService moonService)
+public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseService lunarPhaseService)
 {
     /// <summary>
     /// Get the links to the AstroPixels lunar phase data tables.
@@ -346,7 +346,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, MoonService 
     {
         for (int year = 1; year <= 4000; year++)
         {
-            List<LunarPhaseEvent> phaseEvents = moonService.GetPhasesInYear(year);
+            List<LunarPhaseEvent> phaseEvents = lunarPhaseService.GetPhasesInYear(year);
             foreach (LunarPhaseEvent phaseEvent in phaseEvents)
             {
                 // Look for a matching record.

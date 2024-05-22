@@ -69,7 +69,7 @@ public class Program
         serviceCollection
             .AddScoped<ApsideService>()
             .AddScoped<PlanetService>()
-            .AddScoped<MoonService>();
+            .AddScoped<LunarPhaseService>();
 
         // Add import services.
         serviceCollection

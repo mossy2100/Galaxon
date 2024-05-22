@@ -1,4 +1,4 @@
-using Galaxon.Astronomy.Algorithms.Services;
+using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Models;
 using GeoCoordinatePortable;
 
@@ -29,7 +29,7 @@ public static class AstroObjectExtensions
                 "Cannot calculate the shortest distance between two points on a world without known both the equatorial and the polar radii.");
         }
 
-        return DistanceService.CalculateShortestDistanceBetween(location1, location2,
+        return DistanceUtility.CalculateShortestDistanceBetween(location1, location2,
             astroObj.Physical.EquatorialRadius, astroObj.Physical.PolarRadius);
     }
 }

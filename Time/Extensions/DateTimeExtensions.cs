@@ -1,6 +1,4 @@
-﻿using Galaxon.Time.Utilities;
-
-namespace Galaxon.Time.Extensions;
+﻿namespace Galaxon.Time.Extensions;
 
 /// <summary>
 /// Extension methods for the DateTime class.

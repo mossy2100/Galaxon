@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
-using Galaxon.Time.Utilities;
+using Galaxon.Time;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;
@@ -10,7 +10,7 @@ namespace Galaxon.Astronomy.AstroAPI.Controllers;
 /// Controller for API endpoints relating to lunar phases.
 /// </summary>
 [ApiController]
-public class LunarPhaseController(MoonService moonService) : ControllerBase
+public class LunarPhaseController(LunarPhaseService lunarPhaseService) : ControllerBase
 {
     /// <summary>
     /// Get the lunar phase closest to a specific date.
@@ -26,7 +26,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         {
             // Get the lunar phase.
             DateOnly date = DateOnly.Parse(isoDateString);
-            LunarPhaseEvent lunarPhase = moonService.GetPhaseNearDate(date);
+            LunarPhaseEvent lunarPhase = lunarPhaseService.GetPhaseNearDate(date);
 
             // Construct the result.
             LunarPhaseDto dto = new (lunarPhase);
@@ -57,7 +57,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         try
         {
             // Get the lunar phase data.
-            List<LunarPhaseEvent> phaseEvents = moonService.GetPhasesInYear(year);
+            List<LunarPhaseEvent> phaseEvents = lunarPhaseService.GetPhasesInYear(year);
 
             // Construct the result.
             List<LunarPhaseDto> phaseEventDtos = phaseEvents
@@ -91,7 +91,7 @@ public class LunarPhaseController(MoonService moonService) : ControllerBase
         try
         {
             // Get the lunar phases.
-            List<LunarPhaseEvent> phaseEvents = moonService.GetPhasesInMonth(year, month);
+            List<LunarPhaseEvent> phaseEvents = lunarPhaseService.GetPhasesInMonth(year, month);
 
             // Construct the result.
             List<LunarPhaseDto> phaseEventDtos = phaseEvents

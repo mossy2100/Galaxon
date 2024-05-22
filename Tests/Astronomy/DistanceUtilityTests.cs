@@ -7,7 +7,7 @@ using GeoCoordinatePortable;
 namespace Galaxon.Tests.Astronomy;
 
 [TestClass]
-public class DistanceServiceTests
+public class DistanceUtilityTests
 {
     [ClassInitialize]
     public static void ClassInitialize(TestContext context)
