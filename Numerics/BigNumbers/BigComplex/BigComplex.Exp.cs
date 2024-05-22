@@ -177,7 +177,7 @@ public partial struct BigComplex
     /// You can use this method to get the square root of a negative value (including a BigDecimal
     /// value).
     /// e.g. BigComplex z = BigComplex.Sqrt(-5);
-    /// <see cref="System.Sqrt"/>
+    /// <see cref="System.Math.Sqrt"/>
     /// <see cref="System.Numerics.Complex.Sqrt"/>
     /// <see cref="BigDecimal.Sqrt"/>
     /// </summary>

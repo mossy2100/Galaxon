@@ -18,9 +18,4 @@
       <ProjectReference Include="..\Data\Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Time\Time.csproj" />
-      <ProjectReference Include="..\Data\Data.csproj" />
-    </ItemGroup>
-
 </Project>

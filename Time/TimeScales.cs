@@ -1,7 +1,7 @@
 using System.Globalization;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
-using static System.Math;
+using Galaxon.Time.Utilities;
 
 namespace Galaxon.Time;
 

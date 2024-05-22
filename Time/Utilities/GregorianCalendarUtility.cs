@@ -1,7 +1,7 @@
 using System.Globalization;
 using static Galaxon.Numerics.Extensions.NumberExtensions;
 
-namespace Galaxon.Time;
+namespace Galaxon.Time.Utilities;
 
 /// <summary>
 /// Extension methods for the GregorianCalendar class, and other useful methods relating to the

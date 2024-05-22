@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.AstroAPI.DataTransferObjects;
-using Galaxon.Time;
+using Galaxon.Time.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Galaxon.Astronomy.AstroAPI.Controllers;

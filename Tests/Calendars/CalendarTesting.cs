@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Galaxon.Astronomy.Calendars;
-using Galaxon.Time;
+using Galaxon.Time.Utilities;
 
 namespace Galaxon.Tests.Calendars;
 

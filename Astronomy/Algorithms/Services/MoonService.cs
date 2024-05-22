@@ -4,7 +4,7 @@ using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Numerics.Extensions;
-using Galaxon.Numerics.Geometry;
+using Galaxon.Time.Utilities;
 using Galaxon.Time;
 using Microsoft.EntityFrameworkCore;
 

@@ -478,7 +478,7 @@
             You can use this method to get the square root of a negative value (including a BigDecimal
             value).
             e.g. BigComplex z = BigComplex.Sqrt(-5);
-            <see cref="!:System.Sqrt"/>
+            <see cref="M:System.Math.Sqrt(System.Double)"/>
             <see cref="M:System.Numerics.Complex.Sqrt(System.Numerics.Complex)"/>
             <see cref="M:Galaxon.Numerics.BigNumbers.BigDecimal.Sqrt(Galaxon.Numerics.BigNumbers.BigDecimal)"/>
             </summary>
