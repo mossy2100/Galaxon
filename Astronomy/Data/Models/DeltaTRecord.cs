@@ -2,8 +2,12 @@
 
 public class DeltaTRecord : DatabaseRecord
 {
-    [Column(TypeName = "SMALLINT")]
-    public int Year { get; set; }
+    [Column(TypeName = "decimal(7, 3)")]
+    public decimal DecimalYear { get; set; }
 
-    public double DeltaT { get; set; }
+    /// <summary>
+    /// Value of delta-T at the specified time.
+    /// </summary>
+    [Column(TypeName = "decimal(9, 4)")]
+    public decimal DeltaT { get; set; }
 }

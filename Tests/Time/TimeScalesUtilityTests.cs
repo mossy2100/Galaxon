@@ -1,12 +1,11 @@
 ﻿using Galaxon.Astronomy.Algorithms.Utilities;
-using Galaxon.Time;
 using Galaxon.Time.Extensions;
 using Galaxon.UnitTesting;
 
 namespace Galaxon.Tests.Time;
 
 [TestClass]
-public class TimeScalesTests
+public class TimeScalesUtilityTests
 {
     /// <summary>
     /// A difference of one day, as a fraction of a Gregorian calendar year.
@@ -227,7 +226,7 @@ public class TimeScalesTests
         DateTime expectedDateTime = new (2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert
         DateTimeAssert.AreEqual(expectedDateTime, actualDateTime, TimeSpan.FromDays(1.5));
@@ -241,7 +240,7 @@ public class TimeScalesTests
         DateTime expectedDateTime = new (2025, 7, 2, 12, 0, 0, DateTimeKind.Utc);
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert
         DateTimeAssert.AreEqual(expectedDateTime, actualDateTime, TimeSpan.FromDays(1));
@@ -255,7 +254,7 @@ public class TimeScalesTests
         DateTime expectedDateTime = new (2024, 7, 2, 0, 0, 0, DateTimeKind.Utc);
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert
         DateTimeAssert.AreEqual(expectedDateTime, actualDateTime, TimeSpan.FromDays(1));
@@ -269,7 +268,7 @@ public class TimeScalesTests
         DateTime expectedDateTime = new (2024, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc);
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert
         DateTimeAssert.AreEqual(expectedDateTime, actualDateTime, TimeSpan.FromDays(1));
@@ -283,7 +282,7 @@ public class TimeScalesTests
         double decimalYear = -2024.5;
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert is handled by ExpectedException
     }
@@ -296,7 +295,7 @@ public class TimeScalesTests
         double decimalYear = 10000.0; // Using an extreme future year
 
         // Act
-        DateTime actualDateTime = TimeScales.DecimalYearToDateTime(decimalYear);
+        DateTime actualDateTime = TimeScalesUtility.DecimalYearToDateTime(decimalYear);
 
         // Assert is handled by ExpectedException
     }
@@ -313,7 +312,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 2024.0;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);
@@ -327,7 +326,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 2025.5;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);
@@ -341,7 +340,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 2024.5;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);
@@ -355,7 +354,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 2024.999_999_999;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);
@@ -369,7 +368,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 2024 + 59.5 / 366;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);
@@ -383,7 +382,7 @@ public class TimeScalesTests
         double expectedDecimalYear = 1.0;
 
         // Act
-        double actualDecimalYear = TimeScales.DateTimeToDecimalYear(dt);
+        double actualDecimalYear = TimeScalesUtility.DateTimeToDecimalYear(dt);
 
         // Assert
         Assert.AreEqual(expectedDecimalYear, actualDecimalYear, _DECIMAL_YEAR_DELTA);

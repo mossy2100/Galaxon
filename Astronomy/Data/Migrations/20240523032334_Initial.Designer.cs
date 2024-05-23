@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    [Migration("20240507071637_AddedColumnToIersBulletinCTable")]
-    partial class AddedColumnToIersBulletinCTable
+    [Migration("20240523032334_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,21 +51,30 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("ApsideNumber")
+                        .HasColumnType("double");
+
+                    b.Property<string>("ApsideType")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)");
+
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Orbit")
-                        .HasColumnType("int");
+                    b.Property<double?>("RadiusAstroPixels_AU")
+                        .HasColumnType("double");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
+                    b.Property<double?>("RadiusGalaxon_AU")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -174,6 +183,25 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.ToTable("Atmospheres");
                 });
 
+            modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DeltaTRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("DecimalYear")
+                        .HasColumnType("decimal(7, 3)");
+
+                    b.Property<decimal>("DeltaT")
+                        .HasColumnType("decimal(9, 4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeltaTRecords");
+                });
+
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DocumentRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -241,10 +269,10 @@ namespace Galaxon.Astronomy.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("DateTimeParsed")
-                        .HasColumnType("datetime(6)");
+                    b.Property<DateTime>("DatePublished")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("DateTimePublished")
+                    b.Property<DateTime>("DateTimeParsed")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("LeapSecondDate")
@@ -288,21 +316,21 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Lunation")
+                    b.Property<int>("LunationNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("PhaseType")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(12)");
 
                     b.HasKey("Id");
 
@@ -560,15 +588,18 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateTimeUtc")
+                    b.Property<DateTime?>("DateTimeUtcAstroPixels")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateTimeUtcGalaxon")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("SeasonalMarkerType")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
@@ -618,31 +649,31 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("Amplitude")
-                        .HasColumnType("double");
+                    b.Property<decimal>("Amplitude")
+                        .HasColumnType("decimal(18, 11)");
 
-                    b.Property<int>("AstroObjectId")
-                        .HasColumnType("int");
+                    b.Property<byte>("CodeOfBody")
+                        .HasColumnType("tinyint unsigned");
 
                     b.Property<byte>("Exponent")
                         .HasColumnType("tinyint unsigned");
 
-                    b.Property<double>("Frequency")
-                        .HasColumnType("double");
+                    b.Property<decimal>("Frequency")
+                        .HasColumnType("decimal(20, 11)");
 
-                    b.Property<ushort>("Index")
+                    b.Property<byte>("IndexOfCoordinate")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<decimal>("Phase")
+                        .HasColumnType("decimal(14, 11)");
+
+                    b.Property<ushort>("Rank")
                         .HasColumnType("smallint unsigned");
-
-                    b.Property<double>("Phase")
-                        .HasColumnType("double");
-
-                    b.Property<string>("Variable")
-                        .IsRequired()
-                        .HasColumnType("varchar(1)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AstroObjectId");
+                    b.HasIndex("CodeOfBody", "IndexOfCoordinate", "Exponent", "Rank")
+                        .IsUnique();
 
                     b.ToTable("VSOP87D");
                 });
@@ -774,17 +805,6 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Navigation("AstroObject");
                 });
 
-            modelBuilder.Entity("Galaxon.Astronomy.Data.Models.VSOP87DRecord", b =>
-                {
-                    b.HasOne("Galaxon.Astronomy.Data.Models.AstroObjectRecord", "AstroObject")
-                        .WithMany("VSOP87DRecords")
-                        .HasForeignKey("AstroObjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AstroObject");
-                });
-
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectRecord", b =>
                 {
                     b.Navigation("Atmosphere");
@@ -800,8 +820,6 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Navigation("Rotation");
 
                     b.Navigation("Stellar");
-
-                    b.Navigation("VSOP87DRecords");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AtmosphereRecord", b =>

@@ -86,7 +86,7 @@ public class SeasonalMarkerImportService(AstroDbContext astroDbContext)
                 // See if we need to update or insert.
                 SeasonalMarkerRecord? existingSeasonalMarker =
                     astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                        sm.Type == seasonalMarkerType
+                        sm.SeasonalMarkerType == seasonalMarkerType
                         && sm.DateTimeUtcUsno != null
                         && sm.DateTimeUtcUsno.Value.Year == usm.year);
                 if (existingSeasonalMarker == null)
@@ -94,7 +94,7 @@ public class SeasonalMarkerImportService(AstroDbContext astroDbContext)
                     // Insert a new record.
                     SeasonalMarkerRecord newSeasonalMarkerRecord = new ()
                     {
-                        Type = seasonalMarkerType.Value,
+                        SeasonalMarkerType = seasonalMarkerType.Value,
                         DateTimeUtcUsno = dt
                     };
                     astroDbContext.SeasonalMarkers.Add(newSeasonalMarkerRecord);

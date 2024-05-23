@@ -1,6 +1,5 @@
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
-using Galaxon.Time;
 
 namespace Galaxon.Astronomy.Algorithms.Utilities;
 
@@ -200,7 +199,7 @@ public static class DeltaTUtility
     /// <returns>Delta-T at that point in time.</returns>
     public static double CalcDeltaT(DateTime dt = new ())
     {
-        return CalcDeltaT(TimeScales.DateTimeToDecimalYear(dt));
+        return CalcDeltaT(TimeScalesUtility.DateTimeToDecimalYear(dt));
     }
 
     /// <summary>

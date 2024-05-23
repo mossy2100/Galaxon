@@ -93,15 +93,12 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     ///
     /// This calculation of DUT1 is only valid within the nominal range from 1972..2010.
     /// Yet the *actual* DUT1 is within range up until 2022 (the time of writing) because leap
-    /// seconds have been added to produce exactly this effect. The error must be in CalcDeltaT(),
-    /// which leads me to believe the NASA formulae used in this library either aren't super
-    /// accurate or (more likely) they were developed before 2010.
+    /// seconds have been added to produce exactly this effect.
     ///
-    /// See <see href="https://en.wikipedia.org/wiki/DUT1"/>.
+    /// See: <see href="https://en.wikipedia.org/wiki/DUT1"/>
     /// </summary>
     /// <param name="dt">A point in time. Defaults to current DateTime.</param>
     /// <returns>The difference between UT1 and UTC.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">If year less than 1972.</exception>
     public double CalcDUT1(DateTime? dt = null)
     {
         // Default to now.
@@ -111,22 +108,6 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
             / TimeConstants.MILLISECONDS_PER_SECOND
             - DeltaTUtility.CalcDeltaT(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
-    }
-
-    public void TestCalcDUT1()
-    {
-        for (int y = 1972; y <= 2022; y++)
-        {
-            DateTime dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            int LSC = TotalLeapSeconds(dt);
-            double deltaT = DeltaTUtility.CalcDeltaT(dt);
-            double DUT1 = CalcDUT1(dt);
-            Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
-            if (Abs(DUT1) > 0.9)
-            {
-                Console.WriteLine("Wrong.");
-            }
-        }
     }
 
     /// <summary>

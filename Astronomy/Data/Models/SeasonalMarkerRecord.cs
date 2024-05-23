@@ -18,8 +18,8 @@ public class SeasonalMarkerRecord : DatabaseRecord
     /// <summary>
     /// The seasonal marker type.
     /// </summary>
-    [Column(TypeName = "varchar(20)")]
-    public ESeasonalMarkerType Type { get; set; }
+    [Column(TypeName = "varchar(16)")]
+    public ESeasonalMarkerType SeasonalMarkerType { get; set; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker according to my calculations.

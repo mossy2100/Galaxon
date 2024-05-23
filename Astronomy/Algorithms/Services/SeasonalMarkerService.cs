@@ -290,7 +290,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         // Look for a matching seasonal marker in the database with a USNO datetime.
         SeasonalMarkerRecord? seasonalMarker =
             astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-                sm.Type == markerType
+                sm.SeasonalMarkerType == markerType
                 && sm.DateTimeUtcUsno != null
                 && sm.DateTimeUtcUsno.Value.Year == year);
 

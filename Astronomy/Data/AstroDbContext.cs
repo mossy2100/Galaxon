@@ -46,11 +46,13 @@ public class AstroDbContext : DbContext
     public DbSet<MoleculeRecord> Molecules => Set<MoleculeRecord>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Leap seconds.
+    // Delta-T related.
 
-    public DbSet<LeapSecondRecord> LeapSeconds => Set<LeapSecondRecord>();
+    public DbSet<DeltaTRecord> DeltaTRecords => Set<DeltaTRecord>();
 
     public DbSet<IersBulletinCRecord> IersBulletinCs => Set<IersBulletinCRecord>();
+
+    public DbSet<LeapSecondRecord> LeapSeconds => Set<LeapSecondRecord>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Events.
@@ -110,35 +112,35 @@ public class AstroDbContext : DbContext
 
         builder.Entity<AstroObjectRecord>(entity =>
         {
-            entity.HasMany(ao => ao.Groups)
-                .WithMany(g => g.Objects);
+            entity.HasMany(astroObj => astroObj.Groups)
+                .WithMany(group => group.Objects);
 
-            entity.HasOne(ao => ao.Parent)
-                .WithMany(ao => ao.Children);
+            entity.HasOne(astroObj => astroObj.Parent)
+                .WithMany(astroObj => astroObj.Children);
 
-            entity.HasOne(ao => ao.Physical)
-                .WithOne(phys => phys.AstroObject)
-                .HasForeignKey<PhysicalRecord>(phys => phys.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Physical)
+                .WithOne(physical => physical.AstroObject)
+                .HasForeignKey<PhysicalRecord>(physical => physical.AstroObjectId);
 
-            entity.HasOne(ao => ao.Rotation)
-                .WithOne(rot => rot.AstroObject)
-                .HasForeignKey<RotationalRecord>(rot => rot.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Rotation)
+                .WithOne(rotation => rotation.AstroObject)
+                .HasForeignKey<RotationalRecord>(rotation => rotation.AstroObjectId);
 
-            entity.HasOne(ao => ao.Orbit)
-                .WithOne(orb => orb.AstroObject)
-                .HasForeignKey<OrbitalRecord>(orb => orb.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Orbit)
+                .WithOne(orbit => orbit.AstroObject)
+                .HasForeignKey<OrbitalRecord>(orbit => orbit.AstroObjectId);
 
-            entity.HasOne(ao => ao.Observation)
-                .WithOne(obs => obs.AstroObject)
-                .HasForeignKey<ObservationalRecord>(obs => obs.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Observation)
+                .WithOne(observation => observation.AstroObject)
+                .HasForeignKey<ObservationalRecord>(observation => observation.AstroObjectId);
 
-            entity.HasOne(ao => ao.Atmosphere)
-                .WithOne(atmo => atmo.AstroObject)
-                .HasForeignKey<AtmosphereRecord>(atmo => atmo.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Atmosphere)
+                .WithOne(atmosphere => atmosphere.AstroObject)
+                .HasForeignKey<AtmosphereRecord>(atmosphere => atmosphere.AstroObjectId);
 
-            entity.HasOne(ao => ao.Stellar)
-                .WithOne(ss => ss.AstroObject)
-                .HasForeignKey<StellarRecord>(ss => ss.AstroObjectId);
+            entity.HasOne(astroObj => astroObj.Stellar)
+                .WithOne(stellar => stellar.AstroObject)
+                .HasForeignKey<StellarRecord>(stellar => stellar.AstroObjectId);
         });
 
         builder.Entity<VSOP87DRecord>()

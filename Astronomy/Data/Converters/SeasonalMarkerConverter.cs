@@ -5,8 +5,9 @@ namespace Galaxon.Astronomy.Data.Converters;
 
 public class SeasonalMarkerConverter() : ValueConverter<ESeasonalMarkerType, string>(
     // Convert from enum to string.
-    v => v.ToString(),
+    seasonalMarkerType => seasonalMarkerType.ToString(),
 
     // Convert from string to enum.
-    v => (ESeasonalMarkerType)Enum.Parse(typeof(ESeasonalMarkerType), v)
+    strSeasonalMarkerType =>
+        (ESeasonalMarkerType)Enum.Parse(typeof(ESeasonalMarkerType), strSeasonalMarkerType)
 );

@@ -5,8 +5,8 @@ namespace Galaxon.Astronomy.Data.Converters;
 
 public class LunarPhaseConverter() : ValueConverter<ELunarPhaseType, string>(
     // Convert from enum to string.
-    v => v.ToString(),
+    lunarPhaseType => lunarPhaseType.ToString(),
 
     // Convert from string to enum.
-    v => (ELunarPhaseType)Enum.Parse(typeof(ELunarPhaseType), v)
+    strLunarPhaseType => (ELunarPhaseType)Enum.Parse(typeof(ELunarPhaseType), strLunarPhaseType)
 );

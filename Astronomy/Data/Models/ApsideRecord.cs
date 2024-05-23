@@ -21,7 +21,7 @@ public class ApsideRecord : DatabaseRecord
     /// <summary>
     /// The type of apside. This is stored in the database as a single char 'P' or 'A' (not null).
     /// </summary>
-    [Column(TypeName = "char(1)")]
+    [Column(TypeName = "varchar(9)")]
     public EApsideType ApsideType { get; set; }
 
     /// <summary>

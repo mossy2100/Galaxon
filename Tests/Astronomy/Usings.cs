@@ -1,1 +1,3 @@
 ﻿global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using static System.Math;
+global using static Galaxon.Numerics.Geometry.Angles;

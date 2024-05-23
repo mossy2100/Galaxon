@@ -12,7 +12,7 @@ public class LunarPhaseRecord : DatabaseRecord
     /// <summary>
     /// The phase type.
     /// </summary>
-    [Column(TypeName = "varchar(20)")]
+    [Column(TypeName = "varchar(12)")]
     public ELunarPhaseType PhaseType { get; set; }
 
     /// <summary>

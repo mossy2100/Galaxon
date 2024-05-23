@@ -66,7 +66,7 @@ public class SeasonalMarkerServiceTests
 
             // Act.
             DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
-                seasonalMarker.DateTimeUtcUsno.Value.Year, seasonalMarker.Type);
+                seasonalMarker.DateTimeUtcUsno.Value.Year, seasonalMarker.SeasonalMarkerType);
 
             // Assert.
             DateTimeAssert.AreEqual(expected, actual, maxDiff);

@@ -1,6 +1,8 @@
-namespace Galaxon.Time;
+using Galaxon.Time;
 
-public static class TimeScales
+namespace Galaxon.Astronomy.Algorithms.Utilities;
+
+public static class TimeScalesUtility
 {
     #region Decimal year methods
 

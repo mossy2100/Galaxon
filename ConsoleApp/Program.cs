@@ -204,7 +204,7 @@ class Program
         {
             double y = rnd.Next(1, 9999) + rnd.NextDouble();
 
-            // double jdut1 = TimeScales.DecimalYearToJulianDateLimitedRange(y);
+            // double jdut1 = TimeScalesUtility.DecimalYearToJulianDateLimitedRange(y);
             double jdut2 = JulianDateUtility.DecimalYearToJulianDate(y);
             // if (!jdut2.FuzzyEquals(jdut1))
             // {
@@ -217,7 +217,7 @@ class Program
             //     break;
             // }
 
-            // double y1 = TimeScales.JulianDateToDecimalYearLimitedRange(jdut1);
+            // double y1 = TimeScalesUtility.JulianDateToDecimalYearLimitedRange(jdut1);
             // if (!y1.FuzzyEquals(y))
             // {
             //     Console.WriteLine("Error in JulianDateUniversalToDecimalYearLimitedRange().");

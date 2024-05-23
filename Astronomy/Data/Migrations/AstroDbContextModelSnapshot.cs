@@ -51,8 +51,9 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<double>("ApsideNumber")
                         .HasColumnType("double");
 
-                    b.Property<char>("ApsideType")
-                        .HasColumnType("char(1)");
+                    b.Property<string>("ApsideType")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)");
 
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
@@ -177,6 +178,25 @@ namespace Galaxon.Astronomy.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Atmospheres");
+                });
+
+            modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DeltaTRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("DecimalYear")
+                        .HasColumnType("decimal(7, 3)");
+
+                    b.Property<decimal>("DeltaT")
+                        .HasColumnType("decimal(9, 4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeltaTRecords");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DocumentRecord", b =>
@@ -307,7 +327,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.Property<string>("PhaseType")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(12)");
 
                     b.HasKey("Id");
 
@@ -574,9 +594,9 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("SeasonalMarkerType")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
