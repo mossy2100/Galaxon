@@ -10,16 +10,10 @@ public class LunarPhaseRecord : DatabaseRecord
     public int LunationNumber { get; set; }
 
     /// <summary>
-    /// The phase type.
+    /// The lunar phase type.
     /// </summary>
-    [Column(TypeName = "varchar(12)")]
+    [Column(TypeName = "tinyint unsigned")]
     public ELunarPhaseType PhaseType { get; set; }
-
-    /// <summary>
-    /// The unique phase number, which is a multiple of 0.25. New moons will be integers.
-    /// </summary>
-    [NotMapped]
-    public double PhaseNumber => LunationNumber + (int)PhaseType / 4.0;
 
     /// <summary>
     /// The UTC datetime of the lunar phase according to my calculations.

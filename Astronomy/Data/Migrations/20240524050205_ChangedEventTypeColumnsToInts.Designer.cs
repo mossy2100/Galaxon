@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    partial class AstroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240524050205_ChangedEventTypeColumnsToInts")]
+    partial class ChangedEventTypeColumnsToInts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ObjectsId");
 
-                    b.ToTable("AstroObjectGroupRecordAstroObjectRecord", (string)null);
+                    b.ToTable("AstroObjectGroupRecordAstroObjectRecord");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.ApsideRecord", b =>
@@ -48,7 +51,10 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte>("ApsideType")
+                    b.Property<double>("ApsideNumber")
+                        .HasColumnType("double");
+
+                    b.Property<int>("ApsideType")
                         .HasColumnType("tinyint unsigned");
 
                     b.Property<int>("AstroObjectId")
@@ -63,9 +69,6 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("OrbitNumber")
-                        .HasColumnType("int");
-
                     b.Property<double?>("RadiusAstroPixels_AU")
                         .HasColumnType("double");
 
@@ -74,7 +77,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Apsides", (string)null);
+                    b.ToTable("Apsides");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectGroupRecord", b =>
@@ -97,7 +100,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("AstroObjectGroups", (string)null);
+                    b.ToTable("AstroObjectGroups");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AstroObjectRecord", b =>
@@ -122,7 +125,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("AstroObjects", (string)null);
+                    b.ToTable("AstroObjects");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AtmosphereConstituentRecord", b =>
@@ -148,7 +151,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("MoleculeId");
 
-                    b.ToTable("AtmosphereConstituents", (string)null);
+                    b.ToTable("AtmosphereConstituents");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.AtmosphereRecord", b =>
@@ -176,7 +179,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Atmospheres", (string)null);
+                    b.ToTable("Atmospheres");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DeltaTRecord", b =>
@@ -195,7 +198,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeltaTRecords", (string)null);
+                    b.ToTable("DeltaTRecords");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.DocumentRecord", b =>
@@ -230,7 +233,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.EasterDateRecord", b =>
@@ -246,7 +249,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EasterDates", (string)null);
+                    b.ToTable("EasterDates");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.IersBulletinCRecord", b =>
@@ -282,7 +285,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("BulletinNumber")
                         .IsUnique();
 
-                    b.ToTable("IersBulletinCs", (string)null);
+                    b.ToTable("IersBulletinCs");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.LeapSecondRecord", b =>
@@ -301,7 +304,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeapSeconds", (string)null);
+                    b.ToTable("LeapSeconds");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.LunarPhaseRecord", b =>
@@ -324,12 +327,12 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("LunationNumber")
                         .HasColumnType("int");
 
-                    b.Property<byte>("PhaseType")
+                    b.Property<int>("PhaseType")
                         .HasColumnType("tinyint unsigned");
 
                     b.HasKey("Id");
 
-                    b.ToTable("LunarPhases", (string)null);
+                    b.ToTable("LunarPhases");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.MoleculeRecord", b =>
@@ -352,7 +355,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Molecules", (string)null);
+                    b.ToTable("Molecules");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.ObservationalRecord", b =>
@@ -386,7 +389,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Observationals", (string)null);
+                    b.ToTable("Observationals");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.OrbitalRecord", b =>
@@ -444,7 +447,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Orbitals", (string)null);
+                    b.ToTable("Orbitals");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.PhysicalRecord", b =>
@@ -532,7 +535,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Physicals", (string)null);
+                    b.ToTable("Physicals");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.RotationalRecord", b =>
@@ -569,7 +572,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Rotationals", (string)null);
+                    b.ToTable("Rotationals");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.SeasonalMarkerRecord", b =>
@@ -592,7 +595,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<DateTime?>("DateTimeUtcUsno")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<byte>("SeasonalMarkerType")
+                    b.Property<int>("SeasonalMarkerType")
                         .HasColumnType("tinyint unsigned");
 
                     b.Property<int>("Year")
@@ -600,7 +603,7 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SeasonalMarkers", (string)null);
+                    b.ToTable("SeasonalMarkers");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.StellarRecord", b =>
@@ -632,7 +635,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("AstroObjectId")
                         .IsUnique();
 
-                    b.ToTable("Stellars", (string)null);
+                    b.ToTable("Stellars");
                 });
 
             modelBuilder.Entity("Galaxon.Astronomy.Data.Models.VSOP87DRecord", b =>
@@ -669,7 +672,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.HasIndex("CodeOfBody", "IndexOfCoordinate", "Exponent", "Rank")
                         .IsUnique();
 
-                    b.ToTable("VSOP87D", (string)null);
+                    b.ToTable("VSOP87D");
                 });
 
             modelBuilder.Entity("AstroObjectGroupRecordAstroObjectRecord", b =>

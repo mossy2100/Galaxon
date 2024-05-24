@@ -36,7 +36,8 @@ public class SeasonalMarkerServiceTests
 
         // Act
         double jdtt =
-            seasonalMarkerService.GetSeasonalMarkerApprox(1962, ESeasonalMarkerType.NorthernSolstice);
+            seasonalMarkerService.GetSeasonalMarkerApprox(1962,
+                ESeasonalMarkerType.NorthernSolstice);
         DateTime dt = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt);
 
         // Assert
@@ -65,8 +66,9 @@ public class SeasonalMarkerServiceTests
             DateTime expected = seasonalMarker.DateTimeUtcUsno!.Value;
 
             // Act.
-            DateTime actual = seasonalMarkerService.GetSeasonalMarkerAsDateTime(
-                seasonalMarker.DateTimeUtcUsno.Value.Year, seasonalMarker.SeasonalMarkerType);
+            DateTime actual = seasonalMarkerService
+                .GetSeasonalMarker(seasonalMarker.DateTimeUtcUsno.Value.Year,
+                    seasonalMarker.SeasonalMarkerType).DateTimeUtc;
 
             // Assert.
             DateTimeAssert.AreEqual(expected, actual, maxDiff);

@@ -15,7 +15,7 @@ public class SunImportService(
     /// <summary>
     /// Initialize the Stars data, which for now just means adding the Sun to the database.
     /// </summary>
-    public void Import()
+    public async Task Import()
     {
         AstroObjectRecord sun;
         try
@@ -29,7 +29,7 @@ public class SunImportService(
             // Create new object.
             sun = new AstroObjectRecord("Sun");
             astroDbContext.AstroObjects.Add(sun);
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
         }
 
         // Add the Sun to the right groups.
@@ -48,7 +48,7 @@ public class SunImportService(
         sun.Stellar.Luminosity = 3.828e26;
         // Mean radiance in W/m2/sr.
         sun.Stellar.Radiance = 2.009e7;
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
 
         // Observational parameters.
         sun.Observation ??= new ObservationalRecord();
@@ -60,7 +60,7 @@ public class SunImportService(
         // Angular diameter.
         sun.Observation.MinAngularDiam = DegreesToRadians(0.527);
         sun.Observation.MaxAngularDiam = DegreesToRadians(0.545);
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
 
         // Physical parameters.
         sun.Physical ??= new PhysicalRecord();
@@ -92,7 +92,7 @@ public class SunImportService(
         sun.Physical.HasRingSystem = false;
         // Mean surface temperature (photosphere).
         sun.Physical.MeanSurfaceTemp = 5772;
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
 
         // Orbital parameters.
         sun.Orbit ??= new OrbitalRecord();
@@ -102,7 +102,7 @@ public class SunImportService(
         sun.Orbit.SiderealOrbitPeriod = 230_000_000.0 * TimeConstants.SECONDS_PER_YEAR;
         // Orbital speed in m/s.
         sun.Orbit.AvgOrbitSpeed = 251_000;
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
 
         // Rotational parameters.
         sun.Rotation ??= new RotationalRecord();
@@ -115,7 +115,7 @@ public class SunImportService(
         sun.Rotation.SiderealRotationPeriod = 25.05 * TimeConstants.SECONDS_PER_DAY;
         // Equatorial rotation velocity in m/s.
         sun.Rotation.EquatRotationVelocity = 1997;
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
 
         // Atmosphere.
         sun.Atmosphere ??= new AtmosphereRecord();
@@ -146,6 +146,6 @@ public class SunImportService(
         sun.Atmosphere.AddConstituent(astroDbContext, "Mg", 0.05);
         sun.Atmosphere.AddConstituent(astroDbContext, "S", 0.04);
 
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
     }
 }

@@ -80,7 +80,7 @@ public class GregorianCalendarController(
             foreach (SeasonalMarkerEvent seasonalMarkerEvent in seasonalMarkerEvents)
             {
                 dto.Events.Add(seasonalMarkerEvent.DateTimeUtc.ToIsoString(),
-                    seasonalMarkerEvent._SeasonalMarkerType.GetDisplayName());
+                    seasonalMarkerEvent.SeasonalMarkerType.GetDisplayName());
             }
 
             // Lunar phases.

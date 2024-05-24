@@ -1,10 +1,10 @@
 using System.Collections;
-using Galaxon.Core.Collections;
+using Galaxon.Core.Types;
 
 namespace Galaxon.Tests.Core.Collections;
 
 [TestClass]
-public class CollectionExtensionsTests
+public class ObjectExtensionsTests
 {
     [TestMethod]
     public void IsEmpty_NullCollection_ReturnsTrue()

@@ -342,7 +342,8 @@ public class LunarPhaseService(AstroDbContext astroDbContext)
         // Check year is valid.
         GregorianCalendarUtility.CheckYearInRange(year);
 
-        return GetPhasesInPeriod(GregorianCalendarUtility.GetYearStart(year, DateTimeKind.Utc),
+        return GetPhasesInPeriod(
+            GregorianCalendarUtility.GetYearStart(year, DateTimeKind.Utc),
             GregorianCalendarUtility.GetYearEnd(year, DateTimeKind.Utc), phase);
     }
 }

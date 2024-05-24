@@ -11,17 +11,14 @@ public class ApsideRecord : DatabaseRecord
     public int AstroObjectId { get; set; }
 
     /// <summary>
-    /// This will be a multiple of 0.5 and uniquely identify an apside for the given object.
-    /// This value is called 'k' in Chapter 38, Astronomical Algorithms (2nd ed.) by Jeen Meeus.
-    /// It will be 0 or positive for dates after the beginning of 2000, negative for earlier.
-    /// Perihelion events have no fractional part; aphelion events have a fraction of 0.5.
+    /// The orbit number. Negative values are before J2000, non-negative values are after J2000.
     /// </summary>
-    public double ApsideNumber { get; set; }
+    public int OrbitNumber { get; set; }
 
     /// <summary>
-    /// The type of apside. This is stored in the database as a single char 'P' or 'A' (not null).
+    /// The type of apside. This is stored as 0 for a periapsis or 1 for an apoapsis.
     /// </summary>
-    [Column(TypeName = "varchar(9)")]
+    [Column(TypeName = "tinyint unsigned")]
     public EApsideType ApsideType { get; set; }
 
     /// <summary>

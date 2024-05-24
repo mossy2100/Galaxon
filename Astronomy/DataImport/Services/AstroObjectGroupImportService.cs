@@ -9,7 +9,7 @@ public class AstroObjectGroupImportService(
     /// <summary>
     /// Initialize all the groups.
     /// </summary>
-    public void InitAstroObjectGroups()
+    public async Task InitAstroObjectGroups()
     {
         // Stars.
         AstroObjectGroupRecord star = astroObjectGroupRepository.CreateOrUpdate("Star");

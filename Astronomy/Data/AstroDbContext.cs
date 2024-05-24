@@ -163,14 +163,14 @@ public class AstroDbContext : DbContext
         configurationBuilder.Properties<DateTime?>()
             .HaveConversion<NullableDateTimeConverter>();
 
-        configurationBuilder.Properties<EApsideType>()
-            .HaveConversion<ApsideConverter>();
-
-        configurationBuilder.Properties<ELunarPhaseType>()
-            .HaveConversion<LunarPhaseConverter>();
-
-        configurationBuilder.Properties<ESeasonalMarkerType>()
-            .HaveConversion<SeasonalMarkerConverter>();
+        // configurationBuilder.Properties<EApsideType>()
+        //     .HaveConversion<ApsideConverter>();
+        //
+        // configurationBuilder.Properties<ELunarPhaseType>()
+        //     .HaveConversion<LunarPhaseConverter>();
+        //
+        // configurationBuilder.Properties<ESeasonalMarkerType>()
+        //     .HaveConversion<SeasonalMarkerConverter>();
     }
 
     public static string DataDirectory()

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Galaxon.Astronomy.Data.Converters;
 
-public class LunarPhaseConverter() : ValueConverter<ELunarPhaseType, string>(
-    // Convert from enum to string.
-    lunarPhaseType => lunarPhaseType.ToString(),
+public class LunarPhaseConverter() : ValueConverter<ELunarPhaseType, int>(
+    // Convert from enum to int.
+    eLunarPhaseType => (int)eLunarPhaseType,
 
-    // Convert from string to enum.
-    strLunarPhaseType => (ELunarPhaseType)Enum.Parse(typeof(ELunarPhaseType), strLunarPhaseType)
+    // Convert from int to enum.
+    iLunarPhaseType => (ELunarPhaseType)iLunarPhaseType
 );

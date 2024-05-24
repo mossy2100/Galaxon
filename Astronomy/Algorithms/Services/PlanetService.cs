@@ -3,8 +3,8 @@ using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Collections;
 using Galaxon.Core.Exceptions;
+using Galaxon.Core.Types;
 using Galaxon.Numerics.Algebra;
 
 namespace Galaxon.Astronomy.Algorithms.Services;

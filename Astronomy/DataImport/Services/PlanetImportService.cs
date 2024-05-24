@@ -28,7 +28,7 @@ public class PlanetImportService(
     /// <summary>
     /// Initialize the planet data from the CSV file.
     /// </summary>
-    public void Import()
+    public async Task Import()
     {
         // Get the Sun.
         AstroObjectRecord sun = astroObjectRepository.LoadByName("Sun", "Star");
@@ -39,11 +39,11 @@ public class PlanetImportService(
         using CsvReader csv = new (stream, CultureInfo.InvariantCulture);
 
         // Skip the header row.
-        csv.Read();
+        await csv.ReadAsync();
         csv.ReadHeader();
 
         // Create or update the planet records.
-        while (csv.Read())
+        while (await csv.ReadAsync())
         {
             string? name = csv.GetField(0);
             string? type = csv.GetField(2);
@@ -84,7 +84,7 @@ public class PlanetImportService(
 
             // Save the planet object now to ensure it has an id before attaching composition
             // objects to it.
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
 
             // Orbital parameters.
             planet.Orbit ??= new OrbitalRecord();
@@ -127,7 +127,7 @@ public class PlanetImportService(
             planet.Orbit.MeanMotion = Tau / planet.Orbit.SiderealOrbitPeriod;
 
             // Save the orbital parameters.
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
 
             // Physical parameters.
             planet.Physical ??= new PhysicalRecord();
@@ -155,7 +155,7 @@ public class PlanetImportService(
             planet.Physical.MinSurfaceTemp = GetDoubleValue(csv, 36);
             planet.Physical.MeanSurfaceTemp = GetDoubleValue(csv, 37);
             planet.Physical.MaxSurfaceTemp = GetDoubleValue(csv, 38);
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
 
             // Rotational parameters.
             planet.Rotation ??= new RotationalRecord();
@@ -169,14 +169,14 @@ public class PlanetImportService(
                 GetDoubleValue(csv, 34, RADIANS_PER_DEGREE);
             planet.Rotation.NorthPoleDeclination =
                 GetDoubleValue(csv, 35, RADIANS_PER_DEGREE);
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
 
             // Atmosphere.
             planet.Atmosphere ??= new AtmosphereRecord();
             planet.Atmosphere.SurfacePressure = GetDoubleValue(csv, 40);
             planet.Atmosphere.ScaleHeight = GetDoubleValue(csv, 41, 1000);
             planet.Atmosphere.IsSurfaceBoundedExosphere = name == "Mercury";
-            astroDbContext.SaveChanges();
+            await astroDbContext.SaveChangesAsync();
         }
     }
 }

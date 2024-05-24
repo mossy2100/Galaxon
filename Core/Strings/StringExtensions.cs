@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using Galaxon.Core.Collections;
+using Galaxon.Core.Types;
 
 namespace Galaxon.Core.Strings;
 

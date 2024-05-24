@@ -545,47 +545,48 @@ public class LunisolarCalendar(
         foreach (LunarPhaseEvent newMoon in newMoons)
         {
             // Get Ls.
-            (double Ls, double Bs, double Rs) = sunService.CalcPosition(newMoon.JulianDateTerrestrial);
-            double LsDeg = RadiansToDegrees(Ls);
+            (double Ls_rad, double _, double _) =
+                sunService.CalcPosition(newMoon.JulianDateTerrestrial);
+            double Ls_deg = RadiansToDegrees(Ls_rad);
 
             // Check for New Moon within 1° of the northward equinox.
-            double diff = Abs(LsDeg);
+            double diff = Abs(Ls_deg);
             if (diff < 1)
             {
                 DateTime dtEquinox =
-                    seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarkerType.NorthwardEquinox);
+                    seasonalMarkerService.GetSeasonalMarker(newMoon.DateTimeUtc.Year,
+                        ESeasonalMarkerType.NorthwardEquinox).DateTimeUtc;
                 double diffDays =
                     Abs(dtEquinox.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
-                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={Ls_deg}°");
                 Console.WriteLine($"The northward equinox occurred at {dtEquinox}");
                 Console.WriteLine("Close match to northward equinox (northern spring equinox).");
                 Console.WriteLine($"Difference = {diff}° or {diffDays} days.");
             }
 
             // Check for New Moon within 1° of the southern solstice.
-            diff = Abs(LsDeg + 90);
+            diff = Abs(Ls_deg + 90);
             if (diff < 1)
             {
                 DateTime dtSolstice =
-                    seasonalMarkerService.GetSeasonalMarkerAsDateTime(newMoon.DateTimeUtc.Year,
-                        ESeasonalMarkerType.SouthernSolstice);
+                    seasonalMarkerService.GetSeasonalMarker(newMoon.DateTimeUtc.Year,
+                        ESeasonalMarkerType.SouthernSolstice).DateTimeUtc;
                 double diffDays =
                     Abs(dtSolstice.GetTotalDays() - newMoon.DateTimeUtc.GetTotalDays());
                 Console.WriteLine();
-                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={Ls_deg}°");
                 Console.WriteLine($"The southern solstice occurred at {dtSolstice}");
                 Console.WriteLine("Close match to southern solstice (northern winter solstice).");
                 Console.WriteLine($"Difference = {diff}° or {diffDays} days.");
             }
 
             // Check for New Moon within 1° of the Besselian new year.
-            diff = Abs(LsDeg + 80);
+            diff = Abs(Ls_deg + 80);
             if (diff < 1)
             {
                 Console.WriteLine();
-                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={LsDeg}°");
+                Console.WriteLine($"The New Moon of {newMoon.DateTimeUtc} occurred at Ls={Ls_deg}°");
                 Console.WriteLine("Close match to Besselian New Year.");
                 Console.WriteLine($"Difference = {diff}°");
             }
@@ -625,8 +626,8 @@ public class LunisolarCalendar(
         {
             // Get the southern solstice.
             DateTime solstice =
-                seasonalMarkerService.GetSeasonalMarkerAsDateTime(y,
-                    ESeasonalMarkerType.SouthernSolstice);
+                seasonalMarkerService.GetSeasonalMarker(y, ESeasonalMarkerType.SouthernSolstice)
+                    .DateTimeUtc;
 
             // Check if there's also a New Moon at this time.
             LunarPhaseEvent newMoon = lunarPhaseService.GetPhaseNearDateTimeHumble(solstice);

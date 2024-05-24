@@ -14,28 +14,27 @@ public struct ApsideEvent
     public AstroObjectRecord Planet { get; set; }
 
     /// <summary>
-    /// Gets or sets the apside number.
+    /// The orbit number. Negative values are pre-J2000.
     /// </summary>
-    public double ApsideNumber { get; set; }
+    public int OrbitNumber { get; set; }
 
     /// <summary>
     /// The type of apside.
     /// </summary>
-    public readonly EApsideType ApsideType =>
-        double.IsInteger(ApsideNumber) ? EApsideType.Periapsis : EApsideType.Apoapsis;
+    public EApsideType ApsideType { get; set; }
 
     /// <summary>
-    /// Gets or sets the terrestrial Julian date of this apside event.
+    /// The Julian Date (Terrestrial Time) of this apside event.
     /// </summary>
     public double JulianDateTerrestrial { get; set; }
 
     /// <summary>
-    /// Gets or sets the UTC datetime of this apside event.
+    /// The UTC datetime of this apside event.
     /// </summary>
     public DateTime DateTimeUtc { get; set; }
 
     /// <summary>
-    /// Gets or sets the radius of the orbit at the apside event in astronomical units (optional).
+    /// The radius of the orbit at the apside event in astronomical units (optional).
     /// </summary>
     public double? Radius_AU { get; set; }
 
@@ -43,8 +42,8 @@ public struct ApsideEvent
     /// Initializes a new instance of the <see cref="ApsideEvent"/> struct.
     /// </summary>
     /// <param name="planet">The celestial object involved in this apside event.</param>
-    /// <param name="orbit">The orbit number where the apside event occurs.</param>
-    /// <param name="type">The type of the apside event (e.g., perihelion or aphelion).</param>
+    /// <param name="orbitNumber">The orbit number where the apside event occurs.</param>
+    /// <param name="apsideType">The type of the apside event (e.g. perihelion or aphelion).</param>
     /// <param name="julianDateTerrestrial">
     /// The Julian Date (Terrestrial Time) of this apside event.
     /// </param>
@@ -55,13 +54,15 @@ public struct ApsideEvent
     /// </param>
     public ApsideEvent(
         AstroObjectRecord planet,
-        double apsideNumber,
+        int orbitNumber,
+        EApsideType apsideType,
         double julianDateTerrestrial,
         DateTime dateTimeUtc,
         double? radius_AU = null)
     {
         Planet = planet;
-        ApsideNumber = apsideNumber;
+        OrbitNumber = orbitNumber;
+        ApsideType = apsideType;
         JulianDateTerrestrial = julianDateTerrestrial;
         DateTimeUtc = dateTimeUtc;
         Radius_AU = radius_AU;

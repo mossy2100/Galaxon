@@ -7,7 +7,6 @@ using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.DataImport.DataTransferObjects;
-using Galaxon.Core.Collections;
 using Galaxon.Core.Strings;
 using Galaxon.Core.Types;
 using Galaxon.Time;
@@ -18,15 +17,216 @@ using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseService lunarPhaseService)
+public class LunarPhaseImportService(
+    AstroDbContext astroDbContext,
+    LunarPhaseService lunarPhaseService)
 {
+    /// <summary>
+    /// Log an information message.
+    /// </summary>
+    private void LogInfo(string message, int lunationNumber, ELunarPhaseType phaseType,
+        string source, DateTime dt)
+    {
+        Slog.Information(
+            "{Message}: Lunation = {LN}, Type = {Type}, DateTime from {Source} = {DateTime}",
+            message, lunationNumber,
+            Microsoft.OpenApi.Extensions.EnumExtensions.GetDisplayName(phaseType), source,
+            dt.ToIsoString());
+    }
+
+    /// <summary>
+    /// Look up a lunar phase record in the database by DateTime within ±1 hour of a given
+    /// DateTime.
+    /// </summary>
+    private LunarPhaseRecord? LookupRecord(DateTime dt)
+    {
+        return astroDbContext.LunarPhases.FirstOrDefault(lp =>
+            (lp.DateTimeUtcGalaxon != null
+                && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcGalaxon, dt)!.Value) <= 1)
+            || (lp.DateTimeUtcAstroPixels != null
+                && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!.Value) <= 1)
+            || (lp.DateTimeUtcUsno != null
+                && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value) <= 1));
+    }
+
+    /// <summary>
+    /// Compute and cache lunar phase events.
+    /// This will speed up the API and enables easy comparison with other sources using SQL.
+    /// </summary>
+    public async Task CacheCalculations()
+    {
+        // Compute results for years 1-4000.
+        // AstroPixels provides results from year -1000 to 4000, but .NET doesn't support years less
+        // than 1.
+        // USNO provides results from 1700-2100.
+        for (int year = 1; year <= 4000; year++)
+        {
+            List<LunarPhaseEvent> phaseEvents = lunarPhaseService.GetPhasesInYear(year);
+            foreach (LunarPhaseEvent phaseEvent in phaseEvents)
+            {
+                // Log it.
+                LogInfo("Computed lunar phase", phaseEvent.LunationNumber, phaseEvent.PhaseType,
+                    "Galaxon", phaseEvent.DateTimeUtc);
+
+                // Look for a matching record.
+                LunarPhaseRecord? record = LookupRecord(phaseEvent.DateTimeUtc);
+
+                if (record == null)
+                {
+                    // Insert new record.
+                    record = new LunarPhaseRecord
+                    {
+                        LunationNumber = phaseEvent.LunationNumber,
+                        PhaseType = phaseEvent.PhaseType,
+                        DateTimeUtcGalaxon = phaseEvent.DateTimeUtc,
+                    };
+                    astroDbContext.LunarPhases.Add(record);
+                    await astroDbContext.SaveChangesAsync();
+
+                    // Log it.
+                    LogInfo("Inserted lunar phase record", phaseEvent.LunationNumber,
+                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                }
+                else if (record.DateTimeUtcGalaxon != phaseEvent.DateTimeUtc)
+                {
+                    // Update existing record.
+                    record.DateTimeUtcGalaxon = phaseEvent.DateTimeUtc;
+                    await astroDbContext.SaveChangesAsync();
+
+                    // Log it.
+                    LogInfo("Updated lunar phase record", phaseEvent.LunationNumber,
+                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                }
+                else
+                {
+                    // Nothing to do.
+                    LogInfo("Lunar phase record already up-to-date", phaseEvent.LunationNumber,
+                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Import the lunar phase data from the USNO API.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task ImportFromUsno()
+    {
+        for (int year = 1700; year <= 2100; year++)
+        {
+            string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
+            using HttpClient client = new ();
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonContent = await response.Content.ReadAsStringAsync();
+                // Parse the JSON data to extract the seasonal marker data
+                UsnoLunarPhasesForYear? ulps =
+                    JsonConvert.DeserializeObject<UsnoLunarPhasesForYear>(jsonContent);
+                if (ulps?.phasedata == null || ulps.phasedata.Count == 0)
+                {
+                    Slog.Error("Response does not contain lunar phase data.");
+                }
+                else
+                {
+                    foreach (UsnoLunarPhase ulp in ulps.phasedata)
+                    {
+                        // Get the phase type.
+                        ELunarPhaseType phaseType;
+                        bool parsedPhase;
+                        if (ulp.phase == "Last Quarter")
+                        {
+                            phaseType = ELunarPhaseType.ThirdQuarter;
+                            parsedPhase = true;
+                        }
+                        else
+                        {
+                            parsedPhase = EnumExtensions.TryParse(ulp.phase, out phaseType);
+                        }
+                        if (!parsedPhase)
+                        {
+                            throw new InvalidOperationException("Error parsing lunar phase.");
+                        }
+
+                        // Construct the datetime.
+                        DateOnly date = new (year, ulp.month, ulp.day);
+                        TimeOnly time = TimeOnly.Parse(ulp.time);
+                        DateTime dt = new (date, time, DateTimeKind.Utc);
+
+                        // Get the Lunation Number and phase type.
+                        int lunationNumber = GetLunationNumber(dt);
+
+                        // Log it.
+                        LogInfo("Parsed lunar phase", lunationNumber, phaseType, "USNO", dt);
+
+                        // See if we need to update or insert a record.
+                        LunarPhaseRecord? record = LookupRecord(dt);
+                        if (record == null)
+                        {
+                            // Insert new record.
+                            record = new LunarPhaseRecord
+                            {
+                                LunationNumber = lunationNumber,
+                                PhaseType = phaseType,
+                                DateTimeUtcUsno = dt
+                            };
+                            astroDbContext.LunarPhases.Add(record);
+                            await astroDbContext.SaveChangesAsync();
+
+                            // Log it.
+                            LogInfo("Inserted lunar phase record", lunationNumber, phaseType,
+                                "USNO", dt);
+                        }
+                        else if (record.DateTimeUtcUsno != dt)
+                        {
+                            // Update existing record.
+                            record.DateTimeUtcUsno = dt;
+                            await astroDbContext.SaveChangesAsync();
+
+                            // Log it.
+                            LogInfo("Updated lunar phase record", lunationNumber, phaseType,
+                                "USNO", dt);
+                        }
+                        else
+                        {
+                            // Nothing to do.
+                            LogInfo("Lunar phase record already up-to-date", lunationNumber,
+                                phaseType, "USNO", dt);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Failed to retrieve data. Status code: {response.StatusCode}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Extract lunar phase data from the AstroPixels ephmeris and copy them to the database.
+    /// </summary>
+    public async Task ImportFromAstroPixels()
+    {
+        // Get the links to the catalog pages (CE only).
+        List<string> urls = await GetAstroPixelsEphemerisPageUrls();
+
+        // One page at a time.
+        foreach (string url in urls)
+        {
+            // Import all the lunar phases on this page.
+            await ImportAstroPixelsPage(url);
+        }
+    }
+
     /// <summary>
     /// Get the links to the AstroPixels lunar phase data tables.
     /// See: <see href="http://astropixels.com/ephemeris/phasescat/phasescat.html"/>
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
+    private async Task<List<string>> GetAstroPixelsEphemerisPageUrls()
     {
         List<string> result = new ();
         string indexUrl = "https://astropixels.com/ephemeris/phasescat/phasescat.html";
@@ -56,7 +256,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
         foreach (HtmlNode link in links)
         {
             string linkHref = link.GetAttributeValue("href", string.Empty).Trim();
-            if (!string.IsNullOrEmpty(linkHref))
+            if (!linkHref.IsEmpty())
             {
                 // Ensure the URL is absolute
                 Uri linkUri = new (new Uri(indexUrl), linkHref);
@@ -73,7 +273,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
     /// <param name="url"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task ImportAstroPixelsPage(string url)
+    private async Task ImportAstroPixelsPage(string url)
     {
         JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
 
@@ -115,7 +315,6 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
 
             foreach (string line in lines)
             {
-                Console.WriteLine(line);
                 MatchCollection matches = rxDataLine.Matches(line);
                 if (matches.Count == 0)
                 {
@@ -135,7 +334,7 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
                 }
 
                 // Get the dates and times of the phases, if present.
-                for (byte phaseTypeIndex = 0; phaseTypeIndex < 4; phaseTypeIndex++)
+                for (int phaseTypeIndex = 0; phaseTypeIndex < 4; phaseTypeIndex++)
                 {
                     string dateStr = line.Substring(8 + phaseTypeIndex * 18, 13);
                     MatchCollection dateTimeMatches = rxDateTime.Matches(dateStr);
@@ -146,7 +345,8 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
 
                     // Extract the date parts.
                     int month =
-                        GregorianCalendarUtility.MonthNameToNumber(dateTimeMatches[0].Groups["month"].Value);
+                        GregorianCalendarUtility.MonthNameToNumber(dateTimeMatches[0]
+                            .Groups["month"].Value);
                     int day = int.Parse(dateTimeMatches[0].Groups["day"].Value);
                     int hour = int.Parse(dateTimeMatches[0].Groups["hour"].Value);
                     int minute = int.Parse(dateTimeMatches[0].Groups["minute"].Value);
@@ -173,138 +373,49 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
                     }
 
                     // Get the Lunation Number.
-                    int LN = GetLunationNumber(dt);
-                    ELunarPhaseType phaseTypeType = (ELunarPhaseType)phaseTypeIndex;
+                    int lunatioNumber = GetLunationNumber(dt);
+
+                    // Get the phase type.
+                    ELunarPhaseType phaseType = (ELunarPhaseType)phaseTypeIndex;
+
+                    // Log it.
+                    LogInfo("Parsed lunar phase", lunatioNumber, phaseType, "AstroPixels", dt);
 
                     // See if we need to update or insert a record.
-                    LunarPhaseRecord? existingLunarPhase = LookupRecord(dt);
-                    if (existingLunarPhase == null)
+                    LunarPhaseRecord? record = LookupRecord(dt);
+                    if (record == null)
                     {
                         // Insert new record.
-                        LunarPhaseRecord newLunarPhase = new ()
+                        record = new LunarPhaseRecord
                         {
-                            LunationNumber = LN,
-                            PhaseType = phaseTypeType,
+                            LunationNumber = lunatioNumber,
+                            PhaseType = phaseType,
                             DateTimeUtcAstroPixels = dt
                         };
-                        astroDbContext.LunarPhases.Add(newLunarPhase);
+                        astroDbContext.LunarPhases.Add(record);
+                        await astroDbContext.SaveChangesAsync();
+
+                        // Log it.
+                        LogInfo("Inserted lunar phase record", lunatioNumber, phaseType,
+                            "AstroPixels", dt);
+                    }
+                    else if (record.DateTimeUtcAstroPixels != dt)
+                    {
+                        // Update existing record.
+                        record.DateTimeUtcAstroPixels = dt;
+                        await astroDbContext.SaveChangesAsync();
+
+                        // Log it.
+                        LogInfo("Updated lunar phase record", lunatioNumber, phaseType,
+                            "AstroPixels", dt);
                     }
                     else
                     {
-                        // Update existing record.
-                        existingLunarPhase.LunationNumber = LN;
-                        existingLunarPhase.PhaseType = phaseTypeType;
-                        existingLunarPhase.DateTimeUtcAstroPixels = dt;
-                    }
-                    await astroDbContext.SaveChangesAsync();
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Extract lunar phase data from the AstroPixels web pages and copy them to the database.
-    /// </summary>
-    public async Task ImportAstroPixels()
-    {
-        // Get the links to the catalog pages (CE only).
-        List<string> urls = await GetAstroPixelsEphemerisPageUrls();
-
-        // One page at a time.
-        foreach (string url in urls)
-        {
-            // Import all the lunar phases on this page.
-            await ImportAstroPixelsPage(url);
-        }
-    }
-
-    /// <summary>
-    /// Import the lunar phase data from the USNO API.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public async Task ImportUsno()
-    {
-        for (int year = 1700; year <= 2100; year++)
-        {
-            string apiUrl = $"https://aa.usno.navy.mil/api/moon/phases/year?year={year}";
-            using HttpClient client = new ();
-            HttpResponseMessage response = await client.GetAsync(apiUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonContent = await response.Content.ReadAsStringAsync();
-                // Parse the JSON data to extract the seasonal marker data
-                UsnoLunarPhasesForYear? ulps =
-                    JsonConvert.DeserializeObject<UsnoLunarPhasesForYear>(jsonContent);
-                if (ulps?.phasedata == null || ulps.phasedata.IsEmpty())
-                {
-                    Console.WriteLine(
-                        $"Failed to retrieve data. Status code: {response.StatusCode}");
-                }
-                else
-                {
-                    foreach (UsnoLunarPhase ulp in ulps.phasedata)
-                    {
-                        Console.WriteLine();
-
-                        // Get the phase and phase number.
-                        ELunarPhaseType phaseType;
-                        bool parsedPhase;
-                        if (ulp.phase == "Last Quarter")
-                        {
-                            phaseType = ELunarPhaseType.ThirdQuarter;
-                            parsedPhase = true;
-                        }
-                        else
-                        {
-                            parsedPhase = EnumExtensions.TryParse(ulp.phase, out phaseType);
-                        }
-                        if (!parsedPhase)
-                        {
-                            throw new InvalidOperationException("Error parsing lunar phase.");
-                        }
-                        byte phaseTypeIndex = (byte)phaseType;
-
-                        // Construct the datetime.
-                        DateOnly date = new (year, ulp.month, ulp.day);
-                        TimeOnly time = TimeOnly.Parse(ulp.time);
-                        DateTime dt = new (date, time, DateTimeKind.Utc);
-
-                        // Get the Lunation Number and phase type.
-                        int lunationNumber = GetLunationNumber(dt);
-                        ELunarPhaseType phaseTypeType = (ELunarPhaseType)phaseTypeIndex;
-
-                        // Print.
-                        Console.WriteLine(
-                            $"Lunation {lunationNumber:10}, Phase {ulp.phase,20} => {dt.ToIsoString()}");
-
-                        // See if we need to update or insert a record.
-                        LunarPhaseRecord? existingLunarPhase = LookupRecord(dt);
-                        if (existingLunarPhase == null)
-                        {
-                            // Insert new record.
-                            LunarPhaseRecord newLunarPhase = new ()
-                            {
-                                LunationNumber = lunationNumber,
-                                PhaseType = phaseTypeType,
-                                DateTimeUtcUsno = dt
-                            };
-                            astroDbContext.LunarPhases.Add(newLunarPhase);
-                        }
-                        else
-                        {
-                            // Update existing record.
-                            existingLunarPhase.LunationNumber = lunationNumber;
-                            existingLunarPhase.PhaseType = phaseTypeType;
-                            existingLunarPhase.DateTimeUtcUsno = dt;
-                        }
-                        await astroDbContext.SaveChangesAsync();
+                        // Nothing to do.
+                        LogInfo("Lunar phase record already up-to-date", lunatioNumber, phaseType,
+                            "AstroPixels", dt);
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine(
-                    $"Failed to retrieve data. Status code: {response.StatusCode}");
             }
         }
     }
@@ -317,71 +428,10 @@ public class LunarPhaseImportService(AstroDbContext astroDbContext, LunarPhaseSe
         TimeSpan timeSinceLunation0 = phaseDateTime - TimeConstants.LUNATION_0_START;
 
         // Round off to nearest phase.
-        int phaseCount =
+        int phaseNumber =
             (int)Round((double)timeSinceLunation0.Ticks / TimeConstants.TICKS_PER_LUNAR_PHASE);
 
         // Calculate the Lunation Number.
-        return (int)Floor(phaseCount / 4.0);
-    }
-
-    /// <summary>
-    /// Look up a lunar phase record in the database by DateTime within ±24 hours of a given
-    /// DateTime.
-    /// </summary>
-    public LunarPhaseRecord? LookupRecord(DateTime dt)
-    {
-        return astroDbContext.LunarPhases
-            .FirstOrDefault(lp =>
-                (lp.DateTimeUtcAstroPixels != null
-                    && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcAstroPixels, dt)!
-                        .Value)
-                    <= TimeConstants.HOURS_PER_DAY)
-                || (lp.DateTimeUtcUsno != null
-                    && Abs(EF.Functions.DateDiffHour(lp.DateTimeUtcUsno, dt)!.Value)
-                    <= TimeConstants.HOURS_PER_DAY)
-            );
-    }
-
-    public async Task CacheCalculations()
-    {
-        for (int year = 1; year <= 4000; year++)
-        {
-            List<LunarPhaseEvent> phaseEvents = lunarPhaseService.GetPhasesInYear(year);
-            foreach (LunarPhaseEvent phaseEvent in phaseEvents)
-            {
-                // Look for a matching record.
-                LunarPhaseRecord? phaseRecord = astroDbContext.LunarPhases.FirstOrDefault(
-                    phaseRecord =>
-                        phaseRecord.LunationNumber == phaseEvent.LunationNumber
-                        && phaseRecord.PhaseType == phaseEvent.PhaseType);
-
-                if (phaseRecord == null)
-                {
-                    // Insert new record.
-                    Slog.Information(
-                        "Inserting new record: LN = {LN}, Phase = {Phase}, DateTime = {DateTime}.",
-                        phaseEvent.LunationNumber, phaseEvent.PhaseType.ToString(),
-                        phaseEvent.DateTimeUtc.ToIsoString());
-                    phaseRecord = new LunarPhaseRecord
-                    {
-                        LunationNumber = phaseEvent.LunationNumber,
-                        PhaseType = phaseEvent.PhaseType,
-                        DateTimeUtcGalaxon = phaseEvent.DateTimeUtc,
-                    };
-                }
-                else
-                {
-                    // Update existing record.
-                    Slog.Information(
-                        "Updating existing record: LN = {LN}, Phase = {Phase}, DateTime = {DateTime}.",
-                        phaseEvent.LunationNumber, phaseEvent.PhaseType.ToString(),
-                        phaseEvent.DateTimeUtc.ToIsoString());
-                    phaseRecord.DateTimeUtcGalaxon = phaseEvent.DateTimeUtc;
-                }
-
-                // Update the database.
-                await astroDbContext.SaveChangesAsync();
-            }
-        }
+        return (int)Floor(phaseNumber / 4.0);
     }
 }

@@ -2,7 +2,7 @@ namespace Galaxon.Astronomy.Data.Enums;
 
 public enum EApsideType
 {
-    Periapsis = 0,
+    Periapsis,
 
-    Apoapsis = 1
+    Apoapsis
 }

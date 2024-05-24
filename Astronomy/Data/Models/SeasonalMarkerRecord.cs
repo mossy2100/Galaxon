@@ -18,7 +18,7 @@ public class SeasonalMarkerRecord : DatabaseRecord
     /// <summary>
     /// The seasonal marker type.
     /// </summary>
-    [Column(TypeName = "varchar(16)")]
+    [Column(TypeName = "tinyint unsigned")]
     public ESeasonalMarkerType SeasonalMarkerType { get; set; }
 
     /// <summary>

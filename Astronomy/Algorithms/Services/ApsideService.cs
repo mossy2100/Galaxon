@@ -143,7 +143,10 @@ public class ApsideService(
         DateTime dt2 = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
             .RoundToNearestMinute();
 
-        return new ApsideEvent(planet, k, jdtt2, dt2);
+        // Get the orbit number.
+        int orbitNumber = (int)Floor(k);
+
+        return new ApsideEvent(planet, orbitNumber, apsideType.Value, jdtt2, dt2);
     }
 
     /// <summary>
@@ -179,7 +182,8 @@ public class ApsideService(
         double tolerance = 30.0 / TimeConstants.SECONDS_PER_DAY;
 
         // The function to calculate distance to Sun (radius) from JD(TT).
-        Func<double, double> func = jdtt => planetService.CalcPlanetPosition(planet, jdtt).Radius_AU;
+        Func<double, double> func = jdtt =>
+            planetService.CalcPlanetPosition(planet, jdtt).Radius_AU;
 
         // If we are looking for a minimum or a maximum radius.
         bool findMax = approxApsideEvent.ApsideType == EApsideType.Apoapsis;
@@ -241,8 +245,13 @@ public class ApsideService(
         DateTime dtResult = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
             .RoundToNearestMinute();
 
-        return new ApsideEvent(planet, approxApsideEvent.ApsideNumber, jdttResult, dtResult,
-            radius_AU);
+        // Return the updated event.
+        return approxApsideEvent with
+        {
+            JulianDateTerrestrial = jdttResult,
+            DateTimeUtc = dtResult,
+            Radius_AU = radius_AU
+        };
     }
 
     /// <summary>

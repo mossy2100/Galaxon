@@ -20,9 +20,8 @@ public class SeasonalMarkersDto : Dictionary<string, string>
     /// <param name="seasonalMarkerEvent">The seasonal marker event to be added.</param>
     public void Add(SeasonalMarkerEvent seasonalMarkerEvent)
     {
-        string key = seasonalMarkerEvent._SeasonalMarkerType.GetJsonPropertyName();
-        string value = DateTimeExtensions.RoundToNearestMinute(seasonalMarkerEvent.DateTimeUtc)
-            .ToIsoString();
+        string key = seasonalMarkerEvent.SeasonalMarkerType.GetJsonPropertyName();
+        string value = seasonalMarkerEvent.DateTimeUtc.RoundToNearestMinute().ToIsoString();
         Add(key, value);
     }
 }

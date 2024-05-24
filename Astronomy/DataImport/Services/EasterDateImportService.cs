@@ -8,10 +8,19 @@ namespace Galaxon.Astronomy.DataImport.Services;
 public class EasterDateImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
+    /// Import Easter dates from all sources.
+    /// </summary>
+    public async Task Import()
+    {
+        await ImportEasterDates1600_2099();
+        await ImportEasterDates1700_2299();
+    }
+
+    /// <summary>
     /// Parse the data file from the US Census Bureau.
     /// See: <see href="https://www.census.gov/data/software/x13as/genhol/easter-dates.html"/>
     /// </summary>
-    internal void ImportEasterDates1600_2099()
+    public async Task ImportEasterDates1600_2099()
     {
         Slog.Information("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.census.gov/data/software/x13as/genhol/easter-dates.html");
@@ -22,7 +31,7 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
 
         while (!reader.EndOfStream)
         {
-            string? line = reader.ReadLine()?.Trim();
+            string? line = (await reader.ReadLineAsync())?.Trim();
             if (string.IsNullOrEmpty(line))
             {
                 continue;
@@ -77,14 +86,14 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
             }
         }
 
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
     }
 
     /// <summary>
     /// Parse the data file from the Astronomical Society of South Australia.
     /// See: <see href="https://www.assa.org.au/edm"/>
     /// </summary>
-    internal void ImportEasterDates1700_2299()
+    public async Task ImportEasterDates1700_2299()
     {
         Slog.Information("Parsing easter dates 1600-2999 from {Url}.",
             "https://www.assa.org.au/edm");
@@ -97,7 +106,7 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
 
         while (!reader.EndOfStream)
         {
-            string? line = reader.ReadLine()?.Trim();
+            string? line = (await reader.ReadLineAsync())?.Trim();
             if (string.IsNullOrEmpty(line))
             {
                 continue;
@@ -141,6 +150,6 @@ public class EasterDateImportService(AstroDbContext astroDbContext)
             }
         }
 
-        astroDbContext.SaveChanges();
+        await astroDbContext.SaveChangesAsync();
     }
 }
