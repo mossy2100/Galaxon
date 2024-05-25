@@ -295,7 +295,8 @@ public class ApsideServiceTests
 
         // Convert the computed event from JD(TT) to DateTime (TT) so we can compare it to the
         // values in the book. (The ApsideEvent class only provides the DateTime in UTC.)
-        DateTime dtttActual = JulianDateUtility.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
+        DateTime dtttActual =
+            JulianDateUtility.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
 
         // Get the radius in AU.
         double actualRadius_AU = apsideEvent.Radius_AU!.Value;
@@ -331,10 +332,8 @@ public class ApsideServiceTests
         TimeSpan maxDiff = TimeSpan.FromMinutes(5);
 
         // Get the apsides with a USNO result.
-        List<ApsideRecord> apsides = astroDbContext.Apsides
-            .Where(sm => sm.DateTimeUtcUsno != null)
-            .OrderBy(sm => sm.DateTimeUtcUsno!.Value)
-            .ToList();
+        List<ApsideRecord> apsides = astroDbContext.Apsides.Where(sm => sm.DateTimeUtcUsno != null)
+            .OrderBy(sm => sm.DateTimeUtcUsno!.Value).ToList();
 
         // Check each.
         foreach (ApsideRecord apside in apsides)
@@ -374,8 +373,7 @@ public class ApsideServiceTests
         // Get the apsides with a USNO result.
         List<ApsideRecord> apsides = astroDbContext.Apsides
             .Where(sm => sm.DateTimeUtcAstroPixels != null)
-            .OrderBy(sm => sm.DateTimeUtcAstroPixels!.Value)
-            .ToList();
+            .OrderBy(sm => sm.DateTimeUtcAstroPixels!.Value).ToList();
 
         // Check each.
         foreach (ApsideRecord apside in apsides)
@@ -397,8 +395,8 @@ public class ApsideServiceTests
             // Compare radii.
             if (apside.RadiusAstroPixels_AU != null && apsideEvent.Radius_AU != null)
             {
-                Assert.AreEqual(apside.RadiusAstroPixels_AU.Value, apsideEvent.Radius_AU.Value,
-                    maxDistanceDiff_AU);
+                Assert.AreEqual((double)apside.RadiusAstroPixels_AU.Value,
+                    apsideEvent.Radius_AU.Value, maxDistanceDiff_AU);
             }
         }
     }

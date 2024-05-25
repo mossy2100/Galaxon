@@ -26,6 +26,21 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
         "https://datacenter.iers.org/products/eop/bulletinc/";
 
     /// <summary>
+    /// Import leap second data from the internet.
+    /// </summary>
+    public async Task Import()
+    {
+        // Run this one first to get all the leap seconds, including those before 1996.
+        // This method should only need to be run once.
+        await ImportNistWebPage();
+
+        // Run this one next to get all the leap seconds from 1996 onwards.
+        // This method needs to be run semiannually, as the IERS bulletins are published in January
+        // and July.
+        await ImportIersBulletins();
+    }
+
+    /// <summary>
     /// Download the leap seconds from the NIST website.
     /// </summary>
     public async Task ImportNistWebPage()

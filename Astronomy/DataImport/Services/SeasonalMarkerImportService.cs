@@ -22,6 +22,17 @@ public class SeasonalMarkerImportService(
     SeasonalMarkerService seasonalMarkerService)
 {
     /// <summary>
+    /// Cached reference to the Earth object.
+    /// </summary>
+    private AstroObjectRecord? _earth;
+
+    /// <summary>
+    /// Lazy-loading reference to the Earth object.
+    /// </summary>
+    private AstroObjectRecord _Earth =>
+        _earth ??= astroObjectRepository.LoadByName("Earth", "Planet");
+
+    /// <summary>
     /// Log an information message.
     /// </summary>
     private void LogInfo(string message, string planetName, int year, ESeasonalMarkerType type,
@@ -53,9 +64,6 @@ public class SeasonalMarkerImportService(
     /// </summary>
     public async Task CacheCalculations()
     {
-        // Load Earth.
-        AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
-
         // Compute results for 1700-3000.
         // USNO provides results from 1700-2100.
         // AstroPixels provides results from 2001-2100.
@@ -67,7 +75,7 @@ public class SeasonalMarkerImportService(
             foreach (SeasonalMarkerEvent smEvent in smEvents)
             {
                 // Log it.
-                LogInfo("Computed seasonal marker", earth.Name!, year, smEvent.MarkerType,
+                LogInfo("Computed seasonal marker", _Earth.Name!, year, smEvent.MarkerType,
                     smEvent.DateTimeUtc);
 
                 // Look for a matching record.
@@ -78,7 +86,7 @@ public class SeasonalMarkerImportService(
                     // Insert new record.
                     record = new SeasonalMarkerRecord
                     {
-                        AstroObjectId = earth.Id,
+                        AstroObjectId = _Earth.Id,
                         Year = year,
                         MarkerType = smEvent.MarkerType,
                         DateTimeUtcGalaxon = smEvent.DateTimeUtc
@@ -145,8 +153,6 @@ public class SeasonalMarkerImportService(
                 $"Failed to retrieve data from USNO for year {year}.");
         }
 
-        AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
-
         string jsonContent = await response.Content.ReadAsStringAsync();
 
         // Parse the JSON data to extract the seasonal marker data
@@ -180,8 +186,8 @@ public class SeasonalMarkerImportService(
             DateTime dt = new (date, time, DateTimeKind.Utc);
 
             // Log it.
-            LogInfo("Parsed seasonal marker from USNO", earth.Name!, usm.year,
-                markerType.Value, dt);
+            LogInfo("Parsed seasonal marker from USNO", _Earth.Name!, usm.year, markerType.Value,
+                dt);
 
             // Look for the record to update.
             SeasonalMarkerRecord? record = LookupRecord(dt);
@@ -190,7 +196,7 @@ public class SeasonalMarkerImportService(
                 // Insert new record.
                 record = new SeasonalMarkerRecord
                 {
-                    AstroObjectId = earth.Id,
+                    AstroObjectId = _Earth.Id,
                     Year = usm.year,
                     MarkerType = markerType.Value,
                     DateTimeUtcGalaxon = dt
@@ -238,9 +244,6 @@ public class SeasonalMarkerImportService(
             @"(?<year>\d{4})(\s+(?<month>[a-z]+)\s+(?<day>\d{2})\s+(?<hour>\d{2}):(?<minute>\d{2})){4}",
             RegexOptions.IgnoreCase);
 
-        // Load Earth from the database.
-        AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
-
         // Extract data from <pre> tags.
         foreach (HtmlNode? preNode in htmlDoc.DocumentNode.SelectNodes("//pre"))
         {
@@ -276,7 +279,7 @@ public class SeasonalMarkerImportService(
                     DateTime dt = new (year, month, day, hour, minute, 0, DateTimeKind.Utc);
 
                     // Log it.
-                    LogInfo("Parsed seasonal marker from AstroPixels", earth.Name!, year,
+                    LogInfo("Parsed seasonal marker from AstroPixels", _Earth.Name!, year,
                         markerType, dt);
 
                     // See if we need to update or insert a record, or do nothing.
@@ -286,7 +289,7 @@ public class SeasonalMarkerImportService(
                         // Insert new record.
                         record = new SeasonalMarkerRecord
                         {
-                            AstroObjectId = earth.Id,
+                            AstroObjectId = _Earth.Id,
                             Year = year,
                             MarkerType = markerType,
                             DateTimeUtcAstroPixels = dt

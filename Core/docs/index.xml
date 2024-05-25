@@ -549,7 +549,7 @@
         </member>
         <member name="T:Galaxon.Core.Types.ObjectExtensions">
             <summary>
-            Extension methods for ICollection and ICollection{T}.
+            Extension methods for Object.
             </summary>
         </member>
         <member name="M:Galaxon.Core.Types.ObjectExtensions.IsEmpty(System.Object)">

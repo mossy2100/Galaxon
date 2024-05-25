@@ -4,9 +4,18 @@ namespace Galaxon.Astronomy.DataImport.Services;
 
 public class DeltaTImportService(AstroDbContext astroDbContext)
 {
-    public static async Task ImportUsnoDeltaTMonthly()
+    /// <summary>
+    /// Import all delta-T data from the internet.
+    /// </summary>
+    public async Task Import() { }
+
+    /// <summary>
+    /// Import monthly delta-T data from
+    /// <see href="https://maia.usno.navy.mil/ser7/deltat.data"/>
+    /// </summary>
+    public async Task ImportFromUsnoDeltaTMonthly()
     {
-        // Download data file from https://maia.usno.navy.mil/ser7/deltat.data
+        // Download data file from USNO.
         // Go through each line.
         // Split each line on whitespace to get 4 numbers.
         // The first 3 numbers represent a Gregorian date triplet (year, month, day).

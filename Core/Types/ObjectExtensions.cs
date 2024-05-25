@@ -4,7 +4,7 @@ using System.Text;
 namespace Galaxon.Core.Types;
 
 /// <summary>
-/// Extension methods for ICollection and ICollection{T}.
+/// Extension methods for Object.
 /// </summary>
 public static class ObjectExtensions
 {

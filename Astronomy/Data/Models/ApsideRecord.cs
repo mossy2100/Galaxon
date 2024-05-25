@@ -46,5 +46,6 @@ public class ApsideRecord : DatabaseRecord
     /// <summary>
     /// The radius (distance to Sun) in AU of the apside according to AstroPixels.
     /// </summary>
-    public double? RadiusAstroPixels_AU { get; set; }
+    [Column(TypeName = "decimal(8,7)")]
+    public decimal? RadiusAstroPixels_AU { get; set; }
 }

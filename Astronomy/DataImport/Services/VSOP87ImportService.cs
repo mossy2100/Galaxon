@@ -4,7 +4,7 @@ using Galaxon.Astronomy.Data.Repositories;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
-public class Vsop87ImportService(AstroDbContext astroDbContext)
+public class VSOP87ImportService(AstroDbContext astroDbContext)
 {
     /// <summary>
     /// Parse the VSOP87 data files downloaded from the VSOP87 ftp site.
