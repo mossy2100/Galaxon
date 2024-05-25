@@ -15,11 +15,6 @@ public record struct LunarPhaseEvent
     public ELunarPhaseType PhaseType { get; init; }
 
     /// <summary>
-    /// Calculate the unique lunar phase event number.
-    /// </summary>
-    public double PhaseNumber => LunationNumber + (int)PhaseType / 4.0;
-
-    /// <summary>
     /// The Julian Date (Terrestrial Time) of the lunar phase event.
     /// </summary>
     public double JulianDateTerrestrial { get; init; }

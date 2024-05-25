@@ -19,7 +19,7 @@ public class SeasonalMarkerRecord : DatabaseRecord
     /// The seasonal marker type.
     /// </summary>
     [Column(TypeName = "tinyint unsigned")]
-    public ESeasonalMarkerType SeasonalMarkerType { get; set; }
+    public ESeasonalMarkerType MarkerType { get; set; }
 
     /// <summary>
     /// The UTC datetime of the seasonal marker according to my calculations.

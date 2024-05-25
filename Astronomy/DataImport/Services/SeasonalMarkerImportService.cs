@@ -67,7 +67,7 @@ public class SeasonalMarkerImportService(
             foreach (SeasonalMarkerEvent smEvent in smEvents)
             {
                 // Log it.
-                LogInfo("Computed seasonal marker", earth.Name!, year, smEvent.SeasonalMarkerType,
+                LogInfo("Computed seasonal marker", earth.Name!, year, smEvent.MarkerType,
                     smEvent.DateTimeUtc);
 
                 // Look for a matching record.
@@ -80,7 +80,7 @@ public class SeasonalMarkerImportService(
                     {
                         AstroObjectId = earth.Id,
                         Year = year,
-                        SeasonalMarkerType = smEvent.SeasonalMarkerType,
+                        MarkerType = smEvent.MarkerType,
                         DateTimeUtcGalaxon = smEvent.DateTimeUtc
                     };
                     astroDbContext.SeasonalMarkers.Attach(record);
@@ -160,7 +160,7 @@ public class SeasonalMarkerImportService(
 
         foreach (UsnoSeasonalMarker usm in usms.data)
         {
-            ESeasonalMarkerType? seasonalMarkerType = usm switch
+            ESeasonalMarkerType? markerType = usm switch
             {
                 { month: 3, phenom: "Equinox" } => ESeasonalMarkerType.NorthwardEquinox,
                 { month: 6, phenom: "Solstice" } => ESeasonalMarkerType.NorthernSolstice,
@@ -169,7 +169,7 @@ public class SeasonalMarkerImportService(
                 _ => null
             };
 
-            if (seasonalMarkerType == null)
+            if (markerType == null)
             {
                 continue;
             }
@@ -181,7 +181,7 @@ public class SeasonalMarkerImportService(
 
             // Log it.
             LogInfo("Parsed seasonal marker from USNO", earth.Name!, usm.year,
-                seasonalMarkerType.Value, dt);
+                markerType.Value, dt);
 
             // Look for the record to update.
             SeasonalMarkerRecord? record = LookupRecord(dt);
@@ -192,7 +192,7 @@ public class SeasonalMarkerImportService(
                 {
                     AstroObjectId = earth.Id,
                     Year = usm.year,
-                    SeasonalMarkerType = seasonalMarkerType.Value,
+                    MarkerType = markerType.Value,
                     DateTimeUtcGalaxon = dt
                 };
                 astroDbContext.SeasonalMarkers.Attach(record);
@@ -262,7 +262,7 @@ public class SeasonalMarkerImportService(
                 // Get the dates and times of the seasonal markers.
                 for (int sm = 0; sm < 4; sm++)
                 {
-                    ESeasonalMarkerType seasonalMarkerType = (ESeasonalMarkerType)sm;
+                    ESeasonalMarkerType markerType = (ESeasonalMarkerType)sm;
 
                     // Extract the date parts.
                     int month =
@@ -277,7 +277,7 @@ public class SeasonalMarkerImportService(
 
                     // Log it.
                     LogInfo("Parsed seasonal marker from AstroPixels", earth.Name!, year,
-                        seasonalMarkerType, dt);
+                        markerType, dt);
 
                     // See if we need to update or insert a record, or do nothing.
                     SeasonalMarkerRecord? record = LookupRecord(dt);
@@ -288,7 +288,7 @@ public class SeasonalMarkerImportService(
                         {
                             AstroObjectId = earth.Id,
                             Year = year,
-                            SeasonalMarkerType = seasonalMarkerType,
+                            MarkerType = markerType,
                             DateTimeUtcAstroPixels = dt
                         };
                         astroDbContext.SeasonalMarkers.Add(record);

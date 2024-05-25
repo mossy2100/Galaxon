@@ -17,12 +17,7 @@ public record struct SeasonalMarkerEvent
     /// <summary>
     /// The type of the seasonal marker.
     /// </summary>
-    public ESeasonalMarkerType SeasonalMarkerType { get; init; }
-
-    /// <summary>
-    /// The UTC date and time of the seasonal marker event.
-    /// </summary>
-    public DateTime DateTimeUtc { get; init; }
+    public ESeasonalMarkerType MarkerType { get; init; }
 
     /// <summary>
     /// The Julian Date (Terrestrial Time) of the seasonal marker event.
@@ -30,19 +25,24 @@ public record struct SeasonalMarkerEvent
     public double JulianDateTerrestrial { get; init; }
 
     /// <summary>
+    /// The UTC date and time of the seasonal marker event.
+    /// </summary>
+    public DateTime DateTimeUtc { get; init; }
+
+    /// <summary>
     /// Initializes a new instance of the SeasonalMarkerEvent record struct.
     /// </summary>
     /// <param name="year">The year of the seasonal marker event.</param>
-    /// <param name="seasonalMarkerType">The type of the seasonal marker.</param>
+    /// <param name="markerType">The type of the seasonal marker.</param>
+    /// <param name="julianDateTerrestrial">The Julian date for the terrestrial time of the seasonal marker
+    /// event.</param>
     /// <param name="dateTimeUtc">The UTC date and time of the seasonal marker event.</param>
-    /// <param name="julianDateTerrestrial">The Julian date for the terrestrial time of the seasonal marker event.</param>
-    public SeasonalMarkerEvent(int year, ESeasonalMarkerType seasonalMarkerType,
-        DateTime dateTimeUtc,
-        double julianDateTerrestrial)
+    public SeasonalMarkerEvent(int year, ESeasonalMarkerType markerType,
+        double julianDateTerrestrial, DateTime dateTimeUtc)
     {
         Year = year;
-        SeasonalMarkerType = seasonalMarkerType;
-        DateTimeUtc = dateTimeUtc;
+        MarkerType = markerType;
         JulianDateTerrestrial = julianDateTerrestrial;
+        DateTimeUtc = dateTimeUtc;
     }
 }

@@ -52,13 +52,8 @@ public struct ApsideEvent
     /// The radius of the orbit (i.e. distance from planet to Sun) at the apside event in
     /// astronomical units (AU) (optional).
     /// </param>
-    public ApsideEvent(
-        AstroObjectRecord planet,
-        int orbitNumber,
-        EApsideType apsideType,
-        double julianDateTerrestrial,
-        DateTime dateTimeUtc,
-        double? radius_AU = null)
+    public ApsideEvent(AstroObjectRecord planet, int orbitNumber, EApsideType apsideType,
+        double julianDateTerrestrial, DateTime dateTimeUtc, double? radius_AU = null)
     {
         Planet = planet;
         OrbitNumber = orbitNumber;

@@ -97,8 +97,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
                 ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     1721414.39987, 365242.88257, -0.00769, -0.00933, -0.00006
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerType),
-                    "Invalid value.")
+                _ => throw new ArgumentOutOfRangeException(nameof(markerType), "Invalid value.")
             };
         }
         else
@@ -118,8 +117,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
                 ESeasonalMarkerType.SouthernSolstice => Polynomials.EvaluatePolynomial([
                     2451900.05952, 365242.74049, -0.06223, -0.00823, 0.00032
                 ], Y),
-                _ => throw new ArgumentOutOfRangeException(nameof(markerType),
-                    "Invalid value.")
+                _ => throw new ArgumentOutOfRangeException(nameof(markerType), "Invalid value.")
             };
         }
     }
@@ -184,8 +182,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         double dLambda = 1 + 0.0334 * Cos(W) + 0.0007 * Cos(2 * W);
 
         // Sum the periodic terms from Table 27.C.
-        double S = PeriodicTerms.Sum(term =>
-            term.A * Cos(DegreesToRadians(term.B + term.C * T)));
+        double S = PeriodicTerms.Sum(term => term.A * Cos(DegreesToRadians(term.B + term.C * T)));
 
         // Equation from p178.
         return jdtt + 0.000_01 * S / dLambda;
@@ -254,7 +251,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
             .RoundToNearestMinute();
 
         // Construct and return the result.
-        return new SeasonalMarkerEvent(year, markerType, dtut, jdtt);
+        return new SeasonalMarkerEvent(year, markerType, jdtt, dtut);
     }
 
     /// <summary>
@@ -264,15 +261,13 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a collection of SeasonalMarker objects.</returns>
     public List<SeasonalMarkerEvent> GetSeasonalMarkersInYear(int year)
     {
-        return Enum.GetValues(typeof(ESeasonalMarkerType))
-            .Cast<ESeasonalMarkerType>()
-            .Select(markerType =>
+        return Enum.GetValues(typeof(ESeasonalMarkerType)).Cast<ESeasonalMarkerType>().Select(
+            markerType =>
             {
                 SeasonalMarkerEvent smEvent = GetSeasonalMarker(year, markerType);
-                return new SeasonalMarkerEvent(year, markerType, smEvent.DateTimeUtc,
-                    smEvent.JulianDateTerrestrial);
-            })
-            .ToList();
+                return new SeasonalMarkerEvent(year, markerType, smEvent.JulianDateTerrestrial,
+                    smEvent.DateTimeUtc);
+            }).ToList();
     }
 
     // /// <summary>
@@ -289,7 +284,7 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     //     // Look for a matching seasonal marker in the database with a USNO datetime.
     //     SeasonalMarkerRecord? seasonalMarker =
     //         astroDbContext.SeasonalMarkers.FirstOrDefault(sm =>
-    //             sm.SeasonalMarkerType == markerType
+    //             sm.MarkerType == markerType
     //             && sm.DateTimeUtcUsno != null
     //             && sm.DateTimeUtcUsno.Value.Year == year);
     //
