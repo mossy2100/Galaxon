@@ -161,7 +161,7 @@ public class Program
         // await seasonalMarkerImportService.ImportFromAstroPixels();
 
         // Compute and import lunar phases.
-        await lunarPhaseImportService.CacheCalculations();
+        // await lunarPhaseImportService.CacheCalculations();
         // await lunarPhaseImportService.ImportFromUsno();
         // await lunarPhaseImportService.ImportFromAstroPixels();
 

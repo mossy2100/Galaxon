@@ -87,8 +87,7 @@ public class SeasonalMarkerImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Inserted seasonal marker record", earth.Name!, year,
-                        smEvent.SeasonalMarkerType, "Galaxon", smEvent.DateTimeUtc);
+                    Slog.Information("Inserted seasonal marker record.");
                 }
                 else if (record.DateTimeUtcGalaxon != smEvent.DateTimeUtc)
                 {
@@ -97,14 +96,12 @@ public class SeasonalMarkerImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Updated seasonal marker record", earth.Name!, year,
-                        smEvent.SeasonalMarkerType, "Galaxon", smEvent.DateTimeUtc);
+                    Slog.Information("Updated seasonal marker record.");
                 }
                 else
                 {
                     // No need to update.
-                    LogInfo("Seasonal marker record already up-to-date", earth.Name!, year,
-                        smEvent.SeasonalMarkerType, "Galaxon", smEvent.DateTimeUtc);
+                    Slog.Information("Seasonal marker record already up-to-date.");
                 }
             }
         }
@@ -119,33 +116,32 @@ public class SeasonalMarkerImportService(
         {
             try
             {
-                string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
-
-                using HttpClient client = new ();
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    await ImportFromUsnoJson(response);
-                }
-                else
-                {
-                    Slog.Error("Failed to retrieve data from USNO.");
-                }
+                await ImportFromUsnoYear(year);
             }
             catch (Exception ex)
             {
-                Slog.Error("Exception: {Exception}", ex.Message);
+                Slog.Error(ex, "Error importing seasonal marker data from USNO for year {Year}: {Exception}", year, ex.Message);
+                throw;
             }
         }
     }
 
     /// <summary>
-    /// Extract seasonal markers from the USNO JSON response and import them into the database.
+    /// Extract seasonal markers from the USNO API response for a given year and import them into
+    /// the database.
     /// </summary>
-    /// <param name="response"></param>
-    private async Task ImportFromUsnoJson(HttpResponseMessage response)
+    private async Task ImportFromUsnoYear(int year)
     {
+        string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
+
+        using HttpClient client = new ();
+        HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"Failed to retrieve data from USNO for year {year}.");
+        }
+
         AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
         string jsonContent = await response.Content.ReadAsStringAsync();
@@ -153,72 +149,68 @@ public class SeasonalMarkerImportService(
         // Parse the JSON data to extract the seasonal marker data
         UsnoSeasonalMarkersForYear? usms =
             JsonConvert.DeserializeObject<UsnoSeasonalMarkersForYear>(jsonContent);
+
         if (usms?.data == null || usms.data.IsEmpty())
         {
-            Slog.Error("Failed to extract data from the HTTP response.");
+            throw new Exception("Failed to extract data from the HTTP response.");
         }
-        else
+
+        foreach (UsnoSeasonalMarker usm in usms.data)
         {
-            foreach (UsnoSeasonalMarker usm in usms.data)
+            ESeasonalMarkerType? seasonalMarkerType = usm switch
             {
-                ESeasonalMarkerType? seasonalMarkerType = usm switch
+                { month: 3, phenom: "Equinox" } => ESeasonalMarkerType.NorthwardEquinox,
+                { month: 6, phenom: "Solstice" } => ESeasonalMarkerType.NorthernSolstice,
+                { month: 9, phenom: "Equinox" } => ESeasonalMarkerType.SouthwardEquinox,
+                { month: 12, phenom: "Solstice" } => ESeasonalMarkerType.SouthernSolstice,
+                _ => null
+            };
+
+            if (seasonalMarkerType == null)
+            {
+                continue;
+            }
+
+            // Construct the datetime.
+            DateOnly date = new (usm.year, usm.month, usm.day);
+            TimeOnly time = TimeOnly.Parse(usm.time);
+            DateTime dt = new (date, time, DateTimeKind.Utc);
+
+            // Log it.
+            LogInfo("Parsed seasonal marker", earth.Name!, usm.year, seasonalMarkerType.Value,
+                "USNO", dt);
+
+            // Look for the record to update.
+            SeasonalMarkerRecord? record = LookupRecord(dt);
+            if (record == null)
+            {
+                // Insert new record.
+                record = new SeasonalMarkerRecord
                 {
-                    { month: 3, phenom: "Equinox" } => ESeasonalMarkerType.NorthwardEquinox,
-                    { month: 6, phenom: "Solstice" } => ESeasonalMarkerType.NorthernSolstice,
-                    { month: 9, phenom: "Equinox" } => ESeasonalMarkerType.SouthwardEquinox,
-                    { month: 12, phenom: "Solstice" } => ESeasonalMarkerType.SouthernSolstice,
-                    _ => null
+                    AstroObjectId = earth.Id,
+                    Year = usm.year,
+                    SeasonalMarkerType = seasonalMarkerType.Value,
+                    DateTimeUtcGalaxon = dt
                 };
-
-                if (seasonalMarkerType == null)
-                {
-                    continue;
-                }
-
-                // Construct the datetime.
-                DateOnly date = new (usm.year, usm.month, usm.day);
-                TimeOnly time = TimeOnly.Parse(usm.time);
-                DateTime dt = new (date, time, DateTimeKind.Utc);
+                astroDbContext.SeasonalMarkers.Attach(record);
+                await astroDbContext.SaveChangesAsync();
 
                 // Log it.
-                LogInfo("Parsed seasonal marker", earth.Name!, usm.year, seasonalMarkerType.Value,
-                    "USNO", dt);
+                Slog.Information("Inserted seasonal marker record.");
+            }
+            else if (record.DateTimeUtcUsno != dt)
+            {
+                // Update existing record.
+                record.DateTimeUtcUsno = dt;
+                await astroDbContext.SaveChangesAsync();
 
-                // Look for the record to update.
-                SeasonalMarkerRecord? record = LookupRecord(dt);
-                if (record == null)
-                {
-                    // Insert new record.
-                    record = new SeasonalMarkerRecord
-                    {
-                        AstroObjectId = earth.Id,
-                        Year = usm.year,
-                        SeasonalMarkerType = seasonalMarkerType.Value,
-                        DateTimeUtcGalaxon = dt
-                    };
-                    astroDbContext.SeasonalMarkers.Attach(record);
-                    await astroDbContext.SaveChangesAsync();
-
-                    // Log it.
-                    LogInfo("Inserted seasonal marker record", earth.Name!, usm.year,
-                        seasonalMarkerType.Value, "USNO", dt);
-                }
-                else if (record.DateTimeUtcUsno != dt)
-                {
-                    // Update existing record.
-                    record.DateTimeUtcUsno = dt;
-                    await astroDbContext.SaveChangesAsync();
-
-                    // Log it.
-                    LogInfo("Updated seasonal marker record", earth.Name!, usm.year,
-                        seasonalMarkerType.Value, "USNO", dt);
-                }
-                else
-                {
-                    // Nothing to do.
-                    LogInfo("Seasonal marker record already up-to-date", earth.Name!, usm.year,
-                        seasonalMarkerType.Value, "USNO", dt);
-                }
+                // Log it.
+                Slog.Information("Updated seasonal marker record.");
+            }
+            else
+            {
+                // Nothing to do.
+                Slog.Information("Seasonal marker record already up-to-date.");
             }
         }
     }
@@ -300,8 +292,7 @@ public class SeasonalMarkerImportService(
                         await astroDbContext.SaveChangesAsync();
 
                         // Log it.
-                        LogInfo("Inserted seasonal marker record", earth.Name!, year,
-                            seasonalMarkerType, "AstroPixels", dt);
+                        Slog.Information("Inserted seasonal marker record.");
                     }
                     else if (record.DateTimeUtcAstroPixels != dt)
                     {
@@ -310,14 +301,12 @@ public class SeasonalMarkerImportService(
                         await astroDbContext.SaveChangesAsync();
 
                         // Log it.
-                        LogInfo("Updated seasonal marker record", earth.Name!, year,
-                            seasonalMarkerType, "AstroPixels", dt);
+                        Slog.Information("Updated seasonal marker record.");
                     }
                     else
                     {
                         // Log it.
-                        LogInfo("Seasonal marker record already up-to-date", earth.Name!, year,
-                            seasonalMarkerType, "AstroPixels", dt);
+                        Slog.Information("Seasonal marker record already up-to-date.");
                     }
                 }
             }

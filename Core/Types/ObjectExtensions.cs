@@ -15,7 +15,7 @@ public static class ObjectExtensions
     /// <returns>true if the object is considered empty; otherwise, false.</returns>
     /// <remarks>
     /// An object is considered empty if it is null, an empty string, an empty StringBuilder,
-    /// an empty array, an empty collection, or an empty IEnumerable.
+    /// an empty array, or an empty collection.
     /// </remarks>
     public static bool IsEmpty(this object? obj)
     {
@@ -23,7 +23,6 @@ public static class ObjectExtensions
             || obj is string { Length: 0 }
             || obj is StringBuilder { Length: 0 }
             || obj is Array { Length: 0 }
-            || obj is ICollection { Count: 0 }
-            || (obj is IEnumerable enumerable && !enumerable.Cast<object>().Any());
+            || obj is ICollection { Count: 0 };
     }
 }

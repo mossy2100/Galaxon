@@ -560,7 +560,7 @@
             <returns>true if the object is considered empty; otherwise, false.</returns>
             <remarks>
             An object is considered empty if it is null, an empty string, an empty StringBuilder,
-            an empty array, an empty collection, or an empty IEnumerable.
+            an empty array, or an empty collection.
             </remarks>
         </member>
         <member name="T:Galaxon.Core.Types.ReflectionExtensions">

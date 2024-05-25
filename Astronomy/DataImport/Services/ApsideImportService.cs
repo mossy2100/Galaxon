@@ -122,9 +122,7 @@ public class ApsideImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Inserted apside record", planetName, apsideEvent.OrbitNumber,
-                        apsideEvent.ApsideType, "Galaxon", apsideEvent.DateTimeUtc,
-                        apsideEvent.Radius_AU);
+                    Slog.Information("Inserted apside record.");
                 }
                 else if (record.DateTimeUtcGalaxon != apsideEvent.DateTimeUtc)
                 {
@@ -133,16 +131,12 @@ public class ApsideImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Updated apside record", planetName, apsideEvent.OrbitNumber,
-                        apsideEvent.ApsideType, "Galaxon", apsideEvent.DateTimeUtc,
-                        apsideEvent.Radius_AU);
+                    Slog.Information("Updated apside record.");
                 }
                 else
                 {
                     // Nothing to do.
-                    LogInfo("Apside record already up-to-date", planetName, apsideEvent.OrbitNumber,
-                        apsideEvent.ApsideType, "Galaxon", apsideEvent.DateTimeUtc,
-                        apsideEvent.Radius_AU);
+                    Slog.Information("Apside record already up-to-date.");
                 }
             }
 
@@ -159,106 +153,101 @@ public class ApsideImportService(
         {
             try
             {
-                string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
-
-                using HttpClient client = new ();
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    await ImportApsidesFromUsnoJson(response, earth);
-                }
-                else
-                {
-                    Slog.Error("Failed to retrieve data. Status code: {StatusCode}",
-                        response.StatusCode);
-                }
+                await ImportApsidesFromUsnoYear(year, earth);
             }
             catch (Exception ex)
             {
-                Slog.Error("{Exception}", ex.Message);
+                Slog.Error("Failed to import apside data from USNO for year {Year}: {Exception}", year, ex.Message);
+                throw;
             }
         }
     }
 
-    private async Task ImportApsidesFromUsnoJson(HttpResponseMessage response,
-        AstroObjectRecord earth)
+    private async Task ImportApsidesFromUsnoYear(int year, AstroObjectRecord earth)
     {
+        string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
+
+        using HttpClient client = new ();
+        HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"Failed to retrieve data. Status code: {response.StatusCode}");
+        }
+
+        // Get the JSON response.
         string jsonContent = await response.Content.ReadAsStringAsync();
 
         // Parse the JSON data to extract the seasonal marker data
         UsnoSeasonalMarkersForYear? usms =
             JsonConvert.DeserializeObject<UsnoSeasonalMarkersForYear>(jsonContent);
 
+        // Check we got data.
         if (usms?.data == null || usms.data.IsEmpty())
         {
-            Slog.Error("Failed to retrieve data. Status code: {StatusCode}", response.StatusCode);
+            throw new InvalidOperationException("Failed to find data in the API response.");
         }
-        else
+
+        foreach (UsnoSeasonalMarker usm in usms.data)
         {
-            foreach (UsnoSeasonalMarker usm in usms.data)
+            EApsideType apsideType;
+
+            // Get the apside type.
+            if (usm.phenom == "Perihelion")
             {
-                EApsideType apsideType;
+                apsideType = EApsideType.Periapsis;
+            }
+            else if (usm.phenom == "Aphelion")
+            {
+                apsideType = EApsideType.Apoapsis;
+            }
+            else
+            {
+                continue;
+            }
 
-                // Get the apside type.
-                if (usm.phenom == "Perihelion")
-                {
-                    apsideType = EApsideType.Periapsis;
-                }
-                else if (usm.phenom == "Aphelion")
-                {
-                    apsideType = EApsideType.Apoapsis;
-                }
-                else
-                {
-                    continue;
-                }
+            // Construct the datetime.
+            DateOnly date = new (usms.year, usm.month, usm.day);
+            TimeOnly time = TimeOnly.Parse(usm.time);
+            DateTime dt = new (date, time, DateTimeKind.Utc);
 
-                // Construct the datetime.
-                DateOnly date = new (usms.year, usm.month, usm.day);
-                TimeOnly time = TimeOnly.Parse(usm.time);
-                DateTime dt = new (date, time, DateTimeKind.Utc);
+            // Get the orbit number.
+            int orbitNumber = OrbitNumber(dt);
 
-                // Get the orbit number.
-                int orbitNumber = OrbitNumber(dt);
+            // Log it.
+            LogInfo("Parsed apside", earth.Name!, orbitNumber, apsideType, "USNO", dt);
+
+            // Find the record to update.
+            ApsideRecord? record = LookupRecord(dt);
+
+            if (record == null)
+            {
+                // Insert new record.
+                record = new ApsideRecord
+                {
+                    AstroObjectId = earth.Id,
+                    OrbitNumber = usms.year,
+                    ApsideType = apsideType,
+                    DateTimeUtcUsno = dt
+                };
+                astroDbContext.Apsides.Add(record);
 
                 // Log it.
-                LogInfo("Parsed apside", earth.Name!, orbitNumber, apsideType, "USNO", dt);
+                Slog.Information("Inserted apside record.");
+            }
+            else if (record.DateTimeUtcUsno != dt)
+            {
+                // Update existing record.
+                record.DateTimeUtcUsno = dt;
+                await astroDbContext.SaveChangesAsync();
 
-                // Find the record to update.
-                ApsideRecord? record = LookupRecord(dt);
-
-                if (record == null)
-                {
-                    // Insert new record.
-                    record = new ApsideRecord
-                    {
-                        AstroObjectId = earth.Id,
-                        OrbitNumber = usms.year,
-                        ApsideType = apsideType,
-                        DateTimeUtcUsno = dt
-                    };
-
-                    // Log it.
-                    LogInfo("Inserted apside record", earth.Name!, orbitNumber, apsideType, "USNO",
-                        dt);
-                }
-                else if (record.DateTimeUtcUsno != dt)
-                {
-                    // Update existing record.
-                    record.DateTimeUtcUsno = dt;
-                    await astroDbContext.SaveChangesAsync();
-
-                    // Log it.
-                    LogInfo("Updated apside record", earth.Name!, orbitNumber, apsideType, "USNO",
-                        dt);
-                }
-                else
-                {
-                    // Log it.
-                    LogInfo("Apside record already up-to-date", earth.Name!, orbitNumber,
-                        apsideType, "USNO", dt);
-                }
+                // Log it.
+                Slog.Information("Updated apside record.");
+            }
+            else
+            {
+                // Log it.
+                Slog.Information("Apside record already up-to-date.");
             }
         }
     }
@@ -364,8 +353,7 @@ public class ApsideImportService(
                             await astroDbContext.SaveChangesAsync();
 
                             // Log it.
-                            LogInfo("Inserted apside record", earth.Name!, orbitNumber, apsideType,
-                                "AstroPixels", apsideDateTime, apsideRadius_AU);
+                            Slog.Information("Inserted apside record.");
                         }
                         else if (record.DateTimeUtcAstroPixels != apsideDateTime)
                         {
@@ -375,14 +363,12 @@ public class ApsideImportService(
                             await astroDbContext.SaveChangesAsync();
 
                             // Log it.
-                            LogInfo("Updated apside record", earth.Name!, orbitNumber, apsideType,
-                                "AstroPixels", apsideDateTime, apsideRadius_AU);
+                            Slog.Information("Updated apside record.");
                         }
                         else
                         {
                             // Log it.
-                            LogInfo("Apside record already up-to-date", earth.Name!, 0, apsideType,
-                                "AstroPixels", apsideDateTime, apsideRadius_AU);
+                            Slog.Information("Apside record already up-to-date.");
                         }
 
                         // Adjust field offset for the next iteration.
