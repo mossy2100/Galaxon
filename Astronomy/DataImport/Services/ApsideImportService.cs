@@ -28,12 +28,12 @@ public class ApsideImportService(
     /// Log an information message.
     /// </summary>
     private void LogInfo(string message, string planetName, int orbitNumber, EApsideType apsideType,
-        string source, DateTime dt, double? radius_AU = null)
+        DateTime dt, double? radius_AU = null)
     {
         string strRadius = radius_AU == null ? "<unknown>" : $"{radius_AU:F6}";
         Slog.Information(
-            "{Message}: Planet = {Planet}, Orbit = {Orbit}, Type = {Type}, DateTime from {Source} = {DateTime}, Radius = {Radius} AU",
-            message, planetName, orbitNumber, apsideType.GetDisplayName(), source, dt.ToIsoString(),
+            "{Message}: Planet = {Planet}, Orbit = {Orbit}, Type = {Type}, DateTime = {DateTime}, Radius = {Radius} AU",
+            message, planetName, orbitNumber, apsideType.GetDisplayName(), dt.ToIsoString(),
             strRadius);
     }
 
@@ -93,7 +93,7 @@ public class ApsideImportService(
 
             // Log it.
             LogInfo("Computed apside", planetName, apsideEvent.OrbitNumber, apsideEvent.ApsideType,
-                "Galaxon", apsideEvent.DateTimeUtc, apsideEvent.Radius_AU);
+                apsideEvent.DateTimeUtc, apsideEvent.Radius_AU);
 
             // Done?
             if (apsideEvent.JulianDateTerrestrial > jdttEnd)
@@ -145,7 +145,7 @@ public class ApsideImportService(
         } // while
     }
 
-    public async Task ImportApsidesFromUsno()
+    public async Task ImportFromUsno()
     {
         AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
 
@@ -153,17 +153,18 @@ public class ApsideImportService(
         {
             try
             {
-                await ImportApsidesFromUsnoYear(year, earth);
+                await ImportFromUsnoYear(year, earth);
             }
             catch (Exception ex)
             {
-                Slog.Error("Failed to import apside data from USNO for year {Year}: {Exception}", year, ex.Message);
+                Slog.Error("Failed to import apside data from USNO for year {Year}: {Exception}",
+                    year, ex.Message);
                 throw;
             }
         }
     }
 
-    private async Task ImportApsidesFromUsnoYear(int year, AstroObjectRecord earth)
+    private async Task ImportFromUsnoYear(int year, AstroObjectRecord earth)
     {
         string apiUrl = $"https://aa.usno.navy.mil/api/seasons?year={year}";
 
@@ -172,7 +173,8 @@ public class ApsideImportService(
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new InvalidOperationException($"Failed to retrieve data. Status code: {response.StatusCode}");
+            throw new InvalidOperationException(
+                $"Failed to retrieve data. Status code: {response.StatusCode}");
         }
 
         // Get the JSON response.
@@ -207,18 +209,19 @@ public class ApsideImportService(
             }
 
             // Construct the datetime.
-            DateOnly date = new (usms.year, usm.month, usm.day);
-            TimeOnly time = TimeOnly.Parse(usm.time);
-            DateTime dt = new (date, time, DateTimeKind.Utc);
+            DateOnly apsideDate = new (usms.year, usm.month, usm.day);
+            TimeOnly apsideTime = TimeOnly.Parse(usm.time);
+            DateTime apsideDateTime = new (apsideDate, apsideTime, DateTimeKind.Utc);
 
             // Get the orbit number.
-            int orbitNumber = OrbitNumber(dt);
+            int orbitNumber = OrbitNumber(apsideDateTime);
 
             // Log it.
-            LogInfo("Parsed apside", earth.Name!, orbitNumber, apsideType, "USNO", dt);
+            LogInfo("Parsed apside from USNO", earth.Name!, orbitNumber, apsideType,
+                apsideDateTime);
 
             // Find the record to update.
-            ApsideRecord? record = LookupRecord(dt);
+            ApsideRecord? record = LookupRecord(apsideDateTime);
 
             if (record == null)
             {
@@ -228,17 +231,18 @@ public class ApsideImportService(
                     AstroObjectId = earth.Id,
                     OrbitNumber = usms.year,
                     ApsideType = apsideType,
-                    DateTimeUtcUsno = dt
+                    DateTimeUtcUsno = apsideDateTime
                 };
                 astroDbContext.Apsides.Add(record);
+                await astroDbContext.SaveChangesAsync();
 
                 // Log it.
                 Slog.Information("Inserted apside record.");
             }
-            else if (record.DateTimeUtcUsno != dt)
+            else if (record.DateTimeUtcUsno != apsideDateTime)
             {
                 // Update existing record.
-                record.DateTimeUtcUsno = dt;
+                record.DateTimeUtcUsno = apsideDateTime;
                 await astroDbContext.SaveChangesAsync();
 
                 // Log it.
@@ -256,126 +260,157 @@ public class ApsideImportService(
     /// Import apside event data from the AstroPixels online ephemeris.
     /// See: <see href="https://www.astropixels.com/ephemeris/ephemeris.html"/>
     /// </summary>
-    public async Task ImportApsidesFromAstroPixels()
+    public async Task ImportFromAstroPixels()
     {
         // Load Earth.
         AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
-
-        // Get the Julian Calendar instance.
-        JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
 
         // Get year range to parse.
         int minYear = 1501;
         int maxYear = 2500;
 
         // Loop through all relevant URLS.
-        int y0 = (int)decimal.Round((minYear - 1) / 100m) * 100 + 1;
-        for (int startYear = y0; startYear + 99 <= maxYear; startYear += 100)
+        for (int startYear = 1501; startYear <= 2401; startYear += 100)
         {
-            // Get URL of page to parse.
-            string url = $"https://www.astropixels.com/ephemeris/perap/perap{startYear}.html";
-
-            // Fetch the content.
-            using HttpClient httpClient = new ();
-            string html = await httpClient.GetStringAsync(url);
-
-            // Load HTML into an HtmlDocument.
-            HtmlDocument htmlDoc = new ();
-            htmlDoc.LoadHtml(html);
-
-            // Extract data from <pre> tags.
-            foreach (HtmlNode? preNode in htmlDoc.DocumentNode.SelectNodes("//pre"))
+            try
             {
-                string[] lines = preNode.InnerText.Split(new[] { '\r', '\n' },
-                    StringSplitOptions.RemoveEmptyEntries);
-                foreach (string line in lines)
+                await ImportFromAstroPixelsPage(startYear, minYear, maxYear, earth);
+            }
+            catch (Exception ex)
+            {
+                Slog.Error(
+                    "Failed to import apside data from AstroPixels for start year {Year}: {Exception}",
+                    startYear, ex.Message);
+                throw;
+            }
+        }
+    }
+
+    private async Task ImportFromAstroPixelsPage(int startYear, int minYear, int maxYear,
+        AstroObjectRecord earth)
+    {
+        // Get URL of page to parse.
+        string url = $"https://www.astropixels.com/ephemeris/perap/perap{startYear}.html";
+
+        // Fetch the content.
+        using HttpClient httpClient = new ();
+        string html = await httpClient.GetStringAsync(url);
+
+        // Load HTML into an HtmlDocument.
+        HtmlDocument htmlDoc = new ();
+        htmlDoc.LoadHtml(html);
+
+        // Define newline characters.
+        char[] newlineChars = ['\r', '\n'];
+
+        // Extract data from <pre> tags.
+        foreach (HtmlNode? preNode in htmlDoc.DocumentNode.SelectNodes("//pre"))
+        {
+            // Get the lines.
+            string[] lines =
+                preNode.InnerText.Split(newlineChars, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string line in lines)
+            {
+                // Split the line into parts by whitespaces.
+                string[] parts = Regex.Split(line.Trim(), @"\s+");
+
+                // To see if this is a data record, check array has the right number of
+                // parts, and that the first part is an integer.
+                // Also, skip data from years outside the range we want data for.
+                if (parts.Length != 17
+                    || !int.TryParse(parts[0], out int year)
+                    || year < minYear
+                    || year > maxYear)
                 {
-                    // Split the line by multiple spaces (assumes space is the delimiter).
-                    string[] parts = Regex.Split(line.Trim(), @"\s+");
+                    continue;
+                }
 
-                    // To see if this is a data record, check array has the right number of
-                    // parts, and that the first part is an integer.
-                    if (parts.Length != 17 || !int.TryParse(parts[0], out int year))
-                    {
-                        continue;
-                    }
-
-                    // Loop through the two apside types.
-                    int i = 1;
-                    foreach (EApsideType apsideType in Enum.GetValues(typeof(EApsideType)))
-                    {
-                        // Get the date and time parts.
-                        int apsideYear = parts[i] == "Dec" ? year - 1 : year;
-                        int apsideMonth = GregorianCalendarUtility.MonthNameToNumber(parts[i]);
-                        int apsideDay = int.Parse(parts[i + 1]);
-                        TimeOnly apsideTime = TimeOnly.Parse(parts[i + 2]);
-
-                        // Convert the date parts to a DateTime.
-                        DateTime apsideDateTime;
-                        // Check if it's a Julian or Gregorian date.
-                        if (JulianCalendarUtility.IsValidDate(apsideYear, apsideMonth, apsideDay))
-                        {
-                            apsideDateTime = jcal.ToDateTime(apsideYear, apsideMonth, apsideDay,
-                                apsideTime.Hour, apsideTime.Minute, apsideTime.Second, 0);
-                            DateTime.SpecifyKind(apsideDateTime, DateTimeKind.Utc);
-                        }
-                        else
-                        {
-                            apsideDateTime = new DateTime(apsideYear, apsideMonth, apsideDay,
-                                apsideTime.Hour, apsideTime.Minute, apsideTime.Second,
-                                DateTimeKind.Utc);
-                        }
-
-                        // Get the distance (radius).
-                        double apsideRadius_AU = double.Parse(parts[i + 3]);
-
-                        // Get the orbit number.
-                        int orbitNumber = OrbitNumber(apsideDateTime);
-
-                        // Log the extracted data.
-                        LogInfo("Parsed apside", earth.Name!, orbitNumber, apsideType,
-                            "AstroPixels", apsideDateTime, apsideRadius_AU);
-
-                        // Update the apside record.
-                        ApsideRecord? record = LookupRecord(apsideDateTime);
-                        if (record == null)
-                        {
-                            // Insert new record.
-                            record = new ApsideRecord
-                            {
-                                AstroObjectId = earth.Id,
-                                OrbitNumber = orbitNumber,
-                                ApsideType = apsideType,
-                                DateTimeUtcAstroPixels = apsideDateTime,
-                                RadiusAstroPixels_AU = apsideRadius_AU
-                            };
-                            astroDbContext.Apsides.Add(record);
-                            await astroDbContext.SaveChangesAsync();
-
-                            // Log it.
-                            Slog.Information("Inserted apside record.");
-                        }
-                        else if (record.DateTimeUtcAstroPixels != apsideDateTime)
-                        {
-                            // Update existing record.
-                            record.DateTimeUtcAstroPixels = apsideDateTime;
-                            record.RadiusAstroPixels_AU = apsideRadius_AU;
-                            await astroDbContext.SaveChangesAsync();
-
-                            // Log it.
-                            Slog.Information("Updated apside record.");
-                        }
-                        else
-                        {
-                            // Log it.
-                            Slog.Information("Apside record already up-to-date.");
-                        }
-
-                        // Adjust field offset for the next iteration.
-                        i += 7;
-                    }
+                // Loop through the two apside types.
+                for (int apsideTypeIndex = 0; apsideTypeIndex <= 1; apsideTypeIndex++)
+                {
+                    await ImportFromAstroPixelsEvent(apsideTypeIndex, parts, year, earth);
                 }
             }
+        }
+    }
+
+    private async Task ImportFromAstroPixelsEvent(int apsideTypeIndex, string[] parts, int year,
+        AstroObjectRecord earth)
+    {
+        // Get the Julian Calendar instance.
+        JulianCalendar jcal = JulianCalendarUtility.JulianCalendarInstance;
+
+        // Get the apside type.
+        EApsideType apsideType = (EApsideType)apsideTypeIndex;
+
+        // Get the offset.
+        int j = apsideTypeIndex * 7 + 1;
+
+        // Get the date and time parts.
+        int apsideYear = parts[j] == "Dec" ? year - 1 : year;
+        int apsideMonth = GregorianCalendarUtility.MonthNameToNumber(parts[j]);
+        int apsideDay = int.Parse(parts[j + 1]);
+        TimeOnly apsideTime = TimeOnly.Parse(parts[j + 2]);
+
+        // Convert the date parts to a DateTime.
+        DateTime apsideDateTime;
+        // Check if it's a Julian or Gregorian date.
+        if (JulianCalendarUtility.IsValidDate(apsideYear, apsideMonth, apsideDay))
+        {
+            apsideDateTime = jcal.ToDateTime(apsideYear, apsideMonth, apsideDay, apsideTime.Hour,
+                apsideTime.Minute, apsideTime.Second, 0);
+            DateTime.SpecifyKind(apsideDateTime, DateTimeKind.Utc);
+        }
+        else
+        {
+            apsideDateTime = new DateTime(apsideYear, apsideMonth, apsideDay, apsideTime.Hour,
+                apsideTime.Minute, apsideTime.Second, DateTimeKind.Utc);
+        }
+
+        // Get the distance (radius).
+        double apsideRadius_AU = double.Parse(parts[j + 3]);
+
+        // Get the orbit number.
+        int orbitNumber = OrbitNumber(apsideDateTime);
+
+        // Log the extracted data.
+        LogInfo("Parsed apside from AstroPixels", earth.Name!, orbitNumber, apsideType,
+            apsideDateTime, apsideRadius_AU);
+
+        // See if we need to insert or update the apside record.
+        ApsideRecord? record = LookupRecord(apsideDateTime);
+        if (record == null)
+        {
+            // Insert new record.
+            record = new ApsideRecord
+            {
+                AstroObjectId = earth.Id,
+                OrbitNumber = orbitNumber,
+                ApsideType = apsideType,
+                DateTimeUtcAstroPixels = apsideDateTime,
+                RadiusAstroPixels_AU = apsideRadius_AU
+            };
+            astroDbContext.Apsides.Add(record);
+            await astroDbContext.SaveChangesAsync();
+
+            // Log it.
+            Slog.Information("Inserted apside record.");
+        }
+        else if (record.DateTimeUtcAstroPixels != apsideDateTime)
+        {
+            // Update existing record.
+            record.DateTimeUtcAstroPixels = apsideDateTime;
+            record.RadiusAstroPixels_AU = apsideRadius_AU;
+            await astroDbContext.SaveChangesAsync();
+
+            // Log it.
+            Slog.Information("Updated apside record.");
+        }
+        else
+        {
+            // Log it.
+            Slog.Information("Apside record already up-to-date.");
         }
     }
 

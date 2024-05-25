@@ -25,11 +25,11 @@ public class SeasonalMarkerImportService(
     /// Log an information message.
     /// </summary>
     private void LogInfo(string message, string planetName, int year, ESeasonalMarkerType type,
-        string source, DateTime dt)
+        DateTime dt)
     {
         Slog.Information(
-            "{Message}: planet = {Planet}, year = {Year}, Type = {Type}, DateTime from {Source} = {DateTime}",
-            message, planetName, year, type.GetDisplayName(), source, dt.ToIsoString());
+            "{Message}: planet = {Planet}, year = {Year}, Type = {Type}, DateTime = {DateTime}",
+            message, planetName, year, type.GetDisplayName(), dt.ToIsoString());
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class SeasonalMarkerImportService(
             {
                 // Log it.
                 LogInfo("Computed seasonal marker", earth.Name!, year, smEvent.SeasonalMarkerType,
-                    "Galaxon", smEvent.DateTimeUtc);
+                    smEvent.DateTimeUtc);
 
                 // Look for a matching record.
                 SeasonalMarkerRecord? record = LookupRecord(smEvent.DateTimeUtc);
@@ -120,7 +120,9 @@ public class SeasonalMarkerImportService(
             }
             catch (Exception ex)
             {
-                Slog.Error(ex, "Error importing seasonal marker data from USNO for year {Year}: {Exception}", year, ex.Message);
+                Slog.Error(ex,
+                    "Error importing seasonal marker data from USNO for year {Year}: {Exception}",
+                    year, ex.Message);
                 throw;
             }
         }
@@ -139,7 +141,8 @@ public class SeasonalMarkerImportService(
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new InvalidOperationException($"Failed to retrieve data from USNO for year {year}.");
+            throw new InvalidOperationException(
+                $"Failed to retrieve data from USNO for year {year}.");
         }
 
         AstroObjectRecord earth = astroObjectRepository.LoadByName("Earth", "Planet");
@@ -177,8 +180,8 @@ public class SeasonalMarkerImportService(
             DateTime dt = new (date, time, DateTimeKind.Utc);
 
             // Log it.
-            LogInfo("Parsed seasonal marker", earth.Name!, usm.year, seasonalMarkerType.Value,
-                "USNO", dt);
+            LogInfo("Parsed seasonal marker from USNO", earth.Name!, usm.year,
+                seasonalMarkerType.Value, dt);
 
             // Look for the record to update.
             SeasonalMarkerRecord? record = LookupRecord(dt);
@@ -273,8 +276,8 @@ public class SeasonalMarkerImportService(
                     DateTime dt = new (year, month, day, hour, minute, 0, DateTimeKind.Utc);
 
                     // Log it.
-                    LogInfo("Parsed seasonal marker", earth.Name!, year, seasonalMarkerType,
-                        "AstroPixels", dt);
+                    LogInfo("Parsed seasonal marker from AstroPixels", earth.Name!, year,
+                        seasonalMarkerType, dt);
 
                     // See if we need to update or insert a record, or do nothing.
                     SeasonalMarkerRecord? record = LookupRecord(dt);

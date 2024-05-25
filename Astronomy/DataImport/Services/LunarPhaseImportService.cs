@@ -13,6 +13,7 @@ using Galaxon.Time;
 using Galaxon.Time.Extensions;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using Newtonsoft.Json;
 
 namespace Galaxon.Astronomy.DataImport.Services;
@@ -24,14 +25,10 @@ public class LunarPhaseImportService(
     /// <summary>
     /// Log an information message.
     /// </summary>
-    private void LogInfo(string message, int lunationNumber, ELunarPhaseType phaseType,
-        string source, DateTime dt)
+    private void LogInfo(string message, int lunationNumber, ELunarPhaseType phaseType, DateTime dt)
     {
-        Slog.Information(
-            "{Message}: Lunation = {LN}, Type = {Type}, DateTime from {Source} = {DateTime}",
-            message, lunationNumber,
-            Microsoft.OpenApi.Extensions.EnumExtensions.GetDisplayName(phaseType), source,
-            dt.ToIsoString());
+        Slog.Information("{Message}: Lunation = {LN}, Type = {Type}, DateTime = {DateTime}",
+            message, lunationNumber, phaseType.GetDisplayName(), dt.ToIsoString());
     }
 
     /// <summary>
@@ -66,7 +63,7 @@ public class LunarPhaseImportService(
             {
                 // Log it.
                 LogInfo("Computed lunar phase", phaseEvent.LunationNumber, phaseEvent.PhaseType,
-                    "Galaxon", phaseEvent.DateTimeUtc);
+                    phaseEvent.DateTimeUtc);
 
                 // Look for a matching record.
                 LunarPhaseRecord? record = LookupRecord(phaseEvent.DateTimeUtc);
@@ -84,8 +81,7 @@ public class LunarPhaseImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Inserted lunar phase record", phaseEvent.LunationNumber,
-                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                    Slog.Information("Inserted lunar phase record.");
                 }
                 else if (record.DateTimeUtcGalaxon != phaseEvent.DateTimeUtc)
                 {
@@ -94,14 +90,12 @@ public class LunarPhaseImportService(
                     await astroDbContext.SaveChangesAsync();
 
                     // Log it.
-                    LogInfo("Updated lunar phase record", phaseEvent.LunationNumber,
-                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                    Slog.Information("Updated lunar phase record.");
                 }
                 else
                 {
                     // Nothing to do.
-                    LogInfo("Lunar phase record already up-to-date", phaseEvent.LunationNumber,
-                        phaseEvent.PhaseType, "Galaxon", phaseEvent.DateTimeUtc);
+                    Slog.Information("Lunar phase record already up-to-date.");
                 }
             }
         }
@@ -121,7 +115,9 @@ public class LunarPhaseImportService(
             }
             catch (Exception ex)
             {
-                Slog.Error(ex, "Error importing lunar phase data from USNO for year {Year}: {Exception}", year, ex.Message);
+                Slog.Error(ex,
+                    "Error importing lunar phase data from USNO for year {Year}: {Exception}", year,
+                    ex.Message);
                 throw;
             }
         }
@@ -173,7 +169,7 @@ public class LunarPhaseImportService(
             int lunationNumber = GetLunationNumber(dt);
 
             // Log it.
-            LogInfo("Parsed lunar phase", lunationNumber, phaseType, "USNO", dt);
+            LogInfo("Parsed lunar phase from USNO", lunationNumber, phaseType, dt);
 
             // See if we need to update or insert a record.
             LunarPhaseRecord? record = LookupRecord(dt);
@@ -227,7 +223,9 @@ public class LunarPhaseImportService(
             }
             catch (Exception ex)
             {
-                Slog.Error(ex, "Error importing lunar phase data from AstroPixels from URL {Url}: {Exception}", url, ex.Message);
+                Slog.Error(ex,
+                    "Error importing lunar phase data from AstroPixels from URL {Url}: {Exception}",
+                    url, ex.Message);
                 throw;
             }
         }
@@ -269,7 +267,9 @@ public class LunarPhaseImportService(
         foreach (HtmlNode link in links)
         {
             string linkHref = link.GetAttributeValue("href", string.Empty).Trim();
-            if (!linkHref.IsEmpty())
+            if (!linkHref.IsEmpty()
+                && !linkHref.Contains("phases0001")
+                && !linkHref.Contains("phases0101"))
             {
                 // Ensure the URL is absolute
                 Uri linkUri = new (new Uri(indexUrl), linkHref);
@@ -392,7 +392,7 @@ public class LunarPhaseImportService(
                     ELunarPhaseType phaseType = (ELunarPhaseType)phaseTypeIndex;
 
                     // Log it.
-                    LogInfo("Parsed lunar phase", lunatioNumber, phaseType, "AstroPixels", dt);
+                    LogInfo("Parsed lunar phase from AstroPixels", lunatioNumber, phaseType, dt);
 
                     // See if we need to update or insert a record.
                     LunarPhaseRecord? record = LookupRecord(dt);

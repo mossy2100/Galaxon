@@ -12,25 +12,43 @@ public static class JulianCalendarUtility
     public static JulianCalendar JulianCalendarInstance { get; } = new ();
 
     /// <summary>
-    /// See if a given year is a leap year.
+    /// Check if a given year is a leap year.
     /// </summary>
     /// <param name="year">The Julian Calendar year number.</param>
     /// <returns>If the year is a leap year.</returns>
+    /// <remarks>
+    /// This method ignores the errors in intercalation that occurred during the initial
+    /// half-century of the calendar's use, partly because catering for these errors would introduce
+    /// unnecessary complexity, and also because there is no consensus on which years between 44 BC
+    /// and 4 AD were actually leap years.
+    /// See: <see href="https://en.wikipedia.org/wiki/Julian_calendar#Leap_years"/>
+    /// </remarks>
     public static bool IsLeapYear(int year)
     {
         return Mod(year, 4) == 0;
     }
 
     /// <summary>
-    /// Get the number of days in a given Gregorian Calendar year.
+    /// Get the number of days in a given Julian Calendar year.
     /// </summary>
     /// <param name="year">The year.</param>
     /// <param name="month">The month (1..12).</param>
     /// <returns>The number of days in the month.</returns>
+    /// <remarks>
+    /// Although this method looks identical to
+    /// <see cref="GregorianCalendarUtility.GetDaysInMonth"/>, it can produce different results for
+    /// February because of the different leap year rule.
+    /// </remarks>
     public static int GetDaysInMonth(int year, int month)
     {
-        // May as well use the method in GregorianCalendarUtility, since the lengths are the same.
-        return GregorianCalendarUtility.GetDaysInMonth(year, month);
+        GregorianCalendarUtility.CheckMonthInRange(month);
+
+        return month switch
+        {
+            2 => IsLeapYear(year) ? 29 : 28,
+            4 or 6 or 9 or 11 => 30,
+            _ => 31
+        };
     }
 
     /// <summary>
@@ -57,7 +75,6 @@ public static class JulianCalendarUtility
             return false;
         }
 
-        // Check the date is earlier than or equal to the last Julian Calendar date.
         // For 1582, check if the date is before October 5.
         if (year == 1582 && (month > 10 || (month == 10 && day > 4)))
         {

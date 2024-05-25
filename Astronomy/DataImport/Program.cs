@@ -163,7 +163,7 @@ public class Program
         // Compute and import lunar phases.
         // await lunarPhaseImportService.CacheCalculations();
         // await lunarPhaseImportService.ImportFromUsno();
-        // await lunarPhaseImportService.ImportFromAstroPixels();
+        await lunarPhaseImportService.ImportFromAstroPixels();
 
         // Compute and import apsides.
         // await apsideImportService.CacheCalculations();

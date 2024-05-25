@@ -352,3 +352,7 @@ riderModule.iml
 
 # Keys
 translation-374919-e49a70ea084f.json
+
+# Documents
+*.docx
+*.pdf
