@@ -78,16 +78,19 @@ public class Program
         // Configure DbContext.
         builder.Services.AddDbContext<AstroDbContext>();
 
-        // Dependency injection for repositories and services.
+        // Dependency injection for repositories.
         builder.Services.AddScoped<AstroObjectGroupRepository>();
         builder.Services.AddScoped<AstroObjectRepository>();
-        builder.Services.AddScoped<PlanetService>();
-        builder.Services.AddScoped<LunarPhaseService>();
-        builder.Services.AddScoped<SunService>();
-        builder.Services.AddScoped<SeasonalMarkerService>();
         builder.Services.AddScoped<LeapSecondRepository>();
-        builder.Services.AddScoped<LeapSecondService>();
+
+        // Dependency injection for services.
         builder.Services.AddScoped<ApsideService>();
+        builder.Services.AddScoped<DeltaTService>();
+        builder.Services.AddScoped<LeapSecondService>();
+        builder.Services.AddScoped<LunarPhaseService>();
+        builder.Services.AddScoped<PlanetService>();
+        builder.Services.AddScoped<SeasonalMarkerService>();
+        builder.Services.AddScoped<SunService>();
     }
 
     /// <summary>

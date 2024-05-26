@@ -6,6 +6,8 @@ namespace Galaxon.Astronomy.Algorithms.Services;
 
 public class DeltaTService(AstroDbContext astroDbContext)
 {
+    #region My method
+
     /// <summary>
     /// Cached delta-T records.
     /// </summary>
@@ -76,4 +78,6 @@ public class DeltaTService(AstroDbContext astroDbContext)
         // Find the interpolated delta-T value.
         return _Spline.Interpolate(decimalYear);
     }
+
+    #endregion My method
 }

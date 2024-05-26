@@ -8,7 +8,7 @@ namespace Galaxon.Astronomy.DataImport.Services;
 public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbContext)
 {
     /// <summary>
-    /// Import all delta-T data from the internet.
+    /// Import delta-T data from the internet.
     /// </summary>
     public async Task Import()
     {
@@ -67,7 +67,9 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
         catch (Exception ex)
         {
             // Log the exception.
-            Slog.Error("An error occurred while importing monthly delta-T data from USNO: {Message}", ex.Message);
+            Slog.Error(
+                "An error occurred while importing monthly delta-T data from USNO: {Message}",
+                ex.Message);
             if (ex.InnerException != null)
             {
                 Slog.Error("Inner exception: {Message}", ex.InnerException.Message);
@@ -118,7 +120,9 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
         catch (Exception ex)
         {
             // Log the exception.
-            Slog.Error("An error occurred while importing historic delta-T data from USNO: {Message}", ex.Message);
+            Slog.Error(
+                "An error occurred while importing historic delta-T data from USNO: {Message}",
+                ex.Message);
             if (ex.InnerException != null)
             {
                 Slog.Error("Inner exception: {Message}", ex.InnerException.Message);
@@ -131,8 +135,7 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
     {
         // Look for a matching delta-T record.
         DeltaTRecord? record =
-            astroDbContext.DeltaTRecords.FirstOrDefault(dt =>
-                dt.DecimalYear == decimalYear);
+            astroDbContext.DeltaTRecords.FirstOrDefault(dt => dt.DecimalYear == decimalYear);
 
         // Check if this record already exists
         if (record == null)
@@ -204,7 +207,9 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
         catch (Exception ex)
         {
             // Log the exception.
-            Slog.Error("An error occurred while importing predicted delta-T data from USNO: {Message}", ex.Message);
+            Slog.Error(
+                "An error occurred while importing predicted delta-T data from USNO: {Message}",
+                ex.Message);
             if (ex.InnerException != null)
             {
                 Slog.Error("Inner exception: {Message}", ex.InnerException.Message);
@@ -232,7 +237,8 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
             htmlDoc.LoadHtml(htmlContent);
 
             // Find the first data table with class "datatab".
-            HtmlNode? dataTable = htmlDoc.DocumentNode.SelectSingleNode("//table[@class='datatab']");
+            HtmlNode? dataTable =
+                htmlDoc.DocumentNode.SelectSingleNode("//table[@class='datatab']");
 
             // Iterate over the rows in the tbody of the table.
             foreach (HtmlNode? row in dataTable.SelectNodes("tbody/tr"))
@@ -241,8 +247,8 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
                 if (cells != null && cells.Count >= 2)
                 {
                     // Parse the decimal year and delta-T from the first two td elements
-                    if (decimal.TryParse(cells[0].InnerText.Trim(), out decimal decimalYear) &&
-                        decimal.TryParse(cells[1].InnerText.Trim(), out decimal deltaT))
+                    if (decimal.TryParse(cells[0].InnerText.Trim(), out decimal decimalYear)
+                        && decimal.TryParse(cells[1].InnerText.Trim(), out decimal deltaT))
                     {
                         // Check if the year is less than 1657
                         if (decimalYear < 1657)
@@ -262,7 +268,9 @@ public class DeltaTImportService(HttpClient httpClient, AstroDbContext astroDbCo
         catch (Exception ex)
         {
             // Log the exception.
-            Slog.Error("An error occurred while importing historic delta-T data from NASA: {Message}", ex.Message);
+            Slog.Error(
+                "An error occurred while importing historic delta-T data from NASA: {Message}",
+                ex.Message);
             if (ex.InnerException != null)
             {
                 Slog.Error("Inner exception: {Message}", ex.InnerException.Message);

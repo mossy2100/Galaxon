@@ -5,6 +5,8 @@ namespace Galaxon.Astronomy.Algorithms.Utilities;
 
 public static class DeltaTUtility
 {
+    #region NASA method
+
     /// <summary>
     /// Calculate ∆T in seconds using NASA's equations.
     /// Accepts a decimal year.
@@ -213,10 +215,9 @@ public static class DeltaTUtility
         return CalcDeltaTNasa(year + (month - 0.5) / 12);
     }
 
+    #endregion NASA method
 
-    #region Meeus Delta-T methods
-    //----------------------------------------------------------------------------------------------
-    // This stuff can be removed later if I don't need it. Although, it should be kept somewhere.
+    #region Meeus method
 
     /// <summary>
     /// Copy of Table 10A in Astronomical Algorithms 2nd Ed. by Jean Meeus.
@@ -270,19 +271,21 @@ public static class DeltaTUtility
     /// diverges significantly before and after that. I implemented this algorithm to compare the
     /// two, but I expect the NASA version is superior.
     /// </summary>
-    /// <param name="y">The year as a floating point value.</param>
+    /// <param name="decimalYear">The year as a floating point value.</param>
     /// <returns>The calculated value for ∆T.</returns>
     /// <exception cref="DataNotFoundException">
     /// If a ∆T entry expected to be found in the database table could not be found.
     /// </exception>
-    public static double CalcDeltaTMeeus(double y)
+    public static double CalcDeltaTMeeus(double decimalYear)
     {
         // Get the year as an int.
-        var year = (int)Floor(y);
+        int year = (int)Floor(decimalYear);
+
+        // Get t in centuries.
+        double t = (decimalYear - 2000.0) / 100.0;
 
         // Calculate deltaT.
         double deltaT;
-        double t = (y - 2000.0) / 100.0;
 
         switch (year)
         {
@@ -293,25 +296,25 @@ public static class DeltaTUtility
             case >= 948 and < 1620:
             case >= 2000:
                 deltaT = Polynomials.EvaluatePolynomial([102, 102, 25.3], t);
-                if (y is >= 2000 and <= 2100)
+                if (decimalYear is >= 2000 and <= 2100)
                 {
-                    deltaT += 0.37 * (y - 2100);
+                    deltaT += 0.37 * (decimalYear - 2100);
                 }
                 break;
 
             case >= 1620 and < 2000:
                 // Get the value from the lookup table for the even years before and after, and
-                // interpolate.
-                var year1 = (int)(Floor(y / 2) * 2);
+                // use linear interpolation.
+                int year1 = (int)(Floor(decimalYear / 2) * 2);
                 int year2 = year1 + 2;
                 double deltaT1 = _DeltaTData[year1];
                 double deltaT2 = year2 == 2000 ? CalcDeltaTMeeus(year2) : _DeltaTData[year2];
-                deltaT = deltaT1 + (deltaT2 - deltaT1) * (y - year1) / (year2 - year1);
+                deltaT = deltaT1 + (deltaT2 - deltaT1) * (decimalYear - year1) / (year2 - year1);
                 break;
         }
 
         return deltaT;
     }
 
-    #endregion Meeus Delta-T methods
+    #endregion Meeus method
 }

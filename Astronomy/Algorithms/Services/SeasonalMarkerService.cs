@@ -1,6 +1,5 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Utilities;
-using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Enums;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Time;
@@ -8,7 +7,7 @@ using Galaxon.Time.Extensions;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
-public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sunService)
+public class SeasonalMarkerService(SunService sunService)
 {
     #region Static fields and properties
 
@@ -247,7 +246,8 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
         jdtt = _LoopUntilDesiredPrecision(jdtt, targetLs);
 
         // Convert to DateTime.
-        DateTime dtut = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt)
+        DateTime dtut = JulianDateUtility
+            .JulianDateTerrestrialToDateTimeUniversal(jdtt)
             .RoundToNearestMinute();
 
         // Construct and return the result.
@@ -261,13 +261,16 @@ public class SeasonalMarkerService(AstroDbContext astroDbContext, SunService sun
     /// <returns>The result as a collection of SeasonalMarker objects.</returns>
     public List<SeasonalMarkerEvent> GetSeasonalMarkersInYear(int year)
     {
-        return Enum.GetValues(typeof(ESeasonalMarkerType)).Cast<ESeasonalMarkerType>().Select(
-            markerType =>
+        return Enum
+            .GetValues(typeof(ESeasonalMarkerType))
+            .Cast<ESeasonalMarkerType>()
+            .Select(markerType =>
             {
                 SeasonalMarkerEvent smEvent = GetSeasonalMarker(year, markerType);
                 return new SeasonalMarkerEvent(year, markerType, smEvent.JulianDateTerrestrial,
                     smEvent.DateTimeUtc);
-            }).ToList();
+            })
+            .ToList();
     }
 
     // /// <summary>
