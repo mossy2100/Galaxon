@@ -14,7 +14,7 @@ public class LeapSecondServiceTests
         {
             DateTime dt = new DateTime(y, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             int LSC = leapSecondService.TotalLeapSeconds(dt);
-            double deltaT = DeltaTUtility.CalcDeltaT(dt);
+            double deltaT = DeltaTUtility.CalcDeltaTNasa(dt);
             double DUT1 = leapSecondService.CalcDUT1(dt);
             Console.WriteLine($"Year={y}, LSC={LSC}, ∆T={deltaT}, DUT1={DUT1}");
             if (Abs(DUT1) > 0.9)

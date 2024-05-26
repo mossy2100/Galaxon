@@ -29,14 +29,14 @@ public static class DeltaTUtility
     /// <seealso href="https://maia.usno.navy.mil/products/deltaT"/>
     /// <seealso href="https://asa.hmnao.com/SecK/DeltaT.html"/>
     /// <seealso href="https://www.hermetic.ch/cal_stud/meeus1.htm"/>
-    /// <param name="y">The year as a decimal value.</param>
+    /// <param name="decimalYear">The year as a decimal value.</param>
     /// <returns>The calculated value for ∆T.</returns>
-    public static double CalcDeltaT(double y)
+    public static double CalcDeltaTNasa(double decimalYear)
     {
         double deltaT;
 
         // Get the year as an integer.
-        int year = (int)Floor(y);
+        int year = (int)Floor(decimalYear);
 
         // Calculate deltaT.
         switch (year)
@@ -48,7 +48,7 @@ public static class DeltaTUtility
                     -20,
                     0,
                     32
-                ], (y - 1820) / 100);
+                ], (decimalYear - 1820) / 100);
                 break;
 
             case >= -500 and <= 500:
@@ -60,7 +60,7 @@ public static class DeltaTUtility
                     -0.1798452,
                     0.022174192,
                     0.0090316521
-                ], y / 100);
+                ], decimalYear / 100);
                 break;
 
             case > 500 and <= 1600:
@@ -72,7 +72,7 @@ public static class DeltaTUtility
                     -0.8503463,
                     -0.005050998,
                     0.0083572073
-                ], (y - 1000) / 100);
+                ], (decimalYear - 1000) / 100);
                 break;
 
             case > 1600 and <= 1700:
@@ -81,7 +81,7 @@ public static class DeltaTUtility
                     -0.9808,
                     -0.01532,
                     1.0 / 7129
-                ], y - 1600);
+                ], decimalYear - 1600);
                 break;
 
             case > 1700 and <= 1800:
@@ -91,7 +91,7 @@ public static class DeltaTUtility
                     -0.0059285,
                     0.00013336,
                     -1.0 / 1174000
-                ], y - 1700);
+                ], decimalYear - 1700);
                 break;
 
             case > 1800 and <= 1860:
@@ -104,7 +104,7 @@ public static class DeltaTUtility
                     0.0000121272,
                     -0.0000001699,
                     0.000000000875
-                ], y - 1800);
+                ], decimalYear - 1800);
                 break;
 
             case > 1860 and <= 1900:
@@ -115,7 +115,7 @@ public static class DeltaTUtility
                     0.01680668,
                     -0.0004473624,
                     1.0 / 233174
-                ], y - 1860);
+                ], decimalYear - 1860);
                 break;
 
             case > 1900 and <= 1920:
@@ -125,7 +125,7 @@ public static class DeltaTUtility
                     -0.0598939,
                     0.0061966,
                     -0.000197
-                ], y - 1900);
+                ], decimalYear - 1900);
                 break;
 
             case > 1920 and <= 1941:
@@ -134,7 +134,7 @@ public static class DeltaTUtility
                     0.84493,
                     -0.0761,
                     0.0020936
-                ], y - 1920);
+                ], decimalYear - 1920);
                 break;
 
             case > 1941 and <= 1961:
@@ -143,7 +143,7 @@ public static class DeltaTUtility
                     0.407,
                     -1.0 / 233,
                     1.0 / 2547
-                ], y - 1950);
+                ], decimalYear - 1950);
                 break;
 
             case > 1961 and <= 1986:
@@ -152,7 +152,7 @@ public static class DeltaTUtility
                     1.067,
                     -1.0 / 260,
                     -1.0 / 718
-                ], y - 1975);
+                ], decimalYear - 1975);
                 break;
 
             case > 1986 and <= 2005:
@@ -163,7 +163,7 @@ public static class DeltaTUtility
                     0.0017275,
                     0.000651814,
                     0.00002373599
-                ], y - 2000);
+                ], decimalYear - 2000);
                 break;
 
             case > 2005 and <= 2050:
@@ -171,19 +171,19 @@ public static class DeltaTUtility
                     62.92,
                     0.32217,
                     0.005589
-                ], y - 2000);
+                ], decimalYear - 2000);
                 break;
 
             case > 2050 and <= 2150:
-                double u = (y - 1820) / 100;
-                deltaT = -20 + 32 * u * u - 0.5628 * (2150 - y);
+                double u = (decimalYear - 1820) / 100;
+                deltaT = -20 + 32 * u * u - 0.5628 * (2150 - decimalYear);
                 break;
         }
 
         // Apply the lunar ephemeris correction for years outside the range 1955..2005.
         if (year is < 1955 or > 2005)
         {
-            double t = y - 1955;
+            double t = decimalYear - 1955;
             deltaT -= 0.000012932 * t * t;
         }
 
@@ -197,9 +197,9 @@ public static class DeltaTUtility
     /// </summary>
     /// <param name="dt">A date.</param>
     /// <returns>Delta-T at that point in time.</returns>
-    public static double CalcDeltaT(DateTime dt = new ())
+    public static double CalcDeltaTNasa(DateTime dt = new ())
     {
-        return CalcDeltaT(TimeScalesUtility.DateTimeToDecimalYear(dt));
+        return CalcDeltaTNasa(TimeScalesUtility.DateTimeToDecimalYear(dt));
     }
 
     /// <summary>
@@ -208,9 +208,9 @@ public static class DeltaTUtility
     /// <param name="year">The year.</param>
     /// <param name="month">The month.</param>
     /// <returns>Delta-T at the midpoint of the month.</returns>
-    public static double CalcDeltaT(int year, int month)
+    public static double CalcDeltaTNasa(int year, int month)
     {
-        return CalcDeltaT(year + (month - 0.5) / 12);
+        return CalcDeltaTNasa(year + (month - 0.5) / 12);
     }
 
 

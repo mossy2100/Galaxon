@@ -85,11 +85,11 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
     ///
     /// DUT1 = UT1 - UTC
     ///
-    /// In theory, this should always be between -0.9 and 0.9. However, because the CalcDeltaT()
+    /// In theory, this should always be between -0.9 and 0.9. However, because the CalcDeltaTNasa()
     /// algorithm is only approximate, it isn't.
     ///
     /// DUT1 is normally measured in retrospect, not calculated. I have included this method to
-    /// check the accuracy of the CalcDeltaT() method.
+    /// check the accuracy of the CalcDeltaTNasa() method.
     ///
     /// This calculation of DUT1 is only valid within the nominal range from 1972..2010.
     /// Yet the *actual* DUT1 is within range up until 2022 (the time of writing) because leap
@@ -106,7 +106,7 @@ public class LeapSecondService(LeapSecondRepository leapSecondRepository)
 
         return (double)TimeConstants.TT_MINUS_TAI_MILLISECONDS
             / TimeConstants.MILLISECONDS_PER_SECOND
-            - DeltaTUtility.CalcDeltaT(dt.Value)
+            - DeltaTUtility.CalcDeltaTNasa(dt.Value)
             + CalcTAIMinusUTC(dt.Value);
     }
 

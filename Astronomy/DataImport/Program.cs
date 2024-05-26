@@ -55,14 +55,14 @@ public class Program
         // PlanetImportService planetImportService = _serviceProvider!.GetRequiredService<PlanetImportService>();
         // await planetImportService.Import();
         //
-        // // Import dwarf planets.
+        // Import dwarf planets.
         // DwarfPlanetImportService dwarfPlanetImportService = _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
         // await dwarfPlanetImportService.Import();
-        //
-        // // Import natural satellites.
-        // NaturalSatelliteImportService naturalSatelliteImportService = _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
-        // await naturalSatelliteImportService.Import();
-        //
+
+        // Import natural satellites.
+        NaturalSatelliteImportService naturalSatelliteImportService = _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
+        await naturalSatelliteImportService.Import();
+
         // // Import Easter dates.
         // EasterDateImportService easterDateImportService = _serviceProvider!.GetRequiredService<EasterDateImportService>();
         // await easterDateImportService.Import();
@@ -78,13 +78,13 @@ public class Program
         // // Import delta-T data.
         // DeltaTImportService deltaTImportService = _serviceProvider!.GetRequiredService<DeltaTImportService>();
         // await deltaTImportService.Import();
-        //
+
         // // Compute and import seasonal markers.
         // SeasonalMarkerImportService seasonalMarkerImportService = _serviceProvider!.GetRequiredService<SeasonalMarkerImportService>();
         // await seasonalMarkerImportService.CacheCalculations();
         // await seasonalMarkerImportService.ImportFromUsno();
         // await seasonalMarkerImportService.ImportFromAstroPixels();
-        //
+
         // // Compute and import lunar phases.
         // LunarPhaseImportService lunarPhaseImportService = _serviceProvider!.GetRequiredService<LunarPhaseImportService>();
         // await lunarPhaseImportService.CacheCalculations();
@@ -92,10 +92,10 @@ public class Program
         // await lunarPhaseImportService.ImportFromAstroPixels();
 
         // Compute and import apsides.
-        ApsideImportService apsideImportService = _serviceProvider!.GetRequiredService<ApsideImportService>();
+        // ApsideImportService apsideImportService = _serviceProvider!.GetRequiredService<ApsideImportService>();
         // await apsideImportService.CacheCalculations();
         // await apsideImportService.CacheCalculations("Mars");
-        await apsideImportService.ImportFromUsno();
+        // await apsideImportService.ImportFromUsno();
         // await apsideImportService.ImportFromAstroPixels();
     }
 
@@ -139,6 +139,9 @@ public class Program
             .AddScoped<SeasonalMarkerImportService>()
             .AddScoped<SunImportService>()
             .AddScoped<VSOP87ImportService>();
+
+        // Add other services.
+        serviceCollection.AddScoped<HttpClient>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>

@@ -93,7 +93,7 @@ public static class JulianDateUtility
     public static double JulianDateUniversalToTerrestrial(double jdut)
     {
         double year = JulianDateToDecimalYear(jdut);
-        double deltaT = DeltaTUtility.CalcDeltaT(year);
+        double deltaT = DeltaTUtility.CalcDeltaTNasa(year);
         return jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
 
@@ -106,11 +106,11 @@ public static class JulianDateUtility
     /// <returns>Julian Date in Universal Time</returns>
     public static double JulianDateTerrestrialToUniversal(double jdtt)
     {
-        // We have to convert from a Julian Date to a DateTime in TT, even though the CalcDeltaT()
+        // We have to convert from a Julian Date to a DateTime in TT, even though the CalcDeltaTNasa()
         // method expects a DateTime in UT. This shouldn't matter, though, as the result should be
         // virtually identical given the lack of precision in delta-T calculations.
         DateTime dt = JulianDateToDateTime(jdtt);
-        double deltaT = DeltaTUtility.CalcDeltaT(dt);
+        double deltaT = DeltaTUtility.CalcDeltaTNasa(dt);
         return jdtt - deltaT / TimeConstants.SECONDS_PER_DAY;
     }
 

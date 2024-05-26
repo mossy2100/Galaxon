@@ -25,7 +25,7 @@ public class DeltaTController : ControllerBase
         try
         {
             // Computer the delta-T for the given time specified as a decimal year.
-            double deltaT = DeltaTUtility.CalcDeltaT(year);
+            double deltaT = DeltaTUtility.CalcDeltaTNasa(year);
 
             // Construct the result.
             Dictionary<string, double> result = new ()

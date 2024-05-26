@@ -2,7 +2,7 @@
 
 public class DeltaTRecord : DatabaseRecord
 {
-    [Column(TypeName = "decimal(7, 3)")]
+    [Column(TypeName = "decimal(6, 2)")]
     public decimal DecimalYear { get; set; }
 
     /// <summary>

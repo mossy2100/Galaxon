@@ -28,6 +28,8 @@ public class LeapSecondImportService(AstroDbContext astroDbContext)
     /// <summary>
     /// Import leap second data from the internet.
     /// </summary>
+    /// <seealso href="https://maia.usno.navy.mil/products/leap-second"/>
+    /// <seealse href="https://maia.usno.navy.mil/ser7/tai-utc.dat"/>
     public async Task Import()
     {
         // Run this one first to get all the leap seconds, including those before 1996.
