@@ -56,12 +56,12 @@ public class Program
         // await planetImportService.Import();
         //
         // Import dwarf planets.
-        DwarfPlanetImportService dwarfPlanetImportService = _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
-        await dwarfPlanetImportService.Import();
+        // DwarfPlanetImportService dwarfPlanetImportService = _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
+        // await dwarfPlanetImportService.Import();
 
         // Import natural satellites.
-        // NaturalSatelliteImportService naturalSatelliteImportService = _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
-        // await naturalSatelliteImportService.Import();
+        NaturalSatelliteImportService naturalSatelliteImportService = _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
+        await naturalSatelliteImportService.Import();
 
         // // Import Easter dates.
         // EasterDateImportService easterDateImportService = _serviceProvider!.GetRequiredService<EasterDateImportService>();

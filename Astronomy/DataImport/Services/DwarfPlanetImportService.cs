@@ -15,10 +15,12 @@ public class DwarfPlanetImportService(
 {
     /// <summary>
     /// Import dwarf planets from the Wikipedia page.
+    /// TODO Get the links to the Wikipedia page for each dwarf planet being imported, then load
+    /// that page and parse and import the data (physical, rotational, temperature, etc.).
     /// </summary>
     public async Task Import()
     {
-        // Get the Sun.
+        // Get the Sun, which will be the parent object of each dwarf planet.
         AstroObjectRecord sun = astroObjectRepository.LoadByName("Sun", "Star");
 
         try
@@ -59,10 +61,7 @@ public class DwarfPlanetImportService(
                         // Check if it's a recognised one by looking for the check mark in the cell.
                         bool isOfficial = cells[8]
                             .Descendants("img")
-                            .Any(img =>
-                                img
-                                    .GetAttributeValue("alt", string.Empty)
-                                    .Equals("Yes", StringComparison.OrdinalIgnoreCase));
+                            .Any(img => img.GetAttributeValue("alt", "") == "Yes");
                         if (isOfficial)
                         {
                             Slog.Information("Recognised by IAU.");
@@ -80,7 +79,7 @@ public class DwarfPlanetImportService(
                             dwarfPlanet = astroObjectRepository.LoadByName(name, "Dwarf planet");
 
                             Slog.Information(
-                                "Dwarf planet record already exists in the database, updating.");
+                                "Dwarf planet already exists in the database, updating.");
                         }
                         catch (DataNotFoundException)
                         {
@@ -88,8 +87,7 @@ public class DwarfPlanetImportService(
                             dwarfPlanet = new AstroObjectRecord(name);
                             astroDbContext.AstroObjects.Add(dwarfPlanet);
 
-                            Slog.Information(
-                                "Dwarf planet record not found in the database, inserting.");
+                            Slog.Information("Dwarf planet not found in the database, inserting.");
                         }
 
                         // Number.
@@ -100,8 +98,6 @@ public class DwarfPlanetImportService(
 
                         // Groups. (Just do the main one for now.)
                         astroObjectGroupRepository.AddToGroup(dwarfPlanet, "Dwarf planet");
-
-                        Slog.Information("Number = {Number}, Parent = Sun, Group = 'Dwarf planet'", number);
 
                         // Save the dwarf planet object now to ensure it has an id before
                         // attaching composition objects to it.
@@ -120,7 +116,9 @@ public class DwarfPlanetImportService(
                         // Radius is provided in g/cm3, convert to kg/m3.
                         dwarfPlanet.Physical.Density = Density.GramsPerCm3ToKgPerM3(density);
 
-                        Slog.Information("Mean radius = {Radius} km, Density = {Density} g/cm3", radius, density);
+                        Slog.Information(
+                            "Number = {Number}, Mean radius = {Radius} km, Density = {Density} g/cm3",
+                            number, radius, density);
 
                         // Save the physical parameters.
                         await astroDbContext.SaveChangesAsync();

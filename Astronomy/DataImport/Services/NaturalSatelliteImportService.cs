@@ -26,137 +26,154 @@ public class NaturalSatelliteImportService(
 
             HtmlNode? table =
                 doc.DocumentNode.SelectSingleNode($"//table[contains(@class,'{tableClass}')]");
-            if (table != null)
+            if (table == null)
             {
-                HtmlNodeCollection? rows = table.SelectNodes(".//tbody/tr");
-                if (rows != null)
+                throw new InvalidOperationException("Table with class 'sortable' not found.");
+            }
+
+            HtmlNodeCollection? rows = table.SelectNodes(".//tbody/tr");
+            if (rows == null)
+            {
+                throw new InvalidOperationException("Table doesn't have any rows.");
+            }
+
+            // Loop through the rows, processing the satellite information.
+            foreach (HtmlNode? row in rows)
+            {
+                HtmlNodeCollection? cells = row.SelectNodes(".//td");
+                if (cells == null)
                 {
-                    foreach (HtmlNode? row in rows)
+                    continue;
+                }
+
+                // Get the satellite's name.
+                string satelliteName = cells[0].InnerText.Trim();
+                Slog.Information("Satellite name: {Name}", satelliteName);
+
+                // Handle issue with Namaka.
+                int offset = cells.Count - 12;
+
+                // Load the satellite record from the database, if present.
+                AstroObjectRecord record;
+                bool insert = false;
+                bool update = false;
+                try
+                {
+                    // Update satellite in the database.
+                    record = astroObjectRepository.LoadByName(satelliteName, "Satellite");
+                    insert = true;
+
+                    Slog.Information("Satellite already exists in the database.");
+                }
+                catch (DataNotFoundException)
+                {
+                    // Create a new satellite in the database.
+                    record = new AstroObjectRecord(satelliteName);
+                    update = true;
+
+                    Slog.Information("Satellite not found in the database.");
+                }
+
+                // Planet or dwarf planet the satellite orbits.
+                string parentName = cells[2 + offset].InnerText.Trim();
+                Slog.Information("Parent name: {ParentName}", parentName);
+                AstroObjectRecord? parent = null;
+                try
+                {
+                    parent = astroObjectRepository.LoadByName(parentName, "Planet");
+                }
+                catch (DataNotFoundException)
+                {
+                    // Try dwarf planet.
+                    try
                     {
-                        Console.WriteLine();
-
-                        HtmlNodeCollection? cells = row.SelectNodes(".//td");
-                        if (cells != null)
-                        {
-                            // Get the satellite's name.
-                            string satelliteName = cells[0].InnerText.Trim();
-                            Console.WriteLine($"Satellite name: {satelliteName}");
-
-                            // Handle issue with Namaka.
-                            int offset = satelliteName == "Namaka" ? -1 : 0;
-
-                            // Load the satellite record from the database, if present.
-                            AstroObjectRecord satellite;
-                            try
-                            {
-                                // Update satellite in the database.
-                                satellite =
-                                    astroObjectRepository.LoadByName(satelliteName, "Satellite");
-                                Console.WriteLine($"Updating satellite {satelliteName}.");
-                                astroDbContext.AstroObjects.Attach(satellite);
-                            }
-                            catch (DataNotFoundException)
-                            {
-                                // Create a new satellite in the database.
-                                Console.WriteLine($"Adding new satellite {satelliteName}.");
-                                satellite = new AstroObjectRecord(satelliteName);
-                                astroDbContext.AstroObjects.Add(satellite);
-                            }
-
-                            // Planet or dwarf planet the satellite orbits.
-                            string parentName = cells[2 + offset].InnerText.Trim();
-                            Console.WriteLine($"Parent name: {parentName}");
-                            AstroObjectRecord parent;
-                            try
-                            {
-                                parent = astroObjectRepository.LoadByName(parentName, "Planet");
-                            }
-                            catch (DataNotFoundException)
-                            {
-                                // Try dwarf planet.
-                                try
-                                {
-                                    parent = astroObjectRepository.LoadByName(parentName,
-                                        "Dwarf planet");
-                                }
-                                catch (DataNotFoundException)
-                                {
-                                    Console.WriteLine(
-                                        $"No parent object '{parentName}' found; skipping this item.");
-                                    continue;
-                                }
-                            }
-                            satellite.Parent = parent;
-
-                            // Number.
-                            uint? number =
-                                ParseUtility.ExtractNumber(cells[3 + offset].InnerText.Trim());
-                            Console.WriteLine($"Number: {number}");
-                            satellite.Number = number;
-
-                            // Sidereal period and if the satellite is retrograde or not.
-                            string siderealPeriodText = cells[6 + offset].InnerText.Trim();
-                            int rPos = siderealPeriodText.IndexOf("(r)",
-                                StringComparison.InvariantCulture);
-                            bool isRetrograde = false;
-                            if (rPos != -1)
-                            {
-                                siderealPeriodText = siderealPeriodText[..rPos];
-                                isRetrograde = true;
-                            }
-                            double siderealPeriod = ParseUtility.ParseDouble(siderealPeriodText);
-                            Console.WriteLine($"Sidereal period: {siderealPeriod} days");
-
-                            // Groups.
-                            astroObjectGroupRepository.AddToGroup(satellite, "Satellite");
-                            astroObjectGroupRepository.AddToGroup(satellite,
-                                isRetrograde ? "Retrograde satellite" : "Prograde satellite");
-
-                            // Save the satellite object now to ensure it has an id before attaching
-                            // composition objects to it.
-                            await astroDbContext.SaveChangesAsync();
-
-                            // Orbital parameters.
-                            satellite.Orbit ??= new OrbitalRecord();
-
-                            // Set the semi-major axis.
-                            double semiMajorAxis =
-                                ParseUtility.ParseDouble(cells[5 + offset].InnerText.Trim());
-                            Console.WriteLine($"Semi-major axis: {semiMajorAxis} km");
-                            // Semi-major axis is provided in km, convert to m.
-                            satellite.Orbit.SemiMajorAxis = semiMajorAxis * 1000;
-
-                            // Sidereal orbit period is provided in days, convert to seconds.
-                            satellite.Orbit.SiderealOrbitPeriod =
-                                siderealPeriod * TimeConstants.SECONDS_PER_DAY;
-
-                            // Save the orbital parameters.
-                            await astroDbContext.SaveChangesAsync();
-
-                            // Physical parameters.
-                            satellite.Physical ??= new PhysicalRecord();
-
-                            // Set the radius.
-                            double radius =
-                                ParseUtility.ParseDouble(cells[4 + offset].InnerText.Trim());
-                            Console.WriteLine($"Mean radius: {radius} km");
-                            // Radius is provided in km, convert to m.
-                            satellite.Physical.MeanRadius = radius * 1000;
-
-                            // Save the physical parameters.
-                            await astroDbContext.SaveChangesAsync();
-                        }
+                        parent = astroObjectRepository.LoadByName(parentName, "Dwarf planet");
+                    }
+                    catch (DataNotFoundException)
+                    {
+                        Slog.Warning(
+                            "Parent object '{ParentName}' not found; skipping this satellite.",
+                            parentName);
+                        update = false;
+                        insert = false;
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine("Table with class 'sortable' not found.");
+
+                if (insert)
+                {
+                    Slog.Information("Inserting record.");
+                }
+                else if (update)
+                {
+                    astroDbContext.AstroObjects.Add(record);
+                    Slog.Information("Updating record.");
+                }
+                else
+                {
+                    continue;
+                }
+
+                // Parent.
+                record.Parent = parent;
+
+                // Number.
+                uint? number = ParseUtility.ExtractNumber(cells[3 + offset].InnerText.Trim());
+                Slog.Information("Number = {Number}", number);
+                record.Number = number;
+
+                // Sidereal period and if the satellite is retrograde or not.
+                string siderealPeriodText = cells[6 + offset].InnerText.Trim();
+                int rPos = siderealPeriodText.IndexOf("(r)", StringComparison.InvariantCulture);
+                bool isRetrograde = false;
+                if (rPos != -1)
+                {
+                    siderealPeriodText = siderealPeriodText[..rPos];
+                    isRetrograde = true;
+                }
+                double siderealPeriod_d = ParseUtility.ParseDouble(siderealPeriodText);
+                Slog.Information("Sidereal period: {SiderealPeriod} days", siderealPeriod_d);
+
+                // Groups.
+                astroObjectGroupRepository.AddToGroup(record, "Satellite");
+                astroObjectGroupRepository.AddToGroup(record,
+                    isRetrograde ? "Retrograde satellite" : "Prograde satellite");
+
+                // Save the satellite object now to ensure it has an id before attaching
+                // composition objects to it.
+                await astroDbContext.SaveChangesAsync();
+
+                // Orbital parameters.
+                record.Orbit ??= new OrbitalRecord();
+
+                // Set the semi-major axis.
+                double semiMajorAxis_km =
+                    ParseUtility.ParseDouble(cells[5 + offset].InnerText.Trim());
+                Slog.Information("Semi-major axis: {SemiMajorAxis} km", semiMajorAxis_km);
+                // Semi-major axis is provided in km, convert to m.
+                record.Orbit.SemiMajorAxis = semiMajorAxis_km * 1000;
+
+                // Sidereal orbit period is provided in days, convert to seconds.
+                record.Orbit.SiderealOrbitPeriod = siderealPeriod_d * TimeConstants.SECONDS_PER_DAY;
+
+                // Save the orbital parameters.
+                await astroDbContext.SaveChangesAsync();
+
+                // Physical parameters.
+                record.Physical ??= new PhysicalRecord();
+
+                // Set the radius.
+                double radius_km = ParseUtility.ParseDouble(cells[4 + offset].InnerText.Trim());
+                Slog.Information("Mean radius: {Radius} km", radius_km);
+                // Radius is provided in km, convert to m.
+                record.Physical.MeanRadius = radius_km * 1000;
+
+                // Save the physical parameters.
+                await astroDbContext.SaveChangesAsync();
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Slog.Error("Error: {Message}", ex.Message);
         }
     }
 

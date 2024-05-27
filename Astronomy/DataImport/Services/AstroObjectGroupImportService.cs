@@ -39,6 +39,7 @@ public class AstroObjectGroupImportService(
         AstroObjectGroupRecord planet = astroObjectGroupRepository.CreateOrUpdate("Planet");
         astroObjectGroupRepository.CreateOrUpdate("Terrestrial planet", planet);
 
+        // Giant planets.
         AstroObjectGroupRecord giantPlanet =
             astroObjectGroupRepository.CreateOrUpdate("Giant planet", planet);
         astroObjectGroupRepository.CreateOrUpdate("Gas giant", giantPlanet);
@@ -50,14 +51,20 @@ public class AstroObjectGroupImportService(
         astroObjectGroupRepository.CreateOrUpdate("Trojan", minorPlanet);
         astroObjectGroupRepository.CreateOrUpdate("Quasi-satellite", minorPlanet);
 
+        // Dwarf planets.
         AstroObjectGroupRecord dwarfPlanet =
             astroObjectGroupRepository.CreateOrUpdate("Dwarf planet", minorPlanet);
         astroObjectGroupRepository.CreateOrUpdate("Plutoid", dwarfPlanet);
 
+        // Asteroids.
         AstroObjectGroupRecord asteroid =
             astroObjectGroupRepository.CreateOrUpdate("Asteroid", minorPlanet);
         astroObjectGroupRepository.CreateOrUpdate("Potentially hazardous asteroid", asteroid);
 
+        // Should I include asteroid families? There are many.
+        // See: https://en.wikipedia.org/wiki/Asteroid_family#All_families
+
+        // Near Earth Asteroids.
         AstroObjectGroupRecord nea =
             astroObjectGroupRepository.CreateOrUpdate("Near Earth asteroid", asteroid);
         astroObjectGroupRepository.CreateOrUpdate("Apohele asteroid", nea);
@@ -65,21 +72,22 @@ public class AstroObjectGroupImportService(
         astroObjectGroupRepository.CreateOrUpdate("Apollo asteroid", nea);
         astroObjectGroupRepository.CreateOrUpdate("Amor asteroid", nea);
 
+        // Small Solar System bodies.
         AstroObjectGroupRecord sssb =
             astroObjectGroupRepository.CreateOrUpdate("Small Solar System body");
         astroObjectGroupRepository.CreateOrUpdate("Comet", sssb);
 
-        AstroObjectGroupRecord tno = astroObjectGroupRepository.CreateOrUpdate("Trans-Neptunian Object");
+        AstroObjectGroupRecord tno = astroObjectGroupRepository.CreateOrUpdate("Trans-Neptunian object");
         astroObjectGroupRepository.CreateOrUpdate("Oort cloud", tno);
 
-        AstroObjectGroupRecord kbo = astroObjectGroupRepository.CreateOrUpdate("Kuper Belt Object", tno);
+        AstroObjectGroupRecord kbo = astroObjectGroupRepository.CreateOrUpdate("Kuiper Belt object", tno);
         astroObjectGroupRepository.CreateOrUpdate("Cubewano", kbo);
-        AstroObjectGroupRecord resonentKbo =
+        AstroObjectGroupRecord resonantKbo =
             astroObjectGroupRepository.CreateOrUpdate("Resonant KBO", kbo);
-        astroObjectGroupRepository.CreateOrUpdate("Plutino", resonentKbo);
+        astroObjectGroupRepository.CreateOrUpdate("Plutino", resonantKbo);
 
         AstroObjectGroupRecord sdo =
-            astroObjectGroupRepository.CreateOrUpdate("Scattered-disc object", tno);
+            astroObjectGroupRepository.CreateOrUpdate("Scattered disc object", tno);
         astroObjectGroupRepository.CreateOrUpdate("Resonant SDO", sdo);
 
         AstroObjectGroupRecord etno =

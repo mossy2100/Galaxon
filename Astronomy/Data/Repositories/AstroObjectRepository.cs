@@ -33,9 +33,9 @@ public class AstroObjectRepository(
     ///     Load(null, 4, "Planet");
     /// If there's more than one matching result, an exception will be thrown
     /// </summary>
-    /// <param name="astroObjectName">The object's name.</param>
-    /// <param name="astroObjectNumber">The object's number.</param>
-    /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
+    /// <param name="name">The object's name.</param>
+    /// <param name="number">The object's number.</param>
+    /// <param name="group">The name of the group to search, e.g. "Planet", "Asteroid",
     /// "Plutoid", etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
     /// <exception cref="ArgumentException">
@@ -47,45 +47,42 @@ public class AstroObjectRepository(
     /// <exception cref="InvalidOperationException">
     /// If more than one match is found.
     /// </exception>
-    public AstroObjectRecord? Load(string? astroObjectName, int? astroObjectNumber,
-        string? groupName = null)
+    public AstroObjectRecord? Load(string? name, int? number, string? group = null)
     {
         // Check we have a name or number.
-        if (astroObjectName == null && astroObjectNumber == null)
+        if (name == null && number == null)
         {
             throw new ArgumentException("Either the name or number (or both) must be specified.");
         }
 
         // Match on name if specified (case-insensitive).
         IQueryable<AstroObjectRecord> query = astroDbContext.AstroObjects;
-        if (!string.IsNullOrWhiteSpace(astroObjectName))
+        if (!string.IsNullOrWhiteSpace(name))
         {
             // Can't use string.Equals() here without requiring enumeration first. Using ToLower()
             // should be faster.
-            query = query.Where(ao =>
-                ao.Name != null && ao.Name.ToLower() == astroObjectName.ToLower());
+            query = query.Where(ao => ao.Name != null && ao.Name.ToLower() == name.ToLower());
         }
 
         // Match on number if specified.
-        if (astroObjectNumber != null)
+        if (number != null)
         {
-            if (astroObjectNumber <= 0)
+            if (number <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(astroObjectNumber),
+                throw new ArgumentOutOfRangeException(nameof(number),
                     "Object number must be positive.");
             }
 
-            query = query.Where(ao => ao.Number != null && ao.Number.Value == astroObjectNumber);
+            query = query.Where(ao => ao.Number != null && ao.Number.Value == number);
         }
 
         // Enumerate.
         List<AstroObjectRecord> results = query.ToList();
 
         // Filter by group if specified.
-        if (groupName != null)
+        if (group != null)
         {
-            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName))
-                .ToList();
+            results = results.Where(ao => astroObjectGroupRepository.IsInGroup(ao, group)).ToList();
         }
 
         // Check if we got multiple results.
@@ -130,19 +127,19 @@ public class AstroObjectRepository(
     ///     Load(134340);
     /// If there's more than one matching result, an exception will be thrown.
     /// </summary>
-    /// <param name="astroObjectNumber">The object's number.</param>
-    /// <param name="groupName">The name of the group to search, e.g. "Planet", "Asteroid",
+    /// <param name="number">The object's number.</param>
+    /// <param name="group">The name of the group to search, e.g. "Planet", "Asteroid",
     /// etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObjectRecord LoadByNumber(int astroObjectNumber, string? groupName = null)
+    public AstroObjectRecord LoadByNumber(int number, string? group = null)
     {
-        AstroObjectRecord? obj = Load(null, astroObjectNumber, groupName);
+        AstroObjectRecord? obj = Load(null, number, group);
 
         if (obj == null)
         {
-            string groupName2 = groupName == null ? "object" : groupName.ToLower();
+            string groupName2 = group == null ? "object" : group.ToLower();
             throw new DataNotFoundException(
-                $"Could not find {groupName2} {astroObjectNumber} in the database.");
+                $"Could not find {groupName2} {number} in the database.");
         }
 
         return obj;
@@ -153,13 +150,15 @@ public class AstroObjectRepository(
     /// Examples:
     ///     LoadAllInGroup("Planet");
     /// </summary>
-    /// <param name="groupName">The name of the group, e.g. "Planet", "Asteroid", "Plutoid",
+    /// <param name="group">The name of the group, e.g. "Planet", "Asteroid", "Plutoid",
     /// etc.</param>
     /// <returns>The matching AstroObjects.</returns>
-    public List<AstroObjectRecord> LoadByGroup(string groupName)
+    public List<AstroObjectRecord> LoadByGroup(string group)
     {
-        // Get objects with matching name.
-        return astroDbContext.AstroObjects.ToList()
-            .Where(ao => astroObjectGroupRepository.IsInGroup(ao, groupName)).ToList();
+        return astroDbContext
+            .AstroObjects
+            .ToList()
+            .Where(ao => astroObjectGroupRepository.IsInGroup(ao, group))
+            .ToList();
     }
 }
