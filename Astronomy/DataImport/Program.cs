@@ -56,8 +56,8 @@ public class Program
         // await planetImportService.Import();
         //
         // Import dwarf planets.
-        // DwarfPlanetImportService dwarfPlanetImportService = _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
-        // await dwarfPlanetImportService.Import();
+        DwarfPlanetImportService dwarfPlanetImportService = _serviceProvider!.GetRequiredService<DwarfPlanetImportService>();
+        await dwarfPlanetImportService.Import();
 
         // Import natural satellites.
         // NaturalSatelliteImportService naturalSatelliteImportService = _serviceProvider!.GetRequiredService<NaturalSatelliteImportService>();
@@ -76,8 +76,8 @@ public class Program
         // await leapSecondImportService.Import();
 
         // Import delta-T data.
-        DeltaTImportService deltaTImportService = _serviceProvider!.GetRequiredService<DeltaTImportService>();
-        await deltaTImportService.Import();
+        // DeltaTImportService deltaTImportService = _serviceProvider!.GetRequiredService<DeltaTImportService>();
+        // await deltaTImportService.Import();
 
         // // Compute and import seasonal markers.
         // SeasonalMarkerImportService seasonalMarkerImportService = _serviceProvider!.GetRequiredService<SeasonalMarkerImportService>();

@@ -40,7 +40,9 @@ public class DeltaTController(DeltaTService deltaTService) : ControllerBase
             object result = new { year, deltaT = Round(deltaT, 4) };
 
             // Log it.
-            Slog.Information("Delta-T computed for year {Year} using the method from {Method} is {DeltaT} seconds.", year, method, deltaT);
+            Slog.Information(
+                "Delta-T computed for year {Year} using the method from {Method} is {DeltaT} seconds.",
+                year, method, deltaT);
 
             // Return the delta-T value as HTTP response in JSON.
             return Ok(result);
@@ -62,7 +64,8 @@ public class DeltaTController(DeltaTService deltaTService) : ControllerBase
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     [HttpGet("api/delta-t-range")]
-    public IActionResult GetDeltaTForYearRange(int startYear, int endYear, string step = "year", string method = "Galaxon")
+    public IActionResult GetDeltaTForYearRange(int startYear, int endYear, string step = "year",
+        string method = "Galaxon")
     {
         // Get the step size in years.
         double stepSize = step.ToLower() switch
