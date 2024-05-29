@@ -81,13 +81,12 @@ public class ApsideImportService(
         AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Get the orbital period.
-        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod_d ?? null;
-        if (orbitalPeriod_s == null)
+        if (planet.Orbit?.SiderealOrbitPeriod_d == null)
         {
             throw new DataNotFoundException(
                 $"Sidereal orbit period for {planetName} not found in database.");
         }
-        double orbitalPeriod_d = orbitalPeriod_s.Value / TimeConstants.SECONDS_PER_DAY;
+        double orbitalPeriod_d = planet.Orbit.SiderealOrbitPeriod_d.Value;
 
         // Get the start point of the period.
         DateTime dtStart = GregorianCalendarUtility.GetYearStart(minYear);

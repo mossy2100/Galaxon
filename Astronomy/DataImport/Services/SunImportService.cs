@@ -58,30 +58,31 @@ public class SunImportService(
         // Absolute magnitude.
         sun.Observation.AbsoluteMagnitude = 4.83;
         // Angular diameter.
-        sun.Observation.MinAngularDiameter_deg = DegreesToRadians(0.527);
-        sun.Observation.MaxAngularDiameter_deg = DegreesToRadians(0.545);
+        sun.Observation.MinAngularDiameter_deg = 0.527;
+        sun.Observation.MaxAngularDiameter_deg = 0.545;
         await astroDbContext.SaveChangesAsync();
 
         // Physical parameters.
         sun.Physical ??= new PhysicalRecord();
         // Size and shape.
-        sun.Physical.SetSphericalShape(695_700_000);
+        sun.Physical.EquatorialRadius_km = 696_300;
+        sun.Physical.PolarRadius_km = 696_265;
         // Flattening.
-        sun.Physical.Flattening = 9e-6;
-        // Surface area in m2.
-        sun.Physical.SurfaceArea_km2 = 6.09e18;
-        // Volume in m3.
-        sun.Physical.Volume_km3 = 1.41e27;
+        sun.Physical.Flattening = 0.00005;
+        // Surface area in km2.
+        sun.Physical.SurfaceArea_km2 = 6.09e12;
+        // Volume in km3.
+        sun.Physical.Volume_km3 = 1.412e18;
         // Mass in kg.
         sun.Physical.Mass_kg = 1.9885e30;
         // Density in kg/m3.
-        sun.Physical.Density_kg_m3 = Density.GramsPerCm3ToKgPerM3(1.408);
+        sun.Physical.Density_kg_m3 = 1408;
         // Gravity in m/s2.
         sun.Physical.SurfaceGravity_m_s2 = 274;
         // Moment of inertia factor.
         // sun.Physical.MomentOfInertiaFactor = 0.070;
-        // Escape velocity in m/s.
-        sun.Physical.EscapeVelocity_km_s = 617_700;
+        // Escape velocity in km/s.
+        sun.Physical.EscapeVelocity_km_s = 617.7;
         // Standard gravitational parameter in m3/s2.
         sun.Physical.StandardGravitationalParameter_m3_s2 = 1.327_124_400_18e20;
         // Color B-V
@@ -96,23 +97,23 @@ public class SunImportService(
 
         // Orbital parameters.
         sun.Orbit ??= new OrbitRecord();
-        // 29,000 light years in metres.
-        sun.Orbit.SemiMajorAxis_km = (double)29_000 * Length.METRES_PER_LIGHT_YEAR;
-        // 230 million years in seconds.
-        sun.Orbit.SiderealOrbitPeriod_d = 230_000_000.0 * TimeConstants.SECONDS_PER_YEAR;
-        // Orbital speed in m/s.
-        sun.Orbit.AverageOrbitalSpeed_km_s = 251_000;
+        // 29,000 light years in km.
+        sun.Orbit.SemiMajorAxis_km = 29_000 * Length.KM_PER_LIGHT_YEAR;
+        // Approx. 225-250 million years in days.
+        sun.Orbit.SiderealOrbitPeriod_d = 237.5e6 * TimeConstants.DAYS_PER_YEAR;
+        // Orbital speed in km/s.
+        sun.Orbit.AverageOrbitalSpeed_km_s = 251;
         await astroDbContext.SaveChangesAsync();
 
         // Rotational parameters.
         sun.Rotation ??= new RotationRecord();
-        // Obliquity in radians.
-        sun.Rotation.Obliquity_deg = DegreesToRadians(7.25);
-        // North Pole location in radians.
-        sun.Rotation.NorthPoleRightAscension_deg = DegreesToRadians(286.13);
-        sun.Rotation.NorthPoleDeclination_deg = DegreesToRadians(63.87);
-        // Sidereal rotation period in seconds.
-        sun.Rotation.SiderealRotationPeriod_d = 25.05 * TimeConstants.SECONDS_PER_DAY;
+        // Obliquity.
+        sun.Rotation.Obliquity_deg = 7.25;
+        // North Pole location.
+        sun.Rotation.NorthPoleRightAscension_deg = 286.13;
+        sun.Rotation.NorthPoleDeclination_deg = 63.87;
+        // Sidereal rotation period.
+        sun.Rotation.SiderealRotationPeriod_d = 25.05;
         // Equatorial rotation velocity in m/s.
         sun.Rotation.EquatorialRotationalVelocity_m_s = 1997;
         await astroDbContext.SaveChangesAsync();

@@ -142,30 +142,30 @@ public class NaturalSatelliteImportService(
                 // composition objects to it.
                 await astroDbContext.SaveChangesAsync();
 
-                // Orbital parameters.
+                // ---------------------------------------------------------------------------------
+                // Orbit data.
                 record.Orbit ??= new OrbitRecord();
 
-                // Set the semi-major axis.
+                // Semi-major axis.
                 double semiMajorAxis_km =
                     ParseUtility.ParseDouble(cells[5 + offset].InnerText.Trim());
                 Slog.Information("Semi-major axis: {SemiMajorAxis} km", semiMajorAxis_km);
-                // Semi-major axis is provided in km, convert to m.
-                record.Orbit.SemiMajorAxis_km = semiMajorAxis_km * 1000;
+                record.Orbit.SemiMajorAxis_km = semiMajorAxis_km;
 
-                // Sidereal orbit period is provided in days, convert to seconds.
-                record.Orbit.SiderealOrbitPeriod_d = siderealPeriod_d * TimeConstants.SECONDS_PER_DAY;
+                // Sidereal orbit period.
+                record.Orbit.SiderealOrbitPeriod_d = siderealPeriod_d;
 
-                // Save the orbital parameters.
+                // Save the orbit data.
                 await astroDbContext.SaveChangesAsync();
 
-                // Physical parameters.
+                // ---------------------------------------------------------------------------------
+                // Physical data.
                 record.Physical ??= new PhysicalRecord();
 
-                // Set the radius.
+                // Mean radius.
                 double radius_km = ParseUtility.ParseDouble(cells[4 + offset].InnerText.Trim());
                 Slog.Information("Mean radius: {Radius} km", radius_km);
-                // Radius is provided in km, convert to m.
-                record.Physical.MeanRadius_km = radius_km * 1000;
+                record.Physical.MeanRadius_km = radius_km;
 
                 // Save the physical parameters.
                 await astroDbContext.SaveChangesAsync();

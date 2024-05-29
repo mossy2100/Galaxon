@@ -140,7 +140,8 @@ public class ApsideService(
         }
 
         // Get the datetime rounded off to the nearest minute.
-        DateTime dt2 = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt2)
+        DateTime dt2 = JulianDateUtility
+            .JulianDateTerrestrialToDateTimeUniversal(jdtt2)
             .RoundToNearestMinute();
 
         // Get the orbit number.
@@ -165,13 +166,13 @@ public class ApsideService(
     public ApsideEvent GetClosestApside(AstroObjectRecord planet, double jdtt,
         EApsideType? apsideType = null)
     {
-        // Get the orbital period in days.
-        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod_d;
-        if (orbitalPeriod_s == null)
+        // Get the sidereal orbit period in days.
+        if (planet.Orbit?.SiderealOrbitPeriod_d == null)
         {
-            throw new DataNotFoundException("Sidereal orbit period not found in the database.");
+            throw new DataNotFoundException(
+                $"Sidereal orbit period not for {planet.Name} not found in database.");
         }
-        double orbitalPeriod_d = orbitalPeriod_s.Value / TimeConstants.SECONDS_PER_DAY;
+        double orbitalPeriod_d = planet.Orbit.SiderealOrbitPeriod_d.Value;
 
         // Get the approximate moment of the apside.
         ApsideEvent approxApsideEvent = GetClosestApsideApprox(planet, jdtt, apsideType);
@@ -242,7 +243,8 @@ public class ApsideService(
         }
 
         // Get the datetime of the event rounded off to the nearest minute.
-        DateTime dtResult = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdttResult)
+        DateTime dtResult = JulianDateUtility
+            .JulianDateTerrestrialToDateTimeUniversal(jdttResult)
             .RoundToNearestMinute();
 
         // Return the updated event.

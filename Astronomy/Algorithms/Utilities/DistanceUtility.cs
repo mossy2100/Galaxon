@@ -14,8 +14,8 @@ public static class DistanceUtility
     /// </summary>
     /// <param name="location1">The geographical coordinates of location 1.</param>
     /// <param name="location2">The geographical coordinates of location 2.</param>
-    /// <param name="radiusEquat">The equatorial radius in kilometres.</param>
-    /// <param name="radiusPolar">The polar radius in kilometres.</param>
+    /// <param name="equatorialRadius">The equatorial radius in kilometres.</param>
+    /// <param name="polarRadius">The polar radius in kilometres.</param>
     /// <returns>The distance between the two locations in kilometres.</returns>
     /// <remarks>
     /// The formula used in this method is the higher-accuracy Andoyer's method as described on page 85
@@ -29,7 +29,7 @@ public static class DistanceUtility
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">If either location is unknown.</exception>
     public static double CalculateShortestDistanceBetween(GeoCoordinate location1,
-        GeoCoordinate location2, double radiusEquat, double radiusPolar)
+        GeoCoordinate location2, double equatorialRadius, double polarRadius)
     {
         // Validate inputs.
         if (location1.IsUnknown)
@@ -42,7 +42,7 @@ public static class DistanceUtility
         }
 
         // Calculate the flattening.
-        double f = (radiusEquat - radiusPolar) / radiusEquat;
+        double f = (equatorialRadius - polarRadius) / equatorialRadius;
 
         double F = DegreesToRadians((location1.Latitude + location2.Latitude) / 2);
         double sin2F = Sin2(F);
@@ -61,7 +61,7 @@ public static class DistanceUtility
 
         double omega = Atan(Sqrt(S / C));
         double R = Sqrt(S * C) / omega;
-        double D = 2 * omega * radiusEquat;
+        double D = 2 * omega * equatorialRadius;
         double H1 = (3 * R - 1) / 2 / C;
         double H2 = (3 * R + 1) / 2 / S;
         return D * (1 + f * H1 * sin2F * cos2G - f * H2 * cos2F * sin2G);

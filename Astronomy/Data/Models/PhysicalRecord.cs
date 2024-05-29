@@ -13,8 +13,7 @@ public class PhysicalRecord : DatabaseRecord
     public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
-    /// If the object is ellipsoidal, i.e. gravitationally rounded (meaning, in hydrostatic
-    /// equilibrium).
+    /// If the object is ellipsoidal, i.e. gravitationally rounded (in hydrostatic equilibrium).
     /// </summary>
     public bool? IsRound { get; set; }
 
@@ -109,6 +108,9 @@ public class PhysicalRecord : DatabaseRecord
     /// </summary>
     public double? MaxSurfaceTemperature_K { get; set; }
 
+    /// <summary>
+    /// Surface equivalent radiation dose rate.
+    /// </summary>
     public double? SurfaceEquivalentDoseRate_microSv_h { get; set; }
 
     /// <summary>
@@ -119,13 +121,13 @@ public class PhysicalRecord : DatabaseRecord
     /// <seealso cref="SetSpheroidalShape"/>
     /// <seealso cref="SetEllipsoidalShape"/>
     /// <seealso cref="SetNonEllipsoidShape"/>
-    /// <param name="radiusA">The first radius (or half length).</param>
-    /// <param name="radiusB">The second radius (or half width).</param>
-    /// <param name="radiusC">The third radius (or half height).</param>
+    /// <param name="radiusA">The first radius (or half length) in kilometres.</param>
+    /// <param name="radiusB">The second radius (or half width) in kilometres.</param>
+    /// <param name="radiusC">The third radius (or half height) in kilometres.</param>
     /// <param name="isRound">
     /// This flag should be:
-    ///   - true for round objects (stars, planets, dwarf planets, satellite planets)
-    ///   - false for lumpy objects (small bodies, satellite planetoids)
+    ///   - true for round objects (stars, planets, dwarf planets, major moons)
+    ///   - false for lumpy objects (small bodies, minor moons)
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException">If any of the radii are 0 or negative.</exception>
     public void SetSizeAndShape(double radiusA, double radiusB, double radiusC, bool isRound)
@@ -161,11 +163,11 @@ public class PhysicalRecord : DatabaseRecord
     /// <summary>
     /// Specify the object is a spheroid.
     /// </summary>
-    /// <param name="radiusEquat">The equatorial radius in km.</param>
-    /// <param name="radiusPolar">The polar radius in km.</param>
-    public void SetSpheroidalShape(double radiusEquat, double radiusPolar)
+    /// <param name="equatorialRadius">The equatorial radius in km.</param>
+    /// <param name="polarRadius">The polar radius in km.</param>
+    public void SetSpheroidalShape(double equatorialRadius, double polarRadius)
     {
-        SetEllipsoidalShape(radiusEquat, radiusEquat, radiusPolar);
+        SetEllipsoidalShape(equatorialRadius, equatorialRadius, polarRadius);
     }
 
     /// <summary>

@@ -75,10 +75,13 @@ public class OrbitRecord : DatabaseRecord
     /// </summary>
     public double? ArgumentPeriapsis_deg { get; set; }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Computed properties.
+
     /// <summary>
     /// Mean motion in degrees per day.
     /// </summary>
-    public double? MeanMotion_deg_d => Angles.DEGREES_PER_CIRCLE / SiderealOrbitPeriod_d;
+    public double? MeanMotion_deg_d => DEGREES_PER_CIRCLE / SiderealOrbitPeriod_d;
 
     /// <summary>
     /// Gets the longitude of the periapsis in degrees.
@@ -89,9 +92,8 @@ public class OrbitRecord : DatabaseRecord
     /// <summary>
     /// Calculates the approximate true anomaly in degrees.
     /// See: <see href="https://en.wikipedia.org/wiki/True_anomaly#From_the_mean_anomaly"/>
-    ///
-    /// Note that for reasons of accuracy, this approximation is usually limited to orbits
-    /// where the eccentricity (e) is small.
+    /// For reasons of accuracy, this approximation is usually limited to orbits where the
+    /// eccentricity (e) is small.
     /// </summary>
     public double? ApproxTrueAnomaly
     {
@@ -103,9 +105,12 @@ public class OrbitRecord : DatabaseRecord
             }
             double M = MeanAnomaly_deg.Value;
             double e = Eccentricity.Value;
-            double e3 = Pow(e, 3);
-            return M + (2 * e - e3 / 4) * Sin(M) + 5 * e * e * Sin(2 * M) / 4
-                + 13 * e3 * Sin(3 * M) / 12;
+            double e2 = e * e;
+            double e3 = e2 * e;
+            return M
+                + (2 * e - e3 / 4) * SinDegrees(M)
+                + 5 * e2 * SinDegrees(2 * M) / 4
+                + 13 * e3 * SinDegrees(3 * M) / 12;
         }
     }
 }
