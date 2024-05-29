@@ -1,5 +1,6 @@
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Core.Exceptions;
+using Galaxon.Core.Types;
 
 namespace Galaxon.Astronomy.Data.Repositories;
 
@@ -47,7 +48,7 @@ public class AstroObjectRepository(
     /// <exception cref="InvalidOperationException">
     /// If more than one match is found.
     /// </exception>
-    public AstroObjectRecord? Load(string? name, int? number, string? group = null)
+    public AstroObjectRecord? Load(string? name, uint? number, string? group = null)
     {
         // Check we have a name or number.
         if (name == null && number == null)
@@ -57,7 +58,7 @@ public class AstroObjectRepository(
 
         // Match on name if specified (case-insensitive).
         IQueryable<AstroObjectRecord> query = astroDbContext.AstroObjects;
-        if (!string.IsNullOrWhiteSpace(name))
+        if (!name.IsEmpty())
         {
             // Can't use string.Equals() here without requiring enumeration first. Using ToLower()
             // should be faster.
@@ -67,12 +68,6 @@ public class AstroObjectRepository(
         // Match on number if specified.
         if (number != null)
         {
-            if (number <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(number),
-                    "Object number must be positive.");
-            }
-
             query = query.Where(ao => ao.Number != null && ao.Number.Value == number);
         }
 
@@ -131,7 +126,7 @@ public class AstroObjectRepository(
     /// <param name="group">The name of the group to search, e.g. "Planet", "Asteroid",
     /// etc.</param>
     /// <returns>The matching AstroObject or null if no match was found.</returns>
-    public AstroObjectRecord LoadByNumber(int number, string? group = null)
+    public AstroObjectRecord LoadByNumber(uint number, string? group = null)
     {
         AstroObjectRecord? obj = Load(null, number, group);
 

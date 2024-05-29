@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    partial class AstroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240529085439_UpdatedUnitsAndAddedProperties")]
+    partial class UpdatedUnitsAndAddedProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +122,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("WikipediaUrl")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -427,6 +430,9 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<double?>("MeanAnomaly_deg")
                         .HasColumnType("double");
 
+                    b.Property<double?>("MeanMotion_deg_d")
+                        .HasColumnType("double");
+
                     b.Property<double?>("Periapsis_km")
                         .HasColumnType("double");
 
@@ -537,7 +543,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("EquatorialRotationalVelocity_m_s")
+                    b.Property<double?>("EquatorialRotationalVelocity_km_s")
                         .HasColumnType("double");
 
                     b.Property<double?>("NorthPoleDeclination_deg")

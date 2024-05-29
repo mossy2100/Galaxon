@@ -166,7 +166,7 @@ public class ApsideService(
         EApsideType? apsideType = null)
     {
         // Get the orbital period in days.
-        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod;
+        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod_d;
         if (orbitalPeriod_s == null)
         {
             throw new DataNotFoundException("Sidereal orbit period not found in the database.");

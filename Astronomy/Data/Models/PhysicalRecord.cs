@@ -1,170 +1,115 @@
-﻿using Galaxon.Numerics.Extensions.FloatingPoint;
-
-namespace Galaxon.Astronomy.Data.Models;
+﻿namespace Galaxon.Astronomy.Data.Models;
 
 public class PhysicalRecord : DatabaseRecord
 {
     /// <summary>
-    /// Gets or sets the link to the astronomical object associated with this record.
+    /// Primary key of the astronomical object this component relates to.
     /// </summary>
     public int AstroObjectId { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference to the astronomical object associated with this record.
+    /// Astronomical object this component relates to.
     /// </summary>
     public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
-    /// Gets or sets the first radius in kilometers.
-    /// </summary>
-    public double? RadiusA { get; set; }
-
-    /// <summary>
-    /// Gets or sets the second radius in kilometers.
-    /// </summary>
-    public double? RadiusB { get; set; }
-
-    /// <summary>
-    /// Gets or sets the third radius in kilometers.
-    /// </summary>
-    public double? RadiusC { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the object is gravitationally rounded (in
-    /// hydrostatic equilibrium).
+    /// If the object is ellipsoidal, i.e. gravitationally rounded (meaning, in hydrostatic
+    /// equilibrium).
     /// </summary>
     public bool? IsRound { get; set; }
 
     /// <summary>
-    /// Gets or sets the mean radius in kilometers.
+    /// The equatorial radius in kilometres (km).
     /// </summary>
-    public double? MeanRadius { get; set; }
+    public double? EquatorialRadius_km { get; set; }
 
     /// <summary>
-    /// Gets the equatorial radius. Only valid for spheroidal objects.
+    /// The second equatorial radius in kilometres (km).
+    /// Only relevant for triaxial ellipsoids or non-ellipsoids.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the object is not a spheroid.</exception>
-    [NotMapped]
-    public double EquatorialRadius
-    {
-        get
-        {
-            if (IsRound == null || RadiusA == null || RadiusB == null || RadiusC == null)
-            {
-                throw new InvalidOperationException("Specify the size and shape first.");
-            }
-
-            // Check it's round.
-            if (IsRound.Value)
-            {
-                // Find two radii the same.
-                if (RadiusA.FuzzyEquals(RadiusB) || RadiusA.FuzzyEquals(RadiusC))
-                {
-                    return RadiusA.Value;
-                }
-                if (RadiusB.FuzzyEquals(RadiusC))
-                {
-                    return RadiusB.Value;
-                }
-            }
-
-            // Object is not a spheroid.
-            throw new InvalidOperationException(
-                "Can only get the equatorial radius for a spherical or spheroidal object.");
-        }
-    }
+    public double? EquatorialRadius2_km { get; set; }
 
     /// <summary>
-    /// Gets the polar radius. Only valid for spheroidal objects.
+    /// The polar radius in kilometres (km).
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the object is not a spheroid.</exception>
-    [NotMapped]
-    public double PolarRadius
-    {
-        get
-        {
-            if (IsRound == null || RadiusA == null || RadiusB == null || RadiusC == null)
-            {
-                throw new InvalidOperationException("Specify the size and shape first.");
-            }
+    public double? PolarRadius_km { get; set; }
 
-            // Check it's round.
-            if (IsRound.Value)
-            {
-                // Which one is different?
-                if (RadiusA.FuzzyEquals(RadiusB))
-                {
-                    return RadiusC.Value;
-                }
-                if (RadiusA.FuzzyEquals(RadiusC))
-                {
-                    return RadiusB.Value;
-                }
-                if (RadiusB.FuzzyEquals(RadiusC))
-                {
-                    return RadiusA.Value;
-                }
-            }
+    /// <summary>
+    /// The mean radius in kilometres (km).
+    /// </summary>
+    public double? MeanRadius_km { get; set; }
 
-            // Object is not a spheroid.
-            throw new InvalidOperationException(
-                "Can only get the polar radius for a spherical or spheroidal object.");
-        }
-    }
-
-    // Flattening.
+    /// <summary>
+    /// The flattening. Only relevant for spheroidal objects.
+    /// </summary>
     public double? Flattening { get; set; }
 
-    // Surface area in km^2.
-    public double? SurfaceArea { get; set; }
+    /// <summary>
+    /// Surface area in square kilometres (km^2).
+    /// </summary>
+    public double? SurfaceArea_km2 { get; set; }
 
-    // Volume in km^3.
-    public double? Volume { get; set; }
+    /// <summary>
+    /// Volume in cubic kilometres (km^3).
+    /// </summary>
+    public double? Volume_km3 { get; set; }
 
-    // Mass in kg.
-    public double? Mass { get; set; }
+    /// <summary>
+    /// Mass in kilograms (kg).
+    /// </summary>
+    public double? Mass_kg { get; set; }
 
-    // Mean density in g/cm^3.
-    public double? Density { get; set; }
+    /// <summary>
+    /// Mean density in kilograms per cubic metre (kg/m^3).
+    /// </summary>
+    public double? Density_kg_m3 { get; set; }
 
-    // Surface gravity in m/s2.
-    public double? SurfaceGrav { get; set; }
+    /// <summary>
+    /// Surface gravity in metres per second squared (m/s^2).
+    /// </summary>
+    public double? SurfaceGravity_m_s2 { get; set; }
 
-    // Escape velocity in km/s.
-    public double? EscapeVelocity { get; set; }
+    /// <summary>
+    /// Escape velocity in km/s.
+    /// </summary>
+    public double? EscapeVelocity_km_s { get; set; }
 
-    // Standard gravitational parameter in m3/s2.
-    public double? StdGravParam { get; set; }
+    /// <summary>
+    /// Standard gravitational parameter in m^3/s^2.
+    /// </summary>
+    public double? StandardGravitationalParameter_m3_s2 { get; set; }
 
-    // Moment of inertia factor.
-    public double? MomentOfInertiaFactor { get; set; }
+    /// <summary>
+    /// If the object has a global magnetic field.
+    /// </summary>
+    public bool? HasGlobalMagneticField { get; set; }
 
-    // Has global magnetic field?
-    public bool? HasGlobalMagField { get; set; }
+    /// <summary>
+    /// If the object has rings.
+    /// </summary>
+    public bool? HasRings { get; set; }
 
-    // Has ring system?
-    public bool? HasRingSystem { get; set; }
-
-    // Solar irradiance (W/m2).
-    public double? SolarIrradiance { get; set; }
-
-    // Geometric albedo.
+    /// <summary>
+    /// Geometric albedo.
+    /// </summary>
     public double? GeometricAlbedo { get; set; }
 
-    // Color (B-V).
-    public double? ColorBV { get; set; }
+    /// <summary>
+    /// Minimum surface temperature (K) (at the 0.1 bar altitude for giant planets).
+    /// </summary>
+    public double? MinSurfaceTemperature_K { get; set; }
 
-    // Color (U-B).
-    public double? ColorUB { get; set; }
+    /// <summary>
+    /// Mean surface temperature (K) (at the 0.1 bar altitude for giant planets).
+    /// </summary>
+    public double? MeanSurfaceTemperature_K { get; set; }
 
-    // Minimum surface temperature (K) (0.1 bar for giant planets).
-    public double? MinSurfaceTemp { get; set; }
+    /// <summary>
+    /// Maximum surface temperature (K) (at the 0.1 bar altitude for giant planets).
+    /// </summary>
+    public double? MaxSurfaceTemperature_K { get; set; }
 
-    // Mean surface temperature (K) (0.1 bar for giant planets).
-    public double? MeanSurfaceTemp { get; set; }
-
-    // Maximum surface temperature (K) (0.1 bar for giant planets).
-    public double? MaxSurfaceTemp { get; set; }
+    public double? SurfaceEquivalentDoseRate_microSv_h { get; set; }
 
     /// <summary>
     /// Specify the object's size and shape.
@@ -198,9 +143,9 @@ public class PhysicalRecord : DatabaseRecord
             throw new ArgumentOutOfRangeException(nameof(radiusC), "Must be a positive value.");
         }
 
-        RadiusA = radiusA;
-        RadiusB = radiusB;
-        RadiusC = radiusC;
+        EquatorialRadius_km = radiusA;
+        EquatorialRadius2_km = radiusB;
+        PolarRadius_km = radiusC;
         IsRound = isRound;
     }
 
@@ -235,16 +180,16 @@ public class PhysicalRecord : DatabaseRecord
 
         // Calculate some stuff; they can still set the property directly if
         // they want to override this.
-        var ellipsoid = new Ellipsoid(radiusA, radiusB, radiusC);
+        Ellipsoid ellipsoid = new (radiusA, radiusB, radiusC);
 
         // Volumetric mean radius.
-        MeanRadius = ellipsoid.VolumetricMeanRadius;
+        MeanRadius_km = ellipsoid.VolumetricMeanRadius;
 
         // Surface area.
-        SurfaceArea = ellipsoid.SurfaceArea;
+        SurfaceArea_km2 = ellipsoid.SurfaceArea;
 
         // Volume.
-        Volume = ellipsoid.Volume;
+        Volume_km3 = ellipsoid.Volume;
     }
 
     /// <summary>

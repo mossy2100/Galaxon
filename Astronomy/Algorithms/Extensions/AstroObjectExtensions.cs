@@ -21,15 +21,24 @@ public static class AstroObjectExtensions
         GeoCoordinate location1, GeoCoordinate location2)
     {
         if (astroObj.Physical == null
-            || astroObj.Physical.RadiusA == null
-            || astroObj.Physical.RadiusB == null
-            || astroObj.Physical.RadiusC == null)
+            || astroObj.Physical.EquatorialRadius_km == null
+            || astroObj.Physical.PolarRadius_km == null)
         {
             throw new InvalidOperationException(
-                "Cannot calculate the shortest distance between two points on a world without known both the equatorial and the polar radii.");
+                "To calculate the shortest distance between two points on a world, it is necessary to know both the equatorial and the polar radius.");
         }
 
+        // Check if there are 2 different equatorial radii.
+        if (astroObj.Physical.EquatorialRadius2_km != null
+            && astroObj.Physical.EquatorialRadius2_km.Value
+            != astroObj.Physical.EquatorialRadius_km.Value)
+        {
+            throw new InvalidOperationException(
+                "This method only supports spheroidal worlds. However, this object has two values for equatorial radius, so it is not spheroidal.");
+        }
+
+        // Do the calculation.
         return DistanceUtility.CalculateShortestDistanceBetween(location1, location2,
-            astroObj.Physical.EquatorialRadius, astroObj.Physical.PolarRadius);
+            astroObj.Physical.EquatorialRadius_km.Value, astroObj.Physical.PolarRadius_km.Value);
     }
 }

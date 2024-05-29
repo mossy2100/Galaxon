@@ -143,17 +143,17 @@ public class NaturalSatelliteImportService(
                 await astroDbContext.SaveChangesAsync();
 
                 // Orbital parameters.
-                record.Orbit ??= new OrbitalRecord();
+                record.Orbit ??= new OrbitRecord();
 
                 // Set the semi-major axis.
                 double semiMajorAxis_km =
                     ParseUtility.ParseDouble(cells[5 + offset].InnerText.Trim());
                 Slog.Information("Semi-major axis: {SemiMajorAxis} km", semiMajorAxis_km);
                 // Semi-major axis is provided in km, convert to m.
-                record.Orbit.SemiMajorAxis = semiMajorAxis_km * 1000;
+                record.Orbit.SemiMajorAxis_km = semiMajorAxis_km * 1000;
 
                 // Sidereal orbit period is provided in days, convert to seconds.
-                record.Orbit.SiderealOrbitPeriod = siderealPeriod_d * TimeConstants.SECONDS_PER_DAY;
+                record.Orbit.SiderealOrbitPeriod_d = siderealPeriod_d * TimeConstants.SECONDS_PER_DAY;
 
                 // Save the orbital parameters.
                 await astroDbContext.SaveChangesAsync();
@@ -165,7 +165,7 @@ public class NaturalSatelliteImportService(
                 double radius_km = ParseUtility.ParseDouble(cells[4 + offset].InnerText.Trim());
                 Slog.Information("Mean radius: {Radius} km", radius_km);
                 // Radius is provided in km, convert to m.
-                record.Physical.MeanRadius = radius_km * 1000;
+                record.Physical.MeanRadius_km = radius_km * 1000;
 
                 // Save the physical parameters.
                 await astroDbContext.SaveChangesAsync();

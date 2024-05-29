@@ -81,7 +81,7 @@ public class ApsideImportService(
         AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
 
         // Get the orbital period.
-        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod ?? null;
+        double? orbitalPeriod_s = planet.Orbit?.SiderealOrbitPeriod_d ?? null;
         if (orbitalPeriod_s == null)
         {
             throw new DataNotFoundException(

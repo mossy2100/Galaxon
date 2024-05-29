@@ -27,11 +27,11 @@ public class AstroDbContext : DbContext
 
     public DbSet<PhysicalRecord> Physicals => Set<PhysicalRecord>();
 
-    public DbSet<RotationalRecord> Rotationals => Set<RotationalRecord>();
+    public DbSet<RotationRecord> Rotationals => Set<RotationRecord>();
 
-    public DbSet<OrbitalRecord> Orbitals => Set<OrbitalRecord>();
+    public DbSet<OrbitRecord> Orbitals => Set<OrbitRecord>();
 
-    public DbSet<ObservationalRecord> Observationals => Set<ObservationalRecord>();
+    public DbSet<ObservationRecord> Observationals => Set<ObservationRecord>();
 
     public DbSet<StellarRecord> Stellars => Set<StellarRecord>();
 
@@ -124,15 +124,15 @@ public class AstroDbContext : DbContext
 
             entity.HasOne(astroObj => astroObj.Rotation)
                 .WithOne(rotation => rotation.AstroObject)
-                .HasForeignKey<RotationalRecord>(rotation => rotation.AstroObjectId);
+                .HasForeignKey<RotationRecord>(rotation => rotation.AstroObjectId);
 
             entity.HasOne(astroObj => astroObj.Orbit)
                 .WithOne(orbit => orbit.AstroObject)
-                .HasForeignKey<OrbitalRecord>(orbit => orbit.AstroObjectId);
+                .HasForeignKey<OrbitRecord>(orbit => orbit.AstroObjectId);
 
             entity.HasOne(astroObj => astroObj.Observation)
                 .WithOne(observation => observation.AstroObject)
-                .HasForeignKey<ObservationalRecord>(observation => observation.AstroObjectId);
+                .HasForeignKey<ObservationRecord>(observation => observation.AstroObjectId);
 
             entity.HasOne(astroObj => astroObj.Atmosphere)
                 .WithOne(atmosphere => atmosphere.AstroObject)

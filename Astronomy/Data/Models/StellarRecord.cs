@@ -8,33 +8,33 @@ namespace Galaxon.Astronomy.Data.Models;
 public class StellarRecord : DatabaseRecord
 {
     /// <summary>
-    /// Gets or sets the link to the astronomical object associated with this record.
+    /// Primary key of the astronomical object this component relates to.
     /// </summary>
     public int AstroObjectId { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference to the astronomical object associated with this record.
+    /// Astronomical object this component relates to.
     /// </summary>
     public virtual AstroObjectRecord? AstroObject { get; set; }
 
     /// <summary>
-    /// Gets or sets the spectral classification of the stellar object.
+    /// Spectral classification of the star.
     /// </summary>
     [MaxLength(5)]
     public string? SpectralClass { get; set; }
 
     /// <summary>
-    /// Gets or sets the metallicity of the stellar object.
+    /// Metallicity of the star.
     /// </summary>
     public double? Metallicity { get; set; }
 
     /// <summary>
-    /// Gets or sets the luminosity of the stellar object in watts (W).
+    /// luminosity of the star in watts (W).
     /// </summary>
-    public double? Luminosity { get; set; }
+    public double? Luminosity_W { get; set; }
 
     /// <summary>
-    /// Gets or sets the mean radiance of the stellar object in watts per steradian per square meter (W/sr/m²).
+    /// Mean radiance of the star in watts per steradian per square meter (W/sr/m²).
     /// </summary>
-    public double? Radiance { get; set; }
+    public double? Radiance_W_sr_m2 { get; set; }
 }

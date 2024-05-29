@@ -4,6 +4,7 @@ using Galaxon.Astronomy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Galaxon.Astronomy.Data.Migrations
 {
     [DbContext(typeof(AstroDbContext))]
-    partial class AstroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240529075723_UpdatedAstroObjectPropertiesInclComponents")]
+    partial class UpdatedAstroObjectPropertiesInclComponents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,9 +120,6 @@ namespace Galaxon.Astronomy.Data.Migrations
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("WikipediaUrl")
-                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -427,6 +427,9 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<double?>("MeanAnomaly_deg")
                         .HasColumnType("double");
 
+                    b.Property<double?>("MeanMotion_deg_d")
+                        .HasColumnType("double");
+
                     b.Property<double?>("Periapsis_km")
                         .HasColumnType("double");
 
@@ -458,7 +461,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Density_kg_m3")
+                    b.Property<double?>("Density_g_cm3")
                         .HasColumnType("double");
 
                     b.Property<double?>("EquatorialRadius2_km")
@@ -509,9 +512,6 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<double?>("SurfaceArea_km2")
                         .HasColumnType("double");
 
-                    b.Property<double?>("SurfaceEquivalentDoseRate_microSv_h")
-                        .HasColumnType("double");
-
                     b.Property<double?>("SurfaceGravity_m_s2")
                         .HasColumnType("double");
 
@@ -537,7 +537,7 @@ namespace Galaxon.Astronomy.Data.Migrations
                     b.Property<int>("AstroObjectId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("EquatorialRotationalVelocity_m_s")
+                    b.Property<double?>("EquatorialRotationalVelocity_km_s")
                         .HasColumnType("double");
 
                     b.Property<double?>("NorthPoleDeclination_deg")

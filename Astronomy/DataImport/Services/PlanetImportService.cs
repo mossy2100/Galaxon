@@ -1,11 +1,7 @@
-using System.Globalization;
-using CsvHelper;
 using Galaxon.Astronomy.Data;
 using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
-using Galaxon.Core.Exceptions;
 using Galaxon.Quantities.Kinds;
-using Galaxon.Time;
 
 namespace Galaxon.Astronomy.DataImport.Services;
 
@@ -15,14 +11,13 @@ public class PlanetImportService(
     AstroObjectGroupRepository astroObjectGroupRepository)
 {
     /// <summary>
-    /// Attempt to get a double value from the CSV file.
+    /// Attempt to parse a double value from a data row.
     /// If successful, multiply the value by the multiplier before returning.
+    /// Otherwise, return null.
     /// </summary>
-    private static double? GetDoubleValue(CsvReader csv, int csvFieldNumber, double multiplier = 1)
+    private static double? ParseDouble(string str, double multiplier = 1)
     {
-        return double.TryParse(csv.GetField(csvFieldNumber), out double value)
-            ? value * multiplier
-            : null;
+        return double.TryParse(str, out double value) ? value * multiplier : null;
     }
 
     /// <summary>
@@ -33,150 +28,253 @@ public class PlanetImportService(
         // Get the Sun.
         AstroObjectRecord sun = astroObjectRepository.LoadByName("Sun", "Star");
 
-        // Open the CSV file for parsing.
-        string csvPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.csv";
-        using StreamReader stream = new (csvPath);
-        using CsvReader csv = new (stream, CultureInfo.InvariantCulture);
+        // Constant for converting from AU to km.
+        const double KM_PER_AU = (double)Length.METRES_PER_ASTRONOMICAL_UNIT / 1000;
 
-        // Skip the header row.
-        await csv.ReadAsync();
-        csv.ReadHeader();
+        // Number of columns in the worksheet.
+        const int NUM_COLUMNS = 45;
+
+        // Load the data from the Excel file.
+        string xlsxPath = $"{AstroDbContext.DataDirectory()}/Planets/Planets.xlsx";
+        List<List<string>> planetData = ExcelReader.ReadXlsxFile(xlsxPath);
 
         // Create or update the planet records.
-        while (await csv.ReadAsync())
+        foreach (List<string> row in planetData)
         {
-            string? name = csv.GetField(0);
-            string? type = csv.GetField(2);
-
-            if (name == null)
+            // Skip non-data rows.
+            if (row.Count < 2 || !uint.TryParse(row[1], out uint number))
             {
+                Slog.Warning("Could not read the number; probably a header row: {Data}",
+                    string.Join(", ", row));
                 continue;
             }
 
-            AstroObjectRecord planet;
-            try
+            // Fill row with spaces if necessary, so we don't get index out of range errors.
+            if (row.Count < NUM_COLUMNS)
             {
-                planet = astroObjectRepository.LoadByName(name, "Planet");
-                // Update planet in the database.
-                Console.WriteLine($"Updating planet {name}.");
-                astroDbContext.AstroObjects.Attach(planet);
+                int diff = NUM_COLUMNS - row.Count;
+                for (int i = 0; i < diff; i++)
+                {
+                    row.Add("");
+                }
             }
-            catch (DataNotFoundException)
+
+            // Get the name.
+            string name = row[0];
+
+            // Load the object record if there is one.
+            AstroObjectRecord? planet = astroObjectRepository.Load(name, number);
+
+            // Create a new record as needed.
+            if (planet == null)
             {
-                // Create a new planet in the database.
-                Console.WriteLine($"Adding new planet {name}.");
-                planet = new AstroObjectRecord(name);
+                // Insert new planet data.
+                planet = new AstroObjectRecord(name, number);
                 astroDbContext.AstroObjects.Add(planet);
+
+                Slog.Information("Inserting new data for astronomical object: {Name} ({Number})",
+                    name, number);
+            }
+            else
+            {
+                // Update existing planet data.
+                Slog.Information("Updating data for astronomical object: {Name} ({Number})", name,
+                    number);
             }
 
-            // Set the planet's basic parameters.
+            //--------------------------------------------------------------------------------------
+            // Basic info.
 
-            // Set its number.
-            string? num = csv.GetField(1);
-            planet.Number = num == null ? null : uint.Parse(num);
+            // Groups
+            List<string> groups = row[2].Split(",").Select(g => g.Trim()).ToList();
+            foreach (string group in groups)
+            {
+                astroObjectGroupRepository.AddToGroup(planet, group);
+            }
 
-            // Set its groups.
-            astroObjectGroupRepository.AddToGroup(planet, "Planet");
-            astroObjectGroupRepository.AddToGroup(planet, $"{type} planet");
-
-            // Set its parent.
+            // The parent of planets and dwarf planets is the Sun.
             planet.Parent = sun;
+
+            // Wikipedia URL.
+            planet.WikipediaUrl = row[3];
 
             // Save the planet object now to ensure it has an id before attaching composition
             // objects to it.
             await astroDbContext.SaveChangesAsync();
 
-            // Orbital parameters.
-            planet.Orbit ??= new OrbitalRecord();
+            Slog.Information("Updated basic data for {Name}", name);
 
-            // Apoapsis is provided in km, convert to m.
-            planet.Orbit.Apoapsis = GetDoubleValue(csv, 3, 1000);
+            //--------------------------------------------------------------------------------------
+            // Orbit data.
+            planet.Orbit ??= new OrbitRecord();
 
-            // Periapsis is provided in km, convert to m.
-            planet.Orbit.Periapsis = GetDoubleValue(csv, 4, 1000);
+            // Apoapsis is provided in AU, convert to km.
+            planet.Orbit.Apoapsis_km = ParseDouble(row[4], KM_PER_AU);
 
-            // Semi-major axis is provided in km, convert to m.
-            planet.Orbit.SemiMajorAxis = GetDoubleValue(csv, 5, 1000);
+            // Periapsis is provided in AU, convert to km.
+            planet.Orbit.Periapsis_km = ParseDouble(row[5], KM_PER_AU);
+
+            // Semi-major axis is provided in AU, convert to km.
+            planet.Orbit.SemiMajorAxis_km = ParseDouble(row[6], KM_PER_AU);
 
             // Eccentricity.
-            planet.Orbit.Eccentricity = GetDoubleValue(csv, 6);
+            planet.Orbit.Eccentricity = ParseDouble(row[7]);
 
-            // Sidereal orbit period is provided in days, convert to seconds.
-            planet.Orbit.SiderealOrbitPeriod =
-                GetDoubleValue(csv, 7, TimeConstants.SECONDS_PER_DAY);
+            // Sidereal orbit period.
+            planet.Orbit.SiderealOrbitPeriod_d = ParseDouble(row[8]);
 
-            // Synodic orbit period is provided in days, convert to seconds.
-            planet.Orbit.SynodicOrbitPeriod = GetDoubleValue(csv, 8, TimeConstants.SECONDS_PER_DAY);
+            // Synodic orbit period.
+            planet.Orbit.SynodicOrbitPeriod_d = ParseDouble(row[9]);
 
-            // Avg orbital speed is provided in km/s, convert to m/s.
-            planet.Orbit.AvgOrbitSpeed = GetDoubleValue(csv, 9, 1000);
+            // Average orbital speed.
+            planet.Orbit.AverageOrbitalSpeed_km_s = ParseDouble(row[10]);
 
-            // Mean anomaly is provided in degrees, convert to radians.
-            planet.Orbit.MeanAnomaly = GetDoubleValue(csv, 10, RADIANS_PER_DEGREE);
+            // Mean anomaly.
+            planet.Orbit.MeanAnomaly_deg = ParseDouble(row[11]);
 
-            // Inclination is provided in degrees, convert to radians.
-            planet.Orbit.Inclination = GetDoubleValue(csv, 11, RADIANS_PER_DEGREE);
+            // Inclination to ecliptic.
+            planet.Orbit.Inclination_deg = ParseDouble(row[12]);
 
-            // Long. of asc. node is provided in degrees, convert to radians.
-            planet.Orbit.LongAscNode = GetDoubleValue(csv, 12, RADIANS_PER_DEGREE);
+            // Longitude of ascending node.
+            planet.Orbit.LongitudeAscendingNode_deg = ParseDouble(row[13]);
 
-            // Arg. of perihelion is provided in degrees, convert to radians.
-            planet.Orbit.ArgPeriapsis = GetDoubleValue(csv, 13, RADIANS_PER_DEGREE);
+            // Argument of perihelion.
+            planet.Orbit.ArgumentPeriapsis_deg = ParseDouble(row[14]);
 
-            // Calculate the mean motion in rad/s.
-            planet.Orbit.MeanMotion = Tau / planet.Orbit.SiderealOrbitPeriod;
-
-            // Save the orbital parameters.
+            // Save the orbit data.
             await astroDbContext.SaveChangesAsync();
+            Slog.Information("Updated orbit data for {Name}", name);
 
-            // Physical parameters.
+            //--------------------------------------------------------------------------------------
+            // Physical data.
             planet.Physical ??= new PhysicalRecord();
-            double? equatRadius = GetDoubleValue(csv, 15, 1000);
-            double? polarRadius = GetDoubleValue(csv, 16, 1000);
-            planet.Physical.SetSpheroidalShape(equatRadius ?? 0, polarRadius ?? 0);
-            planet.Physical.MeanRadius = GetDoubleValue(csv, 14, 1000);
-            planet.Physical.Flattening = GetDoubleValue(csv, 17);
-            planet.Physical.SurfaceArea = GetDoubleValue(csv, 18, 1e6);
-            planet.Physical.Volume = GetDoubleValue(csv, 19, 1e9);
-            planet.Physical.Mass = GetDoubleValue(csv, 20);
 
-            double? density = GetDoubleValue(csv, 21);
-            planet.Physical.Density =
-                density == null ? null : Density.GramsPerCm3ToKgPerM3(density.Value);
+            // Equatorial radius.
+            planet.Physical.EquatorialRadius_km = ParseDouble(row[15]);
 
-            planet.Physical.SurfaceGrav = GetDoubleValue(csv, 22);
-            planet.Physical.MomentOfInertiaFactor = GetDoubleValue(csv, 23);
-            planet.Physical.EscapeVelocity = GetDoubleValue(csv, 24, 1000);
-            planet.Physical.StdGravParam = GetDoubleValue(csv, 25);
-            planet.Physical.GeometricAlbedo = GetDoubleValue(csv, 26);
-            planet.Physical.SolarIrradiance = GetDoubleValue(csv, 27);
-            planet.Physical.HasGlobalMagField = csv.GetField(28) == "Y";
-            planet.Physical.HasRingSystem = csv.GetField(29) == "Y";
-            planet.Physical.MinSurfaceTemp = GetDoubleValue(csv, 36);
-            planet.Physical.MeanSurfaceTemp = GetDoubleValue(csv, 37);
-            planet.Physical.MaxSurfaceTemp = GetDoubleValue(csv, 38);
+            // Second equatorial radius.
+            planet.Physical.EquatorialRadius2_km = ParseDouble(row[16]);
+
+            // Polar radius.
+            planet.Physical.PolarRadius_km = ParseDouble(row[17]);
+
+            // Mean radius.
+            planet.Physical.MeanRadius_km = ParseDouble(row[18]);
+
+            // Flattening.
+            planet.Physical.Flattening = ParseDouble(row[19]);
+
+            // Surface area.
+            planet.Physical.SurfaceArea_km2 = ParseDouble(row[20]);
+
+            // Volume.
+            planet.Physical.Volume_km3 = ParseDouble(row[21]);
+
+            // Mass.
+            planet.Physical.Mass_kg = ParseDouble(row[22]);
+
+            // Density.
+            planet.Physical.Density_kg_m3 = ParseDouble(row[23]);
+
+            // Surface gravity.
+            planet.Physical.SurfaceGravity_m_s2 = ParseDouble(row[24]);
+
+            // Escape velocity.
+            planet.Physical.EscapeVelocity_km_s = ParseDouble(row[25]);
+
+            // Standard gravitational parameter.
+            planet.Physical.StandardGravitationalParameter_m3_s2 = ParseDouble(row[26]);
+
+            // Has global magnetic field.
+            planet.Physical.HasGlobalMagneticField = row[27] == "Y";
+
+            // Has rings.
+            planet.Physical.HasRings = row[28] == "Y";
+
+            // Geometric albedo.
+            planet.Physical.GeometricAlbedo = ParseDouble(row[29]);
+
+            // Minimum temperature.
+            planet.Physical.MinSurfaceTemperature_K = ParseDouble(row[30]);
+
+            // Mean temperature.
+            planet.Physical.MeanSurfaceTemperature_K = ParseDouble(row[31]);
+
+            // Maximum temperature.
+            planet.Physical.MaxSurfaceTemperature_K = ParseDouble(row[32]);
+
+            // Surface equivalent dose rate.
+            planet.Physical.SurfaceEquivalentDoseRate_microSv_h = ParseDouble(row[33]);
+
+            // Save the physical data.
             await astroDbContext.SaveChangesAsync();
+            Slog.Information("Updated physical data for {Name}", name);
 
-            // Rotational parameters.
-            planet.Rotation ??= new RotationalRecord();
-            planet.Rotation.SynodicRotationPeriod =
-                GetDoubleValue(csv, 30, TimeConstants.SECONDS_PER_DAY);
-            planet.Rotation.SiderealRotationPeriod =
-                GetDoubleValue(csv, 31, TimeConstants.SECONDS_PER_DAY);
-            planet.Rotation.EquatRotationVelocity = GetDoubleValue(csv, 32);
-            planet.Rotation.Obliquity = GetDoubleValue(csv, 33, RADIANS_PER_DEGREE);
-            planet.Rotation.NorthPoleRightAscension =
-                GetDoubleValue(csv, 34, RADIANS_PER_DEGREE);
-            planet.Rotation.NorthPoleDeclination =
-                GetDoubleValue(csv, 35, RADIANS_PER_DEGREE);
-            await astroDbContext.SaveChangesAsync();
+            //--------------------------------------------------------------------------------------
+            // Rotation data.
+            planet.Rotation ??= new RotationRecord();
 
-            // Atmosphere.
-            planet.Atmosphere ??= new AtmosphereRecord();
-            planet.Atmosphere.SurfacePressure = GetDoubleValue(csv, 40);
-            planet.Atmosphere.ScaleHeight = GetDoubleValue(csv, 41, 1000);
-            planet.Atmosphere.IsSurfaceBoundedExosphere = name == "Mercury";
+            // Synodic rotation period.
+            planet.Rotation.SynodicRotationPeriod_d = ParseDouble(row[34]);
+
+            // Sidereal rotation period.
+            planet.Rotation.SiderealRotationPeriod_d = ParseDouble(row[35]);
+
+            // Equatorial rotational velocity.
+            planet.Rotation.EquatorialRotationalVelocity_m_s = ParseDouble(row[36]);
+
+            // Obliquity.
+            planet.Rotation.Obliquity_deg = ParseDouble(row[37]);
+
+            // North pole right ascension.
+            planet.Rotation.NorthPoleRightAscension_deg = ParseDouble(row[38]);
+
+            // North pole declination.
+            planet.Rotation.NorthPoleDeclination_deg = ParseDouble(row[39]);
+
+            // Save the rotation data.
             await astroDbContext.SaveChangesAsync();
+            Slog.Information("Updated rotation data for {Name}", name);
+
+            //--------------------------------------------------------------------------------------
+            // Observation data.
+            planet.Observation ??= new ObservationRecord();
+
+            // Absolute magnitude.
+            planet.Observation.AbsoluteMagnitude = ParseDouble(row[40]);
+
+            // Save the observation data.
+            await astroDbContext.SaveChangesAsync();
+            Slog.Information("Updated observation data for {Name}", name);
+
+            //--------------------------------------------------------------------------------------
+            // Atmosphere data.
+
+            // If the object has an atmosphere.
+            bool hasAtmosphere = row[41] == "Y";
+
+            if (hasAtmosphere)
+            {
+                // Make sure the atmosphere data record exists.
+                planet.Atmosphere ??= new AtmosphereRecord();
+
+                // If the atmosphere is a surface bounded exosphere.
+                planet.Atmosphere.IsSurfaceBoundedExosphere = row[42] == "Y";
+
+                // Surface pressure.
+                planet.Atmosphere.SurfacePressure_Pa = ParseDouble(row[43]);
+
+                // Scale height.
+                planet.Atmosphere.ScaleHeight_km = ParseDouble(row[44], 1000);
+            }
+            else
+            {
+                planet.Atmosphere = null;
+            }
+
+            // Save the atmosphere data.
+            await astroDbContext.SaveChangesAsync();
+            Slog.Information("Updated atmosphere data for {Name}", name);
         }
     }
 }

@@ -6,6 +6,8 @@ using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.ConsoleApp.Services;
 using Galaxon.Core.Files;
 using Galaxon.Numerics.Extensions.FloatingPoint;
+using Galaxon.Numerics.Geometry;
+using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -34,7 +36,10 @@ class Program
             // CalcTicksInLongPeriod();
             // TestDecimalYearToJulianDateUniversal();
             // Eras();
-            MyBirthMinutes();
+            // MyBirthMinutes();
+            // EarthDistance();
+            // HaumeaCalculations();
+            QuaoarCalculations();
         }
         catch (Exception ex)
         {
@@ -48,6 +53,75 @@ class Program
         }
     }
 
+    private static void HaumeaCalculations()
+    {
+        // Compute surface area.
+        double a = 1050e3;
+        double b = 840e3;
+        double c = 537e3;
+        var e = new Ellipsoid(a, b, c);
+        Console.WriteLine($"Surface area = {e.SurfaceArea} m2 = {e.SurfaceArea / 1e6} km2");
+
+        // Compute gravity.
+        double G = 6.67430e-11;
+        double m_kg = 4.006e21;
+        double ga = G * m_kg / Pow(a, 2);
+        double gb = G * m_kg / Pow(b, 2);
+        double gc = G * m_kg / Pow(c, 2);
+        Console.WriteLine($"Gravity a = {ga:F3} m/s2, Gravity b = {gb:F3} m/s2, Gravity c = {gc:F3} m/s2");
+        Console.WriteLine($"Average = {(ga + gb + gc) / 3:F3} m/s2");
+
+        // Compute escape velocity.
+        double eva = Sqrt(2 * ga * a);
+        double evb = Sqrt(2 * gb * b);
+        double evc = Sqrt(2 * gc * c);
+        Console.WriteLine($"Escape velocity a = {eva:F3} m/s, Escape velocity b = {evb:F3} m/s, Escape velocity c = {evc:F3} m/s");
+        Console.WriteLine($"Average = {(eva + evb + evc) / 3:F3} m/s");
+    }
+
+    private static void QuaoarCalculations()
+    {
+        // Compute surface area.
+        double a = 643e3;
+        double b = 540e3;
+        double c = 466e3;
+        var e = new Ellipsoid(a, b, c);
+        Console.WriteLine($"Surface area = {e.SurfaceArea} m2 = {e.SurfaceArea / 1e6} km2");
+
+        // Compute gravity.
+        double G = 6.67430e-11;
+        double m_kg = 1.2e21;
+        double ga = G * m_kg / Pow(a, 2);
+        double gb = G * m_kg / Pow(b, 2);
+        double gc = G * m_kg / Pow(c, 2);
+        Console.WriteLine($"Gravity a = {ga:F3} m/s2, Gravity b = {gb:F3} m/s2, Gravity c = {gc:F3} m/s2");
+        Console.WriteLine($"Average = {(ga + gb + gc) / 3:F3} m/s2");
+
+        // Compute escape velocity.
+        double eva = Sqrt(2 * ga * a);
+        double evb = Sqrt(2 * gb * b);
+        double evc = Sqrt(2 * gc * c);
+        Console.WriteLine($"Escape velocity a = {eva:F3} m/s, Escape velocity b = {evb:F3} m/s, Escape velocity c = {evc:F3} m/s");
+        Console.WriteLine($"Average = {(eva + evb + evc) / 3:F3} m/s");
+    }
+
+    private static void EarthDistance()
+    {
+        const double ASTRONOMICAL_UNITS_PER_KILOMETRE = 1000 / Length.METRES_PER_ASTRONOMICAL_UNIT;
+
+        double aphelion_km = 152097597;
+        double aphelion_AU = aphelion_km * ASTRONOMICAL_UNITS_PER_KILOMETRE;
+        Console.WriteLine($"{aphelion_km} km = {aphelion_AU:F8} AU");
+
+        double perihelion_km = 147098450;
+        double perihelion_AU = perihelion_km * ASTRONOMICAL_UNITS_PER_KILOMETRE;
+        Console.WriteLine($"{perihelion_km} km = {perihelion_AU:F9} AU");
+
+        double semiMajorAxis_km = 149598023;
+        double semiMajorAxis_AU = semiMajorAxis_km * ASTRONOMICAL_UNITS_PER_KILOMETRE;
+        Console.WriteLine($"{semiMajorAxis_km} km = {semiMajorAxis_AU:F8} AU");
+    }
+
     public static void SetupLogging()
     {
         string? solnDir = DirectoryUtility.GetSolutionDirectory();
@@ -58,17 +132,20 @@ class Program
 
         // Set up logging.
         Slog.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.File(Path.Combine(solnDir, "logs/Astronomy.DataImport.log"))
+            .MinimumLevel
+            .Debug()
+            .WriteTo
+            .Console()
+            .WriteTo
+            .File(Path.Combine(solnDir, "logs/Astronomy.DataImport.log"))
             .CreateLogger();
     }
 
     public static void SetupServices()
     {
         // Setup DI container.
-        IServiceCollection serviceCollection = new ServiceCollection()
-            .AddDbContext<AstroDbContext>();
+        IServiceCollection serviceCollection =
+            new ServiceCollection().AddDbContext<AstroDbContext>();
 
         // Add repositories.
         serviceCollection
@@ -266,7 +343,8 @@ class Program
         BirthdayService birthdayService = _serviceProvider!.GetRequiredService<BirthdayService>();
 
         // Get the time zone for Melbourne.
-        TimeZoneInfo melbourneTimeZone = TimeZoneInfo.FindSystemTimeZoneById("AUS Eastern Standard Time");
+        TimeZoneInfo melbourneTimeZone =
+            TimeZoneInfo.FindSystemTimeZoneById("AUS Eastern Standard Time");
 
         // Create a DateTime in unspecified kind (assumed local time in context).
         DateTime localDateTime = new (1971, 10, 29, 23, 30, 0);
@@ -291,7 +369,8 @@ class Program
             DateTime dtBirthMinuteUtc = birthdayService.CalcBirthMinute(dtBirthUtc, y);
             DateTime dtBirthMinuteLocal =
                 TimeZoneInfo.ConvertTimeFromUtc(dtBirthMinuteUtc, melbourneTimeZone);
-            Console.WriteLine($"My birth minute in the year {y} was/will be {dtBirthMinuteUtc:yyyy-MM-dd HH:mm (zzz)}");
+            Console.WriteLine(
+                $"My birth minute in the year {y} was/will be {dtBirthMinuteUtc:yyyy-MM-dd HH:mm (zzz)}");
             Console.WriteLine($"equal to {dtBirthMinuteLocal:yyyy-MM-dd HH:mm (zzz)}");
         }
     }
