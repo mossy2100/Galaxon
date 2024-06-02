@@ -40,7 +40,7 @@ public class LunarPhaseController(LunarPhaseService lunarPhaseService) : Control
         catch (Exception ex)
         {
             string error = $"Error computing lunar phase near {isoDateString}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 
@@ -73,7 +73,7 @@ public class LunarPhaseController(LunarPhaseService lunarPhaseService) : Control
         catch (Exception ex)
         {
             string error = "Error computing lunar phases for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 
@@ -108,7 +108,7 @@ public class LunarPhaseController(LunarPhaseService lunarPhaseService) : Control
         {
             string monthName = GregorianCalendarUtility.MonthNumberToName(month);
             string error = $"Error computing lunar phases for {monthName} {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Linq.Expressions;
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Utilities;
 using Galaxon.Astronomy.Data.Enums;
@@ -8,6 +9,7 @@ using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 
@@ -65,6 +67,16 @@ public class ApsideService(
     ];
 
     /// <summary>
+    /// Specify the valid expression types to permit when searching for apside events.
+    /// </summary>
+    private static readonly List<ExpressionType> _ValidExpressionTypes =
+    [
+        ExpressionType.Default,
+        ExpressionType.LessThanOrEqual,
+        ExpressionType.GreaterThanOrEqual
+    ];
+
+    /// <summary>
     /// Get the perihelion or aphelion closest to a given point in time, specified by a Julian Date
     /// (TT).
     /// Approximate version (faster).
@@ -77,7 +89,7 @@ public class ApsideService(
     /// either type.
     /// </param>
     /// <returns>The apside event information, excluding the radius (distance to the Sun).</returns>
-    public ApsideEvent GetClosestApsideApprox(AstroObjectRecord planet, double jdtt,
+    public ApsideEvent GetApsideClosestApprox(AstroObjectRecord planet, double jdtt,
         EApsideType? apsideType = null)
     {
         // Check the object is a major planet.
@@ -98,7 +110,7 @@ public class ApsideService(
 
         // Convert the DateTime to a decimal year without making any adjustment for delta-T, as the
         // input JD(TT) is only approximate.
-        double year = JulianDateUtility.JulianDateToDecimalYear(jdtt);
+        double year = JulianDateUtility.ToDecimalYear(jdtt);
 
         // Get approximate value for k.
         double[] formulaInputs = _ApproximateKFormulaInputs[planet.Number.Value]!;
@@ -163,7 +175,7 @@ public class ApsideService(
     /// either type.
     /// </param>
     /// <returns>The apside event information.</returns>
-    public ApsideEvent GetClosestApside(AstroObjectRecord planet, double jdtt,
+    public ApsideEvent GetApsideClosest(AstroObjectRecord planet, double jdtt,
         EApsideType? apsideType = null)
     {
         // Get the sidereal orbit period in days.
@@ -175,7 +187,7 @@ public class ApsideService(
         double orbitalPeriod_d = planet.Orbit.SiderealOrbitPeriod_d.Value;
 
         // Get the approximate moment of the apside.
-        ApsideEvent approxApsideEvent = GetClosestApsideApprox(planet, jdtt, apsideType);
+        ApsideEvent approxApsideEvent = GetApsideClosestApprox(planet, jdtt, apsideType);
         double jdtt1 = approxApsideEvent.JulianDateTerrestrial;
 
         // Set the tolerance for the search. We want a result within 30 seconds of the
@@ -257,16 +269,108 @@ public class ApsideService(
     }
 
     /// <summary>
+    /// Retrieves the apside event (perihelion or aphelion) closest to a given point in time,
+    /// specified by a Julian Date (TT).
+    /// </summary>
+    /// <param name="planet">The planet for which the apside event is to be calculated.</param>
+    /// <param name="jdtt">The approximate moment of the apside as a Julian Date (TT).</param>
+    /// <param name="apsideType">
+    /// The type of apside event to look for. Optional. If null, the algorithm will find the closest
+    /// apside of either type.
+    /// </param>
+    /// <param name="comparison">
+    /// Expression type to determine if the search should be for an event before, after, or closest
+    /// (default) to the Gregorian calendar date equal to the provided Julian Date.
+    ///     Default = closest to the specified date
+    ///     LessThanOrEqual = before or on the specified date
+    ///     GreaterThanOrEqual = after or on the specified date
+    /// </param>
+    /// <returns>The apside event information.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when an invalid expression type is provided.
+    /// </exception>
+    /// <exception cref="DataNotFoundException">
+    /// Thrown when the sidereal orbit period for the planet is not found in the database.
+    /// </exception>
+    public ApsideEvent GetApside(AstroObjectRecord planet, double jdtt,
+        EApsideType? apsideType = null, ExpressionType comparison = ExpressionType.Default)
+    {
+        // Check for valid expression type.
+        if (!_ValidExpressionTypes.Contains(comparison))
+        {
+            throw new ArgumentOutOfRangeException(nameof(comparison), "Invalid expression type.");
+        }
+
+        // Get the closest event of the specified type.
+        ApsideEvent apsideEvent = GetApsideClosest(planet, jdtt, apsideType);
+
+        // Return closest if no expression type specified.
+        if (comparison == ExpressionType.Default)
+        {
+            return apsideEvent;
+        }
+
+        // Get the provided time of the event as a date.
+        DateOnly date = JulianDateUtility.JulianDateTerrestrialToDateTimeUniversal(jdtt).GetDateOnly();
+
+        // To go back or forward in time to find a different apside event, we can use the sidereal
+        // orbit period of the planet. This won't be exactly the same as the anomalistic year, but
+        // it will get us close enough.
+        if (planet.Orbit?.SiderealOrbitPeriod_d == null)
+        {
+            throw new DataNotFoundException(
+                $"Sidereal orbit period not for {planet.Name} not found in database.");
+        }
+        double period_d = planet.Orbit.SiderealOrbitPeriod_d.Value;
+
+        // If the apside type wasn't specified, adjust the search date by half an orbit.
+        // Otherwise, adjust the search date by one full orbit.
+        double adjustment_d = apsideType == null ? period_d / 2 : period_d;
+
+        // Check the expression type.
+        if (comparison == ExpressionType.LessThanOrEqual)
+        {
+            // We want the apside event before or on the specified date.
+            // Check if the event occurs before or on the given date.
+            if (apsideEvent.DateTimeUtc.GetDateOnly() <= date)
+            {
+                return apsideEvent;
+            }
+
+            // Adjust the search date.
+            jdtt = apsideEvent.JulianDateTerrestrial - adjustment_d;
+        }
+        else
+        {
+            // The comparison argument must be GreaterThanOrEqual.
+            // Check if the event occurs after or on the given date.
+            if (apsideEvent.DateTimeUtc.GetDateOnly() >= date)
+            {
+                return apsideEvent;
+            }
+
+            // Adjust the search date.
+            jdtt = apsideEvent.JulianDateTerrestrial + adjustment_d;
+        }
+
+        // Search again and return the correct apside event.
+        return GetApsideClosest(planet, jdtt, apsideType);
+    }
+
+    /// <summary>
     /// Variation of the above method that accepts the planet name as a string.
     /// </summary>
     /// <param name="planetName"></param>
     /// <param name="jdtt"></param>
     /// <param name="apsideType"></param>
+    /// <param name="comparison">
+    /// If we want to search for the event before, after, or closest (default) to the specified date.
+    /// </param>
     /// <returns></returns>
-    public ApsideEvent GetClosestApside(string planetName, double jdtt,
-        EApsideType? apsideType = null)
+    public ApsideEvent GetApside(string planetName, double jdtt,
+        EApsideType? apsideType = null, ExpressionType comparison = ExpressionType.Default)
     {
         AstroObjectRecord planet = astroObjectRepository.LoadByName(planetName, "Planet");
-        return GetClosestApside(planet, jdtt, apsideType);
+        return GetApside(planet, jdtt, apsideType, comparison);
     }
 }

@@ -69,7 +69,7 @@ public static class DurationUtility
         }
 
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jdtt = JulianDateUtility.DecimalYearToJulianDate(year);
+        double jdtt = JulianDateUtility.FromDecimalYear(year);
         double T = JulianDateUtility.JulianCenturiesSinceJ2000(jdtt);
 
         // Call the method that takes T as a parameter.
@@ -86,6 +86,30 @@ public static class DurationUtility
         return GetTropicalYearInEphemerisDaysForYear(year)
             * TimeConstants.SECONDS_PER_DAY
             / GetSolarDayInSeconds(year);
+    }
+
+    /// <summary>
+    /// Find the length of the tropical century in solar days.
+    /// </summary>
+    /// <param name="century">
+    /// The century number. Centuries are assumed to be numbered from 1 in the usual way,
+    /// i.e. century 21 runs from 2001-2100.
+    /// </param>
+    /// <returns>The approximate number of solar days in the century.</returns>
+    public static double GetTropicalCenturyInSolarDays(int century)
+    {
+        // Get year range.
+        int maxYear = century * 100;
+        int minYear = maxYear - 99;
+
+        // Tally up the solar days.
+        double totalDays = 0;
+        for (int y = minYear; y <= maxYear; y++)
+        {
+            totalDays += GetTropicalYearInSolarDaysForYear(y);
+        }
+
+        return totalDays;
     }
 
     /// <summary>
@@ -109,7 +133,7 @@ public static class DurationUtility
     public static double GetLunationInEphemerisDaysForYear(double year)
     {
         // Calculate T, the number of Julian centuries since noon, January 1, 2000 (TT).
-        double jd = JulianDateUtility.DecimalYearToJulianDate(year);
+        double jd = JulianDateUtility.FromDecimalYear(year);
         double T = JulianDateUtility.JulianCenturiesSinceJ2000(jd);
         // Evaluate the polynomial.
         return GetLunationInEphemerisDays(T);

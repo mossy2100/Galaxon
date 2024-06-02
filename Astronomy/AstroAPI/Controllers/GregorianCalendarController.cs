@@ -40,7 +40,7 @@ public class GregorianCalendarController(
             DateOnly? leapSecondDate = leapSecondService.LeapSecondDateForYear(year);
             bool hasLeapSecond = leapSecondDate.HasValue;
             DateOnly firstDayOfYear = new (year, 1, 1);
-            double jdut = JulianDateUtility.DateOnlyToJulianDate(firstDayOfYear);
+            double jdut = JulianDateUtility.FromDateOnly(firstDayOfYear);
             GregorianCalendar gcal = GregorianCalendarUtility.GregorianCalendarInstance;
             DayOfWeek dayOfWeek = gcal.GetDayOfWeek(firstDayOfYear.ToDateTime());
             int century = (year - 1) / 100 + 1;
@@ -59,16 +59,16 @@ public class GregorianCalendarController(
             // Apsides.
             // Perihelion.
             ApsideEvent perihelion =
-                apsideService.GetClosestApside(earth,
-                    JulianDateUtility.DecimalYearToJulianDate(year));
+                apsideService.GetApsideClosest(earth,
+                    JulianDateUtility.FromDecimalYear(year));
             dto.Events.Add(
                 JulianDateUtility
                     .JulianDateTerrestrialToDateTimeUniversal(perihelion.JulianDateTerrestrial)
                     .ToIsoString(), "Perihelion");
 
             // Aphelion.
-            ApsideEvent aphelion = apsideService.GetClosestApside(earth,
-                JulianDateUtility.DecimalYearToJulianDate(year + 0.5));
+            ApsideEvent aphelion = apsideService.GetApsideClosest(earth,
+                JulianDateUtility.FromDecimalYear(year + 0.5));
             dto.Events.Add(
                 JulianDateUtility
                     .JulianDateTerrestrialToDateTimeUniversal(aphelion.JulianDateTerrestrial)
@@ -101,7 +101,7 @@ public class GregorianCalendarController(
         catch (Exception ex)
         {
             string error = $"Error getting information for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 }

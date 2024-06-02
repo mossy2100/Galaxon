@@ -58,7 +58,7 @@ public class AstroObjectRepository(
 
         // Match on name if specified (case-insensitive).
         IQueryable<AstroObjectRecord> query = astroDbContext.AstroObjects;
-        if (!name.IsEmpty())
+        if (!string.IsNullOrEmpty(name))
         {
             // Can't use string.Equals() here without requiring enumeration first. Using ToLower()
             // should be faster.

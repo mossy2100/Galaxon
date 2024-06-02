@@ -98,7 +98,7 @@ public class SunImportService(
         // Orbital parameters.
         sun.Orbit ??= new OrbitRecord();
         // 29,000 light years in km.
-        sun.Orbit.SemiMajorAxis_km = 29_000 * Length.KM_PER_LIGHT_YEAR;
+        sun.Orbit.SemiMajorAxis_km = 29_000 * Length.KILOMETRES_PER_LIGHT_YEAR;
         // Approx. 225-250 million years in days.
         sun.Orbit.SiderealOrbitPeriod_d = 237.5e6 * TimeConstants.DAYS_PER_YEAR;
         // Orbital speed in km/s.

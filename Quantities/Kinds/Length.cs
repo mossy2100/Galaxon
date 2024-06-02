@@ -9,6 +9,11 @@ public static class Length
     public const long METRES_PER_ASTRONOMICAL_UNIT = 149_597_870_700;
 
     /// <summary>
+    /// Number of kilometres per Astronomical Unit.
+    /// </summary>
+    public const double KILOMETRES_PER_ASTRONOMICAL_UNIT = METRES_PER_ASTRONOMICAL_UNIT / 1000.0;
+
+    /// <summary>
     /// Number of metres per light year.
     /// <see href="https://en.wikipedia.org/wiki/Light-year"/>
     /// </summary>
@@ -17,7 +22,7 @@ public static class Length
     /// <summary>
     /// Number of kilometres per light year.
     /// </summary>
-    public const double KM_PER_LIGHT_YEAR = METRES_PER_LIGHT_YEAR / 1000.0;
+    public const double KILOMETRES_PER_LIGHT_YEAR = METRES_PER_LIGHT_YEAR / 1000.0;
 
     /// <summary>
     /// Number of metres per parsec.

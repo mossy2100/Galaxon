@@ -34,7 +34,7 @@ public class BirthdayService(SunService sunService)
         DateTime dtBirthday = new (year, dtBirth.Month, dtBirth.Day, 12, 0, 0);
 
         // Convert to a Julian Date. Don't worry about delta-T; again, this is just an estimate.
-        double jdBirthday = JulianDateUtility.DateTimeToJulianDate(dtBirthday);
+        double jdBirthday = JulianDateUtility.FromDateTime(dtBirthday);
 
         // Construct a function to find the difference between the Ls at a certain datetime and the
         // difference from the Ls at birth.

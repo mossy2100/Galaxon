@@ -43,7 +43,7 @@ public class SeasonalMarkerController(SeasonalMarkerService seasonalMarkerServic
         catch (Exception ex)
         {
             string error = $"Error computing seasonal markers for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 }

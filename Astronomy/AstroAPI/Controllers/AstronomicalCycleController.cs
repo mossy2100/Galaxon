@@ -38,7 +38,7 @@ public class AstronomicalCycleController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this,
+            return Program.ReturnError(this,
                 $"Error computing solar day length for year {year}.", ex);
         }
     }
@@ -77,7 +77,7 @@ public class AstronomicalCycleController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this,
+            return Program.ReturnError(this,
                 $"Error computing tropical year length for year {year}.", ex);
         }
     }
@@ -114,7 +114,7 @@ public class AstronomicalCycleController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Program.ReturnException(this,
+            return Program.ReturnError(this,
                 $"Error computing lunation length for year {year}.", ex);
         }
     }

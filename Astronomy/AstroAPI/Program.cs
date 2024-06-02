@@ -132,7 +132,7 @@ public class Program
     /// <param name="error">The error message to be logged and returned.</param>
     /// <param name="ex">The exception object, if any, associated with the error.</param>
     /// <returns>A standardized error response with a status code of 500.</returns>
-    public static ObjectResult ReturnException(ControllerBase controller, string error, Exception? ex = null)
+    public static ObjectResult ReturnError(ControllerBase controller, string error, Exception? ex = null)
     {
         // Logging.
         Slog.Error("Error: {Error}", error);

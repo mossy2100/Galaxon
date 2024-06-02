@@ -50,7 +50,7 @@ public class DeltaTController(DeltaTService deltaTService) : ControllerBase
         catch (Exception ex)
         {
             string error = $"Error computing delta-T for year {year}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 
@@ -104,7 +104,7 @@ public class DeltaTController(DeltaTService deltaTService) : ControllerBase
         catch (Exception ex)
         {
             string error = $"Error computing delta-T for years {startYear}-{endYear}.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 }

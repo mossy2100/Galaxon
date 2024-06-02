@@ -38,7 +38,7 @@ public class LeapSecondController(AstroDbContext astroDbContext) : ControllerBas
         catch (Exception ex)
         {
             string error = "Error retrieving leap second data.";
-            return Program.ReturnException(this, error, ex);
+            return Program.ReturnError(this, error, ex);
         }
     }
 }

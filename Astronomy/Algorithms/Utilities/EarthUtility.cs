@@ -25,7 +25,7 @@ public static class EarthUtility
     /// <returns>The ERA at the given instant.</returns>
     public static double CalcEarthRotationAngle(DateTime dt)
     {
-        double jdut = JulianDateUtility.DateTimeToJulianDate(dt);
+        double jdut = JulianDateUtility.FromDateTime(dt);
         return CalcEarthRotationAngle(jdut);
     }
 }

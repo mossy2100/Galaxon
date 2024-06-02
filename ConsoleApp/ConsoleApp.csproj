@@ -22,5 +22,18 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1"/>
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
     </ItemGroup>
+    
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </None>
+      <None Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </None>
+    </ItemGroup>
 
 </Project>

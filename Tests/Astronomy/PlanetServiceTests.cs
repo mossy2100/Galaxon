@@ -76,7 +76,7 @@ public class PlanetServiceTests
         PlanetService planetService = ServiceManager.GetService<PlanetService>();
         AstroObjectRecord saturn = astroObjectRepository.LoadByName("Saturn", "Planet");
         DateTime dttt = new (1999, 7, 26, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt = JulianDateUtility.DateTimeToJulianDate(dttt);
+        double jdtt = JulianDateUtility.FromDateTime(dttt);
 
         // Act.
         (double actualL, double _, double _) = planetService.CalcPlanetPosition(saturn, jdtt);

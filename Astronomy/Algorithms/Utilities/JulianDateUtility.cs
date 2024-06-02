@@ -1,3 +1,4 @@
+using Galaxon.Numerics.Algebra;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
 
@@ -14,7 +15,7 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="year">The year number as a decimal.</param>
     /// <returns>The equivalent Julian Date (UT).</returns>
-    public static double DecimalYearToJulianDate(double year)
+    public static double FromDecimalYear(double year)
     {
         return TimeConstants.START_GREGORIAN_EPOCH_JDUT + (year - 1) * TimeConstants.DAYS_PER_YEAR;
     }
@@ -26,7 +27,7 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="jdut">A Julian Date (UT).</param>
     /// <returns>The equivalent decimal year.</returns>
-    public static double JulianDateToDecimalYear(double jdut)
+    public static double ToDecimalYear(double jdut)
     {
         return (jdut - TimeConstants.START_GREGORIAN_EPOCH_JDUT) / TimeConstants.DAYS_PER_YEAR + 1;
     }
@@ -42,7 +43,7 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="dt">The DateTime instance.</param>
     /// <returns>The equivalent Julian Date.</returns>
-    public static double DateTimeToJulianDate(DateTime dt)
+    public static double FromDateTime(DateTime dt)
     {
         return TimeConstants.START_GREGORIAN_EPOCH_JDUT + dt.GetTotalDays();
     }
@@ -54,7 +55,7 @@ public static class JulianDateUtility
     /// The Julian Date. May include a fractional part indicating the time of day.
     /// </param>
     /// <returns>The equivalent DateTime.</returns>
-    public static DateTime JulianDateToDateTime(double jdut)
+    public static DateTime ToDateTime(double jdut)
     {
         return DateTimeExtensions.FromTotalDays(jdut - TimeConstants.START_GREGORIAN_EPOCH_JDUT);
     }
@@ -68,7 +69,7 @@ public static class JulianDateUtility
     /// <returns>The Julian Date in Terrestrial Time.</returns>
     public static double DateTimeUniversalToJulianDateTerrestrial(DateTime dt)
     {
-        return JulianDateUniversalToTerrestrial(DateTimeToJulianDate(dt));
+        return UniversalToTerrestrial(FromDateTime(dt));
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ public static class JulianDateUtility
     /// <returns>The DateTime in Universal Time.</returns>
     public static DateTime JulianDateTerrestrialToDateTimeUniversal(double jdtt)
     {
-        return JulianDateToDateTime(JulianDateTerrestrialToUniversal(jdtt));
+        return ToDateTime(TerrestrialToUniversal(jdtt));
     }
 
     /// <summary>
@@ -90,9 +91,9 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="jdut">Julian Date in Universal Time.</param>
     /// <returns>Julian Date in Terrestrial Time.</returns>
-    public static double JulianDateUniversalToTerrestrial(double jdut)
+    public static double UniversalToTerrestrial(double jdut)
     {
-        double year = JulianDateToDecimalYear(jdut);
+        double year = ToDecimalYear(jdut);
         double deltaT = DeltaTUtility.CalcDeltaTNasa(year);
         return jdut + (deltaT / TimeConstants.SECONDS_PER_DAY);
     }
@@ -104,14 +105,36 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="jdtt">Julian Date in Terrestrial Time</param>
     /// <returns>Julian Date in Universal Time</returns>
-    public static double JulianDateTerrestrialToUniversal(double jdtt)
+    public static double TerrestrialToUniversal(double jdtt)
     {
-        // We have to convert from a Julian Date to a DateTime in TT, even though the CalcDeltaTNasa()
-        // method expects a DateTime in UT. This shouldn't matter, though, as the result should be
-        // virtually identical given the lack of precision in delta-T calculations.
-        DateTime dt = JulianDateToDateTime(jdtt);
-        double deltaT = DeltaTUtility.CalcDeltaTNasa(dt);
-        return jdtt - deltaT / TimeConstants.SECONDS_PER_DAY;
+        // Get an approximate value for JDUT by passing the decimal year in Terrestrial Time to the
+        // CalcDeltaT method (which is designed for a year in UT). The result will be about the
+        // same.
+        double year = ToDecimalYear(jdtt);
+        double deltaT_d = DeltaTUtility.CalcDeltaTNasa(year) / TimeConstants.SECONDS_PER_DAY;
+        double jdutApprox = jdtt - deltaT_d;
+
+        // jdutApprox won't be exact because the CalcDeltaT method expects to receive a value in UT.
+        // But we can use numerical methods to find the right value for JDUT that will give the right
+        // value of JDTT.
+        // Get a range to search within. I guess it will be within 10% of our initial estimate and
+        // testing supports this assumption.
+        // <see cref="JulianDateUtilityTests.TestTerrestrialToUniversalAndViceVersa"/>.
+        double c = 0.2 * deltaT_d;
+        double a = jdutApprox - c;
+        double b = jdutApprox + c;
+
+        // Create a function to find the minimum for.
+        double func(double jdut) => Abs(UniversalToTerrestrial(jdut) - jdtt);
+
+        // We want tolerance within half the smallest precision in our delta-T data, which is 0.0001
+        // seconds.
+        double tolerance = 1e-4 / TimeConstants.SECONDS_PER_DAY / 2;
+
+        // Find the JDUT for which this function returns a minimum.
+        (double jdut1, double diff) = GoldenSectionSearch.FindMinimum(func, a, b, tolerance);
+
+        return jdut1;
     }
 
     /// <summary>
@@ -139,7 +162,7 @@ public static class JulianDateUtility
 
     #endregion Conversion between Julian dates and other time scales
 
-    #region Conversion between DateOnly and Julian Date or Day Number
+    #region Conversion between DateOnly and Julian Date or Julian Day Number
 
     /// <summary>
     /// Convert a DateOnly object to a Julian Date equal to start point of that day.
@@ -148,9 +171,9 @@ public static class JulianDateUtility
     /// </summary>
     /// <param name="date">The DateOnly instance.</param>
     /// <returns>The Julian Date.</returns>
-    public static double DateOnlyToJulianDate(DateOnly date)
+    public static double FromDateOnly(DateOnly date)
     {
-        return DateTimeToJulianDate(date.ToDateTime());
+        return FromDateTime(date.ToDateTime());
     }
 
     /// <summary>
@@ -161,9 +184,9 @@ public static class JulianDateUtility
     /// information will be discarded.
     /// </param>
     /// <returns>A new DateOnly object.</returns>
-    public static DateOnly JulianDateToDateOnly(double jd)
+    public static DateOnly ToDateOnly(double jd)
     {
-        return DateOnly.FromDateTime(JulianDateToDateTime(jd));
+        return DateOnly.FromDateTime(ToDateTime(jd));
     }
 
     /// <summary>
@@ -173,7 +196,7 @@ public static class JulianDateUtility
     /// <returns>The Julian Day Number.</returns>
     public static int DateOnlyToJulianDayNumber(DateOnly date)
     {
-        return (int)DateTimeToJulianDate(date.ToDateTime(new TimeOnly(12, 0)));
+        return (int)FromDateTime(date.ToDateTime(new TimeOnly(12, 0)));
     }
 
     /// <summary>
@@ -183,7 +206,7 @@ public static class JulianDateUtility
     /// <returns>A new DateOnly object.</returns>
     public static DateOnly JulianDayNumberToDateOnly(int jdn)
     {
-        return JulianDateToDateOnly(jdn);
+        return ToDateOnly(jdn);
     }
 
     #endregion Conversion between DateOnly and Julian Day Number

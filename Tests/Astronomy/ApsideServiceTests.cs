@@ -42,12 +42,12 @@ public class ApsideServiceTests
 
         // Get approximate datetime to input.
         DateTime dt0 = new (1978, 10, 15);
-        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.FromDateTime(dt0);
 
         ///////////
         // Act.
         ApsideEvent apsideEvent =
-            apsideService.GetClosestApsideApprox(venus, jdtt0, EApsideType.Periapsis);
+            apsideService.GetApsideClosestApprox(venus, jdtt0, EApsideType.Periapsis);
 
         // Give some feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
@@ -83,12 +83,12 @@ public class ApsideServiceTests
 
         // Get approximate datetime to input.
         DateTime dt0 = new (2032, 1, 1);
-        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.FromDateTime(dt0);
 
         ///////////
         // Act.
         ApsideEvent apsideEvent =
-            apsideService.GetClosestApsideApprox(mars, jdtt0, EApsideType.Apoapsis);
+            apsideService.GetApsideClosestApprox(mars, jdtt0, EApsideType.Apoapsis);
 
         // Give some feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
@@ -127,11 +127,11 @@ public class ApsideServiceTests
 
         // Get the approximate result as an input value.
         DateTime dt0 = new (1990, 1, 4);
-        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.FromDateTime(dt0);
 
         ///////////
         // Act.
-        ApsideEvent apsideEvent = apsideService.GetClosestApsideApprox(planet, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetApsideClosestApprox(planet, jdtt0);
 
         // Feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
@@ -200,11 +200,11 @@ public class ApsideServiceTests
 
         // Get an approximate result datetime to input to the method.
         DateOnly dt0 = new (year, month, day);
-        double jdtt0 = JulianDateUtility.DateOnlyToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.FromDateOnly(dt0);
 
         ///////////
         // Act.
-        ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetApsideClosest(planet, jdtt0);
 
         // Provide feedback.
         double jdtt1 = apsideEvent.JulianDateTerrestrial;
@@ -284,19 +284,19 @@ public class ApsideServiceTests
 
         // Get the initial estimate of event date.
         DateTime dt0 = new (year, month, day, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt0 = JulianDateUtility.DateTimeToJulianDate(dt0);
+        double jdtt0 = JulianDateUtility.FromDateTime(dt0);
 
         // Get the expected result.
         DateTime dtttExpected = dt0 + TimeSpan.FromHours(hours);
 
         ///////////
         // Act.
-        ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdtt0);
+        ApsideEvent apsideEvent = apsideService.GetApsideClosest(planet, jdtt0);
 
         // Convert the computed event from JD(TT) to DateTime (TT) so we can compare it to the
         // values in the book. (The ApsideEvent class only provides the DateTime in UTC.)
         DateTime dtttActual =
-            JulianDateUtility.JulianDateToDateTime(apsideEvent.JulianDateTerrestrial);
+            JulianDateUtility.ToDateTime(apsideEvent.JulianDateTerrestrial);
 
         // Get the radius in AU.
         double actualRadius_AU = apsideEvent.Radius_AU!.Value;
@@ -332,8 +332,11 @@ public class ApsideServiceTests
         TimeSpan maxDiff = TimeSpan.FromMinutes(5);
 
         // Get the apsides with a USNO result.
-        List<ApsideRecord> apsides = astroDbContext.Apsides.Where(sm => sm.DateTimeUtcUsno != null)
-            .OrderBy(sm => sm.DateTimeUtcUsno!.Value).ToList();
+        List<ApsideRecord> apsides = astroDbContext
+            .Apsides
+            .Where(sm => sm.DateTimeUtcUsno != null)
+            .OrderBy(sm => sm.DateTimeUtcUsno!.Value)
+            .ToList();
 
         // Check each.
         foreach (ApsideRecord apside in apsides)
@@ -344,8 +347,8 @@ public class ApsideServiceTests
 
             ////////////////////
             // Act.
-            ApsideEvent apsideEvent = apsideService.GetClosestApside("Earth",
-                JulianDateUtility.DateTimeToJulianDate(dtExpected), apside.ApsideType);
+            ApsideEvent apsideEvent = apsideService.GetApside("Earth",
+                JulianDateUtility.FromDateTime(dtExpected), apside.ApsideType);
 
             ////////////////////
             // Assert.
@@ -371,9 +374,11 @@ public class ApsideServiceTests
         double maxDistanceDiff_AU = 1e-4;
 
         // Get the apsides with a USNO result.
-        List<ApsideRecord> apsides = astroDbContext.Apsides
+        List<ApsideRecord> apsides = astroDbContext
+            .Apsides
             .Where(sm => sm.DateTimeUtcAstroPixels != null)
-            .OrderBy(sm => sm.DateTimeUtcAstroPixels!.Value).ToList();
+            .OrderBy(sm => sm.DateTimeUtcAstroPixels!.Value)
+            .ToList();
 
         // Check each.
         foreach (ApsideRecord apside in apsides)
@@ -384,8 +389,8 @@ public class ApsideServiceTests
 
             ////////////////////
             // Act.
-            ApsideEvent apsideEvent = apsideService.GetClosestApside("Earth",
-                JulianDateUtility.DateTimeToJulianDate(dtExpected), apside.ApsideType);
+            ApsideEvent apsideEvent = apsideService.GetApside("Earth",
+                JulianDateUtility.FromDateTime(dtExpected), apside.ApsideType);
 
             ////////////////////
             // Assert.

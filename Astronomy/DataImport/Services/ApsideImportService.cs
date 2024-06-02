@@ -102,7 +102,7 @@ public class ApsideImportService(
         while (true)
         {
             // Find the apside event closest to the current point in time.
-            ApsideEvent apsideEvent = apsideService.GetClosestApside(planet, jdttCurrent);
+            ApsideEvent apsideEvent = apsideService.GetApsideClosest(planet, jdttCurrent);
 
             // Log it.
             LogInfo("Computed apside", planetName, apsideEvent.OrbitNumber, apsideEvent.ApsideType,

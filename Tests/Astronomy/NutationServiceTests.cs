@@ -16,7 +16,7 @@ public class NutationServiceTests
     {
         // Arrange.
         DateTime dttt = new (1987, 4, 10, 0, 0, 0, DateTimeKind.Utc);
-        double jdtt = JulianDateUtility.DateTimeToJulianDate(dttt);
+        double jdtt = JulianDateUtility.FromDateTime(dttt);
 
         double expectedLongitude = Angles.DMSToRadians(0, 0, -3.788);
         double expectedObliquity = Angles.DMSToRadians(0, 0, 9.443);
