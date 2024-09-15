@@ -7,9 +7,9 @@ using Galaxon.Astronomy.Data.Models;
 using Galaxon.Astronomy.Data.Repositories;
 using Galaxon.Core.Exceptions;
 using Galaxon.Numerics.Algebra;
+using Galaxon.Numerics.Algorithms;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Galaxon.Astronomy.Algorithms.Services;
 

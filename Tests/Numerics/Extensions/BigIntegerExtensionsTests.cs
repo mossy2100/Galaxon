@@ -14,7 +14,7 @@ public class BigIntegerExtensionsTests
         BigInteger n = 123456789;
 
         // Act
-        var result = n.Reverse();
+        BigInteger result = n.Reverse();
 
         // Assert
         Assert.AreEqual(987654321, result);
@@ -27,7 +27,7 @@ public class BigIntegerExtensionsTests
         BigInteger n = 123454321;
 
         // Act
-        var result = n.IsPalindromic();
+        bool result = n.IsPalindromic();
 
         // Assert
         Assert.IsTrue(result);
@@ -40,7 +40,7 @@ public class BigIntegerExtensionsTests
         BigInteger n = 123456789;
 
         // Act
-        var result = n.IsPalindromic();
+        bool result = n.IsPalindromic();
 
         // Assert
         Assert.IsFalse(result);
@@ -53,7 +53,7 @@ public class BigIntegerExtensionsTests
         BigInteger n = 123456789;
 
         // Act
-        var result = n.DigitSum();
+        BigInteger result = n.DigitSum();
 
         // Assert
         Assert.AreEqual(45, result);
@@ -66,36 +66,10 @@ public class BigIntegerExtensionsTests
         BigInteger n = 123456789;
 
         // Act
-        var result = n.NumDigits();
+        int result = n.NumDigits();
 
         // Assert
         Assert.AreEqual(9, result);
-    }
-
-    [TestMethod]
-    public void ToUnsigned_ReturnsCorrectValueForPositiveNumber()
-    {
-        // Arrange
-        BigInteger n = 123456789;
-
-        // Act
-        var result = n.ToUnsigned();
-
-        // Assert
-        Assert.AreEqual(123456789, result);
-    }
-
-    [TestMethod]
-    public void ToUnsigned_ReturnsCorrectValueForNegativeNumber()
-    {
-        // Arrange
-        BigInteger n = -123456789;
-
-        // Act
-        var result = n.ToUnsigned();
-
-        // Assert
-        Assert.AreEqual(306039647, result);
     }
 
     [TestMethod]
@@ -105,7 +79,7 @@ public class BigIntegerExtensionsTests
         List<BigInteger> nums = new () { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = nums.Sum();
+        BigInteger result = nums.Sum();
 
         // Assert
         Assert.AreEqual(15, result);
@@ -118,90 +92,10 @@ public class BigIntegerExtensionsTests
         List<BigInteger> nums = new () { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = nums.Sum(n => n * n);
+        BigInteger result = nums.Sum(n => n * n);
 
         // Assert
         Assert.AreEqual(55, result);
-    }
-
-    [TestMethod]
-    public void TestToUnsignedZero()
-    {
-        BigInteger bi = 0;
-        BigInteger expected = 0;
-        var actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void TestToUnsignedPositive()
-    {
-        BigInteger bi;
-        BigInteger expected;
-        BigInteger actual;
-
-        bi = 1;
-        expected = 1;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = 123;
-        expected = 123;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = sbyte.MaxValue;
-        expected = sbyte.MaxValue;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = byte.MaxValue;
-        expected = byte.MaxValue;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = int.MaxValue;
-        expected = int.MaxValue;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = uint.MaxValue;
-        expected = uint.MaxValue;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-    }
-
-    [TestMethod]
-    public void TestToUnsignedNegative()
-    {
-        BigInteger bi;
-        BigInteger expected;
-        BigInteger actual;
-
-        bi = -1;
-        expected = 255;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = -128;
-        expected = 128;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = -100;
-        expected = bi + byte.MaxValue + 1;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = -10000;
-        expected = bi + ushort.MaxValue + 1;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
-
-        bi = -12345678;
-        expected = bi + uint.MaxValue + 1;
-        actual = bi.ToUnsigned();
-        Assert.AreEqual(expected, actual);
     }
 
     [TestMethod]

@@ -1,17 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>Galaxon.Numerics.Algebra</AssemblyName>
         <RootNamespace>Galaxon.Numerics.Algebra</RootNamespace>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\..\Core\Core.csproj"/>
-        <ProjectReference Include="..\BigNumbers\BigNumbers.csproj"/>
-        <ProjectReference Include="..\Integers\Integers.csproj"/>
+        <ProjectReference
+            Include="..\..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\BigNumbers\BigNumbers.csproj" />
+        <ProjectReference
+            Include="..\Integers\Integers.csproj" />
     </ItemGroup>
-
 </Project>

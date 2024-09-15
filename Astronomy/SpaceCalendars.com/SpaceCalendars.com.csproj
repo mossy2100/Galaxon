@@ -1,342 +1,660 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project
+    Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Galaxon.Astronomy.SpaceCalendars.com</RootNamespace>
         <AssemblyName>Galaxon.Astronomy.SpaceCalendars.com</AssemblyName>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-      <PackageReference Include="Serilog" Version="3.1.1" />
-      <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+        <PackageReference
+            Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"
+            Version="8.0.4" />
+        <PackageReference
+            Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+            Version="8.0.4" />
+        <PackageReference
+            Include="Microsoft.AspNetCore.Identity.UI"
+            Version="8.0.4" />
+        <PackageReference
+            Include="Microsoft.EntityFrameworkCore.Design"
+            Version="8.0.4">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference
+            Include="Microsoft.EntityFrameworkCore.Tools"
+            Version="8.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference
+            Include="Microsoft.Extensions.Configuration"
+            Version="8.0.0" />
+        <PackageReference
+            Include="Microsoft.Extensions.Configuration.Json"
+            Version="8.0.0" />
+        <PackageReference
+            Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"
+            Version="8.0.2" />
+        <PackageReference
+            Include="Serilog"
+            Version="3.1.1" />
+        <PackageReference
+            Include="Serilog.AspNetCore"
+            Version="8.0.1" />
     </ItemGroup>
-
     <ItemGroup>
-      <Folder Include="Logs\" />
-      <Folder Include="Migrations" />
-      <Folder Include="wwwroot\images\icons" />
+        <Folder
+            Include="Logs\" />
+        <Folder
+            Include="Migrations" />
+        <Folder
+            Include="wwwroot\images\icons" />
     </ItemGroup>
-
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\additional-methods.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\additional-methods.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\jquery.validate.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\jquery.validate.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ar.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ar.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_az.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_az.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_bg.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_bg.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_bn_BD.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_bn_BD.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ca.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ca.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_cs.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_cs.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_da.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_da.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_de.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_de.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_el.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_el.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es_AR.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es_AR.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es_PE.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_es_PE.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_et.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_et.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_eu.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_eu.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fa.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fa.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fi.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fi.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fr.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_fr.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ge.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ge.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_gl.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_gl.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_he.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_he.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hr.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hr.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hu.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hu.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hy_AM.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_hy_AM.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_id.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_id.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_is.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_is.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_it.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_it.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ja.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ja.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ka.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ka.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_kk.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_kk.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ko.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ko.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_lt.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_lt.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_lv.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_lv.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_mk.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_mk.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_my.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_my.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_nl.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_nl.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_no.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_no.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pl.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pl.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pt_BR.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pt_BR.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pt_PT.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_pt_PT.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ro.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ro.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ru.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ru.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sd.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sd.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_si.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_si.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sk.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sk.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sl.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sl.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sr.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sr.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sr_lat.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sr_lat.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sv.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_sv.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_th.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_th.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_tj.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_tj.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_tr.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_tr.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_uk.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_uk.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ur.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_ur.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_vi.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_vi.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_zh.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_zh.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_zh_TW.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\messages_zh_TW.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_de.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_de.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_es_CL.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_es_CL.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_fi.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_fi.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_it.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_it.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_nl.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_nl.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_pt.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\localization\methods_pt.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\bower.json" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\CHANGELOG.md" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\composer.json" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\icons\default\icons.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\icons\default\icons.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\icons\default\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\license.txt" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\models\dom\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\models\dom\model.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\models\dom\model.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\package.json" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\advlist\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\advlist\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\advlist\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\anchor\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\anchor\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\anchor\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autolink\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autolink\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autolink\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autoresize\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autoresize\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autoresize\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autosave\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autosave\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\autosave\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\charmap\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\charmap\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\charmap\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\code\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\code\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\code\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\codesample\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\codesample\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\codesample\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\directionality\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\directionality\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\directionality\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojiimages.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojiimages.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\emoticons\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\fullscreen\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\fullscreen\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\fullscreen\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\help\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\help\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\help\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\image\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\image\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\image\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\importcss\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\importcss\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\importcss\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\insertdatetime\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\link\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\link\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\link\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\lists\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\lists\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\lists\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\media\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\media\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\media\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\nonbreaking\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\pagebreak\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\pagebreak\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\pagebreak\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\preview\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\preview\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\preview\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\quickbars\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\quickbars\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\quickbars\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\save\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\save\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\save\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\searchreplace\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\searchreplace\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\searchreplace\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\table\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\table\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\table\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\template\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\template\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\template\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualblocks\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualblocks\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualblocks\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualchars\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualchars\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\visualchars\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\wordcount\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\wordcount\plugin.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\plugins\wordcount\plugin.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\README.md" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\dark\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\dark\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\default\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\default\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\document\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\document\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\tinymce-5-dark\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\tinymce-5-dark\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\tinymce-5\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\tinymce-5\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\writer\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\content\writer\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.inline.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.inline.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.shadowdom.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.shadowdom.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.inline.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.inline.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.shadowdom.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.shadowdom.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.inline.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.inline.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.shadowdom.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.shadowdom.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.inline.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.inline.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.shadowdom.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.shadowdom.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\themes\silver\index.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\themes\silver\theme.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\themes\silver\theme.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\tinymce.d.ts" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\tinymce.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\tinymce\tinymce.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.min.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\css\site.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\additional-methods.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\additional-methods.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\jquery.validate.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\jquery.validate.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ar.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ar.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_az.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_az.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_bg.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_bg.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_bn_BD.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_bn_BD.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ca.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ca.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_cs.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_cs.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_da.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_da.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_de.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_de.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_el.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_el.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es_AR.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es_AR.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es_PE.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_es_PE.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_et.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_et.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_eu.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_eu.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fa.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fa.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fi.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fi.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fr.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_fr.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ge.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ge.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_gl.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_gl.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_he.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_he.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hr.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hr.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hu.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hu.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hy_AM.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_hy_AM.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_id.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_id.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_is.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_is.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_it.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_it.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ja.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ja.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ka.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ka.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_kk.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_kk.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ko.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ko.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_lt.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_lt.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_lv.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_lv.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_mk.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_mk.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_my.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_my.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_nl.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_nl.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_no.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_no.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pl.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pl.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pt_BR.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pt_BR.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pt_PT.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_pt_PT.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ro.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ro.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ru.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ru.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sd.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sd.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_si.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_si.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sk.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sk.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sl.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sl.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sr.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sr.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sr_lat.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sr_lat.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sv.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_sv.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_th.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_th.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_tj.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_tj.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_tr.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_tr.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_uk.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_uk.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ur.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_ur.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_vi.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_vi.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_zh.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_zh.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_zh_TW.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\messages_zh_TW.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_de.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_de.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_es_CL.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_es_CL.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_fi.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_fi.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_it.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_it.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_nl.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_nl.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_pt.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\jquery-validation\localization\methods_pt.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\bower.json" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\CHANGELOG.md" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\composer.json" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\icons\default\icons.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\icons\default\icons.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\icons\default\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\license.txt" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\models\dom\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\models\dom\model.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\models\dom\model.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\package.json" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\advlist\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\advlist\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\advlist\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\anchor\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\anchor\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\anchor\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autolink\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autolink\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autolink\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autoresize\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autoresize\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autoresize\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autosave\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autosave\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\autosave\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\charmap\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\charmap\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\charmap\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\code\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\code\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\code\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\codesample\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\codesample\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\codesample\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\directionality\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\directionality\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\directionality\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojiimages.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojiimages.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\js\emojis.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\emoticons\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\fullscreen\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\fullscreen\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\fullscreen\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\help\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\help\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\help\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\image\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\image\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\image\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\importcss\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\importcss\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\importcss\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\insertdatetime\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\insertdatetime\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\link\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\link\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\link\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\lists\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\lists\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\lists\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\media\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\media\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\media\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\nonbreaking\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\nonbreaking\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\pagebreak\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\pagebreak\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\pagebreak\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\preview\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\preview\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\preview\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\quickbars\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\quickbars\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\quickbars\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\save\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\save\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\save\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\searchreplace\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\searchreplace\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\searchreplace\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\table\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\table\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\table\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\template\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\template\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\template\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualblocks\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualblocks\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualblocks\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualchars\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualchars\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\visualchars\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\wordcount\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\wordcount\plugin.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\plugins\wordcount\plugin.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\README.md" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\dark\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\dark\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\default\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\default\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\document\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\document\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\tinymce-5-dark\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\tinymce-5-dark\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\tinymce-5\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\tinymce-5\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\writer\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\content\writer\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.inline.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.inline.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.shadowdom.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide-dark\skin.shadowdom.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.inline.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.inline.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.shadowdom.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\oxide\skin.shadowdom.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.inline.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.inline.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.shadowdom.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5-dark\skin.shadowdom.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.inline.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.inline.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\content.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.shadowdom.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\skins\ui\tinymce-5\skin.shadowdom.min.css" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\themes\silver\index.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\themes\silver\theme.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\themes\silver\theme.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\tinymce.d.ts" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\tinymce.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\tinymce\tinymce.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.esm.min.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.js.map" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.min.js" />
+        <_ContentIncludedByDefault
+            Remove="wwwroot\lib\bootstrap\js\bootstrap.min.js.map" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\Data\Data.csproj" />
+        <ProjectReference
+            Include="..\Data\Data.csproj" />
     </ItemGroup>
-
     <!-- Run the gulp task. -->
-    <Target Name="Gulp" BeforeTargets="BeforeBuild">
-        <Exec WorkingDirectory="$(ProjectDir)" Command="gulp" ContinueOnError="false" />
+    <Target
+        Name="Gulp"
+        BeforeTargets="BeforeBuild">
+        <Exec
+            WorkingDirectory="$(ProjectDir)"
+            Command="gulp"
+            ContinueOnError="false" />
     </Target>
-
 </Project>

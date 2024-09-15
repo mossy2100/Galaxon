@@ -176,8 +176,6 @@ public static class StringExtensions
         { 'u', "ᴜ" },
         { 'v', "ᴠ" },
         { 'w', "ᴡ" },
-        // Note: there is no Unicode small caps variant for 'x'. The character used here is the
-        // lower-case 'x', which is the same as the original character.
         { 'x', "x" },
         { 'y', "ʏ" },
         { 'z', "ᴢ" }
@@ -473,4 +471,29 @@ public static class StringExtensions
     }
 
     #endregion Format numbers
+
+    #region Transform string
+
+    /// <summary>
+    /// Reverse a string.
+    ///
+    /// This is not implemented as an extension method, because then it clashes with the LINQ
+    /// Reverse() method.
+    ///
+    /// Example:
+    /// <code>
+    /// string reversedString = StringExtensions.Reverse(originalString);
+    /// </code>
+    /// </summary>
+    /// <see cref="Enumerable.Reverse"/>
+    /// <param name="s">The string to reverse.</param>
+    /// <returns>The reversed string.</returns>
+    public static string Reverse(string s)
+    {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+
+    #endregion Transform string
 }

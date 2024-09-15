@@ -113,6 +113,30 @@ public static class DurationUtility
     }
 
     /// <summary>
+    /// Find the length of the tropical millennium in solar days.
+    /// </summary>
+    /// <param name="millennium">
+    /// The millennium number. Centuries are assumed to be numbered from 1 in the usual way,
+    /// i.e. millennium 3 runs from 2001-3000.
+    /// </param>
+    /// <returns>The approximate number of solar days in the millennium.</returns>
+    public static double GetTropicalMillenniumInSolarDays(int millennium)
+    {
+        // Get year range.
+        int maxYear = millennium * 1000;
+        int minYear = maxYear - 999;
+
+        // Tally up the solar days.
+        double totalDays = 0;
+        for (int y = minYear; y <= maxYear; y++)
+        {
+            totalDays += GetTropicalYearInSolarDaysForYear(y);
+        }
+
+        return totalDays;
+    }
+
+    /// <summary>
     /// Calculate the approximate average length of a lunation in ephemeris days at a point in time.
     /// The formula is taken from Wikipedia:
     /// <see href="https://en.wikipedia.org/wiki/Lunar_month#Synodic_month"/>

@@ -1,25 +1,35 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>Galaxon.Astronomy.Algorithms</AssemblyName>
         <RootNamespace>Galaxon.Astronomy.Algorithms</RootNamespace>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
-        <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+        <PackageReference
+            Include="GeoCoordinate.NetCore"
+            Version="1.0.0.1" />
+        <PackageReference
+            Include="MathNet.Numerics"
+            Version="5.0.0" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\Core.csproj" />
-      <ProjectReference Include="..\..\Numerics\Algebra\Algebra.csproj" />
-      <ProjectReference Include="..\..\Numerics\Extensions\Extensions.csproj" />
-      <ProjectReference Include="..\..\Numerics\Geometry\Geometry.csproj" />
-      <ProjectReference Include="..\..\Time\Time.csproj" />
-      <ProjectReference Include="..\Data\Data.csproj" />
+        <ProjectReference
+            Include="..\..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\..\Numerics\Algebra\Algebra.csproj" />
+        <ProjectReference
+            Include="..\..\Numerics\Algorithms\Algorithms.csproj" />
+        <ProjectReference
+            Include="..\..\Numerics\Extensions\Extensions.csproj" />
+        <ProjectReference
+            Include="..\..\Numerics\Geometry\Geometry.csproj" />
+        <ProjectReference
+            Include="..\..\Time\Time.csproj" />
+        <ProjectReference
+            Include="..\Data\Data.csproj" />
     </ItemGroup>
-
 </Project>

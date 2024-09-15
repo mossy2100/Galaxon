@@ -4,14 +4,12 @@ using Galaxon.Numerics.BigNumbers;
 namespace Galaxon.Tests.Numerics.Algebra;
 
 [TestClass]
-public class AnalysisTests
+public class BernoulliTests
 {
-    #region Bernoulli
-
     [TestMethod]
     public void Bernoulli_ThrowsException_ForNegativeIndex()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Analysis.Bernoulli(-1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => Bernoulli.GetNumber(-1));
     }
 
     /// <summary>
@@ -43,9 +41,7 @@ public class AnalysisTests
     public void Bernoulli_ValidIndices_ReturnsExpectedValue(int index, int numerator, int denominator = 1)
     {
         BigRational expected = new BigRational(numerator, denominator);
-        BigRational result = Analysis.Bernoulli(index);
+        BigRational result = Bernoulli.GetNumber(index);
         Assert.AreEqual(expected, result);
     }
-
-    #endregion Bernoulli
 }

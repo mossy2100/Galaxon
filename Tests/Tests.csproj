@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,44 +7,64 @@
         <IsPackable>false</IsPackable>
         <RootNamespace>Galaxon.Tests</RootNamespace>
         <AssemblyName>Galaxon.Tests</AssemblyName>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="DecimalMath.DecimalEx" Version="1.0.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-        <PackageReference Include="MSTest.TestAdapter" Version="3.3.1" />
-        <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
-        <PackageReference Include="coverlet.collector" Version="6.0.2">
+        <PackageReference
+            Include="DecimalMath.DecimalEx"
+            Version="1.0.2" />
+        <PackageReference
+            Include="Microsoft.NET.Test.Sdk"
+            Version="17.9.0" />
+        <PackageReference
+            Include="MSTest.TestAdapter"
+            Version="3.3.1" />
+        <PackageReference
+            Include="MSTest.TestFramework"
+            Version="3.3.1" />
+        <PackageReference
+            Include="coverlet.collector"
+            Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\Astronomy\Algorithms\Algorithms.csproj" />
-        <ProjectReference Include="..\Astronomy\Calendars\Calendars.csproj" />
-        <ProjectReference Include="..\Core\Core.csproj"/>
-        <ProjectReference Include="..\Development\Application\Application.csproj" />
-        <ProjectReference Include="..\Numerics\Algebra\Algebra.csproj" />
-        <ProjectReference Include="..\Numerics\Bases\Bases.csproj" />
-        <ProjectReference Include="..\Numerics\BigNumbers\BigNumbers.csproj" />
-        <ProjectReference Include="..\Numerics\Geometry\Geometry.csproj" />
-        <ProjectReference Include="..\Numerics\Integers\Integers.csproj" />
-        <ProjectReference Include="..\Time\Time.csproj" />
-        <ProjectReference Include="..\UnitTesting\UnitTesting.csproj" />
+        <ProjectReference
+            Include="..\Astronomy\Algorithms\Algorithms.csproj" />
+        <ProjectReference
+            Include="..\Astronomy\Calendars\Calendars.csproj" />
+        <ProjectReference
+            Include="..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\Development\Application\Application.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Algebra\Algebra.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Bases\Bases.csproj" />
+        <ProjectReference
+            Include="..\Numerics\BigNumbers\BigNumbers.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Geometry\Geometry.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Integers\Integers.csproj" />
+        <ProjectReference
+            Include="..\Time\Time.csproj" />
+        <ProjectReference
+            Include="..\UnitTesting\UnitTesting.csproj" />
     </ItemGroup>
-
     <ItemGroup>
-      <None Update="appsettings.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </None>
-      <None Update="appsettings.Development.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </None>
+        <None
+            Update="appsettings.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+        <None
+            Update="appsettings.Development.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
-
 </Project>

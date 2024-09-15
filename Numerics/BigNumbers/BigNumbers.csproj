@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -14,18 +14,21 @@
         <Version>1.0.0</Version>
         <Authors>Shaun Moss</Authors>
         <Company>Galaxon Software</Company>
-        <Copyright>&#xA9; Shaun Moss 2023</Copyright>
+        <Copyright>© Shaun Moss 2023</Copyright>
         <Description>Provides arbitrary-precision decimal type.</Description>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
+        <PackageReference
+            Include="MSTest.TestFramework"
+            Version="3.3.1" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\Core.csproj" />
-      <ProjectReference Include="..\Extensions\Extensions.csproj" />
-      <ProjectReference Include="..\Integers\Integers.csproj" />
+        <ProjectReference
+            Include="..\..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\Extensions\Extensions.csproj" />
+        <ProjectReference
+            Include="..\Integers\Integers.csproj" />
     </ItemGroup>
-
 </Project>

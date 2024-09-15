@@ -1,17 +1,19 @@
-﻿<Project
+<Project
     Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>Galaxon.UnitTesting</AssemblyName>
-        <RootNamespace>Galaxon.UnitTesting</RootNamespace>
+        <AssemblyName>Galaxon.Numerics.Algorithms</AssemblyName>
+        <RootNamespace>Galaxon.Numerics.Algorithms</RootNamespace>
         <DebugType>portable</DebugType>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference
-            Include="..\Numerics\BigNumbers\BigNumbers.csproj" />
+            Include="..\..\Core\Core.csproj" />
         <ProjectReference
-            Include="..\Time\Time.csproj" />
+            Include="..\BigNumbers\BigNumbers.csproj" />
+        <ProjectReference
+            Include="..\Integers\Integers.csproj" />
     </ItemGroup>
 </Project>

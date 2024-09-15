@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,28 +7,32 @@
         <RootNamespace>Galaxon.Numerics.Integers</RootNamespace>
         <Company>Astro Multimedia</Company>
         <AssemblyName>Galaxon.Numerics.Integers</AssemblyName>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="DecimalMath.DecimalEx" Version="1.0.2"/>
-        <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
+        <PackageReference
+            Include="DecimalMath.DecimalEx"
+            Version="1.0.2" />
+        <PackageReference
+            Include="MSTest.TestFramework"
+            Version="3.3.1" />
     </ItemGroup>
-
     <ItemGroup>
-        <Compile Remove="old\**"/>
+        <Compile
+            Remove="old\**" />
     </ItemGroup>
-
     <ItemGroup>
-        <EmbeddedResource Remove="old\**"/>
+        <EmbeddedResource
+            Remove="old\**" />
     </ItemGroup>
-
     <ItemGroup>
-        <None Remove="old\**"/>
+        <None
+            Remove="old\**" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\Core.csproj" />
-      <ProjectReference Include="..\Extensions\Extensions.csproj" />
+        <ProjectReference
+            Include="..\..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\Extensions\Extensions.csproj" />
     </ItemGroup>
-
 </Project>

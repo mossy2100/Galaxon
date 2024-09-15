@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -8,13 +8,16 @@
         <Company>Astro Multimedia</Company>
         <PackageId>Quantities</PackageId>
         <AssemblyName>Galaxon.Quantities</AssemblyName>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj"/>
-        <ProjectReference Include="..\Numerics\Extensions\Extensions.csproj"/>
-        <ProjectReference Include="..\Numerics\Geometry\Geometry.csproj" />
-        <ProjectReference Include="..\Time\Time.csproj"/>
+        <ProjectReference
+            Include="..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Extensions\Extensions.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Geometry\Geometry.csproj" />
+        <ProjectReference
+            Include="..\Time\Time.csproj" />
     </ItemGroup>
-
 </Project>

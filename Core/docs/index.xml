@@ -497,6 +497,22 @@
             <param name="size">The size of each group. Default is 3.</param>
             <returns>The formatted string.</returns>
         </member>
+        <member name="M:Galaxon.Core.Strings.StringExtensions.Reverse(System.String)">
+             <summary>
+             Reverse a string.
+            
+             This is not implemented as an extension method, because then it clashes with the LINQ
+             Reverse() method.
+            
+             Example:
+             <code>
+             string reversedString = StringExtensions.Reverse(originalString);
+             </code>
+             </summary>
+             <see cref="M:System.Linq.Enumerable.Reverse``1(System.Collections.Generic.IEnumerable{``0})"/>
+             <param name="s">The string to reverse.</param>
+             <returns>The reversed string.</returns>
+        </member>
         <member name="T:Galaxon.Core.Types.EnumExtensions">
             <summary>
             Extension methods for enum types.

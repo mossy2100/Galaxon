@@ -1,6 +1,6 @@
-using Galaxon.Numerics.Algebra;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
+using Galaxon.Numerics.Algorithms;
 
 namespace Galaxon.Astronomy.Algorithms.Utilities;
 

@@ -1,5 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,16 +7,21 @@
         <AssemblyName>Galaxon.Maui</AssemblyName>
         <RootNamespace>Galaxon.Maui</RootNamespace>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
-      <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
+        <PackageReference
+            Include="HtmlAgilityPack"
+            Version="1.11.61" />
+        <PackageReference
+            Include="Microsoft.CodeAnalysis.CSharp"
+            Version="4.9.2" />
+        <PackageReference
+            Include="Microsoft.Maui.Controls"
+            Version="8.0.21" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\..\Core\Core.csproj" />
     </ItemGroup>
-
 </Project>

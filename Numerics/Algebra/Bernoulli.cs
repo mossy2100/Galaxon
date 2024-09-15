@@ -4,10 +4,8 @@ using Galaxon.Numerics.Integers;
 
 namespace Galaxon.Numerics.Algebra;
 
-public static class Analysis
+public static class Bernoulli
 {
-    #region Bernoulli numbers
-
     /// <summary>
     /// Calculate a Bernoulli number.
     /// NB: The Bernoulli number for n=1 can be ±1/2. This method returns 1/2.
@@ -15,7 +13,7 @@ public static class Analysis
     /// </summary>
     /// <param name="n">The index of the Bernoulli number to calculate.</param>
     /// <returns>The Bernoulli number as a BigRational.</returns>
-    private static BigRational _Bernoulli(int n)
+    private static BigRational _GetNumber(int n)
     {
         switch (n)
         {
@@ -36,7 +34,7 @@ public static class Analysis
         BigRational b = 1;
         for (var k = 0; k < n; k++)
         {
-            b -= Combinatorial.BinomialCoefficient(n, k) * Bernoulli(k) / (n - k + 1);
+            b -= Combinatorial.BinomialCoefficient(n, k) * GetNumber(k) / (n - k + 1);
         }
         return b;
     }
@@ -45,8 +43,6 @@ public static class Analysis
     /// Calculate a Bernoulli number.
     /// </summary>
     /// <returns>The memoized version of the method.</returns>
-    public static readonly Func<int, BigRational> Bernoulli =
-        Memoization.Memoize<int, BigRational>(_Bernoulli);
-
-    #endregion Bernoulli numbers
+    public static readonly Func<int, BigRational> GetNumber =
+        Memoization.Memoize<int, BigRational>(_GetNumber);
 }

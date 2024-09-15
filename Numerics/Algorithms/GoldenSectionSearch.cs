@@ -2,7 +2,7 @@ using Galaxon.Core.Exceptions;
 using Galaxon.Core.Functional;
 using Galaxon.Numerics.Extensions.FloatingPoint;
 
-namespace Galaxon.Numerics.Algebra;
+namespace Galaxon.Numerics.Algorithms;
 
 public static class GoldenSectionSearch
 {

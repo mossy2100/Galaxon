@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project
+    Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -7,33 +7,44 @@
         <InvariantGlobalization>false</InvariantGlobalization>
         <AssemblyName>Galaxon.Astronomy.AstroAPI</AssemblyName>
         <RootNamespace>Galaxon.Astronomy.AstroAPI</RootNamespace>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile>bin\Debug\net8.0\AstroAPI.xml</DocumentationFile>
+    <PropertyGroup
+        Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\net8.0\AstroAPI.xml</DocumentationFile>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DocumentationFile>bin\Release\net8.0\AstroAPI.xml</DocumentationFile>
+    <PropertyGroup
+        Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\net8.0\AstroAPI.xml</DocumentationFile>
     </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
-        <PackageReference Include="Serilog" Version="3.1.1" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+        <PackageReference
+            Include="Microsoft.AspNetCore.OpenApi"
+            Version="8.0.4" />
+        <PackageReference
+            Include="Serilog"
+            Version="3.1.1" />
+        <PackageReference
+            Include="Serilog.AspNetCore"
+            Version="8.0.1" />
+        <PackageReference
+            Include="Swashbuckle.AspNetCore"
+            Version="6.5.0" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\..\Development\Application\Application.csproj" />
-      <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
+        <ProjectReference
+            Include="..\..\Development\Application\Application.csproj" />
+        <ProjectReference
+            Include="..\Algorithms\Algorithms.csproj" />
     </ItemGroup>
-
     <ItemGroup>
-      <Folder Include="Logs\" />
-      <Folder Include="wwwroot\css\" />
-      <Folder Include="wwwroot\images\" />
-      <Folder Include="wwwroot\js\" />
+        <Folder
+            Include="Logs\" />
+        <Folder
+            Include="wwwroot\css\" />
+        <Folder
+            Include="wwwroot\images\" />
+        <Folder
+            Include="wwwroot\js\" />
     </ItemGroup>
-
 </Project>

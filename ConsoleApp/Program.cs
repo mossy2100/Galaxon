@@ -12,7 +12,6 @@ using Galaxon.Numerics.Geometry;
 using Galaxon.Quantities.Kinds;
 using Galaxon.Time;
 using Galaxon.Time.Extensions;
-using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -44,8 +43,8 @@ class Program
             // EarthDistance();
             // HaumeaCalculations();
             // QuaoarCalculations();
-            // ProgressiveLeapYearRule3();
-            MondaysNearSouthernSolstice();
+            ProgressiveLeapYearRule();
+            // MondaysNearSouthernSolstice();
         }
         catch (Exception ex)
         {
@@ -175,7 +174,8 @@ class Program
             .AddSingleton<SolarCalendar>()
             .AddSingleton<LeapWeekCalendar>()
             .AddSingleton<LunisolarCalendar>()
-            .AddSingleton<BirthdayService>();
+            .AddSingleton<BirthdayService>()
+            .AddSingleton<ProgressiveLeapYearRuleService>();
 
         // Add logging.
         serviceCollection.AddLogging(loggingBuilder =>
@@ -383,267 +383,6 @@ class Program
         }
     }
 
-    public static void ProgressiveLeapYearRule()
-    {
-        int prevBestD = 0;
-
-        for (int y = 2025; y <= 10000; y++)
-        {
-            double tropicalYearLength_d = DurationUtility.GetTropicalYearInSolarDaysForYear(y);
-            double targetFrac = tropicalYearLength_d.Frac();
-
-            // Find the closest fraction.
-            int bestN = 0;
-            int bestD = 0;
-            double diff;
-            double minDiff = double.MaxValue;
-            double frac = 0;
-
-            for (int n = 32; n > 20; n--)
-            {
-                int d = n * 4 + 4;
-                frac = (double)n / d;
-                diff = Abs(frac - targetFrac);
-                if (diff < minDiff)
-                {
-                    bestN = n;
-                    bestD = d;
-                    minDiff = diff;
-                }
-                if (diff < 1e-7)
-                {
-                    Console.WriteLine(
-                        $"In year {y}, the average calendar length of {365 + frac:F6} days is virtually equal to the tropical year length of {tropicalYearLength_d:F6} solar days.");
-                }
-            }
-
-            // Report.
-            if (bestD != prevBestD)
-            {
-                Console.WriteLine($"From year {y}: {bestN}/{bestD}");
-                prevBestD = bestD;
-            }
-        }
-    }
-
-    public static void ProgressiveLeapYearRule2()
-    {
-        double totalDrift = 0;
-        int maxN = 35;
-        Dictionary<int, (int, int, int, int)> results = new ();
-
-        for (int millennium = 3; millennium <= 10; millennium++)
-        {
-            int maxYear = millennium * 1000;
-            int minYear = maxYear - 999;
-
-            Console.WriteLine(
-                $"Results for the {millennium.Ordinalize()} millennium ({minYear}-{maxYear}).");
-
-            // Get total solar days in this tropical millennium (e.g. 2001-3000).
-            double tropicalMillennium_d = 0;
-            for (int y = minYear; y <= maxYear; y++)
-            {
-                tropicalMillennium_d += DurationUtility.GetTropicalYearInSolarDaysForYear(y);
-            }
-            double avgTropicalYear_d = tropicalMillennium_d / 1000;
-            double actualFrac = avgTropicalYear_d.Frac();
-
-            // Consider each fraction and calculate the total drift by the end.
-            int bestN = 0;
-            int bestD = 0;
-            int bestNumLeapYears = 0;
-            double minDrift = double.MaxValue;
-            double bestTotalDriftForMillennium = 0;
-            double minFracDiff = double.MaxValue;
-            double bestAvgCalendarYear_d = 0;
-
-            for (int n = maxN; n >= 25; n--)
-            {
-                int d = n * 4 + 4;
-                double ruleFrac = (double)n / d;
-                double avgCalendarYear_d = 365 + ruleFrac;
-                double fracDiff = Abs(ruleFrac - actualFrac);
-
-                // Get the length of the calendar millennium in solar days.
-                int calendarMillennium_d = 0;
-                int nLeapYears = 0;
-                for (int y = minYear; y <= maxYear; y++)
-                {
-                    bool isLeapYear = y % 4 == 0 && y % d != 0;
-
-                    int calendarYear_d = isLeapYear ? 366 : 365;
-                    calendarMillennium_d += calendarYear_d;
-
-                    if (isLeapYear)
-                    {
-                        nLeapYears++;
-                    }
-                }
-
-                // Compute the drift at the end of the millennium.
-                double totalDriftForMillennium = calendarMillennium_d - tropicalMillennium_d;
-                double testTotalDrift = Abs(totalDrift + totalDriftForMillennium);
-
-                // Console.WriteLine($"    At end of millennium {millennium}, with rule {n} / {d}, total drift would be {testTotalDrift}");
-
-                // Choose the result that produces the lower total drift from the tropical year;
-                // or, if it produces the same, choose the result with closer alignment between the
-                // average calendar year length and the tropical year, as this rule will last longer.
-                // Console.WriteLine($"Rule {n}/{d} => drift {testTotalDrift:F6} days, frac diff {fracDiff:F6}");
-                // if (testTotalDrift < minDrift || (testTotalDrift == minDrift && fracDiff < minFracDiff))
-                if (testTotalDrift < minDrift
-                    || (testTotalDrift == minDrift && fracDiff < minFracDiff))
-                {
-                    // Console.WriteLine("This is better");
-                    minDrift = testTotalDrift;
-                    minFracDiff = fracDiff;
-                    bestN = n;
-                    bestD = d;
-                    bestNumLeapYears = nLeapYears;
-                    bestTotalDriftForMillennium = totalDriftForMillennium;
-                    bestAvgCalendarYear_d = avgCalendarYear_d;
-                }
-            }
-
-            // Console.WriteLine($"Best total drift = {minDrift:F3} days ({minDrift * 24:F3} hours).");
-            Console.WriteLine($"Best rule: {bestN} leap years per {bestD} years.");
-            Console.WriteLine($"Actual: {bestNumLeapYears} leap years in the millennium.");
-            Console.WriteLine($"Average tropical year length {avgTropicalYear_d:F6} solar days.");
-            Console.WriteLine(
-                $"Average calendar year length {bestAvgCalendarYear_d:F6} solar days.");
-            Console.WriteLine(
-                $"Difference between average tropical year and average calendar year = {minFracDiff * 86400:F3} seconds.");
-
-            // Update the total drift.
-            totalDrift += bestTotalDriftForMillennium;
-            Console.WriteLine(
-                $"Total drift by the end of the millennium is {Abs(totalDrift):F3} days ({Abs(totalDrift) * 24:F3} hours).");
-            Console.WriteLine();
-
-            results[millennium] = (minYear, maxYear, bestN, bestD);
-        }
-
-        foreach (KeyValuePair<int, (int, int, int, int)> result in results)
-        {
-            (int minYear, int maxYear, int n, int d) = result.Value;
-            Console.WriteLine($"For years {minYear}-{maxYear}: {n} leap years in {d} years.");
-        }
-    }
-
-    public static void ProgressiveLeapYearRule3()
-    {
-        // Compute the length of a century in calendar days given a century number and value for n.
-        int calendarCenturyInDays(int century, int n)
-        {
-            int maxYear = century * 100;
-            int minYear = maxYear - 99;
-            int d = 4 * (n + 1);
-            int total_d = 0;
-            for (int y = minYear; y <= maxYear; y++)
-            {
-                bool isLeapYear = y % 4 == 0 && y % d != 0;
-                total_d += isLeapYear ? 366 : 365;
-            }
-            return total_d;
-        }
-
-        // Step 1. Find the best fit rule of the form n/(4(n+1)) for the 21st century.
-        int century = 21;
-        int maxYear = century * 100;
-        int minYear = maxYear - 99;
-
-        // Get the total length of the tropical century in solar days.
-        double tropicalCentury_d = DurationUtility.GetTropicalCenturyInSolarDays(century);
-        double targetFrac = (tropicalCentury_d / 100).Frac();
-        int currentN = 0;
-
-        // Find which value for n produces the best fit for the 21st century.
-        double minDiff = double.MaxValue;
-        int currentD;
-        double frac;
-        for (int n = 1; n <= 40; n++)
-        {
-            frac = (double)n / (4 * (n + 1));
-            double diff = Abs(frac - targetFrac);
-            if (diff < minDiff)
-            {
-                minDiff = diff;
-                currentN = n;
-            }
-        }
-        currentD = 4 * (currentN + 1);
-        frac = (double)currentN / currentD;
-
-        Console.WriteLine(targetFrac);
-
-        Console.WriteLine(frac);
-
-        // Compute the drift at the end of the 21st century.
-        // Note, this presupposes that the century started at 0 drift.
-        // In fact, we'll probably start halfway through the century.
-        int calendarCentury_d = calendarCenturyInDays(century, currentN);
-        double currentDrift = tropicalCentury_d - calendarCentury_d;
-
-        // Report.
-        Console.WriteLine(
-            $"For century {century} ({minYear}-{maxYear}), n = {currentN}, d = {currentD}, frac = {frac:F6}, drift at end of century is {currentDrift:F3} days ({currentDrift * 24:F1} hours)");
-
-        Dictionary<int, (int minYear, int maxYear, int nLeapYears)> result = new ();
-        int nLeapYears = calendarCentury_d % 365;
-        result[currentN] = (minYear, maxYear, nLeapYears);
-
-        // Loop through remaining centuries and see when it makes sense to decrement n.
-        for (century = 22; century <= 120; century++)
-        {
-            maxYear = century * 100;
-            minYear = maxYear - 99;
-
-            // Console.WriteLine(
-            //     $"Results for the {century.Ordinalize()} century ({minYear}-{maxYear}).");
-
-            // Get total solar days in this tropical century.
-            tropicalCentury_d = DurationUtility.GetTropicalCenturyInSolarDays(century);
-
-            // Get total calendar days in this tropical century for current value of n and next value of n.
-            int calendarCentury1_d = calendarCenturyInDays(century, currentN);
-            int nLeapYears1 = calendarCentury1_d % 365;
-            int calendarCentury2_d = calendarCenturyInDays(century, currentN - 1);
-            int nLeapYears2 = calendarCentury2_d % 365;
-
-            // Calculate accumulated drift at the end of the century for the current value of n and next value of n.
-            double newDrift1 = currentDrift + (tropicalCentury_d - calendarCentury1_d);
-            double newDrift2 = currentDrift + (tropicalCentury_d - calendarCentury2_d);
-
-            // if switching produces a better result, switch.
-            if (Abs(newDrift2) < Abs(newDrift1))
-            {
-                Console.WriteLine();
-                currentN--;
-                currentDrift = newDrift2;
-                result[currentN] = (minYear, maxYear, nLeapYears2);
-            }
-            else
-            {
-                currentDrift = newDrift1;
-                result[currentN] = (result[currentN].minYear, maxYear, result[currentN].nLeapYears + nLeapYears1);
-            }
-
-            currentD = 4 * (currentN + 1);
-            frac = (double)currentN / currentD;
-
-            Console.WriteLine(
-                $"For century {century} ({minYear}-{maxYear}), n = {currentN}, d = {currentD}, frac = {frac:F6}, drift at end of century is {currentDrift:F3} days ({currentDrift * 24:F1} hours)");
-        }
-
-        foreach (var item in result)
-        {
-            int nYears = item.Value.maxYear - item.Value.minYear + 1;
-            string label = $"For years {item.Value.minYear}-{item.Value.maxYear}:";
-            Console.WriteLine($"    {label,-22} {item.Key} leap years per {4 * (item.Key + 1)} years (actually {item.Value.nLeapYears} leap years in {nYears} years).");
-        }
-    }
-
     public static void MondaysNearSouthernSolstice()
     {
         Console.WriteLine("Years with a southern solstice close to start of Monday:");
@@ -661,5 +400,11 @@ class Program
                 Console.WriteLine($"{solstice.DateTimeUtc.ToString("dddd dd MMMM yyyy HH:mm")} UTC     {startDate.ToString("dddd dd MMMM yyyy")}");
             }
         }
+    }
+
+    public static void ProgressiveLeapYearRule()
+    {
+        ProgressiveLeapYearRuleService progressiveLeapYearRuleService = _serviceProvider!.GetRequiredService<ProgressiveLeapYearRuleService>();
+        progressiveLeapYearRuleService.Version4();
     }
 }

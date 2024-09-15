@@ -1,17 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project
+    Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>Galaxon.Time</AssemblyName>
         <RootNamespace>Galaxon.Time</RootNamespace>
+        <DebugType>portable</DebugType>
     </PropertyGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\Numerics\Algebra\Algebra.csproj" />
-      <ProjectReference Include="..\Numerics\Extensions\Extensions.csproj" />
+        <ProjectReference
+            Include="..\Core\Core.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Algebra\Algebra.csproj" />
+        <ProjectReference
+            Include="..\Numerics\Extensions\Extensions.csproj" />
     </ItemGroup>
-
 </Project>

@@ -1,7 +1,7 @@
 using Galaxon.Astronomy.Algorithms.Records;
 using Galaxon.Astronomy.Algorithms.Services;
 using Galaxon.Astronomy.Algorithms.Utilities;
-using Galaxon.Numerics.Algebra;
+using Galaxon.Numerics.Algorithms;
 using Galaxon.Time;
 
 namespace Galaxon.ConsoleApp.Services;
@@ -31,7 +31,7 @@ public class BirthdayService(SunService sunService)
         // Calculate their approximate birth minute in the given year. We'll use noon as a
         // reasonable mean value for time of day. This is fine, because it's just an approximate
         // value to give us a starting point for the golden section search.
-        DateTime dtBirthday = new (year, dtBirth.Month, dtBirth.Day, 12, 0, 0);
+        DateTime dtBirthday = new(year, dtBirth.Month, dtBirth.Day, 12, 0, 0);
 
         // Convert to a Julian Date. Don't worry about delta-T; again, this is just an estimate.
         double jdBirthday = JulianDateUtility.FromDateTime(dtBirthday);
